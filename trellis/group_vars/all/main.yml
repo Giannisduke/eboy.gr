@@ -15,7 +15,7 @@ nginx_fastcgi_buffer_size: 16k
 
 ip_whitelist:
   - "{{ (env == 'development') | ternary(ansible_default_ipv4.gateway, ipify_public_ip | default('')) }}"
-  - 139.59.134.178
+  - 207.154.234.232
 
 letsencrypt_contact_emails:
   - giannis@eboy.gr
