@@ -16,7 +16,7 @@ wordpress_sites:
     local_path: ../site
     repo: git@github.com:Giannisduke/eboy.gr.git
     repo_subtree_path: site
-    branch: master
+    branch: main
     multisite:
       enabled: true
       subdomains: true   # Set to true if you're using a subdomain multisite install
