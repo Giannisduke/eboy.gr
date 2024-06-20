@@ -1,0 +1,26 @@
+# Created by trellis-cli vcanary
+# Documentation: https://docs.roots.io/trellis/master/wordpress-sites/
+
+wordpress_sites:
+  eboy.gr:
+    site_hosts:
+    - canonical: eboy.test
+      redirects:
+      - www.eboy.test
+    - canonical: sagevue.eboy.test
+      redirects:
+      - www.sagevue.eboy.test
+    - canonical: vuejs-search.eboy.test
+      redirects:
+      - www.vuejs-search.eboy.test
+    local_path: ../site
+    admin_email: admin@eboy.test
+    multisite:
+      enabled: true
+      subdomains: true   # Set to true if you're using a subdomain multisite install
+    ssl:
+      enabled: true
+      provider: self-signed
+      hsts_max_age: 0
+    cache:
+      enabled: false

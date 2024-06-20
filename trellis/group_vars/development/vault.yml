@@ -1,0 +1,24 @@
+# Created by trellis-cli v0.9.0
+# Documentation: https://roots.io/trellis/docs/vault/
+
+vault_mysql_root_password: pDS4jA2aqrnp4Ms1VFYVOZjlfmcjMf8Kh235ztmUAsrPCQw1zYXcudZgaTgVTqQ5
+vault_wordpress_sites:
+  eboy.gr:
+    admin_password: BG7JHqhgQAquLiyVtRyChMe4aHf8gAHqa0rVRUqdjH6QFWdcpoi1d9arTvSrlbaK
+    env:
+      db_password: UooKlnAI9tBZMavtxwv4mqBGavhPWAj7FJiziSKTWVcaF9sqgP2l9DC2PDQK4G42
+      auth_key: ijj1B6PEbsUCbrArS2i9Hm9P6YQPE7cpwXquvpuriabDS6aYHTLmryACeogwcTPp
+      secure_auth_key: g6Fs1zcCpXnoHh87bHwesa8t5Puje3fZnrtacoyx3QlQwM2MpalI4KHXeZaSIYbo
+      logged_in_key: aBMfCw0FUcPVZ0LQ7gnmWnZOeZTcIH4Vm6Wve1MASZodWh9uJjU4V3bApUlI7CeA
+      nonce_key: 9wHpNMSzOD2k8Op6lOBBD6Y0eZpLtxBqU2a3ce3Betvikm8BqNDCzKJAAMFWfWUc
+      auth_salt: 7z0ChI2YYcSCymxcvSYCTlZwnaSCmLvroXA4O98UMiydWk7MBlIM4WalQzEy2ais
+      secure_auth_salt: efaRrcg08pHp7yiBlwWHs44uDXRF89GXgbOtFh9RSV2tb5Kq7iC3XSHF1Mmbpcrx
+      logged_in_salt: 3wrwJHz2Cxj5D0LjbgcBUv5ubSTYds10MhVkzSNE0eeiIPnWyJm1sBgv9ztLxKbX
+      nonce_salt: dwZZEhmnAW3zWUpuZa9AFmV2T4aj3N9jF3i9SxnrPqmbgPbsN2U4PfZPDIW90cEe
+      secure_auth_key: "(B/CMAQt8y!$7dpOnavWQ7;IQ47,(&#!sC]U52IJA)Q34!FP-(Ve?WLj==*s.L]<"
+      logged_in_key: ":IJ>(5LAk2eh[[%p6jbtS9l4(BcoRcCsuv.%%nP.7Z<JqiT:65WOfM`GQ3p%`d=<"
+      nonce_key: "2,CT:QE/KzC5l_tfHXjx{0=Sg9&)Ex4`@0#PKr0,@4yKGpx}s1GylV&1<]@4t:fX"
+      auth_salt: "*4W_B08IZr_.yP8UMVpkSvp/:YJD^r1]u6Hk[5M(sV@sHi@IW_-[a2powzjH8lw?"
+      secure_auth_salt: "{aoyQo+LkRK5yqelRT.rmL[<jmgWuYZjxw1wVPPY#pD*C(4Ds6Sq5,N4N)P?l8<#"
+      logged_in_salt: "2_]c]Z?#CQP_<Z8sisd:-YEfSb6BjJ+!^fTnQ-;`0R)^BP.o!t,kW(p9E6tc2>!G"
+      nonce_salt: ":EKU0W?xl.(+>GHq5?!5Gt$UtzTDOTpB?-1&&Yv1$|G/Vf%1l>2Vdpc{X(RQzBu!"

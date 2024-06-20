@@ -1,0 +1,20 @@
+# Created by trellis-cli vcanary
+# Documentation: https://docs.roots.io/trellis/master/wordpress-sites/
+
+wordpress_sites:
+  eboy.gr:
+    site_hosts:
+    - canonical: eboy.gr
+      redirects:
+      - www.eboy.gr
+    local_path: ../site
+    branch: master
+    repo: git@github.com:example/example.com.git
+    repo_subtree_path: site
+    multisite:
+      enabled: false
+    ssl:
+      enabled: false
+      provider: letsencrypt
+    cache:
+      enabled: false

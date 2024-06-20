@@ -1,0 +1,12 @@
+Log created: 2024-01-13T14:24:36.820536000Z
+Process ID:  9422 (0x24ce)
+Parent PID:  1 (0x1)
+Executable:  /usr/lib/virtualbox/VBoxHeadless
+Arg[0]: /usr/lib/virtualbox/VBoxHeadless
+Arg[1]: --comment
+Arg[2]: eboy.test
+Arg[3]: --startvm
+Arg[4]: 6c4f5180-d799-4b60-bd19-627b4a8313cf
+Arg[5]: --vrde
+Arg[6]: config
+AddRef: illegal refcnt=3221225469 state=2

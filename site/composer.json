@@ -1,0 +1,193 @@
+{
+  "name": "roots/bedrock",
+  "type": "project",
+  "license": "MIT",
+  "description": "WordPress boilerplate with Composer, easier configuration, and an improved folder structure",
+  "homepage": "https://roots.io/bedrock/",
+  "authors": [
+    {
+      "name": "Scott Walkinshaw",
+      "email": "scott.walkinshaw@gmail.com",
+      "homepage": "https://github.com/swalkinshaw"
+    },
+    {
+      "name": "Ben Word",
+      "email": "ben@benword.com",
+      "homepage": "https://github.com/retlehs"
+    }
+  ],
+  "keywords": [
+    "bedrock",
+    "composer",
+    "roots",
+    "wordpress",
+    "wp",
+    "wp-config"
+  ],
+  "support": {
+    "issues": "https://github.com/roots/bedrock/issues",
+    "forum": "https://discourse.roots.io/category/bedrock"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org",
+      "only": [
+        "wpackagist-plugin/*",
+        "wpackagist-theme/*"
+      ]
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "giannisduke/advanced-custom-fields-pro",
+        "version": "6.2.0",
+        "type": "wordpress-plugin",
+        "dist": {
+          "type": "zip",
+          "url": "https://github.com/Giannisduke/advanced-custom-fields-pro/archive/refs/tags/6.2.0.zip"
+        },
+        "require": {
+          "composer/installers": "*"
+        }
+      }
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "giannisduke/gravityforms",
+        "version": "2.7.13",
+        "type": "wordpress-plugin",
+        "dist": {
+          "type": "zip",
+          "url": "https://github.com/Giannisduke/gravityforms/archive/main.zip"
+        },
+        "require": {
+          "composer/installers": "*"
+        }
+      }
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "woocommerce/wc-smooth-generator",
+        "version": "1.1.0",
+        "type": "wordpress-plugin",
+        "dist": {
+          "type": "zip",
+          "url": "https://github.com/woocommerce/wc-smooth-generator/releases/download/1.1.0/wc-smooth-generator.zip"
+        },
+        "require": {
+          "composer/installers": "*"
+        }
+      }
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "giannisduke/sage",
+        "version": "10.6.0",
+        "type": "wordpress-theme",
+        "dist": {
+          "type": "zip",
+          "url": "https://github.com/Giannisduke/sage/archive/refs/tags/styles.zip"
+        },
+        "require": {
+          "composer/installers": "*"
+        }
+      }   
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "giannisduke/wordpress-vuejs-search",
+        "version": "0.1",
+        "type": "wordpress-theme",
+        "dist": {
+          "type": "zip",
+          "url": "https://github.com/Giannisduke/wordpress-vuejs-search/archive/refs/tags/giannisduke.zip"
+        },
+        "require": {
+          "composer/installers": "*"
+        }
+      }
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "giannisduke/sage-vue-tailwind",
+        "version": "0.1",
+        "type": "wordpress-theme",
+        "dist": {
+          "type": "zip",
+          "url": "https://github.com/Giannisduke/sage-vue-tailwind/archive/refs/tags/Giannisduke.zip"
+        },
+        "require": {
+          "composer/installers": "*"
+        }
+      }
+    }
+  ],
+  "require": {
+    "php": ">=8.2",
+    "ext-gd": "*",
+    "composer/installers": "^2.2",
+    "vlucas/phpdotenv": "^5.5",
+    "oscarotero/env": "^2.1",
+    "roots/bedrock-autoloader": "^1.0",
+    "roots/bedrock-disallow-indexing": "^2.0",
+    "roots/wordpress": "6.5.4",
+    "roots/wp-config": "1.0.0",
+    "roots/wp-password-bcrypt": "1.1.0",
+    "wpackagist-theme/twentytwentyfour": "^1.0",
+    "roots/soil": "^4.1",
+    "wpackagist-plugin/regenerate-thumbnails": "^3.1",
+    "wpackagist-plugin/woocommerce": "^8.3",
+    "wpackagist-plugin/query-monitor": "3.15.0",
+    "wpackagist-plugin/user-switching": "1.7.2",
+    "giannisduke/gravityforms": "^2.7",
+    "giannisduke/advanced-custom-fields-pro": "6.2.0",
+    "roots/acorn": "^3.3",
+    "roots/sage": "^10.7.0",
+    "darylldoyle/safe-svg": "^2.2",
+    "wpackagist-theme/twentyseventeen": "^3.4",
+    "giannisduke/wordpress-vuejs-search": "0.1",
+    "woocommerce/wc-smooth-generator": "1.1.0"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.7.1",
+    "roave/security-advisories": "dev-latest"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "allow-plugins": {
+      "composer/installers": true,
+      "roots/wordpress-core-installer": true
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "extra": {
+    "installer-paths": {
+      "web/app/mu-plugins/{$name}/": [
+        "type:wordpress-muplugin"
+      ],
+      "web/app/plugins/{$name}/": [
+        "type:wordpress-plugin"
+      ],
+      "web/app/themes/{$name}/": [
+        "type:wordpress-theme"
+      ]
+    },
+    "wordpress-install-dir": "web/wp"
+  },
+  "scripts": {
+    "test": [
+      "phpcs"
+    ],
+    "post-autoload-dump": [
+      "Roots\\Acorn\\ComposerScripts::postAutoloadDump"
+    ]
+  }
+}

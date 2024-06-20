@@ -1,0 +1,31 @@
+  # Created by trellis-cli vcanary
+# Documentation: https://docs.roots.io/trellis/master/wordpress-sites/
+
+wordpress_sites:
+  eboy.gr:
+    site_hosts:
+    - canonical: eboy.gr
+      redirects:
+      - www.eboy.gr
+    - canonical: bookme.eboy.gr
+      redirects:
+      - www.bookme.eboy.gr
+    - canonical: takis.eboy.gr
+      redirects:
+      - www.takis.eboy.gr
+    local_path: ../site
+    repo: git@github.com:Giannisduke/eboy.gr.git
+    repo_subtree_path: site
+    branch: master
+    multisite:
+      enabled: true
+      subdomains: true   # Set to true if you're using a subdomain multisite install
+      hsts_include_subdomains: true
+    ssl:
+      enabled: true
+      provider: letsencrypt
+      hsts_include_subdomains: true
+    cache:
+      enabled: false
+    env:
+      domain_current_site: eboy.gr
