@@ -12,7 +12,7 @@ wordpress_sites:
       - www.simple-city.eboy.gr
     local_path: ../site
     branch: main
-    repo: git@github.com:Giannisduke/eboy.git
+    repo: git@github.com:Giannisduke/eboy.gr.git
     repo_subtree_path: site
     multisite:
       enabled: true
