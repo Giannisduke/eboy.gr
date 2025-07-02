@@ -1,0 +1,22 @@
+# Created by trellis-cli v1.14.0
+# Documentation: https://roots.io/trellis/docs/wordpress-sites/
+
+wordpress_sites:
+  eboy.gr:
+    site_hosts:
+    - canonical: eboy.test
+      redirects:
+      - www.eboy.test
+    - canonical: simple-city.eboy.test
+      redirects:
+      - www.simple-city.eboy.test
+    local_path: ../site
+    admin_email: admin@eboy.test
+    multisite:
+      enabled: true
+      subdomains: true   # Set to true if you're using a subdomain multisite install
+    ssl:
+      enabled: true
+      provider: self-signed
+    cache:  
+      enabled: false
