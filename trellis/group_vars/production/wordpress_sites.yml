@@ -22,5 +22,3 @@ wordpress_sites:
       provider: letsencrypt
     cache:
       enabled: true
-    env:
-      domain_current_site: eboy.gr
