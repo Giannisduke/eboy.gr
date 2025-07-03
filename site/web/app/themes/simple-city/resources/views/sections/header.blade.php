@@ -28,7 +28,7 @@
                 </div>         
         </div>
 
-        @if (has_nav_menu('info_navigation'))
+        @if (has_nav_menu('help_navigation'))
           <nav class="nav-help" aria-label="{{ wp_get_nav_menu_name('help_navigation') }}">
             {!! wp_nav_menu(['theme_location' => 'help_navigation', 'menu_class' => 'nav', 'echo' => false]) !!}
           </nav>

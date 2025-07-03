@@ -62,6 +62,7 @@ collect(['setup', 'filters'])
 
     function my_own_mime_types( $mimes ) {
         $mimes['svg'] = 'image/svg+xml';
+        $mimes['csv'] = 'text/csv';
         return $mimes;
     }
 
