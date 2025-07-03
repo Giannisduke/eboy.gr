@@ -39,7 +39,21 @@
     "roots/bedrock-disallow-indexing": "^2.0",
     "roots/wordpress": "6.8.1",
     "roots/wp-config": "1.0.0",
-    "wpackagist-theme/twentytwentyfive": "^1.0"
+    "roots/wp-password-bcrypt": "1.2.0",
+    "wpackagist-theme/twentytwentyfive": "^1.0",
+    "roots/sage": "^11.0.0",
+    "wpackagist-plugin/regenerate-thumbnails": "^3.1",
+    "wpackagist-plugin/woocommerce": "^9.1.2",
+    "wpackagist-plugin/query-monitor": "^3.16.3",
+    "wpackagist-plugin/user-switching": "^1.7.3",
+    "wpackagist-plugin/woocommerce-xml-csv-product-import":"1.5.4",
+    "pronamic/gravityforms": "^2.9.6.1",
+    "giannisduke/remove-gravity-forms-license": "1.0.4",
+    "wordpress-premium/advanced-custom-fields-pro": "6.4.2",
+    "automattic/woocommerce": "^3.1",
+    "generoi/sage-woocommerce": "^1.1",
+    "common-repository/ai-product-content-creator-for-woocommerce": "^1.0.0",
+    "invisionapp/wp-all-import-pro": "4.5.6"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
