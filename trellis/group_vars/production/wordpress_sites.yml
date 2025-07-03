@@ -14,7 +14,6 @@ wordpress_sites:
     branch: main
     repo: git@github.com:Giannisduke/eboy.gr.git
     repo_subtree_path: site
-    update_wp_theme_paths: false
     multisite:
       enabled: true
       subdomains: true # Set to true if using sub domains
@@ -22,5 +21,5 @@ wordpress_sites:
       enabled: true
       provider: letsencrypt
     cache:
-      enabled: true
+      enabled: false
 
