@@ -15,6 +15,11 @@ wordpress_sites:
     multisite:
       enabled: true
       subdomains: true   # Set to true if you're using a subdomain multisite install
+    env:
+      allow_multisite: true
+      multisite: true
+      subdomain_install: true
+      domain_current_site: eboy.test
     ssl:
       enabled: true
       provider: self-signed
