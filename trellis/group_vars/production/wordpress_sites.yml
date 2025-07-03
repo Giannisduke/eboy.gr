@@ -17,6 +17,10 @@ wordpress_sites:
     multisite:
       enabled: true
       subdomains: true # Set to true if using sub domains
+    env:
+      allow_multisite: true
+      multisite: true
+      subdomain_install: true
     ssl:
       enabled: true
       provider: letsencrypt
