@@ -1,5 +1,6 @@
 /node_modules
 /vendor
+/plugins/*
 !/public/*
 !/public/.gitkeep
 .env
