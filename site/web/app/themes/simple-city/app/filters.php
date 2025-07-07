@@ -102,3 +102,5 @@ add_filter( 'facetwp_facet_display_value', function( $label, $params ) {
 
 // Disable Woocommerce setup_wizard
 add_filter( 'woocommerce_prevent_automatic_wizard_redirect', '__return_true' );
+
+

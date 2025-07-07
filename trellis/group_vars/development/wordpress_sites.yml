@@ -10,6 +10,9 @@ wordpress_sites:
     - canonical: simple-city.eboy.test
       redirects:
       - www.simple-city.eboy.test
+    - canonical: monk.eboy.test
+      redirects:
+      - www.monk.eboy.test
     local_path: ../site
     admin_email: admin@eboy.test
     multisite:

@@ -10,6 +10,9 @@ wordpress_sites:
     - canonical: simple-city.eboy.gr
       redirects:
       - www.simple-city.eboy.gr
+    - canonical: monk.eboy.gr
+      redirects:
+      - www.monk.eboy.gr
     local_path: ../site
     branch: main
     repo: git@github.com:Giannisduke/eboy.gr.git
