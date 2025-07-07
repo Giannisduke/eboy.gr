@@ -10,7 +10,7 @@
                 </h1>
         <div class="slogan">
                 <h2 class="display-1">
-
+                        Το κάνουμε απλό!
                 </h2>
  
 
@@ -19,7 +19,7 @@
         </div>
         </div>
 
-<div class="featured_slider" id="slider">
+<div class="monk_slider" id="monk_slider">
     Slider
 </div>
 

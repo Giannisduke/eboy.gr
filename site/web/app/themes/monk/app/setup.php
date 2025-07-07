@@ -111,6 +111,7 @@ add_action('after_setup_theme', function () {
         'primary_navigation' => __('Primary Navigation', 'sage'),
         'info_navigation' => __('Info Navigation', 'sage'),
         'help_navigation' => __('Help Navigation', 'sage'),
+        'main_navigation' => __('Main Navigation', 'sage'),
     ]);
 
     /**
@@ -201,5 +202,11 @@ add_action('widgets_init', function () {
         'id' => 'sidebar-footer',
     ] + $config);
 });
+
+add_action('wp_enqueue_scripts', function () {
+
+ wp_register_script( 'TweenMax', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js', null, null, true );
+    wp_enqueue_script('TweenMax');
+}, 100);
 
 

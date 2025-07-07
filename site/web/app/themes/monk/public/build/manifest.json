@@ -4,7 +4,7 @@
     "src": "editor.deps.json"
   },
   "resources/css/app.scss": {
-    "file": "assets/app-CnWyP-OK.css",
+    "file": "assets/app-D605XlEZ.css",
     "src": "resources/css/app.scss",
     "isEntry": true
   },
@@ -169,9 +169,41 @@
     "file": "assets/kitchen-CWGgO1IH.svg",
     "src": "resources/images/kitchen.svg"
   },
-  "resources/images/logo.svg": {
-    "file": "assets/logo-Vti560dz.svg",
-    "src": "resources/images/logo.svg"
+  "resources/images/logo_1_h.svg": {
+    "file": "assets/logo_1_h-C_2Dj1EE.svg",
+    "src": "resources/images/logo_1_h.svg"
+  },
+  "resources/images/logo_2_e.svg": {
+    "file": "assets/logo_2_e-BhE4z580.svg",
+    "src": "resources/images/logo_2_e.svg"
+  },
+  "resources/images/logo_3_l.svg": {
+    "file": "assets/logo_3_l-D-MsZO9M.svg",
+    "src": "resources/images/logo_3_l.svg"
+  },
+  "resources/images/logo_5_o.svg": {
+    "file": "assets/logo_5_o-CMBbFt9G.svg",
+    "src": "resources/images/logo_5_o.svg"
+  },
+  "resources/images/logo_6_s.svg": {
+    "file": "assets/logo_6_s-Dm005wxM.svg",
+    "src": "resources/images/logo_6_s.svg"
+  },
+  "resources/images/logo_7_u.svg": {
+    "file": "assets/logo_7_u-CHn_ediO.svg",
+    "src": "resources/images/logo_7_u.svg"
+  },
+  "resources/images/logo_8_m.svg": {
+    "file": "assets/logo_8_m-C4NOhBmL.svg",
+    "src": "resources/images/logo_8_m.svg"
+  },
+  "resources/images/logo_9_r.svg": {
+    "file": "assets/logo_9_r-VkJsZ9s0.svg",
+    "src": "resources/images/logo_9_r.svg"
+  },
+  "resources/images/monk-logo.svg": {
+    "file": "assets/monk-logo-DsXoQHIB.svg",
+    "src": "resources/images/monk-logo.svg"
   },
   "resources/images/office.svg": {
     "file": "assets/office-zTi99C67.svg",
@@ -185,8 +217,16 @@
     "file": "assets/slider_001-D6eEIFHf.png",
     "src": "resources/images/slider_001.png"
   },
+  "resources/images/summer25_logo.svg": {
+    "file": "assets/summer25_logo-CsgNCGSC.svg",
+    "src": "resources/images/summer25_logo.svg"
+  },
+  "resources/images/summer25_watermellon.svg": {
+    "file": "assets/summer25_watermellon-BClo5Ju8.svg",
+    "src": "resources/images/summer25_watermellon.svg"
+  },
   "resources/js/app.js": {
-    "file": "assets/app-DR9FHhP7.js",
+    "file": "assets/app-so_XOjYn.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

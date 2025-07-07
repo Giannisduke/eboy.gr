@@ -115,7 +115,7 @@ body {
                             justify-content: center;
 
                             @include media-breakpoint-up(sm) {
-                               justify-content: left;
+                               justify-content: center;
                             }
 
                             @include media-breakpoint-up(lg) {
@@ -131,10 +131,11 @@ body {
                             }
 
                             @include media-breakpoint-up(lg) {
-                                @include make-col(2);
+                                @include make-col(3);
                             }
-                               //     @extend .text-start;
-                                    @extend .py-2;
+                               //@extend .text-start;
+                                 @extend .py-2;
+                                 @extend .text-center;
 
                             & .custom-logo {
                                 @extend .img-fluid;
@@ -211,6 +212,8 @@ body {
                         }
 
                      }
+
+
                                 
                     }
 
@@ -250,7 +253,7 @@ body {
         &.main {
             @include make-container();
            // max-width: 1440px;
-           @extend .p-0;
+           margin: 5.15rem 0 0 0;
             
 
             & .control {
