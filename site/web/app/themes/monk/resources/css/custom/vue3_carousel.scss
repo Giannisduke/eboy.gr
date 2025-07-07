@@ -1,0 +1,117 @@
+:root {
+  --carousel-transition: 300ms;
+  --carousel-opacity-inactive: 0.90;
+  --carousel-opacity-active: 1;
+  --carousel-opacity-near: 0.95;
+}
+
+.carousel {
+  --vc-nav-background: rgba(255, 255, 255, 0.1);
+  --vc-nav-border-radius: 100%;
+
+  & img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+  & .carousel__next,
+      .carousel__prev {
+        inset-block-start: 22%;
+      }
+
+  & .carousel__item {
+    & .details {
+      @extend .d-flex;
+      @extend .flex-column;
+      @extend .justify-content-end;
+      position: relative;
+      top: 2.84rem;
+      z-index: 999;
+
+      @include media-breakpoint-up(lg) {
+        top: 8.2rem;
+    }
+
+      & .name {
+        @extend .display-4;
+        @extend .text-end;
+         & span {
+          @extend .m-1;
+          @extend .btn;
+          font-size: .75rem;
+          @extend .btn-light;
+          @extend .py-0;
+          @extend .px-1;
+        }
+      }
+
+      & .price {
+      //  @extend .rounded-pill;
+      //  @extend .text-bg-primary;
+      @extend .display-5;
+      @extend .text-end;
+
+        & span {
+          @extend .btn;
+          @extend .btn-primary;
+          box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .2);  
+
+          &.sales_price {
+            position: relative;
+            top: .5rem;
+            right: .5rem;
+            font-size: .75rem;
+          }
+          &.regular_price {
+            font-size: .75rem;
+          }      
+        }
+      }
+    }
+  }
+
+  & .carousel__slide {
+      opacity: var(--carousel-opacity-inactive);
+      transform: translateX(10px) rotateY(-12deg) scale(0.35);
+      //position: relative;
+      //top: -3.4rem;
+      }
+
+  & .carousel__slide--active {
+      opacity: var(--carousel-opacity-active);
+      transform: rotateY(0) scale(1.6);
+      padding: 0rem 0rem 9rem 0rem;
+      
+      @include media-breakpoint-up(xxl) {
+        transform: rotateY(0) scale(1.2);
+      }
+    }
+
+}
+
+
+
+
+
+.carousel__viewport {
+  perspective: 2000px;
+ // padding: 0rem 0rem 0rem 10rem;
+
+  @include media-breakpoint-up(lg) {
+  //  padding: 0rem 0rem 3rem 0rem;
+  }
+  @include media-breakpoint-up(xxl) {
+   // padding: 0rem 0rem 0rem 10rem;
+  }
+
+  & .carousel__track {
+    @extend .justify-content-start;
+    align-items: flex-start;
+    padding: 8rem 0 0 0;
+    @include media-breakpoint-up(xl) {
+      align-items: center;
+      
+  } 
+  }
+}
