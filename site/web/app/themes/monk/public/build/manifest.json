@@ -4,7 +4,7 @@
     "src": "editor.deps.json"
   },
   "resources/css/app.scss": {
-    "file": "assets/app-D605XlEZ.css",
+    "file": "assets/app-BQmwAjZr.css",
     "src": "resources/css/app.scss",
     "isEntry": true
   },
@@ -226,7 +226,7 @@
     "src": "resources/images/summer25_watermellon.svg"
   },
   "resources/js/app.js": {
-    "file": "assets/app-so_XOjYn.js",
+    "file": "assets/app-Bmsh2iU-.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

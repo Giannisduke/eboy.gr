@@ -133,7 +133,7 @@ import axios from "axios";
         // Pulls posts when the component is created.
         created() {
             axios
-                .get('https://simple-city.eboy.gr/wp-json/wc/v3/products?featured=true&consumer_key=ck_411069644bb7de3656fc0aa91c7b1ae647491d73&consumer_secret=cs_084bc2a33a810a4beaaf88da2cd8d9b15e8c326d')
+                .get('')
                 .then((response) => {
                     // JSON responses are automatically parsed.
                     this.products = response.data;
