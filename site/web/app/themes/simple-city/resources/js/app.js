@@ -26,10 +26,7 @@ const app = createApp(App);
 app.use(router);
 app.use(pinia);
 
-// CUSTOM DIRECTIVE
-// app.directive('html-append', (el, binding) => {
-//   el.insertAdjacentHTML('beforeend', binding.value);
-// });
+
 
 app.mount('#slider');
 
@@ -42,7 +39,6 @@ document.addEventListener('facetwp-loaded', function() {
   scrollButton.addEventListener('click', () => {
  gsap.to(window, .5, {scrollTo:{y:main_cats, offsetY:160}});
  });
-
   buttons.forEach((button) => {
     button.addEventListener('click', () => {
       bootstrap.Collapse.getOrCreateInstance(control, { toggle: true });
