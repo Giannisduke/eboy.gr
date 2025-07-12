@@ -26,8 +26,6 @@ const app = createApp(App);
 app.use(router);
 app.use(pinia);
 
-
-
 app.mount('#slider');
 
 document.addEventListener('facetwp-loaded', function() {
