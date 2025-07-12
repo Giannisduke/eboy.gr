@@ -16,8 +16,6 @@ import router from './router';
 // Import Gsap
 import { gsap } from "gsap";
 
-import { TextPlugin } from 'gsap/TextPlugin';
-
 import { ScrollTrigger } from "gsap/ScrollTrigger"; 
 
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
@@ -36,10 +34,6 @@ app.use(pinia);
 // });
 
 app.mount('#slider');
-
-
-
-
 
  document.addEventListener('facetwp-loaded', function() {
 
