@@ -33,13 +33,12 @@ app.use(pinia);
 
 app.mount('#slider');
 
- document.addEventListener('facetwp-loaded', function() {
-
+document.addEventListener('facetwp-loaded', function() {
   const scrollButton = document.querySelector('.searchbar');
   const main_cats = document.querySelector('.main_cats');
   const buttons = document.querySelectorAll('.facetwp-radio');
   const control = document.querySelector('.product-tags');
-
+  const collapse = document.querySelector('.collapse');
   scrollButton.addEventListener('click', () => {
  gsap.to(window, .5, {scrollTo:{y:main_cats, offsetY:160}});
  });
