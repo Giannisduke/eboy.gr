@@ -11,8 +11,6 @@ import { createPinia } from 'pinia';
 
 import App from './App.vue';
 import router from './router';
-
-
 // Import Gsap
 import { gsap } from "gsap";
 
