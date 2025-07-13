@@ -1,0 +1,35 @@
+.spring_logo {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1.2rem 0rem 1.2rem;
+}
+
+.spring_logo img {
+  width: 30rem;
+}
+
+.spring_bg_01 {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.embla {
+  overflow: hidden;
+}
+.embla__container {
+display: flex;
+  justify-content: center;
+  height: 70vh;
+  align-items: center;
+}
+.embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+}
