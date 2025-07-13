@@ -60,6 +60,11 @@ collect(['setup', 'filters'])
     });
 
 
+    add_filter('init', 'add_cors_header');
+function add_cors_header() {
+    header("Access-Control-Allow-Origin: *");
+}
+
     function my_own_mime_types( $mimes ) {
         $mimes['svg'] = 'image/svg+xml';
         $mimes['csv'] = 'text/csv';
