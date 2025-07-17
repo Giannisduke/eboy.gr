@@ -2,7 +2,7 @@
 web/app/plugins/*
 !web/app/plugins/.gitkeep
 web/app/mu-plugins/*/
-
+!web/app/plugins/lh-multisite-cors
 !web/app/themes/simple-city
 web/app/upgrade
 web/app/uploads/*
