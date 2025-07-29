@@ -13,6 +13,9 @@ wordpress_sites:
     - canonical: monk.eboy.gr
       redirects:
       - www.monk.eboy.gr
+    - canonical: kaloudia.eboy.gr
+      redirects:
+      - www.kaloudia.eboy.gr
     local_path: ../site
     branch: main
     repo: git@github.com:Giannisduke/eboy.gr.git

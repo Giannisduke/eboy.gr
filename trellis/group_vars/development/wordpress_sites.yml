@@ -13,6 +13,9 @@ wordpress_sites:
     - canonical: monk.eboy.test
       redirects:
       - www.monk.eboy.test
+    - canonical: kaloudia.eboy.test
+      redirects:
+      - www.kaloudia.eboy.test
     local_path: ../site
     admin_email: admin@eboy.test
     multisite:
