@@ -1,0 +1,22 @@
+
+.display-1 {
+  font-family: 'PFBagueSansPro-Black';
+}
+
+.display-2 {
+  font-family: 'PFBagueSansPro-Thin';
+}
+
+.display-3 {
+  font-family: 'PFBagueSansPro-Medium';
+}
+
+.display-4 {
+  font-family: 'PFBagueSansPro-Light';
+  @extend .py-1;
+  @extend .px-1;
+}
+
+.display-5 {
+  font-family: 'PFBagueSansPro-Bold';
+}

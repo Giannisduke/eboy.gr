@@ -1,0 +1,283 @@
+{
+  "editor.deps.json": {
+    "file": "assets/editor.deps-DxpY22xl.json",
+    "src": "editor.deps.json"
+  },
+  "resources/css/app.scss": {
+    "file": "assets/app-BQmwAjZr.css",
+    "src": "resources/css/app.scss",
+    "isEntry": true
+  },
+  "resources/css/editor.scss": {
+    "file": "assets/editor-BgWJUlXJ.css",
+    "src": "resources/css/editor.scss",
+    "isEntry": true
+  },
+  "resources/fonts/PFBagueSansPro-Black.woff2": {
+    "file": "assets/PFBagueSansPro-Black-D55QUO-N.woff2",
+    "src": "resources/fonts/PFBagueSansPro-Black.woff2"
+  },
+  "resources/fonts/PFBagueSansPro-BlackItalic.woff2": {
+    "file": "assets/PFBagueSansPro-BlackItalic-JendLUgg.woff2",
+    "src": "resources/fonts/PFBagueSansPro-BlackItalic.woff2"
+  },
+  "resources/fonts/PFBagueSansPro-Bold.woff2": {
+    "file": "assets/PFBagueSansPro-Bold-BNzjlJR2.woff2",
+    "src": "resources/fonts/PFBagueSansPro-Bold.woff2"
+  },
+  "resources/fonts/PFBagueSansPro-BoldItalic.woff2": {
+    "file": "assets/PFBagueSansPro-BoldItalic-BQbRh8hq.woff2",
+    "src": "resources/fonts/PFBagueSansPro-BoldItalic.woff2"
+  },
+  "resources/fonts/PFBagueSansPro-ExtraThin.woff2": {
+    "file": "assets/PFBagueSansPro-ExtraThin-aKkghXfR.woff2",
+    "src": "resources/fonts/PFBagueSansPro-ExtraThin.woff2"
+  },
+  "resources/fonts/PFBagueSansPro-ExtraThinItalic.woff2": {
+    "file": "assets/PFBagueSansPro-ExtraThinItalic-DTpP2yN-.woff2",
+    "src": "resources/fonts/PFBagueSansPro-ExtraThinItalic.woff2"
+  },
+  "resources/fonts/PFBagueSansPro-Italic.woff2": {
+    "file": "assets/PFBagueSansPro-Italic-MEp09iFH.woff2",
+    "src": "resources/fonts/PFBagueSansPro-Italic.woff2"
+  },
+  "resources/fonts/PFBagueSansPro-Light.woff2": {
+    "file": "assets/PFBagueSansPro-Light-BErULryR.woff2",
+    "src": "resources/fonts/PFBagueSansPro-Light.woff2"
+  },
+  "resources/fonts/PFBagueSansPro-LightItalic.woff2": {
+    "file": "assets/PFBagueSansPro-LightItalic-D50Hu8bY.woff2",
+    "src": "resources/fonts/PFBagueSansPro-LightItalic.woff2"
+  },
+  "resources/fonts/PFBagueSansPro-Medium.woff2": {
+    "file": "assets/PFBagueSansPro-Medium-CKDZUXxg.woff2",
+    "src": "resources/fonts/PFBagueSansPro-Medium.woff2"
+  },
+  "resources/fonts/PFBagueSansPro-MediumItalic.woff2": {
+    "file": "assets/PFBagueSansPro-MediumItalic-CGzXCzzC.woff2",
+    "src": "resources/fonts/PFBagueSansPro-MediumItalic.woff2"
+  },
+  "resources/fonts/PFBagueSansPro-Thin.woff2": {
+    "file": "assets/PFBagueSansPro-Thin-CDY9bd0n.woff2",
+    "src": "resources/fonts/PFBagueSansPro-Thin.woff2"
+  },
+  "resources/fonts/PFBagueSansPro-ThinItalic.woff2": {
+    "file": "assets/PFBagueSansPro-ThinItalic-CC45BkgD.woff2",
+    "src": "resources/fonts/PFBagueSansPro-ThinItalic.woff2"
+  },
+  "resources/fonts/PFBagueSansPro-UltraBlack.woff2": {
+    "file": "assets/PFBagueSansPro-UltraBlack-CKspm5yW.woff2",
+    "src": "resources/fonts/PFBagueSansPro-UltraBlack.woff2"
+  },
+  "resources/fonts/PFBagueSansPro-UltraBlackItalic.woff2": {
+    "file": "assets/PFBagueSansPro-UltraBlackItalic-C0MxOWo8.woff2",
+    "src": "resources/fonts/PFBagueSansPro-UltraBlackItalic.woff2"
+  },
+  "resources/fonts/PFBagueSansPro.woff2": {
+    "file": "assets/PFBagueSansPro-Plw73fMn.woff2",
+    "src": "resources/fonts/PFBagueSansPro.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-Black.woff2": {
+    "file": "assets/PFEncoreSansPro-Black-QrqLLRKs.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-Black.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-BlackItalic.woff2": {
+    "file": "assets/PFEncoreSansPro-BlackItalic-I-00mHmd.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-BlackItalic.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-Bold.woff2": {
+    "file": "assets/PFEncoreSansPro-Bold-vxrFEimH.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-Bold.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-BoldItalic.woff2": {
+    "file": "assets/PFEncoreSansPro-BoldItalic-DG3jam27.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-BoldItalic.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-Book.woff2": {
+    "file": "assets/PFEncoreSansPro-Book-Ct_bWD3L.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-Book.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-BookItalic.woff2": {
+    "file": "assets/PFEncoreSansPro-BookItalic-Cx66YIqa.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-BookItalic.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-ExtraThin.woff2": {
+    "file": "assets/PFEncoreSansPro-ExtraThin-BQ92x7aC.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-ExtraThin.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-ExtraThinItalic.woff2": {
+    "file": "assets/PFEncoreSansPro-ExtraThinItalic-DolvVruq.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-ExtraThinItalic.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-Italic.woff2": {
+    "file": "assets/PFEncoreSansPro-Italic-Ynm9EkSw.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-Italic.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-Light.woff2": {
+    "file": "assets/PFEncoreSansPro-Light-CaVz7QFa.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-Light.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-LightItalic.woff2": {
+    "file": "assets/PFEncoreSansPro-LightItalic-56jDAO-8.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-LightItalic.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-Medium.woff2": {
+    "file": "assets/PFEncoreSansPro-Medium-YinfnpD9.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-Medium.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-MediumItalic.woff2": {
+    "file": "assets/PFEncoreSansPro-MediumItalic-cwkvG9nQ.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-MediumItalic.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-Regular.woff2": {
+    "file": "assets/PFEncoreSansPro-Regular-BoFJ0gSu.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-Regular.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-Thin.woff2": {
+    "file": "assets/PFEncoreSansPro-Thin-p5jfid9y.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-Thin.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-ThinItalic.woff2": {
+    "file": "assets/PFEncoreSansPro-ThinItalic-LDk5nJZK.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-ThinItalic.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-UltraBlack.woff2": {
+    "file": "assets/PFEncoreSansPro-UltraBlack-DZDRXKfw.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-UltraBlack.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-UltraBlackItalic.woff2": {
+    "file": "assets/PFEncoreSansPro-UltraBlackItalic-BTziHsUW.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-UltraBlackItalic.woff2"
+  },
+  "resources/fonts/PFEncoreSansPro-UltraThin.woff2": {
+    "file": "assets/PFEncoreSansPro-UltraThin-BpyvpuPz.woff2",
+    "src": "resources/fonts/PFEncoreSansPro-UltraThin.woff2"
+  },
+  "resources/images/bathroom.svg": {
+    "file": "assets/bathroom-H5gpXJb4.svg",
+    "src": "resources/images/bathroom.svg"
+  },
+  "resources/images/bedroom.svg": {
+    "file": "assets/bedroom-Bh8B20E2.svg",
+    "src": "resources/images/bedroom.svg"
+  },
+  "resources/images/dot_01.svg": {
+    "file": "assets/dot_01-C4PqDswB.svg",
+    "src": "resources/images/dot_01.svg"
+  },
+  "resources/images/dot_02.svg": {
+    "file": "assets/dot_02-i81xXVRD.svg",
+    "src": "resources/images/dot_02.svg"
+  },
+  "resources/images/garden.svg": {
+    "file": "assets/garden-D5g2VUHZ.svg",
+    "src": "resources/images/garden.svg"
+  },
+  "resources/images/kitchen.svg": {
+    "file": "assets/kitchen-CWGgO1IH.svg",
+    "src": "resources/images/kitchen.svg"
+  },
+  "resources/images/logo_10_a.svg": {
+    "file": "assets/logo_10_a-BttFqjtV.svg",
+    "src": "resources/images/logo_10_a.svg"
+  },
+  "resources/images/logo_11_o.svg": {
+    "file": "assets/logo_11_o-DyZcA_CP.svg",
+    "src": "resources/images/logo_11_o.svg"
+  },
+  "resources/images/logo_12_f.svg": {
+    "file": "assets/logo_12_f-CdRp4sAc.svg",
+    "src": "resources/images/logo_12_f.svg"
+  },
+  "resources/images/logo_1_h.svg": {
+    "file": "assets/logo_1_h-C_2Dj1EE.svg",
+    "src": "resources/images/logo_1_h.svg"
+  },
+  "resources/images/logo_2_e.svg": {
+    "file": "assets/logo_2_e-BhE4z580.svg",
+    "src": "resources/images/logo_2_e.svg"
+  },
+  "resources/images/logo_3_l.svg": {
+    "file": "assets/logo_3_l-BPDbUS78.svg",
+    "src": "resources/images/logo_3_l.svg"
+  },
+  "resources/images/logo_4_l.svg": {
+    "file": "assets/logo_4_l-BnnTFm4S.svg",
+    "src": "resources/images/logo_4_l.svg"
+  },
+  "resources/images/logo_5_o.svg": {
+    "file": "assets/logo_5_o-CMBbFt9G.svg",
+    "src": "resources/images/logo_5_o.svg"
+  },
+  "resources/images/logo_5b_spacer.svg": {
+    "file": "assets/logo_5b_spacer-DLc_oy3d.svg",
+    "src": "resources/images/logo_5b_spacer.svg"
+  },
+  "resources/images/logo_6_s.svg": {
+    "file": "assets/logo_6_s-Dm005wxM.svg",
+    "src": "resources/images/logo_6_s.svg"
+  },
+  "resources/images/logo_6b_s.svg": {
+    "file": "assets/logo_6b_s-s8KfU0K9.svg",
+    "src": "resources/images/logo_6b_s.svg"
+  },
+  "resources/images/logo_7_u.svg": {
+    "file": "assets/logo_7_u-CHn_ediO.svg",
+    "src": "resources/images/logo_7_u.svg"
+  },
+  "resources/images/logo_8_m.svg": {
+    "file": "assets/logo_8_m-C4NOhBmL.svg",
+    "src": "resources/images/logo_8_m.svg"
+  },
+  "resources/images/logo_9_r.svg": {
+    "file": "assets/logo_9_r-ZnHg79ol.svg",
+    "src": "resources/images/logo_9_r.svg"
+  },
+  "resources/images/logo_9b_r.svg": {
+    "file": "assets/logo_9b_r-78Z7EtQC.svg",
+    "src": "resources/images/logo_9b_r.svg"
+  },
+  "resources/images/monk-logo.svg": {
+    "file": "assets/monk-logo-DsXoQHIB.svg",
+    "src": "resources/images/monk-logo.svg"
+  },
+  "resources/images/office.svg": {
+    "file": "assets/office-zTi99C67.svg",
+    "src": "resources/images/office.svg"
+  },
+  "resources/images/sale.svg": {
+    "file": "assets/sale-DAfT-E5p.svg",
+    "src": "resources/images/sale.svg"
+  },
+  "resources/images/saloni.svg": {
+    "file": "assets/saloni-hVbrlUkY.svg",
+    "src": "resources/images/saloni.svg"
+  },
+  "resources/images/slider_001.png": {
+    "file": "assets/slider_001-D6eEIFHf.png",
+    "src": "resources/images/slider_001.png"
+  },
+  "resources/images/summer25_logo.svg": {
+    "file": "assets/summer25_logo-CsgNCGSC.svg",
+    "src": "resources/images/summer25_logo.svg"
+  },
+  "resources/images/summer25_watermellon.svg": {
+    "file": "assets/summer25_watermellon-BClo5Ju8.svg",
+    "src": "resources/images/summer25_watermellon.svg"
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-Bmsh2iU-.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "css": [
+      "assets/app-B3i0i6f-.css"
+    ]
+  },
+  "resources/js/editor.js": {
+    "file": "assets/editor-CfU4GbSP.js",
+    "name": "editor",
+    "src": "resources/js/editor.js",
+    "isEntry": true
+  }
+}
