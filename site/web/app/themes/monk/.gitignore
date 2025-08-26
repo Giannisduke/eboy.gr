@@ -1,7 +1,0 @@
-/node_modules
-/vendor
-/plugins/*
-!/public/*
-!/public/.gitkeep
-.env
-npm-debug.log
