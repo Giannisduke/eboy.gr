@@ -4,6 +4,7 @@ web/app/plugins/*
 web/app/mu-plugins/*/
 !web/app/plugins/lh-multisite-cors
 !web/app/plugins/enable-cors
+!web/app/plugins/facetwp
 !web/app/themes/simple-city
 web/app/upgrade
 web/app/uploads/*
