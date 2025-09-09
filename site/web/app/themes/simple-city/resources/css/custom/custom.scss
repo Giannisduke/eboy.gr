@@ -427,6 +427,12 @@ body {
 
             & .products {
                 @include make-row();
+
+                justify-content: center !important;
+
+                @include media-breakpoint-up(sm) {
+                    justify-content: space-between !important;
+                }
              //   @extend .row-cols-1;
              //   @extend .row-cols-md-5;
                   @extend .p-0;
