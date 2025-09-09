@@ -2,3 +2,24 @@ location = https://eboy.gr/app/themes/simple-city/public/build/assets/app-IBbg4m
   add_header "Access-Control-Allow-Origin" "*" always;
 }
 
+location = https://simple-city.eboy.gr/wp-json/wc/v3/products?featured=true&consumer_key=ck_5d8a95b30ef429cb8ef4c33c7a69e46a1e2ef3ae&consumer_secret=cs_45e0c75bcf6d54396fc3d896e180aa90300495af {
+  add_header "Access-Control-Allow-Origin" "*" always;
+}
+
+location /wp-json/ {
+    if ($request_method = 'OPTIONS') {
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'Authorization,Content-Type';
+        add_header 'Access-Control-Max-Age' 1728000;
+        add_header 'Content-Type' 'text/plain charset=UTF-8';
+        add_header 'Content-Length' 0;
+        return 204;
+    }
+
+    add_header 'Access-Control-Allow-Origin' '*';
+    add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+    add_header 'Access-Control-Allow-Headers' 'Authorization,Content-Type';
+
+    try_files $uri $uri/ /index.php?$args;
+}
