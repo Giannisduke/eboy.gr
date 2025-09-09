@@ -148,7 +148,7 @@ Config::define('BLOG_ID_CURRENT_SITE', env('BLOG_ID_CURRENT_SITE') ?: 1);
  * (Optional) Constants to help with assigning custom domains and prevent redirect login loops
  */
 Config::define('ADMIN_COOKIE_PATH', '/');
-Config::define('COOKIE_DOMAIN', '');
+Config::define('COOKIE_DOMAIN', env('DOMAIN_CURRENT_SITE'));
 Config::define('COOKIEPATH', '');
 Config::define('SITECOOKIEPATH', ''); 
 
