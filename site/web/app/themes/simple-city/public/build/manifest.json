@@ -4,7 +4,7 @@
     "src": "editor.deps.json"
   },
   "resources/css/app.scss": {
-    "file": "assets/app-7u-srgBa.css",
+    "file": "assets/app-BMGfVJHN.css",
     "src": "resources/css/app.scss",
     "isEntry": true
   },
@@ -184,6 +184,18 @@
   "resources/images/slider_001.png": {
     "file": "assets/slider_001-D6eEIFHf.png",
     "src": "resources/images/slider_001.png"
+  },
+  "resources/images/view_large.svg": {
+    "file": "assets/view_large-CIKfZ5J7.svg",
+    "src": "resources/images/view_large.svg"
+  },
+  "resources/images/view_normal.svg": {
+    "file": "assets/view_normal-D01sLeWB.svg",
+    "src": "resources/images/view_normal.svg"
+  },
+  "resources/images/view_small.svg": {
+    "file": "assets/view_small-BUyydQsK.svg",
+    "src": "resources/images/view_small.svg"
   },
   "resources/js/app.js": {
     "file": "assets/app-Dd54M82o.js",
