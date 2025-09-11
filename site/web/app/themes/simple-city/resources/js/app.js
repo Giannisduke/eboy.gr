@@ -45,6 +45,7 @@ document.addEventListener('facetwp-loaded', function() {
 });
 
 const grid_2 = document.getElementById('grid_2');
+const grid_4 = document.getElementById('grid_4');
 const grid_6 = document.getElementById('grid_6');
 const targets = document.getElementsByClassName('product');
 

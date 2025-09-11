@@ -442,7 +442,7 @@ body {
                 & .product {
                    @extend .d-flex; 
                    @extend .flex-column;
-                   @extend .px-3;
+                   @extend .px-1;
                    @extend .pt-5;
                    @extend .align-items-end;
 
@@ -456,14 +456,14 @@ body {
                     }
 
                     &.view_small {
-                    @include make-col(6);
+                    @include make-col(12);
                     @include media-breakpoint-up(lg) {
                         @include make-col(6);
                     }
                     }
 
                     &.view_large {
-                    @include make-col(6);
+                    @include make-col(4);
                     @include media-breakpoint-up(lg) {
                         @include make-col(2);
                     }

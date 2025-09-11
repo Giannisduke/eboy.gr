@@ -327,6 +327,32 @@ section {
                 @include media-breakpoint-up(sm) {
                     @include make-col(6);
                 }
+                & button {
+                all: unset;
+                display: inline-block;
+                cursor: pointer;
+                outline: revert;
+                }
+                & :nth-child(1) {
+                //@extend .test;
+                width: 27px;
+                height: 13px;
+                background: url("../images/view_small.svg") no-repeat center center;
+                }
+
+                & :nth-child(2) {
+                //@extend .test;
+                width: 56px;
+                height: 13px;
+                background: url("../images/view_normal.svg") no-repeat center center;
+                }
+
+                & :nth-child(3) {
+                //@extend .test;
+                width: 86px;
+                height: 13px;
+                background: url("../images/view_large.svg") no-repeat center center;
+                }
             }
             & .facetwp-facet {
                 @include make-col-ready();
