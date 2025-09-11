@@ -98,9 +98,22 @@ add_filter( 'facetwp_facet_display_value', function( $label, $params ) {
     return $label;
   }, 20, 2 );
 
+add_filter( 'facetwp_index_row', function( $params, $class ) {
+    if ( 'product_categories' == $params['facet_name'] ) { // Αντικαταστήστε με το όνομα του facet σας
+        $excluded_terms = [ 'Uncategorized' ]; // Η κατηγορία που θέλετε να αποκρύψετε
+        if ( in_array( $params['facet_display_value'], $excluded_terms ) ) {
+            $params['facet_value'] = ''; // Αποκλείει την κατηγορία από το facet
+        }
+    }
+    return $params;
+}, 10, 2 );
+
+
   add_filter('wp_image_editors', 'fi_force_imagick');
 
-// Disable Woocommerce setup_wizard
+
+
+  // Disable Woocommerce setup_wizard
 add_filter( 'woocommerce_prevent_automatic_wizard_redirect', '__return_true' );
 
 

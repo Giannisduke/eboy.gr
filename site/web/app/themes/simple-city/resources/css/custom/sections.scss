@@ -185,7 +185,7 @@ section {
     &.main_cats {
                 @include make-container();
                // max-width: 1400px;
-              /// background: $third;
+               background: $third;
 
                 & nav {
                     @include make-row();
@@ -211,13 +211,20 @@ section {
                 & .cat_menu_wrapper {
                     @include make-container();
                     max-width: 1440px;
+                    background: $white;
                     @extend .d-flex;
-                     @extend .overflow-x-scroll;
+                     @extend .overflow-x-auto;
+                     @extend .px-0;
+
+                    & .sale {
+                        margin-right: 0.1rem;
+                        background: $third;
+                    }
 
                     & .facetwp-facet {
                        @extend .d-flex;
                         @extend .px-0;
-                        @extend .py-2;
+                        @extend .py-0;
                         @extend .justify-content-between;
                         @extend .flex-nowrap;
                         background: $white;
@@ -226,13 +233,16 @@ section {
 
                         & .facetwp-radio {
                             @extend .px-3;
-
+                            //@extend .mx-1;
+                            margin-left: 0.1rem;
+                            margin-right: 0.1rem;
                             @extend .d-flex;
                             @extend .align-items-center;
+                            @extend .justify-content-center;
                             @extend .flex-fill;
-                            @extend .text-center;
-                           //background: $third;
-                            border-radius:  9999px;
+                           // @extend .text-center;
+                            background: $third;
+                            //border-radius:  9999px;
 
                           //  width: 66px;
 
@@ -255,10 +265,12 @@ section {
 
                                     & .cat_image {
                                           margin: 1rem 0 0 0;
+                                          @extend .text-center;
                                     }
 
                                      & .cat_name {
                                         padding: 1.25rem 0 1.25rem 0;
+                                        @extend .text-center;
                                     }
 
                                 }

@@ -44,4 +44,42 @@ document.addEventListener('facetwp-loaded', function() {
   });
 });
 
+const grid_2 = document.getElementById('grid_2');
+const grid_6 = document.getElementById('grid_6');
+const targets = document.getElementsByClassName('product');
 
+if (grid_2) {
+    grid_2.onclick = function() {
+        const newValue = grid_2.getAttribute('data-value');
+        if (!newValue) return;
+
+        for (let i = 0; i < targets.length; i++) {
+            targets[i].classList.remove('view_large', 'view_normal');
+            targets[i].classList.add(newValue);
+        }
+    };
+}
+
+if (grid_4) {
+    grid_4.onclick = function() {
+        const newValue = grid_4.getAttribute('data-value');
+        if (!newValue) return;
+
+        for (let i = 0; i < targets.length; i++) {
+            targets[i].classList.remove('view_large', 'view_small');
+            targets[i].classList.add(newValue);
+        }
+    };
+}
+
+if (grid_6) {
+    grid_6.onclick = function() {
+        const newValue = grid_6.getAttribute('data-value');
+        if (!newValue) return;
+
+        for (let i = 0; i < targets.length; i++) {
+            targets[i].classList.remove('view_normal', 'view_small');
+            targets[i].classList.add(newValue);
+        }
+    };
+}

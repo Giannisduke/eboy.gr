@@ -1,9 +1,13 @@
 <section class="shop">
 	<div class="row test">
-	Test
+		<button id="grid_2" data-value="view_small">x2</button>
+		<button id="grid_4" data-value="view_normal">x4</button>
+		<button id="grid_6" data-value="view_large">x6</button>
+
+@php echo facetwp_display( 'facet', 'sort_products' ); @endphp
 
 	</div>
-	<div class="products facetwp-template ">
+	<ul class="products facetwp-template ">
 
 
 		<?php
@@ -53,5 +57,5 @@
 
 		?>
 
-	</div><!-/.facet->
+		</ul><!-/.facet->
 </section>

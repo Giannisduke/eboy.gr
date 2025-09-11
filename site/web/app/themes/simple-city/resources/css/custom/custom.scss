@@ -431,7 +431,7 @@ body {
                 justify-content: center !important;
 
                 @include media-breakpoint-up(sm) {
-                    justify-content: space-between !important;
+                    justify-content: flex-start !important;
                 }
              //   @extend .row-cols-1;
              //   @extend .row-cols-md-5;
@@ -446,6 +446,28 @@ body {
                    @extend .pt-5;
                    @extend .align-items-end;
 
+                   @include make-col-ready();
+
+                    &.view_normal {
+                    @include make-col(6);
+                    @include media-breakpoint-up(lg) {
+                        @include make-col(3);
+                    }
+                    }
+
+                    &.view_small {
+                    @include make-col(6);
+                    @include media-breakpoint-up(lg) {
+                        @include make-col(6);
+                    }
+                    }
+
+                    &.view_large {
+                    @include make-col(6);
+                    @include media-breakpoint-up(lg) {
+                        @include make-col(2);
+                    }
+                    }
 
 
                     & .color {
