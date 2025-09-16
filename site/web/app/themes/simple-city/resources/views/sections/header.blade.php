@@ -16,7 +16,10 @@
           @endif
             <div class="searchbar"> 
         
-              @php echo facetwp_display( 'facet', 'search' ); @endphp
+              @php if ( is_front_page() ) {
+                  # code...
+                  echo facetwp_display( 'facet', 'search' ); 
+              }@endphp
          
               <div class="selections">
               @php echo facetwp_display( 'selections' ); @endphp

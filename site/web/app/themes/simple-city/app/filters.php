@@ -58,6 +58,22 @@ add_filter( 'facetwp_facet_display_value', function( $label, $params ) {
   return $label;
 }, 10, 2 );
 
+// Facet images for labels on main category facet
+add_filter( 'facetwp_facet_display_value', function( $label, $params ) {
+ 
+  // Only apply to a facet named "vehicle_type"
+  if ( 'sales' == $params['facet']['name'] ) { // Repace "vehicle_type" with the name of your facet
+ 
+    // Get the raw value
+    $val = $params['row']['facet_value'];
+ 
+    // Use the raw value to generate the image URL
+    $label = '<div class="cat_image"><img src="/app/themes/simple-city/resources/images/sales.svg" alt="{val}" /></div>';
+    $label = str_replace( '{val}', $val, $label );
+  }
+  return $label;
+}, 20, 2 );
+
 
 // Facet images for labels on main category facet
 add_filter( 'facetwp_facet_display_value', function( $label, $params ) {
@@ -109,7 +125,8 @@ add_filter( 'facetwp_index_row', function( $params, $class ) {
 }, 10, 2 );
 
 
-  add_filter('wp_image_editors', 'fi_force_imagick');
+
+add_filter('wp_image_editors', 'fi_force_imagick');
 
 
 

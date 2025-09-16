@@ -4,7 +4,7 @@
     "src": "editor.deps.json"
   },
   "resources/css/app.scss": {
-    "file": "assets/app-Dkcy3Gaq.css",
+    "file": "assets/app-D_OTxpA1.css",
     "src": "resources/css/app.scss",
     "isEntry": true
   },
@@ -177,6 +177,10 @@
     "file": "assets/office-zTi99C67.svg",
     "src": "resources/images/office.svg"
   },
+  "resources/images/sales.svg": {
+    "file": "assets/sales-9FCY2qef.svg",
+    "src": "resources/images/sales.svg"
+  },
   "resources/images/saloni.svg": {
     "file": "assets/saloni-hVbrlUkY.svg",
     "src": "resources/images/saloni.svg"
@@ -189,16 +193,28 @@
     "file": "assets/view_large-CIKfZ5J7.svg",
     "src": "resources/images/view_large.svg"
   },
+  "resources/images/view_large_s.svg": {
+    "file": "assets/view_large_s-XAfbBv5t.svg",
+    "src": "resources/images/view_large_s.svg"
+  },
   "resources/images/view_normal.svg": {
-    "file": "assets/view_normal-D01sLeWB.svg",
+    "file": "assets/view_normal-CvCMHJMA.svg",
     "src": "resources/images/view_normal.svg"
+  },
+  "resources/images/view_normal_s.svg": {
+    "file": "assets/view_normal_s-BTelVWBa.svg",
+    "src": "resources/images/view_normal_s.svg"
   },
   "resources/images/view_small.svg": {
     "file": "assets/view_small-BUyydQsK.svg",
     "src": "resources/images/view_small.svg"
   },
+  "resources/images/view_small_s.svg": {
+    "file": "assets/view_small_s-D171-pXS.svg",
+    "src": "resources/images/view_small_s.svg"
+  },
   "resources/js/app.js": {
-    "file": "assets/app-D4Nfmjez.js",
+    "file": "assets/app-BaJ8QS8M.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

@@ -16,6 +16,7 @@
     "translate:mo": "wp i18n make-mo ./resources/lang ./resources/lang"
   },
   "devDependencies": {
+    "@rollup/plugin-inject": "^5.0.5",
     "@roots/vite-plugin": "^1.0.2",
     "@vitejs/plugin-vue": "^5.2.3",
     "laravel-vite-plugin": "^1.2.0",
@@ -33,7 +34,9 @@
     "@primeuix/themes": "^1.0.0",
     "axios": "^1.8.4",
     "bootstrap": "^5.3.3",
+    "flexslider": "^2.7.2",
     "gsap": "^3.12.7",
+    "jquery": "^3.7.1",
     "pinia": "^3.0.2",
     "primevue": "^4.3.3",
     "vue": "^3.5.13",

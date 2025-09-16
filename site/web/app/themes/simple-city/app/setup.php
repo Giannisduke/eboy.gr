@@ -140,6 +140,9 @@ add_action('after_setup_theme', function () {
      * @link https://github.com/woocommerce/woocommerce/wiki/Declaring-WooCommerce-support-in-themes#basic-usage
      */
     add_theme_support('woocommerce');
+        add_theme_support( 'wc-product-gallery-zoom' ); // Μεγέθυνση εικόνας στη gallery
+    add_theme_support( 'wc-product-gallery-lightbox' ); // Lightbox για gallery
+    add_theme_support( 'wc-product-gallery-slider' ); // Ενεργοποίηση slider στη gallery προϊόντος
 
     add_action( 'init', function() {
     update_option( 'woocommerce_setup_complete', 'yes' );

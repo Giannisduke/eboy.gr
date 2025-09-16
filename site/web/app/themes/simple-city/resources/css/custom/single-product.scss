@@ -1,0 +1,74 @@
+.single-product {
+    & .product {
+        @include make-row($gutter: $grid-gutter-width);
+        margin: 5rem 0 0 0;
+
+        & .image_wrapper {
+            @include make-col-ready();
+
+            @include media-breakpoint-up(sm) {
+                @include make-col(6);
+            }
+
+            & .image_inner {
+                 @include make-row($gutter: $grid-gutter-width);
+            
+                    & .onsale {
+                        @include make-col-ready();
+
+                        @include media-breakpoint-up(sm) {
+                            @include make-col(12);
+                        }
+                        @include media-breakpoint-up(lg) {
+                            @include make-col(12);
+                        }
+                        @extend .text-end;
+                    }
+
+                    & .woocommerce-product-gallery {
+                        @include make-col-ready();
+
+                        @include media-breakpoint-up(sm) {
+                            @include make-col(12);
+                        }
+                        @include media-breakpoint-up(lg) {
+                            @include make-col(12);
+                        }
+                        @extend .text-center;
+                        & img {
+                            @extend .img-fluid;
+                        }
+
+                        & ol {
+                            @extend .list-inline;
+
+                            & li {
+                                @extend .list-inline-item;
+                                margin: 0 .2rem;
+                                cursor: pointer;
+
+                                & img {
+                                    @extend .img-fluid;
+                                    border: 2px solid $fourth;
+                                    padding: .2rem;
+                                    max-width: 4rem;
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+
+        }
+
+
+        & .summary {
+            @include make-col-ready();
+
+            @include media-breakpoint-up(sm) {
+                @include make-col(6);
+            }
+        }
+    }
+}

@@ -217,6 +217,7 @@ section {
                      @extend .px-0;
 
                     & .sale {
+                        @extend .d-flex;
                         margin-right: 0.1rem;
                         background: $third;
                     }
@@ -231,12 +232,28 @@ section {
                        
                         @extend .flex-grow-1;
 
+                        &.facetwp-facet-product_categories {
+                            
+                            & .facetwp-counter {
+                                @extend .ms-auto;
+                                @extend .d-flex;
+                                @extend .justify-content-end;
+                              //  @extend .w-100;
+                                //@extend .pe-3;
+                                @extend .mt-2;
+                                @extend .me-4;
+                                background: $secondary;
+                                font-size: .8rem;
+                                border-radius: 50%;
+                            }
+                        }
                         & .facetwp-radio {
                             @extend .px-3;
                             //@extend .mx-1;
                             margin-left: 0.1rem;
                             margin-right: 0.1rem;
                             @extend .d-flex;
+                            @extend .flex-column;
                             @extend .align-items-center;
                             @extend .justify-content-center;
                             @extend .flex-fill;
@@ -264,7 +281,7 @@ section {
                                     @extend .justify-content-center;
 
                                     & .cat_image {
-                                          margin: 1rem 0 0 0;
+                                          //margin: 1rem 0 0 0;
                                           @extend .text-center;
                                     }
 
@@ -275,13 +292,12 @@ section {
 
                                 }
 
-
                             &.checked {
-                                background: #000;
-                                border: 2px solid $secondary;
+                              //  background: #000;
+                              //  border: 2px solid $secondary;
 
                                 @include media-breakpoint-up(lg) {
-                                    background: $primary;
+                                    background: $white;
                                 }
 
                                 & .cat_image {
@@ -291,7 +307,7 @@ section {
                                 }
 
                                 & .cat_name {
-                                    color: $white;
+                                 //   color: $white;
                                 }
                             }
 
@@ -306,7 +322,7 @@ section {
                             }
 
                             & .facetwp-counter {
-                                display: none;
+                              //  display: none;
                             }
                         }
                     }
@@ -338,6 +354,10 @@ section {
                 width: 27px;
                 height: 13px;
                 background: url("../images/view_small.svg") no-repeat center center;
+
+                    &.selected {
+                        background: url("../images/view_small_s.svg") no-repeat center center;
+                    }
                 }
 
                 & :nth-child(2) {
@@ -345,6 +365,9 @@ section {
                 width: 56px;
                 height: 13px;
                 background: url("../images/view_normal.svg") no-repeat center center;
+                     &.selected {
+                        background: url("../images/view_normal_s.svg") no-repeat center center;
+                    }
                 }
 
                 & :nth-child(3) {
@@ -352,6 +375,10 @@ section {
                 width: 86px;
                 height: 13px;
                 background: url("../images/view_large.svg") no-repeat center center;
+
+                    &.selected {
+                        background: url("../images/view_large_s.svg") no-repeat center center;
+                    }
                 }
             }
             & .facetwp-facet {
@@ -361,6 +388,12 @@ section {
                     @include make-col(6);
                 }
                 @extend .text-end;
+
+                & select {
+                    @extend .form-select;
+                    @extend .w-auto;
+                    @extend .ms-auto;
+                }
             }
         }
     }

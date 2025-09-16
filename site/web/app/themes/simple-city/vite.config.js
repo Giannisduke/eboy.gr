@@ -4,7 +4,9 @@ import laravel from 'laravel-vite-plugin'
 import { wordpressPlugin, wordpressThemeJson } from '@roots/vite-plugin';
 import vue from '@vitejs/plugin-vue'
 
+
 export default defineConfig({
+
   base: '/app/themes/simple-city/public/build/',
   plugins: [
    // tailwindcss(),

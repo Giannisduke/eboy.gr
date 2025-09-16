@@ -114,8 +114,15 @@ add_action( 'woocommerce_before_shop_loop', function() {
     
 }, 4);
 
+function open_woocommerce_product_image() { 
+    echo '<div class="image_wrapper"><div class="image_inner">';
+}
+add_action( 'woocommerce_before_single_product_summary', 'open_woocommerce_product_image', 5);
 
-
+function close_woocommerce_catalog_ordering() { 
+    echo '</div></div>';
+}
+add_action( 'woocommerce_before_single_product_summary', 'close_woocommerce_catalog_ordering', 25);
 
 add_action ( 'simple_product_loop', function() {
                 $args = array( 'post_type' => 'product' );
@@ -154,7 +161,7 @@ function category_single_product(){
 
 <?php }
 }
-//add_action( 'woocommerce_after_shop_loop_item', 'category_single_product', 25 );
+add_action( 'woocommerce_after_shop_loop_item', 'category_single_product', 25 );
 
 
 

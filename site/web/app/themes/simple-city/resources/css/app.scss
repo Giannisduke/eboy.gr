@@ -34,7 +34,7 @@ $font-size-base:             1rem;
 $font-family-base:          'PFBagueSansPro';
 
 $white: #fff;
-$primary: #010101;
+$primary: #0E0C0A;
 $secondary: #fff200;
 $third: #F5F5F5; 
 //$secondary: rgba(var(--#{$prefix}emphasis-color-rgb), .65) !default;
@@ -94,6 +94,7 @@ p {
 @import "bootstrap/scss/nav";
 @import "bootstrap/scss/navbar";
 //@import "bootstrap/scss/carousel";
+@import './custom/carousel.scss';
 
 
 //@import "bootstrap/scss/card";
@@ -113,6 +114,7 @@ p {
 @import './custom/facetcolor.scss';
 @import './custom/forms.scss';
 @import './custom/vue3_carousel.scss';
-@import './custom/nouislider.scss';
+//@import './custom/nouislider.scss';
+@import './custom/single-product.scss';
 
 @import './custom/mixins.scss';
