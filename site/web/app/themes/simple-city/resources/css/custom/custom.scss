@@ -573,7 +573,7 @@ body {
                      //   @extend .mt-auto;
                         @extend .d-flex;
                         @extend .flex-column;
-                        @extend .pt-2;
+                        @extend .pt-3;
                         @extend .w-100;
 
                         & .info {
@@ -582,7 +582,52 @@ body {
 
                             & h3 {
                                 display: inline;
-                            }    
+                            }  
+                            
+                            & .price {
+                                @extend .d-flex;
+                                @extend .flex-column;
+
+
+                                & del {
+                                    color: $primary;
+
+                                     & .woocommerce-Price-amount {
+                                        @extend .d-flex;
+                                        @extend .flex-column;
+
+
+                                                                        
+                                        & bdi {
+                                             @extend .d-flex;
+                                             @extend .justify-content-end;
+                                             color: $primary;
+                                             font-size: .8rem;
+                                         }
+                                     }
+                                }
+
+                                & ins {
+                                    @extend .d-flex;
+                                    @extend .align-items-end;
+
+                                    text-decoration: none;
+                                  
+                                    & .woocommerce-Price-amount {
+                                        @extend .d-flex;
+                                        @extend .align-items-end;
+
+                                          & bdi {
+                                             @extend .d-flex;
+                                             @extend .align-items-end;
+                                             color: $primary;
+                                             font-size: 1rem;
+                                             letter-spacing: .002rem;
+                                         }
+                                    }
+         
+                                }
+                            }
                         }
 
                     }

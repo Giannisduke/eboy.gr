@@ -161,7 +161,7 @@ function category_single_product(){
 
 <?php }
 }
-add_action( 'woocommerce_after_shop_loop_item', 'category_single_product', 25 );
+//add_action( 'woocommerce_after_shop_loop_item', 'category_single_product', 25 );
 
 
 
@@ -325,7 +325,7 @@ function compress_and_convert_images_to_webp($file) {
         'type' => 'image/webp',
     ];
 }
-//add_filter('wp_handle_upload', 'compress_and_convert_images_to_webp');
+add_filter('wp_handle_upload', 'compress_and_convert_images_to_webp');
 
 
 
