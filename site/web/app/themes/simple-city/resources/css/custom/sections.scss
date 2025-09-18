@@ -401,4 +401,8 @@ section {
     &.controls {
         max-width: 1440px;
     }
+
+    &.related {
+        @extend .py-5;
+    }
 }

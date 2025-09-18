@@ -41,6 +41,9 @@ $third: #F5F5F5;
 $fourth: #939598;
 
 $enable-shadows:              true !default;
+:root {
+  --bs-border-radius: 0.15rem; /* ή άλλη τιμή */
+}
 
 $display-font-sizes: (
   1: 5rem,
