@@ -12,17 +12,19 @@
 
             & .image_inner {
                  @include make-row($gutter: $grid-gutter-width);
+                 @extend .justify-content-end;
             
                     & .onsale {
-                        @include make-col-ready();
 
-                        @include media-breakpoint-up(sm) {
-                            @include make-col(12);
-                        }
-                        @include media-breakpoint-up(lg) {
-                            @include make-col(12);
-                        }
-                        @extend .text-end;
+                       //position: absolute;
+                       // font-size: .8rem;
+                       // background: $secondary;
+                       // @extend .m-5;
+                        @extend .p-2;
+                        margin: 6.5rem 1.5rem;
+                        position: absolute;
+                        @extend .rounded-pill;
+                        @extend .text-bg-secondary;
                     }
 
                     & .woocommerce-product-gallery {
@@ -68,6 +70,22 @@
 
             @include media-breakpoint-up(sm) {
                 @include make-col(6);
+            }
+            @extend .mt-5;
+
+            & p {
+                &.price {
+                    @extend .d-flex;
+                   // @extend .align-items-center;
+                    @extend .flex-column;
+                    
+                    & del {
+                        font-size: 1rem;
+                    }
+                    & ins {
+                        font-size: 1.2rem;
+                    }
+                }
             }
         }
     }

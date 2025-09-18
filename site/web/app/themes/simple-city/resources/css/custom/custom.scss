@@ -517,34 +517,8 @@ body {
                         & .price {
                             @extend .d-flex;
                             @extend .flex-column;
-
-                            & .woocommerce-Price-amount {
-                                font-family: 'PFEncoreSansPro-Bold';
-                                font-size: 1.25rem;
-
-                                & .woocommerce-Price-currencySymbol {
-                                    font-family: 'PFEncoreSansPro-Thin';
-                                    font-size: 1rem;
-                                }
-                            }
-
-                            & del {
-                                color: $secondary;
-
-                                 & .woocommerce-Price-amount {
-                                    @extend .d-flex;
-                                    @extend .flex-column;
-                                    @extend .align-items-end;
-
-                                                                    
-                                    & bdi {
-                                         @extend .d-flex;
-                                         @extend .align-items-end;
-                                         color: $secondary;
-                                         font-size: 1.5rem;
-                                     }
-                                 }
-                            }
+                            
+                    
 
                             & ins {
                                 @extend .d-flex;
@@ -560,7 +534,7 @@ body {
                                          @extend .d-flex;
                                          @extend .align-items-end;
                                          color: $primary;
-                                         font-size: 1.32rem;
+                                         font-size: 2.32rem;
                                          letter-spacing: .002rem;
                                      }
                                 }
@@ -579,6 +553,7 @@ body {
                         & .info {
                             @extend .d-flex;
                             @extend .justify-content-between;
+                            @extend .px-2;
 
                             & h3 {
                                 display: inline;
@@ -587,7 +562,7 @@ body {
                             & .price {
                                 @extend .d-flex;
                                 @extend .flex-column;
-
+                                
 
                                 & del {
                                     color: $primary;
@@ -621,7 +596,7 @@ body {
                                              @extend .d-flex;
                                              @extend .align-items-end;
                                              color: $primary;
-                                             font-size: 1rem;
+                                             font-size: 1.2rem;
                                              letter-spacing: .002rem;
                                          }
                                     }

@@ -326,6 +326,3 @@ function compress_and_convert_images_to_webp($file) {
     ];
 }
 add_filter('wp_handle_upload', 'compress_and_convert_images_to_webp');
-
-
-
