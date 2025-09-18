@@ -88,10 +88,17 @@
         & .summary {
             @include make-col-ready();
 
+            margin: 2rem 0;
+
             @include media-breakpoint-up(sm) {
                 @include make-col(6);
+
+                margin: 3rem 0;
             }
-            @extend .mt-5;
+            
+            & .product_meta {
+                margin: 0rem 0rem .35rem 0;
+            }
 
             & p {
                 &.price {
