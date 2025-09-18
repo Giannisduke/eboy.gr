@@ -8,11 +8,15 @@
 
             @include media-breakpoint-up(sm) {
                 @include make-col(6);
-            }
+                
+                padding-right: 3rem;
+            } 
 
             & .image_inner {
                  @include make-row($gutter: $grid-gutter-width);
                  @extend .justify-content-end;
+                 background: $third;
+                 
             
                     & .onsale {
 
@@ -21,10 +25,15 @@
                        // background: $secondary;
                        // @extend .m-5;
                         @extend .p-2;
-                        margin: 6.5rem 1.5rem;
+                        margin: 2.5rem 2.5rem;
                         position: absolute;
                         @extend .rounded-pill;
                         @extend .text-bg-secondary;
+
+
+                        @include media-breakpoint-up(sm) {
+                            margin: 8.25rem -1.5rem;
+                        } 
                     }
 
                     & .woocommerce-product-gallery {
