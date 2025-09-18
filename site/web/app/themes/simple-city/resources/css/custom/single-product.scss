@@ -37,6 +37,17 @@
                             @include make-col(12);
                         }
                         @extend .text-center;
+
+                        & .carousel {
+                            @extend .d-flex;
+                            @extend .justify-content-center;
+
+                            & .carousel-inner {
+                                @include media-breakpoint-up(md) {
+                                    width: 80%;
+                                }
+                            }
+                        }
                         & img {
                             @extend .img-fluid;
                         }
@@ -84,9 +95,18 @@
                     }
                     & ins {
                         font-size: 1.2rem;
+                        font-family: 'PFBagueSansPro-Medium';
                     }
                 }
             }
+
+            & h1 {
+                &.product_title {
+                font-family: 'PFBagueSansPro-Bold';
+                font-size: 2.8rem;
+            }
+            }
+
         }
     }
 }
