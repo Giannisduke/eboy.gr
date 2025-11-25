@@ -5,11 +5,11 @@ import.meta.glob([
 
 import * as bootstrap from 'bootstrap';
 
-import { createApp } from 'vue';
-import { createPinia } from 'pinia';
+//import { createApp } from 'vue';
+//import { createPinia } from 'pinia';
 
-import App from './App.vue';
-import router from './router';
+//import App from './App.vue';
+//import router from './router';
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -18,12 +18,12 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-const pinia = createPinia();
-const app = createApp(App);
-app.use(router);
-app.use(pinia);
+//const pinia = createPinia();
+//const app = createApp(App);
+//app.use(router);
+//app.use(pinia);
 
-app.mount('#slider');
+//app.mount('#slider');
 
 
 document.addEventListener('facetwp-loaded', function() {
@@ -31,10 +31,14 @@ document.addEventListener('facetwp-loaded', function() {
   const main_cats = document.querySelector('.main_cats');
   const buttons = document.querySelectorAll('.facetwp-radio');
   const control = document.querySelector('.product-tags');
+ 
+   // TODO: Define radios and currentSort variables
+  //const radios = document.querySelectorAll('.some-radio-selector');
+  //const currentSort = // η τρέχουσα τιμή sort
 
-    radios.forEach(radio => {
-    radio.checked = radio.value === currentSort;
-  });
+  // radios.forEach(radio => {
+  //   radio.checked = radio.value === currentSort;
+  // });
 
 
 

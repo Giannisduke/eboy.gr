@@ -93,7 +93,7 @@ section {
                 @include make-col(12);
             }
             @include media-breakpoint-up(lg) {
-                @include make-col(7);
+                @include make-col(12);
             }
 
             & .carousel {

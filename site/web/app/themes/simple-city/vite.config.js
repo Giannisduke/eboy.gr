@@ -8,6 +8,10 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
 
   base: '/app/themes/simple-city/public/build/',
+  server: {
+    cors: true,
+    strictPort: true,
+  },
   plugins: [
    // tailwindcss(),
     vue(),

@@ -12,8 +12,6 @@
                 <h2 class="display-1">
 
                 </h2>
- 
-
         </div>
 
         </div>

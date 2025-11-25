@@ -70,8 +70,8 @@ if (!env('WP_ENVIRONMENT_TYPE') && in_array(WP_ENV, ['production', 'staging', 'd
 /**
  * URLs
  */
-Config::define( 'WP_HOME', 'https://' . $_SERVER['HTTP_HOST']);
-Config::define( 'WP_SITEURL', 'https://' . $_SERVER['HTTP_HOST']);
+Config::define('WP_HOME', env('WP_HOME') ?: 'https://' . ($_SERVER['HTTP_HOST'] ?? 'localhost'));
+Config::define('WP_SITEURL', env('WP_SITEURL') ?: env('WP_HOME') . '/wp');
 
 /**
  * Custom Content Directory
