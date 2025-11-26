@@ -20,7 +20,7 @@ if ( $slider_query->have_posts() ) {
         if(has_post_thumbnail()){
             $temp = array();
             $thumb_id = get_post_thumbnail_id();
-            $thumb_url_array = wp_get_attachment_image_src($thumb_id, 'full', true);
+            $thumb_url_array = wp_get_attachment_image_src($thumb_id, 'medium', true);
             $thumb_url = $thumb_url_array[0];
             $temp['title'] = get_the_title();
             $temp['excerpt'] = get_the_excerpt();
@@ -35,10 +35,12 @@ wp_reset_postdata();
 //$value_2 = get_field( "main_slogan_2" );
 ?>
 <div class="embla">
-  <div class="embla__container">
-    <?php $i=0; foreach($slides as $slide) { extract($slide); ?>
-    <div class="embla__slide"> <img src="<?php echo $image ?>" alt="<?php echo esc_attr($title); ?>"></div>
- <?php  } ?>
+  <div class="embla__viewport">
+    <div class="embla__container">
+      <?php $i=0; foreach($slides as $slide) { extract($slide); ?>
+      <div class="embla__slide"> <img src="<?php echo $image ?>" alt="<?php echo esc_attr($title); ?>"></div>
+      <?php  } ?>
+    </div>
   </div>
 </div>
 

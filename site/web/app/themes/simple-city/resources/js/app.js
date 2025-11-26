@@ -16,13 +16,22 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import EmblaCarousel from 'embla-carousel';
 import Autoplay from 'embla-carousel-autoplay';
+import ClassNames from 'embla-carousel-class-names'
 
-EmblaCarousel.globalOptions = { loop: true }
+const emblaNode = document.querySelector('.embla__viewport');
 
-const emblaNode = document.querySelector('.embla')
-const plugins = [Autoplay()]
-//const emblaApi = EmblaCarousel(emblaNode, options, plugins)
-const emblaApi = EmblaCarousel(emblaNode, { align: 'end' })
+if (emblaNode) {
+    const options = {
+        loop: true,
+        align: 'center',
+        containScroll: 'trimSnaps' // Prevents empty space at the end
+    };
+    const plugins = [
+        //Autoplay(),
+        ClassNames()
+    ];
+    const emblaApi = EmblaCarousel(emblaNode, options, plugins);
+}
 
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
