@@ -209,4 +209,63 @@ add_action('widgets_init', function () {
     ] + $config);
 });
 
+/**
+ * Fix asset URLs for multisite subdomain.
+ * Replace the main domain with the current site's URL.
+ *
+ * @return string
+ */
+$fix_asset_url = function ($url) {
+    // Get the main network URL
+    $network_url = network_site_url();
+    $network_domain = parse_url($network_url, PHP_URL_HOST);
+
+    // Get the current site URL
+    $site_url = home_url();
+    $site_domain = parse_url($site_url, PHP_URL_HOST);
+
+    // Replace network domain with site domain in asset URLs
+    if ($network_domain !== $site_domain && strpos($url, $network_domain) !== false) {
+        $url = str_replace('https://' . $network_domain, $site_url, $url);
+        $url = str_replace('http://' . $network_domain, $site_url, $url);
+    }
+
+    return $url;
+};
+
+// Apply to multiple filters to ensure it catches all asset URLs
+add_filter('acorn/asset.url', $fix_asset_url, 10, 1);
+add_filter('theme_file_uri', $fix_asset_url, 10, 1);
+add_filter('stylesheet_directory_uri', $fix_asset_url, 10, 1);
+add_filter('template_directory_uri', $fix_asset_url, 10, 1);
+
+/**
+ * Replace asset URLs in HTML output as a last resort.
+ * This catches URLs that aren't filtered by the above filters.
+ */
+add_action('template_redirect', function () {
+    if (is_admin()) {
+        return;
+    }
+
+    ob_start(function ($buffer) {
+        $network_url = network_site_url();
+        $network_domain = parse_url($network_url, PHP_URL_HOST);
+        $site_url = home_url();
+        $site_domain = parse_url($site_url, PHP_URL_HOST);
+
+        // Only replace if domains are different
+        if ($network_domain !== $site_domain) {
+            // Replace asset URLs in script and link tags
+            $buffer = preg_replace(
+                '/(src|href)=["\']https?:\/\/' . preg_quote($network_domain, '/') . '(\/app\/themes\/[^"\']+)["\']/',
+                '$1="' . $site_url . '$2"',
+                $buffer
+            );
+        }
+
+        return $buffer;
+    });
+}, 1);
+
 
