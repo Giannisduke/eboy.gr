@@ -14,6 +14,15 @@ import * as bootstrap from 'bootstrap';
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import EmblaCarousel from 'embla-carousel';
+import Autoplay from 'embla-carousel-autoplay';
+
+EmblaCarousel.globalOptions = { loop: true }
+
+const emblaNode = document.querySelector('.embla')
+const plugins = [Autoplay()]
+//const emblaApi = EmblaCarousel(emblaNode, options, plugins)
+const emblaApi = EmblaCarousel(emblaNode, { align: 'end' })
 
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);

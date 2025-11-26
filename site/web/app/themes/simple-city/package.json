@@ -35,6 +35,7 @@
     "axios": "^1.8.4",
     "bootstrap": "^5.3.3",
     "embla-carousel": "^8.6.0",
+    "embla-carousel-autoplay": "^8.6.0",
     "flexslider": "^2.7.2",
     "gsap": "^3.12.7",
     "jquery": "^3.7.1",

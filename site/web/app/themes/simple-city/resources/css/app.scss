@@ -91,7 +91,7 @@ $headings-line-height:        1 !default;
 @import "bootstrap/scss/nav";
 @import "bootstrap/scss/navbar";
 //@import "bootstrap/scss/carousel";
-@import './custom/carousel.scss';
+//@import './custom/carousel.scss';
 
 
 //@import "bootstrap/scss/card";
@@ -110,8 +110,8 @@ $headings-line-height:        1 !default;
 @import './custom/custom_facet.scss';
 @import './custom/facetcolor.scss';
 @import './custom/forms.scss';
-@import './custom/vue3_carousel.scss';
-//@import './custom/nouislider.scss';
+//@import './custom/vue3_carousel.scss';
+@import './custom/embla.scss';
 @import './custom/single-product.scss';
 
 @import './custom/mixins.scss';
