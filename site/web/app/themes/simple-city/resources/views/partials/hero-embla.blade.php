@@ -1,6 +1,10 @@
 <section class="featured">
     <?php
-$slides = array(); 
+// Save the current page content before running custom query
+global $post;
+$page_content = $post ? $post->post_content : '';
+
+$slides = array();
 $args = array(
     'post_type' => 'product',
     'posts_per_page' => 12,
@@ -38,7 +42,7 @@ wp_reset_postdata();
     <div class="container">
         <div class="row">
             <div class="col content">
-                <?php echo wp_kses_post($temp['content']); ?>
+                <?php echo apply_filters('the_content', $page_content); ?>
             </div>
         </div>
     </div>
