@@ -23,11 +23,11 @@ const emblaNode = document.querySelector('.embla__viewport');
 if (emblaNode) {
     const options = {
         loop: true,
-        align: 'center',
-        containScroll: 'trimSnaps' // Prevents empty space at the end
+        align: 'end',
+        containScroll: 'keepSnaps' // Prevents empty space at the end
     };
     const plugins = [
-        //Autoplay(),
+        Autoplay(),
         ClassNames()
     ];
     const emblaApi = EmblaCarousel(emblaNode, options, plugins);
