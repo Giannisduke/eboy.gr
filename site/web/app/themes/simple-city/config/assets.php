@@ -33,7 +33,7 @@ return [
     'manifests' => [
         'theme' => [
             'path' => get_theme_file_path('public'),
-            'url' => get_bloginfo('url') . '/app/themes/simple-city/public',
+            'url' => home_url('/app/themes/simple-city/public'),
             'assets' => get_theme_file_path('public/build/manifest.json'),
             'bundles' => get_theme_file_path('public/build/entrypoints.json'),
         ],
