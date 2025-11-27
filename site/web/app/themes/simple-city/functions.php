@@ -326,3 +326,170 @@ function compress_and_convert_images_to_webp($file) {
     ];
 }
 add_filter('wp_handle_upload', 'compress_and_convert_images_to_webp');
+
+
+/**
+ * Register Custom REST API Endpoints for Vue Shop
+ */
+add_action('rest_api_init', function () {
+    // Products endpoint
+    register_rest_route('theme/v1', '/products', [
+        'methods' => 'GET',
+        'callback' => 'get_shop_products',
+        'permission_callback' => '__return_true',
+    ]);
+
+    // Categories endpoint
+    register_rest_route('theme/v1', '/categories', [
+        'methods' => 'GET',
+        'callback' => 'get_shop_categories',
+        'permission_callback' => '__return_true',
+    ]);
+});
+
+/**
+ * Get WooCommerce products with filters
+ */
+function get_shop_products($request) {
+    $params = $request->get_params();
+
+    // Prepare WP_Query arguments
+    $args = [
+        'post_type' => 'product',
+        'posts_per_page' => isset($params['per_page']) ? intval($params['per_page']) : 10,
+        'paged' => isset($params['page']) ? intval($params['page']) : 1,
+        'post_status' => 'publish',
+        'orderby' => isset($params['orderby']) ? sanitize_text_field($params['orderby']) : 'menu_order',
+        'order' => isset($params['order']) ? sanitize_text_field($params['order']) : 'ASC',
+    ];
+
+    // Add category filter
+    if (isset($params['category']) && !empty($params['category'])) {
+        $args['tax_query'] = [
+            [
+                'taxonomy' => 'product_cat',
+                'field' => 'term_id',
+                'terms' => intval($params['category']),
+            ],
+        ];
+    }
+
+    // Add search filter
+    if (isset($params['search']) && !empty($params['search'])) {
+        $args['s'] = sanitize_text_field($params['search']);
+    }
+
+    // Add on sale filter
+    if (isset($params['on_sale']) && $params['on_sale'] === 'true') {
+        $args['meta_query'] = [
+            'relation' => 'OR',
+            [
+                'key' => '_sale_price',
+                'value' => 0,
+                'compare' => '>',
+                'type' => 'NUMERIC',
+            ],
+        ];
+    }
+
+    // Execute query
+    $query = new WP_Query($args);
+
+    // Format products for Vue
+    $products = [];
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
+            $product = wc_get_product(get_the_ID());
+
+            // Get product categories
+            $categories = [];
+            $terms = get_the_terms(get_the_ID(), 'product_cat');
+            if ($terms && !is_wp_error($terms)) {
+                foreach ($terms as $term) {
+                    $categories[] = [
+                        'id' => $term->term_id,
+                        'name' => $term->name,
+                        'slug' => $term->slug,
+                    ];
+                }
+            }
+
+            // Get product image
+            $image = null;
+            if (has_post_thumbnail()) {
+                $image_id = get_post_thumbnail_id();
+                $image_data = wp_get_attachment_image_src($image_id, 'medium');
+                $image = [
+                    'src' => $image_data[0],
+                    'alt' => get_the_title(),
+                ];
+            }
+
+            $products[] = [
+                'id' => get_the_ID(),
+                'name' => get_the_title(),
+                'slug' => $product->get_slug(),
+                'permalink' => get_permalink(),
+                'price' => $product->get_price(),
+                'regular_price' => $product->get_regular_price(),
+                'sale_price' => $product->get_sale_price(),
+                'price_html' => $product->get_price_html(),
+                'on_sale' => $product->is_on_sale(),
+                'in_stock' => $product->is_in_stock(),
+                'categories' => $categories,
+                'images' => $image ? [$image] : [],
+                'short_description' => $product->get_short_description(),
+            ];
+        }
+        wp_reset_postdata();
+    }
+
+    // Prepare response
+    $response = new WP_REST_Response([
+        'products' => $products,
+        'total' => $query->found_posts,
+        'totalPages' => $query->max_num_pages,
+        'currentPage' => intval($args['paged']),
+    ]);
+
+    // Add pagination headers
+    $response->header('X-WP-Total', $query->found_posts);
+    $response->header('X-WP-TotalPages', $query->max_num_pages);
+
+    return $response;
+}
+
+/**
+ * Get WooCommerce product categories
+ */
+function get_shop_categories($request) {
+    $params = $request->get_params();
+
+    $args = [
+        'taxonomy' => 'product_cat',
+        'hide_empty' => isset($params['hide_empty']) ? filter_var($params['hide_empty'], FILTER_VALIDATE_BOOLEAN) : true,
+        'parent' => isset($params['parent']) ? intval($params['parent']) : 0,
+        'number' => isset($params['per_page']) ? intval($params['per_page']) : 100,
+    ];
+
+    $categories = get_terms($args);
+
+    if (is_wp_error($categories)) {
+        return new WP_Error('no_categories', 'No categories found', ['status' => 404]);
+    }
+
+    $formatted_categories = [];
+    foreach ($categories as $category) {
+        $formatted_categories[] = [
+            'id' => $category->term_id,
+            'name' => $category->name,
+            'slug' => $category->slug,
+            'count' => $category->count,
+            'description' => $category->description,
+            'parent' => $category->parent,
+        ];
+    }
+
+    return new WP_REST_Response($formatted_categories);
+}

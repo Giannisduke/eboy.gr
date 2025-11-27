@@ -5,11 +5,9 @@ import.meta.glob([
 
 import * as bootstrap from 'bootstrap';
 
-//import { createApp } from 'vue';
-//import { createPinia } from 'pinia';
-
-//import App from './App.vue';
-//import router from './router';
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+import ShopPage from './components/shop/ShopPage.vue';
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -27,7 +25,7 @@ if (emblaNode) {
         containScroll: 'keepSnaps' // Prevents empty space at the end
     };
     const plugins = [
-        Autoplay(),
+        //Autoplay(),
         ClassNames()
     ];
     const emblaApi = EmblaCarousel(emblaNode, options, plugins);
@@ -132,3 +130,11 @@ if (grid_6) {
     };
 }
 
+// Mount Vue Shop App
+const shopAppElement = document.getElementById('vue-shop-app');
+if (shopAppElement) {
+    const pinia = createPinia();
+    const shopApp = createApp(ShopPage);
+    shopApp.use(pinia);
+    shopApp.mount('#vue-shop-app');
+}

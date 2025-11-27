@@ -13,6 +13,7 @@ $args = array(
                 'taxonomy' => 'product_visibility',
                 'field'    => 'name',
                 'terms'    => 'featured',
+                'facetwp' => true, // we added this
             ),
         ),
     );
@@ -46,13 +47,15 @@ wp_reset_postdata();
             </div>
         </div>
     </div>
-  <div class="embla__viewport">
-    <div class="embla__container">
-      <?php $i=0; foreach($slides as $slide) { extract($slide); ?>
-      <div class="embla__slide"> <img src="<?php echo $image ?>" alt="<?php echo esc_attr($title); ?>"></div>
-      <?php  } ?>
+
+    <div class="embla__viewport">
+      <div class="embla__container">
+        <?php $i=0; foreach($slides as $slide) { extract($slide); ?>
+        <div class="embla__slide"> <img src="<?php echo $image ?>" alt="<?php echo esc_attr($title); ?>"></div>
+        <?php  } ?>
+      </div>
     </div>
-  </div>
+
 </div>
 
 </section>
