@@ -34,43 +34,6 @@ if (emblaNode) {
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-//const pinia = createPinia();
-//const app = createApp(App);
-//app.use(router);
-//app.use(pinia);
-
-//app.mount('#slider');
-
-
-document.addEventListener('facetwp-loaded', function() {
-  const scrollButton = document.querySelector('.searchbar');
-  const main_cats = document.querySelector('.main_cats');
-  const buttons = document.querySelectorAll('.facetwp-radio');
-  const control = document.querySelector('.product-tags');
- 
-   // TODO: Define radios and currentSort variables
-  //const radios = document.querySelectorAll('.some-radio-selector');
-  //const currentSort = // η τρέχουσα τιμή sort
-
-  // radios.forEach(radio => {
-  //   radio.checked = radio.value === currentSort;
-  // });
-
-
-
-
-scrollButton.addEventListener('click', () => {
-        gsap.to(window, .5, {scrollTo:{y:main_cats, offsetY:160}});
-        });
-buttons.forEach((button) => {
-    button.addEventListener('click', () => {
-      bootstrap.Collapse.getOrCreateInstance(control, { toggle: true });
-      });
-  });
-
-
-});
-
 
 
 const grid_2 = document.getElementById('grid_2');

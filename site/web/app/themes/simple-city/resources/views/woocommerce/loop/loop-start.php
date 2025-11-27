@@ -22,4 +22,4 @@ $i = esc_attr( wc_get_loop_prop( 'columns') );
 $n = (int) ($i / 2);
 ?>
 <section class="shop">
-	<div class="products facetwp-template">
+	<div class="products">

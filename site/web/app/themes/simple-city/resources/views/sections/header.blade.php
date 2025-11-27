@@ -14,17 +14,15 @@
           @if ( function_exists( 'the_custom_logo' ) ) 
   	       @php echo (the_custom_logo()); @endphp 
           @endif
-            <div class="searchbar"> 
-        
-              @php if ( is_front_page() ) {
-                  # code...
-                  echo facetwp_display( 'facet', 'search' ); 
-              }@endphp
-         
-              <div class="selections">
-              @php echo facetwp_display( 'selections' ); @endphp
-              </div>    
-            
+            <div class="searchbar">
+
+              <input
+                type="text"
+                id="shop-search-input"
+                placeholder="Αναζήτηση προϊόντων..."
+                class="shop-search-input"
+              />
+
             </div>
 
                   </div>

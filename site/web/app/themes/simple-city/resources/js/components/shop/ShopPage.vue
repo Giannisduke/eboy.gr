@@ -14,7 +14,11 @@
     </div>
 
     <!-- Products Grid -->
-    <div v-else-if="shopStore.hasProducts" class="products-grid">
+    <div
+      v-else-if="shopStore.hasProducts"
+      class="products-grid"
+      :class="`grid-cols-${shopStore.gridColumns}`"
+    >
       <ProductCard
         v-for="product in shopStore.products"
         :key="product.id"
@@ -33,7 +37,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, nextTick, watch } from 'vue';
 import { useShopStore } from '../../stores/shop';
 import FilterBar from './FilterBar.vue';
 import ProductCard from './ProductCard.vue';
@@ -42,9 +46,132 @@ import Pagination from './Pagination.vue';
 const shopStore = useShopStore();
 
 onMounted(async () => {
+  // Initialize filters from URL parameters
+  shopStore.initFromURL();
+
+  // Initialize grid columns from localStorage
+  shopStore.initGridColumns();
+
+  // Fetch categories, tags, colors, price range, and products
   await shopStore.fetchCategories();
+  await shopStore.fetchTags();
+  await shopStore.fetchColors();
+  await shopStore.fetchPriceRange();
   await shopStore.fetchProducts();
+
+  // Move .views div below .results-count
+  await nextTick();
+  const viewsDiv = document.querySelector('.views');
+  const resultsCount = document.querySelector('.results-count');
+
+  if (viewsDiv && resultsCount) {
+    // Insert .views right after .results-count
+    resultsCount.parentNode.insertBefore(viewsDiv, resultsCount.nextSibling);
+  }
+
+  // Connect grid view buttons to Vue store
+  setupGridButtons();
+
+  // Connect header search to Vue store
+  setupHeaderSearch();
+
+  // Connect sort select to Vue store
+  setupSortSelect();
 });
+
+function setupHeaderSearch() {
+  const searchInput = document.getElementById('shop-search-input');
+
+  if (searchInput) {
+    // Set initial value from store
+    searchInput.value = shopStore.filters.search;
+
+    let searchTimeout = null;
+
+    // Listen for input changes
+    searchInput.addEventListener('input', (e) => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        shopStore.setSearch(e.target.value);
+      }, 500); // Debounce search
+    });
+
+    // Watch store changes to keep input in sync
+    watch(() => shopStore.filters.search, (newVal) => {
+      if (searchInput.value !== newVal) {
+        searchInput.value = newVal;
+      }
+    });
+  }
+}
+
+function setupGridButtons() {
+  const grid2 = document.getElementById('grid_2');
+  const grid4 = document.getElementById('grid_4');
+  const grid6 = document.getElementById('grid_6');
+
+  if (grid2) {
+    grid2.addEventListener('click', () => {
+      shopStore.setGridColumns(2);
+      updateButtonStates();
+    });
+  }
+
+  if (grid4) {
+    grid4.addEventListener('click', () => {
+      shopStore.setGridColumns(4);
+      updateButtonStates();
+    });
+  }
+
+  if (grid6) {
+    grid6.addEventListener('click', () => {
+      shopStore.setGridColumns(6);
+      updateButtonStates();
+    });
+  }
+
+  // Set initial button states
+  updateButtonStates();
+}
+
+function updateButtonStates() {
+  const grid2 = document.getElementById('grid_2');
+  const grid4 = document.getElementById('grid_4');
+  const grid6 = document.getElementById('grid_6');
+
+  [grid2, grid4, grid6].forEach(btn => {
+    if (btn) btn.classList.remove('selected');
+  });
+
+  if (shopStore.gridColumns === 2 && grid2) grid2.classList.add('selected');
+  if (shopStore.gridColumns === 4 && grid4) grid4.classList.add('selected');
+  if (shopStore.gridColumns === 6 && grid6) grid6.classList.add('selected');
+}
+
+function setupSortSelect() {
+  const sortSelect = document.getElementById('sort-select');
+
+  if (sortSelect) {
+    // Set initial value from store
+    const currentValue = `${shopStore.filters.orderby}-${shopStore.filters.order}`;
+    sortSelect.value = currentValue;
+
+    // Listen for select changes
+    sortSelect.addEventListener('change', (e) => {
+      const value = e.target.value;
+      const [orderby, order] = value.split('-');
+      shopStore.setSort(orderby, order);
+    });
+
+    // Watch store changes to keep select in sync
+    watch(() => `${shopStore.filters.orderby}-${shopStore.filters.order}`, (newVal) => {
+      if (sortSelect.value !== newVal) {
+        sortSelect.value = newVal;
+      }
+    });
+  }
+}
 </script>
 
 <style scoped>
@@ -54,9 +181,21 @@ onMounted(async () => {
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 2rem;
   margin: 2rem 0;
+}
+
+/* Grid column variations */
+.products-grid.grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.products-grid.grid-cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.products-grid.grid-cols-6 {
+  grid-template-columns: repeat(6, 1fr);
 }
 
 .loading,
@@ -71,9 +210,29 @@ onMounted(async () => {
   color: #dc3545;
 }
 
+@media (max-width: 1200px) {
+  .products-grid.grid-cols-6 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
+  .products-grid.grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .products-grid.grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .products-grid.grid-cols-6 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
   .products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(2, 1fr) !important;
     gap: 1rem;
   }
 }

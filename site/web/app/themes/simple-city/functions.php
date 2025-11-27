@@ -107,12 +107,13 @@ add_action( 'woocommerce_before_shop_loop', function() {
 }, 50);
 
 
-add_action( 'woocommerce_before_shop_loop', function() {
-    echo '<div class="col-6">';
-    echo facetwp_display( 'counts' );
-    echo '</div>';
-    
-}, 4);
+// Removed FacetWP counts display
+// add_action( 'woocommerce_before_shop_loop', function() {
+//     echo '<div class="col-6">';
+//     echo facetwp_display( 'counts' );
+//     echo '</div>';
+//
+// }, 4);
 
 function open_woocommerce_product_image() { 
     echo '<div class="image_wrapper"><div class="image_inner">';
@@ -345,6 +346,27 @@ add_action('rest_api_init', function () {
         'callback' => 'get_shop_categories',
         'permission_callback' => '__return_true',
     ]);
+
+    // Tags endpoint
+    register_rest_route('theme/v1', '/tags', [
+        'methods' => 'GET',
+        'callback' => 'get_shop_tags',
+        'permission_callback' => '__return_true',
+    ]);
+
+    // Colors endpoint
+    register_rest_route('theme/v1', '/colors', [
+        'methods' => 'GET',
+        'callback' => 'get_shop_colors',
+        'permission_callback' => '__return_true',
+    ]);
+
+    // Price range endpoint
+    register_rest_route('theme/v1', '/price-range', [
+        'methods' => 'GET',
+        'callback' => 'get_price_range',
+        'permission_callback' => '__return_true',
+    ]);
 });
 
 /**
@@ -363,15 +385,42 @@ function get_shop_products($request) {
         'order' => isset($params['order']) ? sanitize_text_field($params['order']) : 'ASC',
     ];
 
-    // Add category filter
+    // Add category and tags filters
+    $tax_query = [];
+
     if (isset($params['category']) && !empty($params['category'])) {
-        $args['tax_query'] = [
-            [
-                'taxonomy' => 'product_cat',
-                'field' => 'term_id',
-                'terms' => intval($params['category']),
-            ],
+        $tax_query[] = [
+            'taxonomy' => 'product_cat',
+            'field' => 'term_id',
+            'terms' => intval($params['category']),
         ];
+    }
+
+    if (isset($params['tags']) && !empty($params['tags'])) {
+        $tag_ids = array_map('intval', explode(',', $params['tags']));
+        $tax_query[] = [
+            'taxonomy' => 'product_tag',
+            'field' => 'term_id',
+            'terms' => $tag_ids,
+            'operator' => 'AND', // Products must have ALL selected tags
+        ];
+    }
+
+    if (isset($params['colors']) && !empty($params['colors'])) {
+        $color_ids = array_map('intval', explode(',', $params['colors']));
+        $tax_query[] = [
+            'taxonomy' => 'pa_color',
+            'field' => 'term_id',
+            'terms' => $color_ids,
+            'operator' => 'IN', // Products can have ANY of the selected colors
+        ];
+    }
+
+    if (!empty($tax_query)) {
+        $args['tax_query'] = $tax_query;
+        if (count($tax_query) > 1) {
+            $args['tax_query']['relation'] = 'AND';
+        }
     }
 
     // Add search filter
@@ -379,17 +428,43 @@ function get_shop_products($request) {
         $args['s'] = sanitize_text_field($params['search']);
     }
 
+    // Build meta_query
+    $meta_query = [];
+
     // Add on sale filter
     if (isset($params['on_sale']) && $params['on_sale'] === 'true') {
-        $args['meta_query'] = [
-            'relation' => 'OR',
-            [
-                'key' => '_sale_price',
-                'value' => 0,
-                'compare' => '>',
-                'type' => 'NUMERIC',
-            ],
+        $meta_query[] = [
+            'key' => '_sale_price',
+            'value' => 0,
+            'compare' => '>',
+            'type' => 'NUMERIC',
         ];
+    }
+
+    // Add price range filter
+    if (isset($params['min_price']) && !empty($params['min_price'])) {
+        $meta_query[] = [
+            'key' => '_price',
+            'value' => floatval($params['min_price']),
+            'compare' => '>=',
+            'type' => 'NUMERIC',
+        ];
+    }
+
+    if (isset($params['max_price']) && !empty($params['max_price'])) {
+        $meta_query[] = [
+            'key' => '_price',
+            'value' => floatval($params['max_price']),
+            'compare' => '<=',
+            'type' => 'NUMERIC',
+        ];
+    }
+
+    if (!empty($meta_query)) {
+        $args['meta_query'] = $meta_query;
+        if (count($meta_query) > 1) {
+            $args['meta_query']['relation'] = 'AND';
+        }
     }
 
     // Execute query
@@ -492,4 +567,446 @@ function get_shop_categories($request) {
     }
 
     return new WP_REST_Response($formatted_categories);
+}
+
+/**
+ * Get WooCommerce product tags
+ */
+function get_shop_tags($request) {
+    $params = $request->get_params();
+
+    $args = [
+        'taxonomy' => 'product_tag',
+        'hide_empty' => isset($params['hide_empty']) ? filter_var($params['hide_empty'], FILTER_VALIDATE_BOOLEAN) : true,
+        'number' => isset($params['per_page']) ? intval($params['per_page']) : 100,
+    ];
+
+    // Base product IDs (from category filter)
+    $base_product_ids = null;
+
+    // If category filter is provided, get only tags from products in that category
+    if (isset($params['category']) && !empty($params['category'])) {
+        $category_id = intval($params['category']);
+
+        // Get all product IDs in this category
+        $base_product_ids = get_posts([
+            'post_type' => 'product',
+            'posts_per_page' => -1,
+            'fields' => 'ids',
+            'tax_query' => [
+                [
+                    'taxonomy' => 'product_cat',
+                    'field' => 'term_id',
+                    'terms' => $category_id,
+                ],
+            ],
+        ]);
+
+        if (!empty($base_product_ids)) {
+            $args['object_ids'] = $base_product_ids;
+        } else {
+            // No products in this category, return empty array
+            return new WP_REST_Response([]);
+        }
+    }
+
+    $tags = get_terms($args);
+
+    if (is_wp_error($tags)) {
+        return new WP_Error('no_tags', 'No tags found', ['status' => 404]);
+    }
+
+    // Get available tags based on ALL current filters
+    $available_tag_ids = [];
+    if (isset($params['selected_tags']) || isset($params['colors']) || isset($params['min_price']) || isset($params['max_price'])) {
+        // Build query for filtered products
+        $filtered_query_args = [
+            'post_type' => 'product',
+            'posts_per_page' => -1,
+            'fields' => 'ids',
+        ];
+
+        $tax_query = [];
+        $meta_query = [];
+
+        // Add category filter
+        if (isset($params['category']) && !empty($params['category'])) {
+            $tax_query[] = [
+                'taxonomy' => 'product_cat',
+                'field' => 'term_id',
+                'terms' => intval($params['category']),
+            ];
+        }
+
+        // Add selected tags filter
+        if (isset($params['selected_tags']) && !empty($params['selected_tags'])) {
+            $selected_tag_ids = array_map('intval', explode(',', $params['selected_tags']));
+            $tax_query[] = [
+                'taxonomy' => 'product_tag',
+                'field' => 'term_id',
+                'terms' => $selected_tag_ids,
+                'operator' => 'AND',
+            ];
+        }
+
+        // Add colors filter
+        if (isset($params['colors']) && !empty($params['colors'])) {
+            $color_ids = array_map('intval', explode(',', $params['colors']));
+            $tax_query[] = [
+                'taxonomy' => 'pa_color',
+                'field' => 'term_id',
+                'terms' => $color_ids,
+                'operator' => 'IN',
+            ];
+        }
+
+        if (!empty($tax_query)) {
+            $tax_query['relation'] = 'AND';
+            $filtered_query_args['tax_query'] = $tax_query;
+        }
+
+        // Add price range filter
+        if (isset($params['min_price']) && !empty($params['min_price'])) {
+            $meta_query[] = [
+                'key' => '_price',
+                'value' => floatval($params['min_price']),
+                'compare' => '>=',
+                'type' => 'NUMERIC',
+            ];
+        }
+        if (isset($params['max_price']) && !empty($params['max_price'])) {
+            $meta_query[] = [
+                'key' => '_price',
+                'value' => floatval($params['max_price']),
+                'compare' => '<=',
+                'type' => 'NUMERIC',
+            ];
+        }
+
+        if (!empty($meta_query)) {
+            $meta_query['relation'] = 'AND';
+            $filtered_query_args['meta_query'] = $meta_query;
+        }
+
+        // Get filtered product IDs
+        $filtered_product_ids = get_posts($filtered_query_args);
+
+        if (!empty($filtered_product_ids)) {
+            // Get tags that exist in these filtered products
+            $available_tags = wp_get_object_terms($filtered_product_ids, 'product_tag', ['fields' => 'ids']);
+            $available_tag_ids = is_array($available_tags) ? $available_tags : [];
+        }
+    }
+
+    $formatted_tags = [];
+    foreach ($tags as $tag) {
+        $is_available = true;
+
+        // If we have filters applied, check if this tag is available
+        if (!empty($available_tag_ids)) {
+            $is_available = in_array($tag->term_id, $available_tag_ids);
+        }
+
+        $formatted_tags[] = [
+            'id' => $tag->term_id,
+            'name' => $tag->name,
+            'slug' => $tag->slug,
+            'count' => $tag->count,
+            'available' => $is_available,
+        ];
+    }
+
+    return new WP_REST_Response($formatted_tags);
+}
+
+/**
+ * Get WooCommerce product colors (from pa_color attribute)
+ */
+function get_shop_colors($request) {
+    $params = $request->get_params();
+
+    $args = [
+        'taxonomy' => 'pa_color',
+        'hide_empty' => isset($params['hide_empty']) ? filter_var($params['hide_empty'], FILTER_VALIDATE_BOOLEAN) : true,
+        'number' => isset($params['per_page']) ? intval($params['per_page']) : 100,
+    ];
+
+    // Base product IDs (from category filter)
+    $base_product_ids = null;
+
+    // If category filter is provided, get only colors from products in that category
+    if (isset($params['category']) && !empty($params['category'])) {
+        $category_id = intval($params['category']);
+
+        // Get all product IDs in this category
+        $base_product_ids = get_posts([
+            'post_type' => 'product',
+            'posts_per_page' => -1,
+            'fields' => 'ids',
+            'tax_query' => [
+                [
+                    'taxonomy' => 'product_cat',
+                    'field' => 'term_id',
+                    'terms' => $category_id,
+                ],
+            ],
+        ]);
+
+        if (!empty($base_product_ids)) {
+            $args['object_ids'] = $base_product_ids;
+        } else {
+            // No products in this category, return empty array
+            return new WP_REST_Response([]);
+        }
+    }
+
+    $colors = get_terms($args);
+
+    if (is_wp_error($colors)) {
+        return new WP_REST_Response([]);
+    }
+
+    // Get available colors based on ALL current filters
+    $available_color_ids = [];
+    if (isset($params['selected_tags']) || isset($params['selected_colors']) || isset($params['min_price']) || isset($params['max_price'])) {
+        // Build query for filtered products
+        $filtered_query_args = [
+            'post_type' => 'product',
+            'posts_per_page' => -1,
+            'fields' => 'ids',
+        ];
+
+        $tax_query = [];
+        $meta_query = [];
+
+        // Add category filter
+        if (isset($params['category']) && !empty($params['category'])) {
+            $tax_query[] = [
+                'taxonomy' => 'product_cat',
+                'field' => 'term_id',
+                'terms' => intval($params['category']),
+            ];
+        }
+
+        // Add tags filter
+        if (isset($params['selected_tags']) && !empty($params['selected_tags'])) {
+            $tag_ids = array_map('intval', explode(',', $params['selected_tags']));
+            $tax_query[] = [
+                'taxonomy' => 'product_tag',
+                'field' => 'term_id',
+                'terms' => $tag_ids,
+                'operator' => 'AND',
+            ];
+        }
+
+        // Add selected colors filter
+        if (isset($params['selected_colors']) && !empty($params['selected_colors'])) {
+            $selected_color_ids = array_map('intval', explode(',', $params['selected_colors']));
+            $tax_query[] = [
+                'taxonomy' => 'pa_color',
+                'field' => 'term_id',
+                'terms' => $selected_color_ids,
+                'operator' => 'IN',
+            ];
+        }
+
+        if (!empty($tax_query)) {
+            $tax_query['relation'] = 'AND';
+            $filtered_query_args['tax_query'] = $tax_query;
+        }
+
+        // Add price range filter
+        if (isset($params['min_price']) && !empty($params['min_price'])) {
+            $meta_query[] = [
+                'key' => '_price',
+                'value' => floatval($params['min_price']),
+                'compare' => '>=',
+                'type' => 'NUMERIC',
+            ];
+        }
+        if (isset($params['max_price']) && !empty($params['max_price'])) {
+            $meta_query[] = [
+                'key' => '_price',
+                'value' => floatval($params['max_price']),
+                'compare' => '<=',
+                'type' => 'NUMERIC',
+            ];
+        }
+
+        if (!empty($meta_query)) {
+            $meta_query['relation'] = 'AND';
+            $filtered_query_args['meta_query'] = $meta_query;
+        }
+
+        // Get filtered product IDs
+        $filtered_product_ids = get_posts($filtered_query_args);
+
+        if (!empty($filtered_product_ids)) {
+            // Get colors that exist in these filtered products
+            $available_colors = wp_get_object_terms($filtered_product_ids, 'pa_color', ['fields' => 'ids']);
+            $available_color_ids = is_array($available_colors) ? $available_colors : [];
+        }
+    }
+
+    $formatted_colors = [];
+    foreach ($colors as $color) {
+        $is_available = true;
+
+        // If we have filters applied, check if this color is available
+        if (!empty($available_color_ids)) {
+            $is_available = in_array($color->term_id, $available_color_ids);
+        }
+
+        $formatted_colors[] = [
+            'id' => $color->term_id,
+            'name' => $color->name,
+            'slug' => $color->slug,
+            'count' => $color->count,
+            'available' => $is_available,
+        ];
+    }
+
+    return new WP_REST_Response($formatted_colors);
+}
+
+/**
+ * Get price range (min and max) from all products
+ */
+function get_price_range($request) {
+    global $wpdb;
+
+    $params = $request->get_params();
+
+    // Get overall price range based on category
+    $where_clause = "WHERE meta_key = '_price'
+        AND {$wpdb->posts}.post_type = 'product'
+        AND {$wpdb->posts}.post_status = 'publish'
+        AND meta_value != ''";
+
+    // If category filter is provided, add category filter
+    if (isset($params['category']) && !empty($params['category'])) {
+        $category_id = intval($params['category']);
+
+        // Get all product IDs in this category
+        $product_ids = get_posts([
+            'post_type' => 'product',
+            'posts_per_page' => -1,
+            'fields' => 'ids',
+            'tax_query' => [
+                [
+                    'taxonomy' => 'product_cat',
+                    'field' => 'term_id',
+                    'terms' => $category_id,
+                ],
+            ],
+        ]);
+
+        if (!empty($product_ids)) {
+            $product_ids_string = implode(',', array_map('intval', $product_ids));
+            $where_clause .= " AND {$wpdb->posts}.ID IN ($product_ids_string)";
+        } else {
+            // No products in this category, return default range
+            return new WP_REST_Response([
+                'min' => 0,
+                'max' => 1000,
+                'filteredMin' => 0,
+                'filteredMax' => 1000,
+            ]);
+        }
+    }
+
+    // Get min and max prices from published products
+    $results = $wpdb->get_row("
+        SELECT
+            MIN(CAST(meta_value AS DECIMAL(10,2))) as min_price,
+            MAX(CAST(meta_value AS DECIMAL(10,2))) as max_price
+        FROM {$wpdb->postmeta}
+        INNER JOIN {$wpdb->posts} ON {$wpdb->postmeta}.post_id = {$wpdb->posts}.ID
+        {$where_clause}
+    ");
+
+    $min_price = $results->min_price ? floatval($results->min_price) : 0;
+    $max_price = $results->max_price ? floatval($results->max_price) : 1000;
+
+    // Calculate filtered price range if other filters are applied
+    $filtered_min = $min_price;
+    $filtered_max = $max_price;
+
+    if (isset($params['selected_tags']) || isset($params['selected_colors'])) {
+        // Build query for filtered products
+        $filtered_query_args = [
+            'post_type' => 'product',
+            'posts_per_page' => -1,
+            'fields' => 'ids',
+        ];
+
+        $tax_query = [];
+
+        // Add category filter
+        if (isset($params['category']) && !empty($params['category'])) {
+            $tax_query[] = [
+                'taxonomy' => 'product_cat',
+                'field' => 'term_id',
+                'terms' => intval($params['category']),
+            ];
+        }
+
+        // Add tags filter
+        if (isset($params['selected_tags']) && !empty($params['selected_tags'])) {
+            $tag_ids = array_map('intval', explode(',', $params['selected_tags']));
+            $tax_query[] = [
+                'taxonomy' => 'product_tag',
+                'field' => 'term_id',
+                'terms' => $tag_ids,
+                'operator' => 'AND',
+            ];
+        }
+
+        // Add colors filter
+        if (isset($params['selected_colors']) && !empty($params['selected_colors'])) {
+            $color_ids = array_map('intval', explode(',', $params['selected_colors']));
+            $tax_query[] = [
+                'taxonomy' => 'pa_color',
+                'field' => 'term_id',
+                'terms' => $color_ids,
+                'operator' => 'IN',
+            ];
+        }
+
+        if (!empty($tax_query)) {
+            $tax_query['relation'] = 'AND';
+            $filtered_query_args['tax_query'] = $tax_query;
+        }
+
+        // Get filtered product IDs
+        $filtered_product_ids = get_posts($filtered_query_args);
+
+        if (!empty($filtered_product_ids)) {
+            $filtered_ids_string = implode(',', array_map('intval', $filtered_product_ids));
+
+            // Get price range for filtered products
+            $filtered_results = $wpdb->get_row("
+                SELECT
+                    MIN(CAST(meta_value AS DECIMAL(10,2))) as min_price,
+                    MAX(CAST(meta_value AS DECIMAL(10,2))) as max_price
+                FROM {$wpdb->postmeta}
+                INNER JOIN {$wpdb->posts} ON {$wpdb->postmeta}.post_id = {$wpdb->posts}.ID
+                WHERE meta_key = '_price'
+                AND {$wpdb->posts}.post_type = 'product'
+                AND {$wpdb->posts}.post_status = 'publish'
+                AND meta_value != ''
+                AND {$wpdb->posts}.ID IN ($filtered_ids_string)
+            ");
+
+            $filtered_min = $filtered_results->min_price ? floatval($filtered_results->min_price) : $min_price;
+            $filtered_max = $filtered_results->max_price ? floatval($filtered_results->max_price) : $max_price;
+        }
+    }
+
+    return new WP_REST_Response([
+        'min' => $min_price,
+        'max' => $max_price,
+        'filteredMin' => $filtered_min,
+        'filteredMax' => $filtered_max,
+    ]);
 }

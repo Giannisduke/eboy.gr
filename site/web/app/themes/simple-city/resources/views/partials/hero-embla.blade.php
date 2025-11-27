@@ -13,7 +13,6 @@ $args = array(
                 'taxonomy' => 'product_visibility',
                 'field'    => 'name',
                 'terms'    => 'featured',
-                'facetwp' => true, // we added this
             ),
         ),
     );

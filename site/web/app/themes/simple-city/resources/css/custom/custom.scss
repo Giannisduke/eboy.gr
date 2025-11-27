@@ -157,15 +157,12 @@ body {
                                 padding: .5rem 0rem .5rem 3rem;
                             }
 
-                            & .facetwp-facet-search {
-                                @extend .w-100;
-
-                                & input {
+                                & .shop-search-input {
                                     @extend .form-control-lg;
                                     @extend .w-100;
                                     border-width: 1px;
                                 }
-                            }
+                         
 
                             & .selections { 
                                @extend .d-flex;
@@ -251,151 +248,7 @@ body {
             @include make-container();
            // max-width: 1440px;
            @extend .p-0;
-            
 
-            & .control {
-                @include make-row();
-
-                @extend .justify-content-center;
-                @extend .py-3;
-
-
-                    & .product-tags {
-                            @include make-col-ready();
-
-                            @include media-breakpoint-up(sm) {
-                                @include make-col(12);
-                            }
-                            @include media-breakpoint-up(lg) {
-                                @include make-col(12);
-                            }
-
-                            & .checkboxes {
-                                @include make-row();
-
-                                & .facetwp-facet {
-                                    @extend .p-0;
-                                
-                                    &.facetwp-facet-tags {
-                                        @include make-col-ready();
-
-                                        @include media-breakpoint-up(sm) {
-                                            @include make-col(12);
-                                        }
-                                        @include media-breakpoint-up(lg) {
-                                            @include make-col(6);
-                                        }
-
-                                        
-                                    }
-
-
-
-                                    &.facetwp-facet-material {
-                                        @include make-col-ready();
-
-                                        @include media-breakpoint-up(sm) {
-                                            @include make-col(12);
-                                        }
-                                        @include media-breakpoint-up(lg) {
-                                            @include make-col(3);
-                                        }
-
-                                        border-left: 1px dotted $third;
-                                        @extend .ps-1;
-                                    }
-
-                                    &.facetwp-facet-price {
-                                        @include make-col-ready();
-                                        @extend .text-center;
-                                        @extend .mt-auto;
-
-                                        & .facetwp-slider-wrap {
-                                            @extend .pb-2;
-                                        }
-
-                                        & .facetwp-slider-reset {
-                                            display: none;
-                                        }
-                                    }
-
-                                    & .facetwp-checkbox {
-                                        @extend .btn;
-                                        @extend .btn-light;
-                                        @extend .btn-sm;
-                                       
-                                       // @extend .d-flex;
-                                        @extend .align-items-center;
-                                        @extend .m-1;
-
-                                        & .facetwp-counter {
-                                            display: none;
-                                        }
-
-                                        &.checked {
-                                            @extend .btn-primary; 
-                                            border: 2px solid $secondary;
-
-                                            & .facetwp-display-value {
-                                                color: $white;
-                                            }
-
-                                        }
-
-                                        &.disabled {
-                                            color: $primary;
-                                        }
-
-                                    }
-                                }
-                                
-                                & .colorprice {
-                                    @include make-col-ready();
-                    
-                                    @include media-breakpoint-up(sm) {
-                                        @include make-col(3);
-                                    }
-                                    @include media-breakpoint-up(lg) {
-                                        @include make-col(3);
-                                    }
-
-                                    border-left: 1px dotted $third;
-
-                                    @extend .ps-3;
-                                    @extend .d-flex;
-                                    @extend .flex-column;
-
-                                    & .facetwp-facet-colors {
-                                        @include make-row();
-                                        @extend .pb-3;
-                                    }
-                                }
-                                
-                            }
-                    }
-                    
-                    & .buttonmenu {
-                        @extend .btn;
-                        @extend .btn-outline-secondary;
-
-                        & svg {
-                            width: .85rem;
-                        }
-                    }
-
-                    & .accordion-button::after {
-                        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-plus' viewBox='0 0 16 16'%3E%3Cpath d='M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z'/%3E%3C/svg%3E");
-                        transition: all 0.5s;
-                      }
-                    &  .accordion-button:not(.collapsed)::after {
-                        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-dash' viewBox='0 0 16 16'%3E%3Cpath d='M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z'/%3E%3C/svg%3E");
-                      }
-                    &  .accordion-button::after {
-                        transition: all 0.5s;
-                      }
-             
-
-            }
 
             & .control_catalogue {
                 @include make-container();

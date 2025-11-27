@@ -4,7 +4,7 @@
     "src": "editor.deps.json"
   },
   "resources/css/app.scss": {
-    "file": "assets/app-CjiGZ5vP.css",
+    "file": "assets/app-HSUOxzxd.css",
     "src": "resources/css/app.scss",
     "isEntry": true
   },
@@ -214,12 +214,21 @@
     "src": "resources/images/view_small_s.svg"
   },
   "resources/js/app.js": {
-    "file": "assets/app-CbP_UsH8.js",
+    "file": "assets/app-DezcZDvt.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-CmkgI3tv.css"
+      "assets/app-CQbk7MWY.css"
+    ],
+    "assets": [
+      "assets/bathroom-H5gpXJb4.svg",
+      "assets/bedroom-Bh8B20E2.svg",
+      "assets/garden-D5g2VUHZ.svg",
+      "assets/kitchen-CWGgO1IH.svg",
+      "assets/office-zTi99C67.svg",
+      "assets/sales-9FCY2qef.svg",
+      "assets/saloni-hVbrlUkY.svg"
     ]
   },
   "resources/js/editor.js": {

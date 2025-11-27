@@ -30,6 +30,24 @@ export const productsApi = {
             params.on_sale = 'true';
         }
 
+        // Add tags filter
+        if (filters.tags && filters.tags.length > 0) {
+            params.tags = filters.tags.join(',');
+        }
+
+        // Add colors filter
+        if (filters.colors && filters.colors.length > 0) {
+            params.colors = filters.colors.join(',');
+        }
+
+        // Add price range filter
+        if (filters.minPrice !== undefined && filters.minPrice !== null) {
+            params.min_price = filters.minPrice;
+        }
+        if (filters.maxPrice !== undefined && filters.maxPrice !== null) {
+            params.max_price = filters.maxPrice;
+        }
+
         try {
             const response = await axios.get('/wp-json/theme/v1/products', { params });
 
@@ -60,6 +78,115 @@ export const productsApi = {
         } catch (error) {
             console.error('Error fetching categories:', error);
             throw new Error('Failed to load categories. Please try again.');
+        }
+    },
+
+    /**
+     * Get product tags
+     */
+    async getTags(filters = {}) {
+        try {
+            const params = {
+                per_page: 100,
+                hide_empty: true
+            };
+
+            if (filters.category) {
+                params.category = filters.category;
+            }
+
+            // Pass selected tags to calculate availability
+            if (filters.tags && filters.tags.length > 0) {
+                params.selected_tags = filters.tags.join(',');
+            }
+
+            // Pass colors to calculate availability
+            if (filters.colors && filters.colors.length > 0) {
+                params.colors = filters.colors.join(',');
+            }
+
+            // Pass price range to calculate availability
+            if (filters.minPrice !== undefined && filters.minPrice !== null) {
+                params.min_price = filters.minPrice;
+            }
+            if (filters.maxPrice !== undefined && filters.maxPrice !== null) {
+                params.max_price = filters.maxPrice;
+            }
+
+            const response = await axios.get('/wp-json/theme/v1/tags', { params });
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching tags:', error);
+            throw new Error('Failed to load tags. Please try again.');
+        }
+    },
+
+    /**
+     * Get product colors
+     */
+    async getColors(filters = {}) {
+        try {
+            const params = {
+                per_page: 100,
+                hide_empty: true
+            };
+
+            if (filters.category) {
+                params.category = filters.category;
+            }
+
+            // Pass selected tags to calculate availability
+            if (filters.tags && filters.tags.length > 0) {
+                params.selected_tags = filters.tags.join(',');
+            }
+
+            // Pass selected colors to calculate availability
+            if (filters.colors && filters.colors.length > 0) {
+                params.selected_colors = filters.colors.join(',');
+            }
+
+            // Pass price range to calculate availability
+            if (filters.minPrice !== undefined && filters.minPrice !== null) {
+                params.min_price = filters.minPrice;
+            }
+            if (filters.maxPrice !== undefined && filters.maxPrice !== null) {
+                params.max_price = filters.maxPrice;
+            }
+
+            const response = await axios.get('/wp-json/theme/v1/colors', { params });
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching colors:', error);
+            throw new Error('Failed to load colors. Please try again.');
+        }
+    },
+
+    /**
+     * Get price range (min and max)
+     */
+    async getPriceRange(filters = {}) {
+        try {
+            const params = {};
+
+            if (filters.category) {
+                params.category = filters.category;
+            }
+
+            // Pass selected tags to calculate filtered range
+            if (filters.tags && filters.tags.length > 0) {
+                params.selected_tags = filters.tags.join(',');
+            }
+
+            // Pass selected colors to calculate filtered range
+            if (filters.colors && filters.colors.length > 0) {
+                params.selected_colors = filters.colors.join(',');
+            }
+
+            const response = await axios.get('/wp-json/theme/v1/price-range', { params });
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching price range:', error);
+            throw new Error('Failed to load price range. Please try again.');
         }
     }
 };
