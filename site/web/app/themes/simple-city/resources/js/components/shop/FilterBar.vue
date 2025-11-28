@@ -51,8 +51,9 @@
         </button>
       </div>
 
-      <!-- Material Column -->
+      <!-- Υλικά Column -->
       <div v-if="shopStore.materials.length > 0" class="material">
+
         <button
           v-for="material in shopStore.materials"
           :key="material.id"
@@ -73,7 +74,7 @@
       <div class="additional-filters">
         <!-- Color Filters (Left Side) -->
         <div v-if="shopStore.colors.length > 0" class="color-filters">
-          <h4 class="filter-title">Χρώματα</h4>
+
           <div class="color-swatches">
             <button
               v-for="color in shopStore.colors"
@@ -96,7 +97,7 @@
         <!-- Price Range Slider (Right Side) -->
         <div class="extra-filters">
           <div class="price-filter">
-            <h4 class="filter-title">Εύρος Τιμών</h4>
+        
             <div v-if="isPriceRangeRestricted" class="price-range-info">
               Διαθέσιμο: {{ shopStore.priceRange.filteredMin.toFixed(2) }}€ - {{ shopStore.priceRange.filteredMax.toFixed(2) }}€
             </div>
@@ -398,15 +399,7 @@ const getMaterialSize = (count) => {
       @include media-breakpoint-up(lg) {
       @include make-col(3);
     }
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  padding: 1.5rem 1rem;
-  background: #fafafa;
-  border-radius: 8px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  align-content: flex-start;
+
 }
 
 /* Additional Filters (Right Column - 50%) */

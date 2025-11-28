@@ -435,7 +435,7 @@ function get_shop_products($request) {
     if (isset($params['materials']) && !empty($params['materials'])) {
         $material_ids = array_map('intval', explode(',', $params['materials']));
         $tax_query[] = [
-            'taxonomy' => 'pa_material',
+            'taxonomy' => 'pa_υλικό',
             'field' => 'term_id',
             'terms' => $material_ids,
             'operator' => 'AND', // Products must have ALL selected materials
@@ -821,7 +821,7 @@ function get_shop_tags($request) {
         if (isset($params['materials']) && !empty($params['materials'])) {
             $material_ids = array_map('intval', explode(',', $params['materials']));
             $tax_query[] = [
-                'taxonomy' => 'pa_material',
+                'taxonomy' => 'pa_υλικό',
                 'field' => 'term_id',
                 'terms' => $material_ids,
                 'operator' => 'AND',
@@ -1053,7 +1053,7 @@ function get_shop_colors($request) {
 }
 
 /**
- * Get product materials (attribute pa_material)
+ * Get product materials (attribute pa_υλικό)
  */
 function get_shop_materials($request) {
     $params = $request->get_params();
@@ -1068,7 +1068,7 @@ function get_shop_materials($request) {
     }
 
     $args = [
-        'taxonomy' => 'pa_material',
+        'taxonomy' => 'pa_υλικό',
         'hide_empty' => isset($params['hide_empty']) ? filter_var($params['hide_empty'], FILTER_VALIDATE_BOOLEAN) : true,
         'number' => isset($params['per_page']) ? intval($params['per_page']) : 100,
     ];
@@ -1156,7 +1156,7 @@ function get_shop_materials($request) {
         if (isset($params['selected_materials']) && !empty($params['selected_materials'])) {
             $selected_material_ids = array_map('intval', explode(',', $params['selected_materials']));
             $tax_query[] = [
-                'taxonomy' => 'pa_material',
+                'taxonomy' => 'pa_υλικό',
                 'field' => 'term_id',
                 'terms' => $selected_material_ids,
                 'operator' => 'AND',
@@ -1196,7 +1196,7 @@ function get_shop_materials($request) {
 
         if (!empty($filtered_product_ids)) {
             // Get materials that exist in these filtered products
-            $available_materials = wp_get_object_terms($filtered_product_ids, 'pa_material', ['fields' => 'ids']);
+            $available_materials = wp_get_object_terms($filtered_product_ids, 'pa_υλικό', ['fields' => 'ids']);
             $available_material_ids = is_array($available_materials) ? $available_materials : [];
         }
     }
@@ -1342,7 +1342,7 @@ function get_price_range($request) {
         if (isset($params['selected_materials']) && !empty($params['selected_materials'])) {
             $material_ids = array_map('intval', explode(',', $params['selected_materials']));
             $tax_query[] = [
-                'taxonomy' => 'pa_material',
+                'taxonomy' => 'pa_υλικό',
                 'field' => 'term_id',
                 'terms' => $material_ids,
                 'operator' => 'AND',
