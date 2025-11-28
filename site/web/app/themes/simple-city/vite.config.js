@@ -3,6 +3,7 @@ import { defineConfig } from 'vite'
 import laravel from 'laravel-vite-plugin'
 import { wordpressPlugin, wordpressThemeJson } from '@roots/vite-plugin';
 import vue from '@vitejs/plugin-vue'
+import vuetify from 'vite-plugin-vuetify'
 
 
 export default defineConfig({
@@ -15,6 +16,7 @@ export default defineConfig({
   plugins: [
    // tailwindcss(),
     vue(),
+    vuetify({ autoImport: true }),
     laravel({
       input: [
         'resources/css/app.scss',

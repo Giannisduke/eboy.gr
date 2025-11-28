@@ -51,6 +51,24 @@
         </button>
       </div>
 
+      <!-- Material Column -->
+      <div v-if="shopStore.materials.length > 0" class="material">
+        <button
+          v-for="material in shopStore.materials"
+          :key="material.id"
+          class="material-btn"
+          :class="{
+            active: shopStore.filters.materials.includes(material.id),
+            disabled: material.available === false && !shopStore.filters.materials.includes(material.id)
+          }"
+          :style="{ fontSize: getMaterialSize(material.count) }"
+          :disabled="material.available === false && !shopStore.filters.materials.includes(material.id)"
+          @click="toggleMaterial(material.id)"
+        >
+          {{ material.name }} <span class="material-count">({{ material.count }})</span>
+        </button>
+      </div>
+
       <!-- Additional Filters (Right Column) -->
       <div class="additional-filters">
         <!-- Color Filters (Left Side) -->
@@ -109,22 +127,17 @@
               </div>
             </div>
             <div class="price-slider">
-              <input
-                type="range"
-                v-model.number="localMinPrice"
+              <v-range-slider
+                v-model="priceRange"
                 :min="shopStore.priceRange.min"
                 :max="shopStore.priceRange.max"
-                @input="onMinPriceChange"
-                class="slider slider-min"
-              />
-              <input
-                type="range"
-                v-model.number="localMaxPrice"
-                :min="shopStore.priceRange.min"
-                :max="shopStore.priceRange.max"
-                @input="onMaxPriceChange"
-                class="slider slider-max"
-              />
+                :step="1"
+                hide-details
+                color="primary"
+                track-color="#ddd"
+                @update:model-value="onPriceRangeChange"
+                class="mt-4"
+              ></v-range-slider>
             </div>
           </div>
         </div>
@@ -158,6 +171,7 @@ const showOnSale = ref(false);
 const selectedTags = ref([]);
 const localMinPrice = ref(0);
 const localMaxPrice = ref(1000);
+const priceRange = ref([0, 1000]);
 let priceUpdateTimeout = null;
 
 // Sync local state with store on mount (for URL initialization)
@@ -167,6 +181,7 @@ onMounted(() => {
   selectedTags.value = [...shopStore.filters.tags];
   localMinPrice.value = shopStore.filters.minPrice || shopStore.priceRange.min;
   localMaxPrice.value = shopStore.filters.maxPrice || shopStore.priceRange.max;
+  priceRange.value = [localMinPrice.value, localMaxPrice.value];
 });
 
 // Watch store changes to keep local state in sync
@@ -186,6 +201,7 @@ watch(() => shopStore.filters.tags, (newVal) => {
 watch(() => [shopStore.priceRange.min, shopStore.priceRange.max], ([min, max]) => {
   localMinPrice.value = shopStore.filters.minPrice || min;
   localMaxPrice.value = shopStore.filters.maxPrice || max;
+  priceRange.value = [localMinPrice.value, localMaxPrice.value];
 });
 
 // Computed property to check if current range is outside filtered range
@@ -240,17 +256,13 @@ const toggleColor = (colorId) => {
   shopStore.toggleColor(colorId);
 };
 
-const onMinPriceChange = () => {
-  if (localMinPrice.value > localMaxPrice.value) {
-    localMinPrice.value = localMaxPrice.value;
-  }
-  debouncedPriceUpdate();
+const toggleMaterial = (materialId) => {
+  shopStore.toggleMaterial(materialId);
 };
 
-const onMaxPriceChange = () => {
-  if (localMaxPrice.value < localMinPrice.value) {
-    localMaxPrice.value = localMinPrice.value;
-  }
+const onPriceRangeChange = (value) => {
+  localMinPrice.value = value[0];
+  localMaxPrice.value = value[1];
   debouncedPriceUpdate();
 };
 
@@ -267,10 +279,23 @@ const updatePriceRange = () => {
 
 const getTagSize = (count) => {
   // Calculate font size based on product count (tag cloud effect)
-  const minSize = 0.85;
-  const maxSize = 1.4;
+  const minSize = 0.65;
+  const maxSize = 1;
   const minCount = Math.min(...shopStore.tags.map(t => t.count));
   const maxCount = Math.max(...shopStore.tags.map(t => t.count));
+
+  if (maxCount === minCount) return `${minSize}rem`;
+
+  const size = minSize + ((count - minCount) / (maxCount - minCount)) * (maxSize - minSize);
+  return `${size.toFixed(2)}rem`;
+};
+
+const getMaterialSize = (count) => {
+  // Calculate font size based on product count (material cloud effect)
+  const minSize = 0.65;
+  const maxSize = 1;
+  const minCount = Math.min(...shopStore.materials.map(m => m.count));
+  const maxCount = Math.max(...shopStore.materials.map(m => m.count));
 
   if (maxCount === minCount) return `${minSize}rem`;
 
@@ -281,9 +306,16 @@ const getTagSize = (count) => {
 
 <style scoped lang="scss">
 @import 'bootstrap/scss/functions';
+@import '../../../css/custom/shared-variables';
 @import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/maps';
 @import 'bootstrap/scss/mixins';
 @import 'bootstrap/scss/forms';
+@import "bootstrap/scss/buttons";
+@import "bootstrap/scss/containers";
+@import "bootstrap/scss/grid";
+@import "bootstrap/scss/utilities";
+@import "bootstrap/scss/utilities/api";
 
 .filter-bar {
   margin-bottom: 2rem;
@@ -349,14 +381,23 @@ const getTagSize = (count) => {
 
 /* Filters Container (Two Columns) */
 .filters-container {
-  display: flex;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  @include make-row();
 }
 
 /* Tag Cloud (Left Column - 50%) */
 .tag-cloud {
-  flex: 1;
+      @include make-col(4);
+      @include media-breakpoint-up(lg) {
+      @include make-col(5);
+    }
+}
+
+/* Material Column */
+.material {
+      @include make-col(4);
+      @include media-breakpoint-up(lg) {
+      @include make-col(3);
+    }
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -370,13 +411,10 @@ const getTagSize = (count) => {
 
 /* Additional Filters (Right Column - 50%) */
 .additional-filters {
-  flex: 1;
-  display: flex;
-  gap: 1.5rem;
-  padding: 1.5rem 1rem;
-  background: #fafafa;
-  border-radius: 8px;
-  min-height: 150px;
+      @include make-col(4);
+      @include media-breakpoint-up(lg) {
+      @include make-col(4);
+    }
 }
 
 /* Color Filters (Left Side of Additional Filters) */
@@ -388,7 +426,7 @@ const getTagSize = (count) => {
 }
 
 .extra-filters {
-  flex: 1;
+  flex: 2;
   display: flex;
   flex-direction: column;
 }
@@ -449,70 +487,8 @@ const getTagSize = (count) => {
 
 /* Price Slider */
 .price-slider {
-  position: relative;
-  height: 40px;
   margin-top: 0.5rem;
-}
-
-.slider {
-  position: absolute;
-  width: 100%;
-  height: 6px;
-  -webkit-appearance: none;
-  appearance: none;
-  background: transparent;
-  outline: none;
-  pointer-events: none;
-}
-
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  background: #000;
-  border: 3px solid #fff;
-  border-radius: 50%;
-  cursor: pointer;
-  pointer-events: all;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  z-index: 2;
-}
-
-.slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  background: #000;
-  border: 3px solid #fff;
-  border-radius: 50%;
-  cursor: pointer;
-  pointer-events: all;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  z-index: 2;
-}
-
-.slider-min {
-  z-index: 1;
-
-  @extend .form-range;
-  
-}
-
-.slider-max {
-  z-index: 2;
-}
-
-.slider::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 0;
-  right: 0;
-  height: 6px;
-  background: #ddd;
-  border-radius: 3px;
-  z-index: 0;
+  padding: 0 0.5rem;
 }
 
 .filter-title {
@@ -582,20 +558,14 @@ const getTagSize = (count) => {
 }
 
 .tag-btn {
-  padding: 0.5rem 1rem;
-  background: #fff;
-  border: 2px solid #e0e0e0;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 500;
-  color: #555;
-  white-space: nowrap;
+  @extend .btn;
+  @extend .btn-primary;
+  @extend .m-1;
 }
 
 .tag-btn:hover {
-  border-color: #999;
-  background: #f5f5f5;
+ // border-color: #999;
+  background: $secondary;
   transform: translateY(-2px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -628,6 +598,51 @@ const getTagSize = (count) => {
 }
 
 .tag-count {
+  font-size: 0.85em;
+  opacity: 0.7;
+  margin-left: 0.25rem;
+}
+
+.material-btn {
+  @extend .btn;
+  @extend .btn-primary;
+  @extend .m-1;
+}
+
+.material-btn:hover {
+  background: $secondary;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.material-btn.active {
+  background: #ffd700;
+  border-color: #ffd700;
+  color: #000;
+  font-weight: 600;
+}
+
+.material-btn.active:hover {
+  background: #ffed4e;
+  border-color: #ffed4e;
+}
+
+.material-btn.disabled {
+  background: #f5f5f5;
+  color: #ccc;
+  border-color: #e5e5e5;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.material-btn.disabled:hover {
+  background: #f5f5f5;
+  border-color: #e5e5e5;
+  transform: none;
+  box-shadow: none;
+}
+
+.material-count {
   font-size: 0.85em;
   opacity: 0.7;
   margin-left: 0.25rem;
@@ -667,10 +682,7 @@ const getTagSize = (count) => {
     gap: 1rem;
   }
 
-  .tag-cloud {
-    gap: 0.5rem;
-    padding: 1rem 0.5rem;
-  }
+
 
   .additional-filters {
     flex-direction: column;

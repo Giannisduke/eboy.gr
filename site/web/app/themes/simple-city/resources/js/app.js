@@ -7,7 +7,25 @@ import * as bootstrap from 'bootstrap';
 
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
+import { createVuetify } from 'vuetify';
+import 'vuetify/styles';
+import '@mdi/font/css/materialdesignicons.css';
 import ShopPage from './components/shop/ShopPage.vue';
+
+// Vuetify configuration
+const vuetify = createVuetify({
+  theme: {
+    defaultTheme: 'light',
+    themes: {
+      light: {
+        colors: {
+          primary: '#0E0C0A',
+          secondary: '#fff200',
+        }
+      }
+    }
+  }
+});
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -99,5 +117,6 @@ if (shopAppElement) {
     const pinia = createPinia();
     const shopApp = createApp(ShopPage);
     shopApp.use(pinia);
+    shopApp.use(vuetify);
     shopApp.mount('#vue-shop-app');
 }

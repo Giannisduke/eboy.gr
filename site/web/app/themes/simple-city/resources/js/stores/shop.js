@@ -7,6 +7,7 @@ export const useShopStore = defineStore('shop', {
         categories: [],
         tags: [],
         colors: [],
+        materials: [],
         priceRange: {
             min: 0,
             max: 1000,
@@ -19,6 +20,7 @@ export const useShopStore = defineStore('shop', {
             onSale: false,
             tags: [],
             colors: [],
+            materials: [],
             minPrice: null,
             maxPrice: null,
             orderby: 'menu_order',
@@ -74,6 +76,10 @@ export const useShopStore = defineStore('shop', {
                 const colorIds = params.get('colors').split(',').map(id => parseInt(id)).filter(id => !isNaN(id));
                 this.filters.colors = colorIds;
             }
+            if (params.has('materials')) {
+                const materialIds = params.get('materials').split(',').map(id => parseInt(id)).filter(id => !isNaN(id));
+                this.filters.materials = materialIds;
+            }
             if (params.has('min_price')) {
                 this.filters.minPrice = parseFloat(params.get('min_price'));
             }
@@ -100,6 +106,9 @@ export const useShopStore = defineStore('shop', {
             }
             if (this.filters.colors && this.filters.colors.length > 0) {
                 params.set('colors', this.filters.colors.join(','));
+            }
+            if (this.filters.materials && this.filters.materials.length > 0) {
+                params.set('materials', this.filters.materials.join(','));
             }
             if (this.filters.minPrice !== null && this.filters.minPrice !== undefined) {
                 params.set('min_price', this.filters.minPrice);
@@ -166,6 +175,14 @@ export const useShopStore = defineStore('shop', {
             }
         },
 
+        async fetchMaterials() {
+            try {
+                this.materials = await productsApi.getMaterials(this.filters);
+            } catch (error) {
+                console.error('Error fetching materials:', error);
+            }
+        },
+
         async fetchPriceRange() {
             try {
                 const range = await productsApi.getPriceRange(this.filters);
@@ -193,6 +210,7 @@ export const useShopStore = defineStore('shop', {
             // Clear tag and color filters when changing category
             this.filters.tags = [];
             this.filters.colors = [];
+            this.filters.materials = [];
 
             // Reset price range to defaults
             this.filters.minPrice = null;
@@ -203,6 +221,7 @@ export const useShopStore = defineStore('shop', {
             // Re-fetch filters based on new category
             await this.fetchTags();
             await this.fetchColors();
+            await this.fetchMaterials();
             await this.fetchPriceRange();
 
             // Fetch products with new category
@@ -239,6 +258,7 @@ export const useShopStore = defineStore('shop', {
             await Promise.all([
                 this.fetchTags(),
                 this.fetchColors(),
+                this.fetchMaterials(),
                 this.fetchPriceRange()
             ]);
 
@@ -261,6 +281,30 @@ export const useShopStore = defineStore('shop', {
             await Promise.all([
                 this.fetchTags(),
                 this.fetchColors(),
+                this.fetchMaterials(),
+                this.fetchPriceRange()
+            ]);
+
+            this.fetchProducts();
+        },
+
+        async toggleMaterial(materialId) {
+            const index = this.filters.materials.indexOf(materialId);
+            if (index === -1) {
+                // Add material
+                this.filters.materials.push(materialId);
+            } else {
+                // Remove material
+                this.filters.materials.splice(index, 1);
+            }
+            this.filters.page = 1;
+            this.updateURL();
+
+            // Re-fetch all filters to update availability
+            await Promise.all([
+                this.fetchTags(),
+                this.fetchColors(),
+                this.fetchMaterials(),
                 this.fetchPriceRange()
             ]);
 
@@ -276,7 +320,8 @@ export const useShopStore = defineStore('shop', {
             // Re-fetch all filters to update availability
             await Promise.all([
                 this.fetchTags(),
-                this.fetchColors()
+                this.fetchColors(),
+                this.fetchMaterials()
             ]);
 
             this.fetchProducts();

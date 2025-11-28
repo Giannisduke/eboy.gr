@@ -40,6 +40,11 @@ export const productsApi = {
             params.colors = filters.colors.join(',');
         }
 
+        // Add materials filter
+        if (filters.materials && filters.materials.length > 0) {
+            params.materials = filters.materials.join(',');
+        }
+
         // Add price range filter
         if (filters.minPrice !== undefined && filters.minPrice !== null) {
             params.min_price = filters.minPrice;
@@ -105,6 +110,11 @@ export const productsApi = {
                 params.colors = filters.colors.join(',');
             }
 
+            // Pass materials to calculate availability
+            if (filters.materials && filters.materials.length > 0) {
+                params.materials = filters.materials.join(',');
+            }
+
             // Pass price range to calculate availability
             if (filters.minPrice !== undefined && filters.minPrice !== null) {
                 params.min_price = filters.minPrice;
@@ -145,6 +155,11 @@ export const productsApi = {
                 params.selected_colors = filters.colors.join(',');
             }
 
+            // Pass selected materials to calculate availability
+            if (filters.materials && filters.materials.length > 0) {
+                params.selected_materials = filters.materials.join(',');
+            }
+
             // Pass price range to calculate availability
             if (filters.minPrice !== undefined && filters.minPrice !== null) {
                 params.min_price = filters.minPrice;
@@ -158,6 +173,51 @@ export const productsApi = {
         } catch (error) {
             console.error('Error fetching colors:', error);
             throw new Error('Failed to load colors. Please try again.');
+        }
+    },
+
+    /**
+     * Get product materials
+     */
+    async getMaterials(filters = {}) {
+        try {
+            const params = {
+                per_page: 100,
+                hide_empty: true
+            };
+
+            if (filters.category) {
+                params.category = filters.category;
+            }
+
+            // Pass selected tags to calculate availability
+            if (filters.tags && filters.tags.length > 0) {
+                params.selected_tags = filters.tags.join(',');
+            }
+
+            // Pass selected colors to calculate availability
+            if (filters.colors && filters.colors.length > 0) {
+                params.selected_colors = filters.colors.join(',');
+            }
+
+            // Pass selected materials to calculate availability
+            if (filters.materials && filters.materials.length > 0) {
+                params.selected_materials = filters.materials.join(',');
+            }
+
+            // Pass price range to calculate availability
+            if (filters.minPrice !== undefined && filters.minPrice !== null) {
+                params.min_price = filters.minPrice;
+            }
+            if (filters.maxPrice !== undefined && filters.maxPrice !== null) {
+                params.max_price = filters.maxPrice;
+            }
+
+            const response = await axios.get('/wp-json/theme/v1/materials', { params });
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching materials:', error);
+            throw new Error('Failed to load materials. Please try again.');
         }
     },
 
@@ -180,6 +240,11 @@ export const productsApi = {
             // Pass selected colors to calculate filtered range
             if (filters.colors && filters.colors.length > 0) {
                 params.selected_colors = filters.colors.join(',');
+            }
+
+            // Pass selected materials to calculate filtered range
+            if (filters.materials && filters.materials.length > 0) {
+                params.selected_materials = filters.materials.join(',');
             }
 
             const response = await axios.get('/wp-json/theme/v1/price-range', { params });

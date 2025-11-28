@@ -1,7 +1,9 @@
 <template>
-  <div class="shop-page">
-    <!-- Filters -->
-    <FilterBar />
+  <v-app>
+    <v-main>
+      <div class="shop-page">
+        <!-- Filters -->
+        <FilterBar />
 
     <!-- Loading State -->
     <div v-if="shopStore.loading" class="loading">
@@ -33,7 +35,9 @@
 
     <!-- Pagination -->
     <Pagination v-if="shopStore.pagination.totalPages > 1" />
-  </div>
+      </div>
+    </v-main>
+  </v-app>
 </template>
 
 <script setup>
@@ -52,10 +56,11 @@ onMounted(async () => {
   // Initialize grid columns from localStorage
   shopStore.initGridColumns();
 
-  // Fetch categories, tags, colors, price range, and products
+  // Fetch categories, tags, colors, materials, price range, and products
   await shopStore.fetchCategories();
   await shopStore.fetchTags();
   await shopStore.fetchColors();
+  await shopStore.fetchMaterials();
   await shopStore.fetchPriceRange();
   await shopStore.fetchProducts();
 
