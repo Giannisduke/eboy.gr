@@ -689,6 +689,15 @@ add_action('admin_menu', 'shop_cache_admin_menu');
 function get_shop_categories($request) {
     $params = $request->get_params();
 
+    // Create cache key from all parameters
+    $cache_key = 'shop_categories_' . md5(serialize($params));
+
+    // Try to get from cache (5 minutes)
+    $cached_response = get_transient($cache_key);
+    if ($cached_response !== false) {
+        return new WP_REST_Response($cached_response);
+    }
+
     $args = [
         'taxonomy' => 'product_cat',
         'hide_empty' => isset($params['hide_empty']) ? filter_var($params['hide_empty'], FILTER_VALIDATE_BOOLEAN) : true,
@@ -713,6 +722,9 @@ function get_shop_categories($request) {
             'parent' => $category->parent,
         ];
     }
+
+    // Cache the response for 5 minutes (300 seconds)
+    set_transient($cache_key, $formatted_categories, 300);
 
     return new WP_REST_Response($formatted_categories);
 }

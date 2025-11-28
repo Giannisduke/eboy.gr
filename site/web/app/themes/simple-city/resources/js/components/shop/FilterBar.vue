@@ -329,7 +329,7 @@ const getMaterialSize = (count) => {
   overflow-x: auto;
   padding: 1rem 0;
   margin-bottom: 1.5rem;
-  border-bottom: 2px solid #e0e0e0;
+  //border-bottom: 2px solid #e0e0e0;
 }
 
 .category-btn {
