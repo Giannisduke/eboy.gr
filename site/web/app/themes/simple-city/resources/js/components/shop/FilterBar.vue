@@ -279,7 +279,12 @@ const getTagSize = (count) => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
+@import 'bootstrap/scss/forms';
+
 .filter-bar {
   margin-bottom: 2rem;
 }
@@ -488,6 +493,9 @@ const getTagSize = (count) => {
 
 .slider-min {
   z-index: 1;
+
+  @extend .form-range;
+  
 }
 
 .slider-max {
@@ -523,10 +531,10 @@ const getTagSize = (count) => {
 
 .color-swatch {
   position: relative;
-  width: 50px;
-  height: 50px;
+  width: 25px;
+  height: 25px;
   border-radius: 50%;
-  border: 3px solid #ddd;
+  border: 2px solid #ddd;
   cursor: pointer;
   transition: all 0.3s ease;
   overflow: hidden;

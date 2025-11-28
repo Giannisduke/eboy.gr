@@ -214,12 +214,12 @@
     "src": "resources/images/view_small_s.svg"
   },
   "resources/js/app.js": {
-    "file": "assets/app-DezcZDvt.js",
+    "file": "assets/app-DBPqzXtk.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-CQbk7MWY.css"
+      "assets/app-DmxuiWJs.css"
     ],
     "assets": [
       "assets/bathroom-H5gpXJb4.svg",
