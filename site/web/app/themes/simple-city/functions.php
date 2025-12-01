@@ -413,14 +413,24 @@ function get_shop_products($request) {
     }
 
     // Prepare WP_Query arguments
+    $orderby = isset($params['orderby']) ? sanitize_text_field($params['orderby']) : 'menu_order';
+    $order = isset($params['order']) ? sanitize_text_field($params['order']) : 'ASC';
+
     $args = [
         'post_type' => 'product',
         'posts_per_page' => isset($params['per_page']) ? intval($params['per_page']) : 10,
         'paged' => isset($params['page']) ? intval($params['page']) : 1,
         'post_status' => 'publish',
-        'orderby' => isset($params['orderby']) ? sanitize_text_field($params['orderby']) : 'menu_order',
-        'order' => isset($params['order']) ? sanitize_text_field($params['order']) : 'ASC',
+        'order' => $order,
     ];
+
+    // Handle price sorting specially
+    if ($orderby === 'price') {
+        $args['orderby'] = 'meta_value_num';
+        $args['meta_key'] = '_price';
+    } else {
+        $args['orderby'] = $orderby;
+    }
 
     // Add category and tags filters
     $tax_query = [];
