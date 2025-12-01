@@ -33,12 +33,15 @@
       <p>No products found.</p>
     </div>
 
-    <!-- Load More Trigger (Intersection Observer) -->
-    <div ref="loadMoreTrigger" class="load-more-trigger"></div>
-
-    <!-- Loading More Indicator -->
-    <div v-if="shopStore.loadingMore" class="loading-more">
-      <p>Loading more products...</p>
+    <!-- Load More Button -->
+    <div v-if="shopStore.hasMore && shopStore.hasProducts" class="load-more-container">
+      <button
+        @click="shopStore.loadMoreProducts()"
+        :disabled="shopStore.loadingMore"
+        class="load-more-button"
+      >
+        {{ shopStore.loadingMore ? 'Φορτώνει...' : 'Δείτε Περισσότερα' }}
+      </button>
     </div>
       </div>
     </v-main>
@@ -46,14 +49,12 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, nextTick, watch, ref } from 'vue';
+import { onMounted, nextTick, watch } from 'vue';
 import { useShopStore } from '../../stores/shop';
 import FilterBar from './FilterBar.vue';
 import ProductCard from './ProductCard.vue';
 
 const shopStore = useShopStore();
-const loadMoreTrigger = ref(null);
-let observer = null;
 
 onMounted(async () => {
   // Initialize filters from URL parameters
@@ -88,31 +89,6 @@ onMounted(async () => {
 
   // Connect sort select to Vue store
   setupSortSelect();
-
-  // Setup Intersection Observer for infinite scroll
-  await nextTick();
-  if (loadMoreTrigger.value) {
-    observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry.isIntersecting && shopStore.hasMore && !shopStore.loadingMore) {
-          shopStore.loadMoreProducts();
-        }
-      },
-      {
-        rootMargin: '200px' // Start loading 200px before reaching the trigger
-      }
-    );
-    observer.observe(loadMoreTrigger.value);
-  }
-});
-
-onUnmounted(() => {
-  // Cleanup observer
-  if (observer && loadMoreTrigger.value) {
-    observer.unobserve(loadMoreTrigger.value);
-    observer.disconnect();
-  }
 });
 
 function setupHeaderSearch() {
@@ -246,16 +222,33 @@ function setupSortSelect() {
   color: #dc3545;
 }
 
-.load-more-trigger {
-  height: 1px;
-  visibility: hidden;
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0;
 }
 
-.loading-more {
-  text-align: center;
-  padding: 2rem;
+.load-more-button {
+  padding: 1rem 3rem;
   font-size: 1rem;
-  color: #666;
+  font-weight: 600;
+  color: #fff;
+  background-color: #333;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.load-more-button:hover:not(:disabled) {
+  background-color: #555;
+  transform: translateY(-2px);
+}
+
+.load-more-button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 @media (max-width: 1200px) {
