@@ -116,6 +116,44 @@
             </option>
           </select>
         </div>
+
+        <!-- Width Filter -->
+        <div v-if="shopStore.widths.length > 0" class="width-filter">
+          <select
+            v-model="selectedWidth"
+            @change="onWidthChange"
+            class="width-select"
+          >
+            <option :value="null">Όλα τα πλάτη</option>
+            <option
+              v-for="width in shopStore.widths"
+              :key="width.slug"
+              :value="width.slug"
+              :disabled="width.available === false"
+            >
+              {{ width.name }} ({{ width.count }})
+            </option>
+          </select>
+        </div>
+
+        <!-- Depth Filter -->
+        <div v-if="shopStore.depths.length > 0" class="depth-filter">
+          <select
+            v-model="selectedDepth"
+            @change="onDepthChange"
+            class="depth-select"
+          >
+            <option :value="null">Όλα τα μήκη</option>
+            <option
+              v-for="depth in shopStore.depths"
+              :key="depth.slug"
+              :value="depth.slug"
+              :disabled="depth.available === false"
+            >
+              {{ depth.name }} ({{ depth.count }})
+            </option>
+          </select>
+        </div>
         </div>
         <!-- Price Range Slider (Right Side) -->
         <div class="extra-filters">
@@ -170,6 +208,8 @@ const selectedCategory = ref(null);
 const showOnSale = ref(false);
 const selectedTags = ref([]);
 const selectedHeight = ref(null);
+const selectedWidth = ref(null);
+const selectedDepth = ref(null);
 const localMinPrice = ref(0);
 const localMaxPrice = ref(1000);
 const priceRange = ref([0, 1000]);
@@ -181,6 +221,8 @@ onMounted(() => {
   showOnSale.value = shopStore.filters.onSale;
   selectedTags.value = [...shopStore.filters.tags];
   selectedHeight.value = shopStore.filters.height;
+  selectedWidth.value = shopStore.filters.width;
+  selectedDepth.value = shopStore.filters.depth;
   localMinPrice.value = shopStore.filters.minPrice || shopStore.priceRange.min;
   localMaxPrice.value = shopStore.filters.maxPrice || shopStore.priceRange.max;
   priceRange.value = [localMinPrice.value, localMaxPrice.value];
@@ -201,6 +243,14 @@ watch(() => shopStore.filters.tags, (newVal) => {
 
 watch(() => shopStore.filters.height, (newVal) => {
   selectedHeight.value = newVal;
+});
+
+watch(() => shopStore.filters.width, (newVal) => {
+  selectedWidth.value = newVal;
+});
+
+watch(() => shopStore.filters.depth, (newVal) => {
+  selectedDepth.value = newVal;
 });
 
 // Watch price range changes
@@ -268,6 +318,14 @@ const toggleMaterial = (materialId) => {
 
 const onHeightChange = () => {
   shopStore.setHeight(selectedHeight.value);
+};
+
+const onWidthChange = () => {
+  shopStore.setWidth(selectedWidth.value);
+};
+
+const onDepthChange = () => {
+  shopStore.setDepth(selectedDepth.value);
 };
 
 const onPriceRangeChange = (value) => {
@@ -433,16 +491,40 @@ const getMaterialSize = (count) => {
 
 .height-filter {
     @include make-col-ready();
-    
+
     @include media-breakpoint-up(sm) {
     @include make-col(4);
     }
     @include media-breakpoint-up(lg) {
-    @include make-col(4);
+    @include make-col(3);
     }
 }
 
-.height-select {
+.width-filter {
+    @include make-col-ready();
+
+    @include media-breakpoint-up(sm) {
+    @include make-col(4);
+    }
+    @include media-breakpoint-up(lg) {
+    @include make-col(3);
+    }
+}
+
+.depth-filter {
+    @include make-col-ready();
+
+    @include media-breakpoint-up(sm) {
+    @include make-col(4);
+    }
+    @include media-breakpoint-up(lg) {
+    @include make-col(3);
+    }
+}
+
+.height-select,
+.width-select,
+.depth-select {
   padding: 0.5rem;
   border: 2px solid #ddd;
   border-radius: 4px;
@@ -452,16 +534,22 @@ const getMaterialSize = (count) => {
   transition: border-color 0.3s ease;
 }
 
-.height-select:hover {
+.height-select:hover,
+.width-select:hover,
+.depth-select:hover {
   border-color: #999;
 }
 
-.height-select:focus {
+.height-select:focus,
+.width-select:focus,
+.depth-select:focus {
   outline: none;
   border-color: #000;
 }
 
-.height-select option:disabled {
+.height-select option:disabled,
+.width-select option:disabled,
+.depth-select option:disabled {
   color: #ccc;
   font-style: italic;
 }

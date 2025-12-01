@@ -69,6 +69,8 @@ onMounted(async () => {
   await shopStore.fetchColors();
   await shopStore.fetchMaterials();
   await shopStore.fetchHeights();
+  await shopStore.fetchWidths();
+  await shopStore.fetchDepths();
   await shopStore.fetchPriceRange();
   await shopStore.fetchProducts();
 

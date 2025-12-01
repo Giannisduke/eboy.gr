@@ -375,6 +375,20 @@ add_action('rest_api_init', function () {
         'permission_callback' => '__return_true',
     ]);
 
+    // Widths endpoint
+    register_rest_route('theme/v1', '/widths', [
+        'methods' => 'GET',
+        'callback' => 'get_shop_widths',
+        'permission_callback' => '__return_true',
+    ]);
+
+    // Depths endpoint
+    register_rest_route('theme/v1', '/depths', [
+        'methods' => 'GET',
+        'callback' => 'get_shop_depths',
+        'permission_callback' => '__return_true',
+    ]);
+
     // Price range endpoint
     register_rest_route('theme/v1', '/price-range', [
         'methods' => 'GET',
@@ -454,6 +468,22 @@ function get_shop_products($request) {
             'taxonomy' => 'pa_ύψος',
             'field' => 'slug',
             'terms' => sanitize_text_field($params['height']),
+        ];
+    }
+
+    if (isset($params['width']) && !empty($params['width'])) {
+        $tax_query[] = [
+            'taxonomy' => 'pa_πλάτος',
+            'field' => 'slug',
+            'terms' => sanitize_text_field($params['width']),
+        ];
+    }
+
+    if (isset($params['depth']) && !empty($params['depth'])) {
+        $tax_query[] = [
+            'taxonomy' => 'pa_μήκος',
+            'field' => 'slug',
+            'terms' => sanitize_text_field($params['depth']),
         ];
     }
 
@@ -864,6 +894,15 @@ function get_shop_tags($request) {
             ];
         }
 
+        // Add width filter
+        if (isset($params['width']) && !empty($params['width'])) {
+            $tax_query[] = [
+                'taxonomy' => 'pa_πλάτος',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($params['width']),
+            ];
+        }
+
         if (!empty($tax_query)) {
             $tax_query['relation'] = 'AND';
             $filtered_query_args['tax_query'] = $tax_query;
@@ -1032,6 +1071,24 @@ function get_shop_colors($request) {
                 'taxonomy' => 'pa_ύψος',
                 'field' => 'slug',
                 'terms' => sanitize_text_field($params['selected_height']),
+            ];
+        }
+
+        // Add selected width filter
+        if (isset($params['selected_width']) && !empty($params['selected_width'])) {
+            $tax_query[] = [
+                'taxonomy' => 'pa_πλάτος',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($params['selected_width']),
+            ];
+        }
+
+        // Add selected depth filter
+        if (isset($params['selected_depth']) && !empty($params['selected_depth'])) {
+            $tax_query[] = [
+                'taxonomy' => 'pa_μήκος',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($params['selected_depth']),
             ];
         }
 
@@ -1217,6 +1274,24 @@ function get_shop_materials($request) {
             ];
         }
 
+        // Add selected width filter
+        if (isset($params['selected_width']) && !empty($params['selected_width'])) {
+            $tax_query[] = [
+                'taxonomy' => 'pa_πλάτος',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($params['selected_width']),
+            ];
+        }
+
+        // Add selected depth filter
+        if (isset($params['selected_depth']) && !empty($params['selected_depth'])) {
+            $tax_query[] = [
+                'taxonomy' => 'pa_μήκος',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($params['selected_depth']),
+            ];
+        }
+
         if (!empty($tax_query)) {
             $tax_query['relation'] = 'AND';
             $filtered_query_args['tax_query'] = $tax_query;
@@ -1399,6 +1474,24 @@ function get_shop_heights($request) {
             ];
         }
 
+        // Add selected width filter
+        if (isset($params['selected_width']) && !empty($params['selected_width'])) {
+            $tax_query[] = [
+                'taxonomy' => 'pa_πλάτος',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($params['selected_width']),
+            ];
+        }
+
+        // Add selected depth filter
+        if (isset($params['selected_depth']) && !empty($params['selected_depth'])) {
+            $tax_query[] = [
+                'taxonomy' => 'pa_μήκος',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($params['selected_depth']),
+            ];
+        }
+
         if (!empty($tax_query)) {
             $tax_query['relation'] = 'AND';
             $filtered_query_args['tax_query'] = $tax_query;
@@ -1459,6 +1552,406 @@ function get_shop_heights($request) {
     set_transient($cache_key, $formatted_heights, 300);
 
     return new WP_REST_Response($formatted_heights);
+}
+
+/**
+ * Get product widths (attribute pa_πλάτος)
+ */
+function get_shop_widths($request) {
+    $params = $request->get_params();
+
+    // Create cache key from all parameters
+    $cache_key = 'shop_widths_' . md5(serialize($params));
+
+    // Try to get from cache (5 minutes)
+    $cached_response = get_transient($cache_key);
+    if ($cached_response !== false) {
+        return new WP_REST_Response($cached_response);
+    }
+
+    $args = [
+        'taxonomy' => 'pa_πλάτος',
+        'hide_empty' => isset($params['hide_empty']) ? filter_var($params['hide_empty'], FILTER_VALIDATE_BOOLEAN) : true,
+        'number' => isset($params['per_page']) ? intval($params['per_page']) : 100,
+    ];
+
+    // Base product IDs (from category filter)
+    $base_product_ids = null;
+
+    // If category filter is provided, get only widths from products in that category
+    if (isset($params['category']) && !empty($params['category'])) {
+        $category_id = intval($params['category']);
+
+        // Get all product IDs in this category
+        $base_product_ids = get_posts([
+            'post_type' => 'product',
+            'posts_per_page' => -1,
+            'fields' => 'ids',
+            'tax_query' => [
+                [
+                    'taxonomy' => 'product_cat',
+                    'field' => 'term_id',
+                    'terms' => $category_id,
+                ],
+            ],
+        ]);
+
+        if (!empty($base_product_ids)) {
+            $args['object_ids'] = $base_product_ids;
+        } else {
+            // No products in this category, return empty array
+            return new WP_REST_Response([]);
+        }
+    }
+
+    $widths = get_terms($args);
+
+    if (is_wp_error($widths)) {
+        return new WP_REST_Response([]);
+    }
+
+    // Get available widths based on ALL current filters
+    $available_width_ids = [];
+    if (isset($params['selected_tags']) || isset($params['selected_colors']) || isset($params['selected_materials']) || isset($params['selected_height']) || isset($params['selected_width']) || isset($params['min_price']) || isset($params['max_price'])) {
+        // Build query for filtered products
+        $filtered_query_args = [
+            'post_type' => 'product',
+            'posts_per_page' => -1,
+            'fields' => 'ids',
+        ];
+
+        $tax_query = [];
+        $meta_query = [];
+
+        // Add category filter
+        if (isset($params['category']) && !empty($params['category'])) {
+            $tax_query[] = [
+                'taxonomy' => 'product_cat',
+                'field' => 'term_id',
+                'terms' => intval($params['category']),
+            ];
+        }
+
+        // Add tags filter
+        if (isset($params['selected_tags']) && !empty($params['selected_tags'])) {
+            $tag_ids = array_map('intval', explode(',', $params['selected_tags']));
+            $tax_query[] = [
+                'taxonomy' => 'product_tag',
+                'field' => 'term_id',
+                'terms' => $tag_ids,
+                'operator' => 'AND',
+            ];
+        }
+
+        // Add selected colors filter
+        if (isset($params['selected_colors']) && !empty($params['selected_colors'])) {
+            $selected_color_ids = array_map('intval', explode(',', $params['selected_colors']));
+            $tax_query[] = [
+                'taxonomy' => 'pa_color',
+                'field' => 'term_id',
+                'terms' => $selected_color_ids,
+                'operator' => 'IN',
+            ];
+        }
+
+        // Add selected materials filter
+        if (isset($params['selected_materials']) && !empty($params['selected_materials'])) {
+            $selected_material_ids = array_map('intval', explode(',', $params['selected_materials']));
+            $tax_query[] = [
+                'taxonomy' => 'pa_υλικό',
+                'field' => 'term_id',
+                'terms' => $selected_material_ids,
+                'operator' => 'AND',
+            ];
+        }
+
+        // Add selected height filter
+        if (isset($params['selected_height']) && !empty($params['selected_height'])) {
+            $tax_query[] = [
+                'taxonomy' => 'pa_ύψος',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($params['selected_height']),
+            ];
+        }
+
+        // Add selected width filter
+        if (isset($params['selected_width']) && !empty($params['selected_width'])) {
+            $tax_query[] = [
+                'taxonomy' => 'pa_πλάτος',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($params['selected_width']),
+            ];
+        }
+
+        // Add selected depth filter
+        if (isset($params['selected_depth']) && !empty($params['selected_depth'])) {
+            $tax_query[] = [
+                'taxonomy' => 'pa_μήκος',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($params['selected_depth']),
+            ];
+        }
+
+        if (!empty($tax_query)) {
+            $tax_query['relation'] = 'AND';
+            $filtered_query_args['tax_query'] = $tax_query;
+        }
+
+        // Add price range filter
+        if (isset($params['min_price']) && !empty($params['min_price'])) {
+            $meta_query[] = [
+                'key' => '_price',
+                'value' => floatval($params['min_price']),
+                'compare' => '>=',
+                'type' => 'NUMERIC',
+            ];
+        }
+        if (isset($params['max_price']) && !empty($params['max_price'])) {
+            $meta_query[] = [
+                'key' => '_price',
+                'value' => floatval($params['max_price']),
+                'compare' => '<=',
+                'type' => 'NUMERIC',
+            ];
+        }
+
+        if (!empty($meta_query)) {
+            $meta_query['relation'] = 'AND';
+            $filtered_query_args['meta_query'] = $meta_query;
+        }
+
+        // Get filtered product IDs
+        $filtered_product_ids = get_posts($filtered_query_args);
+
+        if (!empty($filtered_product_ids)) {
+            // Get widths that exist in these filtered products
+            $available_widths = wp_get_object_terms($filtered_product_ids, 'pa_πλάτος', ['fields' => 'ids']);
+            $available_width_ids = is_array($available_widths) ? $available_widths : [];
+        }
+    }
+
+    $formatted_widths = [];
+    foreach ($widths as $width) {
+        $is_available = true;
+
+        // If we have filters applied, check if this width is available
+        if (!empty($available_width_ids)) {
+            $is_available = in_array($width->term_id, $available_width_ids);
+        }
+
+        $formatted_widths[] = [
+            'id' => $width->term_id,
+            'name' => $width->name,
+            'slug' => $width->slug,
+            'count' => $width->count,
+            'available' => $is_available,
+        ];
+    }
+
+    // Cache the response for 5 minutes (300 seconds)
+    set_transient($cache_key, $formatted_widths, 300);
+
+    return new WP_REST_Response($formatted_widths);
+}
+
+/**
+ * Get product depths (attribute pa_μήκος)
+ */
+function get_shop_depths($request) {
+    $params = $request->get_params();
+
+    // Create cache key from all parameters
+    $cache_key = 'shop_depths_' . md5(serialize($params));
+
+    // Try to get from cache (5 minutes)
+    $cached_response = get_transient($cache_key);
+    if ($cached_response !== false) {
+        return new WP_REST_Response($cached_response);
+    }
+
+    $args = [
+        'taxonomy' => 'pa_μήκος',
+        'hide_empty' => isset($params['hide_empty']) ? filter_var($params['hide_empty'], FILTER_VALIDATE_BOOLEAN) : true,
+        'number' => isset($params['per_page']) ? intval($params['per_page']) : 100,
+    ];
+
+    // Base product IDs (from category filter)
+    $base_product_ids = null;
+
+    // If category filter is provided, get only depths from products in that category
+    if (isset($params['category']) && !empty($params['category'])) {
+        $category_id = intval($params['category']);
+
+        // Get all product IDs in this category
+        $base_product_ids = get_posts([
+            'post_type' => 'product',
+            'posts_per_page' => -1,
+            'fields' => 'ids',
+            'tax_query' => [
+                [
+                    'taxonomy' => 'product_cat',
+                    'field' => 'term_id',
+                    'terms' => $category_id,
+                ],
+            ],
+        ]);
+
+        if (!empty($base_product_ids)) {
+            $args['object_ids'] = $base_product_ids;
+        } else {
+            // No products in this category, return empty array
+            return new WP_REST_Response([]);
+        }
+    }
+
+    $depths = get_terms($args);
+
+    if (is_wp_error($depths)) {
+        return new WP_REST_Response([]);
+    }
+
+    // Get available depths based on ALL current filters
+    $available_depth_ids = [];
+    if (isset($params['selected_tags']) || isset($params['selected_colors']) || isset($params['selected_materials']) || isset($params['selected_height']) || isset($params['selected_width']) || isset($params['selected_depth']) || isset($params['min_price']) || isset($params['max_price'])) {
+        // Build query for filtered products
+        $filtered_query_args = [
+            'post_type' => 'product',
+            'posts_per_page' => -1,
+            'fields' => 'ids',
+        ];
+
+        $tax_query = [];
+        $meta_query = [];
+
+        // Add category filter
+        if (isset($params['category']) && !empty($params['category'])) {
+            $tax_query[] = [
+                'taxonomy' => 'product_cat',
+                'field' => 'term_id',
+                'terms' => intval($params['category']),
+            ];
+        }
+
+        // Add tags filter
+        if (isset($params['selected_tags']) && !empty($params['selected_tags'])) {
+            $tag_ids = array_map('intval', explode(',', $params['selected_tags']));
+            $tax_query[] = [
+                'taxonomy' => 'product_tag',
+                'field' => 'term_id',
+                'terms' => $tag_ids,
+                'operator' => 'AND',
+            ];
+        }
+
+        // Add selected colors filter
+        if (isset($params['selected_colors']) && !empty($params['selected_colors'])) {
+            $selected_color_ids = array_map('intval', explode(',', $params['selected_colors']));
+            $tax_query[] = [
+                'taxonomy' => 'pa_color',
+                'field' => 'term_id',
+                'terms' => $selected_color_ids,
+                'operator' => 'IN',
+            ];
+        }
+
+        // Add selected materials filter
+        if (isset($params['selected_materials']) && !empty($params['selected_materials'])) {
+            $selected_material_ids = array_map('intval', explode(',', $params['selected_materials']));
+            $tax_query[] = [
+                'taxonomy' => 'pa_υλικό',
+                'field' => 'term_id',
+                'terms' => $selected_material_ids,
+                'operator' => 'AND',
+            ];
+        }
+
+        // Add selected height filter
+        if (isset($params['selected_height']) && !empty($params['selected_height'])) {
+            $tax_query[] = [
+                'taxonomy' => 'pa_ύψος',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($params['selected_height']),
+            ];
+        }
+
+        // Add selected width filter
+        if (isset($params['selected_width']) && !empty($params['selected_width'])) {
+            $tax_query[] = [
+                'taxonomy' => 'pa_πλάτος',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($params['selected_width']),
+            ];
+        }
+
+        // Add selected depth filter
+        if (isset($params['selected_depth']) && !empty($params['selected_depth'])) {
+            $tax_query[] = [
+                'taxonomy' => 'pa_μήκος',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($params['selected_depth']),
+            ];
+        }
+
+        if (!empty($tax_query)) {
+            $tax_query['relation'] = 'AND';
+            $filtered_query_args['tax_query'] = $tax_query;
+        }
+
+        // Add price range filter
+        if (isset($params['min_price']) && !empty($params['min_price'])) {
+            $meta_query[] = [
+                'key' => '_price',
+                'value' => floatval($params['min_price']),
+                'compare' => '>=',
+                'type' => 'NUMERIC',
+            ];
+        }
+        if (isset($params['max_price']) && !empty($params['max_price'])) {
+            $meta_query[] = [
+                'key' => '_price',
+                'value' => floatval($params['max_price']),
+                'compare' => '<=',
+                'type' => 'NUMERIC',
+            ];
+        }
+
+        if (!empty($meta_query)) {
+            $meta_query['relation'] = 'AND';
+            $filtered_query_args['meta_query'] = $meta_query;
+        }
+
+        // Get filtered product IDs
+        $filtered_product_ids = get_posts($filtered_query_args);
+
+        if (!empty($filtered_product_ids)) {
+            // Get depths that exist in these filtered products
+            $available_depths = wp_get_object_terms($filtered_product_ids, 'pa_μήκος', ['fields' => 'ids']);
+            $available_depth_ids = is_array($available_depths) ? $available_depths : [];
+        }
+    }
+
+    $formatted_depths = [];
+    foreach ($depths as $depth) {
+        $is_available = true;
+
+        // If we have filters applied, check if this depth is available
+        if (!empty($available_depth_ids)) {
+            $is_available = in_array($depth->term_id, $available_depth_ids);
+        }
+
+        $formatted_depths[] = [
+            'id' => $depth->term_id,
+            'name' => $depth->name,
+            'slug' => $depth->slug,
+            'count' => $depth->count,
+            'available' => $is_available,
+        ];
+    }
+
+    // Cache the response for 5 minutes (300 seconds)
+    set_transient($cache_key, $formatted_depths, 300);
+
+    return new WP_REST_Response($formatted_depths);
 }
 
 /**
@@ -1591,6 +2084,24 @@ function get_price_range($request) {
                 'taxonomy' => 'pa_ύψος',
                 'field' => 'slug',
                 'terms' => sanitize_text_field($params['selected_height']),
+            ];
+        }
+
+        // Add width filter
+        if (isset($params['selected_width']) && !empty($params['selected_width'])) {
+            $tax_query[] = [
+                'taxonomy' => 'pa_πλάτος',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($params['selected_width']),
+            ];
+        }
+
+        // Add depth filter
+        if (isset($params['selected_depth']) && !empty($params['selected_depth'])) {
+            $tax_query[] = [
+                'taxonomy' => 'pa_μήκος',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($params['selected_depth']),
             ];
         }
 

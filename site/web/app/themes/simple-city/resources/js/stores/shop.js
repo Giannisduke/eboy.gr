@@ -9,6 +9,8 @@ export const useShopStore = defineStore('shop', {
         colors: [],
         materials: [],
         heights: [],
+        widths: [],
+        depths: [],
         priceRange: {
             min: 0,
             max: 1000,
@@ -23,6 +25,8 @@ export const useShopStore = defineStore('shop', {
             colors: [],
             materials: [],
             height: null,
+            width: null,
+            depth: null,
             minPrice: null,
             maxPrice: null,
             orderby: 'menu_order',
@@ -93,6 +97,12 @@ export const useShopStore = defineStore('shop', {
             if (params.has('height')) {
                 this.filters.height = params.get('height');
             }
+            if (params.has('width')) {
+                this.filters.width = params.get('width');
+            }
+            if (params.has('depth')) {
+                this.filters.depth = params.get('depth');
+            }
         },
 
         // Update URL with current filters
@@ -125,6 +135,12 @@ export const useShopStore = defineStore('shop', {
             }
             if (this.filters.height) {
                 params.set('height', this.filters.height);
+            }
+            if (this.filters.width) {
+                params.set('width', this.filters.width);
+            }
+            if (this.filters.depth) {
+                params.set('depth', this.filters.depth);
             }
             if (this.filters.orderby !== 'menu_order') {
                 params.set('orderby', this.filters.orderby);
@@ -213,6 +229,22 @@ export const useShopStore = defineStore('shop', {
             }
         },
 
+        async fetchWidths() {
+            try {
+                this.widths = await productsApi.getWidths(this.filters);
+            } catch (error) {
+                console.error('Error fetching widths:', error);
+            }
+        },
+
+        async fetchDepths() {
+            try {
+                this.depths = await productsApi.getDepths(this.filters);
+            } catch (error) {
+                console.error('Error fetching depths:', error);
+            }
+        },
+
         async fetchPriceRange() {
             try {
                 const range = await productsApi.getPriceRange(this.filters);
@@ -251,6 +283,8 @@ export const useShopStore = defineStore('shop', {
             this.filters.colors = [];
             this.filters.materials = [];
             this.filters.height = null;
+            this.filters.width = null;
+            this.filters.depth = null;
 
             // Reset price range to defaults
             this.filters.minPrice = null;
@@ -263,6 +297,8 @@ export const useShopStore = defineStore('shop', {
             await this.fetchColors();
             await this.fetchMaterials();
             await this.fetchHeights();
+            await this.fetchWidths();
+            await this.fetchDepths();
             await this.fetchPriceRange();
 
             // Fetch products with new category
@@ -301,6 +337,8 @@ export const useShopStore = defineStore('shop', {
                 this.fetchColors(),
                 this.fetchMaterials(),
                 this.fetchHeights(),
+                this.fetchWidths(),
+                this.fetchDepths(),
                 this.fetchPriceRange()
             ]);
 
@@ -325,6 +363,8 @@ export const useShopStore = defineStore('shop', {
                 this.fetchColors(),
                 this.fetchMaterials(),
                 this.fetchHeights(),
+                this.fetchWidths(),
+                this.fetchDepths(),
                 this.fetchPriceRange()
             ]);
 
@@ -349,6 +389,8 @@ export const useShopStore = defineStore('shop', {
                 this.fetchColors(),
                 this.fetchMaterials(),
                 this.fetchHeights(),
+                this.fetchWidths(),
+                this.fetchDepths(),
                 this.fetchPriceRange()
             ]);
 
@@ -366,6 +408,46 @@ export const useShopStore = defineStore('shop', {
                 this.fetchColors(),
                 this.fetchMaterials(),
                 this.fetchHeights(),
+                this.fetchWidths(),
+                this.fetchDepths(),
+                this.fetchPriceRange()
+            ]);
+
+            this.fetchProducts();
+        },
+
+        async setWidth(width) {
+            this.filters.width = width;
+            this.filters.page = 1;
+            this.updateURL();
+
+            // Re-fetch all filters to update availability
+            await Promise.all([
+                this.fetchTags(),
+                this.fetchColors(),
+                this.fetchMaterials(),
+                this.fetchHeights(),
+                this.fetchWidths(),
+                this.fetchDepths(),
+                this.fetchPriceRange()
+            ]);
+
+            this.fetchProducts();
+        },
+
+        async setDepth(depth) {
+            this.filters.depth = depth;
+            this.filters.page = 1;
+            this.updateURL();
+
+            // Re-fetch all filters to update availability
+            await Promise.all([
+                this.fetchTags(),
+                this.fetchColors(),
+                this.fetchMaterials(),
+                this.fetchHeights(),
+                this.fetchWidths(),
+                this.fetchDepths(),
                 this.fetchPriceRange()
             ]);
 
@@ -383,7 +465,9 @@ export const useShopStore = defineStore('shop', {
                 this.fetchTags(),
                 this.fetchColors(),
                 this.fetchMaterials(),
-                this.fetchHeights()
+                this.fetchHeights(),
+                this.fetchWidths(),
+                this.fetchDepths()
             ]);
 
             this.fetchProducts();
@@ -425,6 +509,8 @@ export const useShopStore = defineStore('shop', {
                 colors: [],
                 materials: [],
                 height: null,
+                width: null,
+                depth: null,
                 minPrice: this.priceRange.min,
                 maxPrice: this.priceRange.max,
                 orderby: 'menu_order',
