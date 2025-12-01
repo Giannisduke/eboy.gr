@@ -8,6 +8,7 @@ export const useShopStore = defineStore('shop', {
         tags: [],
         colors: [],
         materials: [],
+        heights: [],
         priceRange: {
             min: 0,
             max: 1000,
@@ -21,6 +22,7 @@ export const useShopStore = defineStore('shop', {
             tags: [],
             colors: [],
             materials: [],
+            height: null,
             minPrice: null,
             maxPrice: null,
             orderby: 'menu_order',
@@ -88,6 +90,9 @@ export const useShopStore = defineStore('shop', {
             if (params.has('max_price')) {
                 this.filters.maxPrice = parseFloat(params.get('max_price'));
             }
+            if (params.has('height')) {
+                this.filters.height = params.get('height');
+            }
         },
 
         // Update URL with current filters
@@ -117,6 +122,9 @@ export const useShopStore = defineStore('shop', {
             }
             if (this.filters.maxPrice !== null && this.filters.maxPrice !== undefined) {
                 params.set('max_price', this.filters.maxPrice);
+            }
+            if (this.filters.height) {
+                params.set('height', this.filters.height);
             }
             if (this.filters.orderby !== 'menu_order') {
                 params.set('orderby', this.filters.orderby);
@@ -197,6 +205,14 @@ export const useShopStore = defineStore('shop', {
             }
         },
 
+        async fetchHeights() {
+            try {
+                this.heights = await productsApi.getHeights(this.filters);
+            } catch (error) {
+                console.error('Error fetching heights:', error);
+            }
+        },
+
         async fetchPriceRange() {
             try {
                 const range = await productsApi.getPriceRange(this.filters);
@@ -234,6 +250,7 @@ export const useShopStore = defineStore('shop', {
             this.filters.tags = [];
             this.filters.colors = [];
             this.filters.materials = [];
+            this.filters.height = null;
 
             // Reset price range to defaults
             this.filters.minPrice = null;
@@ -245,6 +262,7 @@ export const useShopStore = defineStore('shop', {
             await this.fetchTags();
             await this.fetchColors();
             await this.fetchMaterials();
+            await this.fetchHeights();
             await this.fetchPriceRange();
 
             // Fetch products with new category
@@ -282,6 +300,7 @@ export const useShopStore = defineStore('shop', {
                 this.fetchTags(),
                 this.fetchColors(),
                 this.fetchMaterials(),
+                this.fetchHeights(),
                 this.fetchPriceRange()
             ]);
 
@@ -305,6 +324,7 @@ export const useShopStore = defineStore('shop', {
                 this.fetchTags(),
                 this.fetchColors(),
                 this.fetchMaterials(),
+                this.fetchHeights(),
                 this.fetchPriceRange()
             ]);
 
@@ -328,6 +348,24 @@ export const useShopStore = defineStore('shop', {
                 this.fetchTags(),
                 this.fetchColors(),
                 this.fetchMaterials(),
+                this.fetchHeights(),
+                this.fetchPriceRange()
+            ]);
+
+            this.fetchProducts();
+        },
+
+        async setHeight(height) {
+            this.filters.height = height;
+            this.filters.page = 1;
+            this.updateURL();
+
+            // Re-fetch all filters to update availability
+            await Promise.all([
+                this.fetchTags(),
+                this.fetchColors(),
+                this.fetchMaterials(),
+                this.fetchHeights(),
                 this.fetchPriceRange()
             ]);
 
@@ -344,7 +382,8 @@ export const useShopStore = defineStore('shop', {
             await Promise.all([
                 this.fetchTags(),
                 this.fetchColors(),
-                this.fetchMaterials()
+                this.fetchMaterials(),
+                this.fetchHeights()
             ]);
 
             this.fetchProducts();
@@ -384,6 +423,8 @@ export const useShopStore = defineStore('shop', {
                 onSale: false,
                 tags: [],
                 colors: [],
+                materials: [],
+                height: null,
                 minPrice: this.priceRange.min,
                 maxPrice: this.priceRange.max,
                 orderby: 'menu_order',

@@ -72,6 +72,7 @@
 
       <!-- Additional Filters (Right Column) -->
       <div class="additional-filters">
+        <div class="row">
         <!-- Color Filters (Left Side) -->
         <div v-if="shopStore.colors.length > 0" class="color-filters">
 
@@ -94,8 +95,28 @@
             >
             </button>
           </div>
-        </div>
+          </div>
+        
 
+        <!-- Height Filter -->
+        <div v-if="shopStore.heights.length > 0" class="height-filter">
+          <select
+            v-model="selectedHeight"
+            @change="onHeightChange"
+            class="height-select"
+          >
+            <option :value="null">Όλα τα ύψη</option>
+            <option
+              v-for="height in shopStore.heights"
+              :key="height.slug"
+              :value="height.slug"
+              :disabled="height.available === false"
+            >
+              {{ height.name }} ({{ height.count }})
+            </option>
+          </select>
+        </div>
+        </div>
         <!-- Price Range Slider (Right Side) -->
         <div class="extra-filters">
           <div class="price-filter">
@@ -148,6 +169,7 @@ const shopStore = useShopStore();
 const selectedCategory = ref(null);
 const showOnSale = ref(false);
 const selectedTags = ref([]);
+const selectedHeight = ref(null);
 const localMinPrice = ref(0);
 const localMaxPrice = ref(1000);
 const priceRange = ref([0, 1000]);
@@ -158,6 +180,7 @@ onMounted(() => {
   selectedCategory.value = shopStore.filters.category;
   showOnSale.value = shopStore.filters.onSale;
   selectedTags.value = [...shopStore.filters.tags];
+  selectedHeight.value = shopStore.filters.height;
   localMinPrice.value = shopStore.filters.minPrice || shopStore.priceRange.min;
   localMaxPrice.value = shopStore.filters.maxPrice || shopStore.priceRange.max;
   priceRange.value = [localMinPrice.value, localMaxPrice.value];
@@ -174,6 +197,10 @@ watch(() => shopStore.filters.onSale, (newVal) => {
 
 watch(() => shopStore.filters.tags, (newVal) => {
   selectedTags.value = [...newVal];
+});
+
+watch(() => shopStore.filters.height, (newVal) => {
+  selectedHeight.value = newVal;
 });
 
 // Watch price range changes
@@ -237,6 +264,10 @@ const toggleColor = (colorId) => {
 
 const toggleMaterial = (materialId) => {
   shopStore.toggleMaterial(materialId);
+};
+
+const onHeightChange = () => {
+  shopStore.setHeight(selectedHeight.value);
 };
 
 const onPriceRangeChange = (value) => {
@@ -390,10 +421,49 @@ const getMaterialSize = (count) => {
 
 /* Color Filters (Left Side of Additional Filters) */
 .color-filters {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+                      @include make-col-ready();
+    
+                    @include media-breakpoint-up(sm) {
+                        @include make-col(4);
+                    }
+                    @include media-breakpoint-up(lg) {
+                        @include make-col(4);
+                    }
+}
+
+.height-filter {
+    @include make-col-ready();
+    
+    @include media-breakpoint-up(sm) {
+    @include make-col(4);
+    }
+    @include media-breakpoint-up(lg) {
+    @include make-col(4);
+    }
+}
+
+.height-select {
+  padding: 0.5rem;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.height-select:hover {
+  border-color: #999;
+}
+
+.height-select:focus {
+  outline: none;
+  border-color: #000;
+}
+
+.height-select option:disabled {
+  color: #ccc;
+  font-style: italic;
 }
 
 .extra-filters {
