@@ -80,16 +80,18 @@
               v-for="color in shopStore.colors"
               :key="color.id"
               class="color-swatch"
-              :class="{
-                active: shopStore.filters.colors.includes(color.id),
-                disabled: color.available === false && !shopStore.filters.colors.includes(color.id)
-              }"
+              :class="[
+                color.slug,
+                {
+                  active: shopStore.filters.colors.includes(color.id),
+                  disabled: color.available === false && !shopStore.filters.colors.includes(color.id)
+                }
+              ]"
               :style="{ backgroundColor: color.slug }"
               :title="color.name"
               :disabled="color.available === false && !shopStore.filters.colors.includes(color.id)"
               @click="toggleColor(color.id)"
             >
-              <span class="color-name">{{ color.name }}</span>
             </button>
           </div>
         </div>
@@ -101,32 +103,7 @@
             <div v-if="isPriceRangeRestricted" class="price-range-info">
               Διαθέσιμο: {{ shopStore.priceRange.filteredMin.toFixed(2) }}€ - {{ shopStore.priceRange.filteredMax.toFixed(2) }}€
             </div>
-            <div class="price-inputs">
-              <div class="price-input-group">
-                <label>Από:</label>
-                <input
-                  type="number"
-                  v-model.number="localMinPrice"
-                  :min="shopStore.priceRange.min"
-                  :max="shopStore.priceRange.max"
-                  @change="updatePriceRange"
-                  class="price-input"
-                />
-                <span>€</span>
-              </div>
-              <div class="price-input-group">
-                <label>Έως:</label>
-                <input
-                  type="number"
-                  v-model.number="localMaxPrice"
-                  :min="shopStore.priceRange.min"
-                  :max="shopStore.priceRange.max"
-                  @change="updatePriceRange"
-                  class="price-input"
-                />
-                <span>€</span>
-              </div>
-            </div>
+
             <div class="price-slider">
               <v-range-slider
                 v-model="priceRange"
@@ -138,6 +115,7 @@
                 track-color="#ddd"
                 @update:model-value="onPriceRangeChange"
                 class="mt-4"
+                thumb-label="always"
               ></v-range-slider>
             </div>
           </div>
@@ -364,7 +342,7 @@ const getMaterialSize = (count) => {
   transform: translateX(-50%);
   width: 60%;
   height: 3px;
-  background: #000;
+  background: $secondary;
 }
 
 .category-icon {
