@@ -166,8 +166,8 @@
             <div class="price-slider">
               <v-range-slider
                 v-model="priceRange"
-                :min="shopStore.priceRange.min"
-                :max="shopStore.priceRange.max"
+                :min="shopStore.priceRange.filteredMin"
+                :max="shopStore.priceRange.filteredMax"
                 :step="1"
                 hide-details
                 color="primary"
@@ -223,8 +223,9 @@ onMounted(() => {
   selectedHeight.value = shopStore.filters.height;
   selectedWidth.value = shopStore.filters.width;
   selectedDepth.value = shopStore.filters.depth;
-  localMinPrice.value = shopStore.filters.minPrice || shopStore.priceRange.min;
-  localMaxPrice.value = shopStore.filters.maxPrice || shopStore.priceRange.max;
+  // Use filtered range for initialization
+  localMinPrice.value = shopStore.filters.minPrice || shopStore.priceRange.filteredMin;
+  localMaxPrice.value = shopStore.filters.maxPrice || shopStore.priceRange.filteredMax;
   priceRange.value = [localMinPrice.value, localMaxPrice.value];
 });
 
@@ -253,10 +254,12 @@ watch(() => shopStore.filters.depth, (newVal) => {
   selectedDepth.value = newVal;
 });
 
-// Watch price range changes
-watch(() => [shopStore.priceRange.min, shopStore.priceRange.max], ([min, max]) => {
-  localMinPrice.value = shopStore.filters.minPrice || min;
-  localMaxPrice.value = shopStore.filters.maxPrice || max;
+// Watch price range changes (both overall and filtered)
+watch(() => [shopStore.priceRange.min, shopStore.priceRange.max, shopStore.priceRange.filteredMin, shopStore.priceRange.filteredMax], ([min, max, filteredMin, filteredMax]) => {
+  // Use filtered range as the slider bounds
+  // Constrain current values to the new filtered range
+  localMinPrice.value = Math.max(shopStore.filters.minPrice || filteredMin, filteredMin);
+  localMaxPrice.value = Math.min(shopStore.filters.maxPrice || filteredMax, filteredMax);
   priceRange.value = [localMinPrice.value, localMaxPrice.value];
 });
 
