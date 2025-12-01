@@ -33,21 +33,27 @@
       <p>No products found.</p>
     </div>
 
-    <!-- Pagination -->
-    <Pagination v-if="shopStore.pagination.totalPages > 1" />
+    <!-- Load More Trigger (Intersection Observer) -->
+    <div ref="loadMoreTrigger" class="load-more-trigger"></div>
+
+    <!-- Loading More Indicator -->
+    <div v-if="shopStore.loadingMore" class="loading-more">
+      <p>Loading more products...</p>
+    </div>
       </div>
     </v-main>
   </v-app>
 </template>
 
 <script setup>
-import { onMounted, nextTick, watch } from 'vue';
+import { onMounted, onUnmounted, nextTick, watch, ref } from 'vue';
 import { useShopStore } from '../../stores/shop';
 import FilterBar from './FilterBar.vue';
 import ProductCard from './ProductCard.vue';
-import Pagination from './Pagination.vue';
 
 const shopStore = useShopStore();
+const loadMoreTrigger = ref(null);
+let observer = null;
 
 onMounted(async () => {
   // Initialize filters from URL parameters
@@ -82,6 +88,31 @@ onMounted(async () => {
 
   // Connect sort select to Vue store
   setupSortSelect();
+
+  // Setup Intersection Observer for infinite scroll
+  await nextTick();
+  if (loadMoreTrigger.value) {
+    observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting && shopStore.hasMore && !shopStore.loadingMore) {
+          shopStore.loadMoreProducts();
+        }
+      },
+      {
+        rootMargin: '200px' // Start loading 200px before reaching the trigger
+      }
+    );
+    observer.observe(loadMoreTrigger.value);
+  }
+});
+
+onUnmounted(() => {
+  // Cleanup observer
+  if (observer && loadMoreTrigger.value) {
+    observer.unobserve(loadMoreTrigger.value);
+    observer.disconnect();
+  }
 });
 
 function setupHeaderSearch() {
@@ -213,6 +244,18 @@ function setupSortSelect() {
 
 .error {
   color: #dc3545;
+}
+
+.load-more-trigger {
+  height: 1px;
+  visibility: hidden;
+}
+
+.loading-more {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1rem;
+  color: #666;
 }
 
 @media (max-width: 1200px) {

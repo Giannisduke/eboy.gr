@@ -26,15 +26,17 @@ export const useShopStore = defineStore('shop', {
             orderby: 'menu_order',
             order: 'asc',
             page: 1,
-            perPage: 10
+            perPage: 12
         },
         pagination: {
             total: 0,
             totalPages: 1,
             currentPage: 1
         },
+        hasMore: true,
         gridColumns: 4, // 2, 4, or 6 columns
         loading: false,
+        loadingMore: false,
         error: null
     }),
 
@@ -133,21 +135,33 @@ export const useShopStore = defineStore('shop', {
             window.history.pushState({}, '', newURL);
         },
 
-        async fetchProducts() {
-            this.loading = true;
+        async fetchProducts(append = false) {
+            if (append) {
+                this.loadingMore = true;
+            } else {
+                this.loading = true;
+            }
             this.error = null;
 
             try {
                 const result = await productsApi.getProducts(this.filters);
-                this.products = result.products;
+
+                if (append) {
+                    this.products = [...this.products, ...result.products];
+                } else {
+                    this.products = result.products;
+                }
+
                 this.pagination.total = result.total;
                 this.pagination.totalPages = result.totalPages;
                 this.pagination.currentPage = this.filters.page;
+                this.hasMore = this.filters.page < result.totalPages;
             } catch (error) {
                 this.error = error.message;
                 console.error('Error fetching products:', error);
             } finally {
                 this.loading = false;
+                this.loadingMore = false;
             }
         },
 
@@ -201,6 +215,15 @@ export const useShopStore = defineStore('shop', {
             } catch (error) {
                 console.error('Error fetching price range:', error);
             }
+        },
+
+        async loadMoreProducts() {
+            if (!this.hasMore || this.loadingMore) {
+                return;
+            }
+
+            this.filters.page += 1;
+            await this.fetchProducts(true);
         },
 
         async setCategory(categoryId) {
@@ -366,7 +389,7 @@ export const useShopStore = defineStore('shop', {
                 orderby: 'menu_order',
                 order: 'asc',
                 page: 1,
-                perPage: 10
+                perPage: 12
             };
             this.updateURL();
             this.fetchProducts();
