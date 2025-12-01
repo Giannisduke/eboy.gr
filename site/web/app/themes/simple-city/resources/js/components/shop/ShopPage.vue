@@ -90,6 +90,9 @@ onMounted(async () => {
   // Connect header search to Vue store
   setupHeaderSearch();
 
+  // Wait for DOM to update before setting up sort select
+  await nextTick();
+
   // Connect sort select to Vue store
   setupSortSelect();
 });
