@@ -217,7 +217,7 @@ const selectedDepth = ref(null);
 const localMinPrice = ref(0);
 const localMaxPrice = ref(1000);
 const priceRange = ref([0, 1000]);
-const sortValue = ref('menu_order-asc');
+const sortValue = ref('date-desc');
 let priceUpdateTimeout = null;
 
 // Sync local state with store on mount (for URL initialization)

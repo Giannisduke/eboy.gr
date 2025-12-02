@@ -3,22 +3,6 @@
     "file": "assets/editor.deps-DxpY22xl.json",
     "src": "editor.deps.json"
   },
-  "node_modules/@mdi/font/fonts/materialdesignicons-webfont.eot": {
-    "file": "assets/materialdesignicons-webfont-CSr8KVlo.eot",
-    "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.eot"
-  },
-  "node_modules/@mdi/font/fonts/materialdesignicons-webfont.ttf": {
-    "file": "assets/materialdesignicons-webfont-B7mPwVP_.ttf",
-    "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.ttf"
-  },
-  "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff": {
-    "file": "assets/materialdesignicons-webfont-PXm3-2wK.woff",
-    "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff"
-  },
-  "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff2": {
-    "file": "assets/materialdesignicons-webfont-Dp5v-WZN.woff2",
-    "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff2"
-  },
   "resources/css/app.scss": {
     "file": "assets/app-VujEWeju.css",
     "src": "resources/css/app.scss",
@@ -230,12 +214,12 @@
     "src": "resources/images/view_small_s.svg"
   },
   "resources/js/app.js": {
-    "file": "assets/app-IvCZ8_HA.js",
+    "file": "assets/app-DJMzcXPp.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-l1p7yA3o.css"
+      "assets/app-Bj6zWXtA.css"
     ],
     "assets": [
       "assets/bathroom-H5gpXJb4.svg",
@@ -244,11 +228,7 @@
       "assets/kitchen-CWGgO1IH.svg",
       "assets/office-zTi99C67.svg",
       "assets/sales-9FCY2qef.svg",
-      "assets/saloni-hVbrlUkY.svg",
-      "assets/materialdesignicons-webfont-CSr8KVlo.eot",
-      "assets/materialdesignicons-webfont-Dp5v-WZN.woff2",
-      "assets/materialdesignicons-webfont-PXm3-2wK.woff",
-      "assets/materialdesignicons-webfont-B7mPwVP_.ttf"
+      "assets/saloni-hVbrlUkY.svg"
     ]
   },
   "resources/js/editor.js": {

@@ -636,6 +636,11 @@ function clear_shop_cache($post_id) {
     // Delete all shop transients
     $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_shop_%'");
     $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_timeout_shop_%'");
+
+    // Also clear WordPress object cache if available
+    if (function_exists('wp_cache_flush')) {
+        wp_cache_flush();
+    }
 }
 
 // Hook into product save/update/delete events

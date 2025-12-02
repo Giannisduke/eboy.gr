@@ -29,8 +29,8 @@ export const useShopStore = defineStore('shop', {
             depth: null,
             minPrice: null,
             maxPrice: null,
-            orderby: 'menu_order',
-            order: 'asc',
+            orderby: 'date',
+            order: 'desc',
             page: 1,
             perPage: 12
         },
@@ -513,8 +513,8 @@ export const useShopStore = defineStore('shop', {
                 depth: null,
                 minPrice: this.priceRange.min,
                 maxPrice: this.priceRange.max,
-                orderby: 'menu_order',
-                order: 'asc',
+                orderby: 'date',
+                order: 'desc',
                 page: 1,
                 perPage: 12
             };

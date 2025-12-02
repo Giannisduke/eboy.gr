@@ -3,17 +3,19 @@ import.meta.glob([
   '../fonts/**',
 ]);
 
-import * as bootstrap from 'bootstrap';
-
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import { createVuetify } from 'vuetify';
+import { VRangeSlider, VSelect } from 'vuetify/components';
 import 'vuetify/styles';
-import '@mdi/font/css/materialdesignicons.css';
 import ShopPage from './components/shop/ShopPage.vue';
 
-// Vuetify configuration
+// Vuetify configuration with only needed components
 const vuetify = createVuetify({
+  components: {
+    VRangeSlider,
+    VSelect,
+  },
   theme: {
     defaultTheme: 'light',
     themes: {
