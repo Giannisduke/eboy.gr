@@ -20,7 +20,7 @@
     "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff2"
   },
   "resources/css/app.scss": {
-    "file": "assets/app-CPbsnnBe.css",
+    "file": "assets/app-VujEWeju.css",
     "src": "resources/css/app.scss",
     "isEntry": true
   },
@@ -230,12 +230,12 @@
     "src": "resources/images/view_small_s.svg"
   },
   "resources/js/app.js": {
-    "file": "assets/app-DdU2o3PX.js",
+    "file": "assets/app-IvCZ8_HA.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-C8Nm11uW.css"
+      "assets/app-l1p7yA3o.css"
     ],
     "assets": [
       "assets/bathroom-H5gpXJb4.svg",

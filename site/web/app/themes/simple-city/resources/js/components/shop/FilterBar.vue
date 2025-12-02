@@ -177,13 +177,15 @@
 			</div>
 
 			<div class="right">
-				<select id="sort-select" class="sort-select">
-					<option value="menu_order-asc">Προεπιλεγμένη ταξινόμηση</option>
-					<option value="popularity-desc">Δημοφιλά</option>
-					<option value="date-desc">Πιο πρόσφατα</option>
-					<option value="price-asc">Τιμή: Χαμηλή προς Υψηλή</option>
-					<option value="price-desc">Τιμή: Υψηλή προς Χαμηλή</option>
-				</select>
+				<v-select
+					id="sort-select"
+					v-model="sortValue"
+					:items="sortItems"
+					variant="outlined"
+					density="compact"
+					hide-details
+					@update:model-value="onSortChange"
+				></v-select>
 			</div>
 			</div>
 		</div>
@@ -215,6 +217,7 @@ const selectedDepth = ref(null);
 const localMinPrice = ref(0);
 const localMaxPrice = ref(1000);
 const priceRange = ref([0, 1000]);
+const sortValue = ref('menu_order-asc');
 let priceUpdateTimeout = null;
 
 // Sync local state with store on mount (for URL initialization)
@@ -225,6 +228,7 @@ onMounted(() => {
   selectedHeight.value = shopStore.filters.height;
   selectedWidth.value = shopStore.filters.width;
   selectedDepth.value = shopStore.filters.depth;
+  sortValue.value = `${shopStore.filters.orderby}-${shopStore.filters.order}`;
   // Use filtered range for initialization
   localMinPrice.value = shopStore.filters.minPrice || shopStore.priceRange.filteredMin;
   localMaxPrice.value = shopStore.filters.maxPrice || shopStore.priceRange.filteredMax;
@@ -254,6 +258,11 @@ watch(() => shopStore.filters.width, (newVal) => {
 
 watch(() => shopStore.filters.depth, (newVal) => {
   selectedDepth.value = newVal;
+});
+
+// Watch sort changes from store
+watch(() => `${shopStore.filters.orderby}-${shopStore.filters.order}`, (newVal) => {
+  sortValue.value = newVal;
 });
 
 // Watch price range changes (both overall and filtered)
@@ -294,6 +303,17 @@ const depthItems = computed(() => {
     value: depth.slug,
     disabled: depth.available === false
   }));
+});
+
+// Sort items for v-select
+const sortItems = computed(() => {
+  return [
+    { title: 'Προεπιλεγμένη ταξινόμηση', value: 'menu_order-asc' },
+    { title: 'Δημοφιλά', value: 'popularity-desc' },
+    { title: 'Πιο πρόσφατα', value: 'date-desc' },
+    { title: 'Τιμή: Χαμηλή προς Υψηλή', value: 'price-asc' },
+    { title: 'Τιμή: Υψηλή προς Χαμηλή', value: 'price-desc' }
+  ];
 });
 
 // Category icon mapping
@@ -356,6 +376,11 @@ const onWidthChange = (value) => {
 
 const onDepthChange = (value) => {
   shopStore.setDepth(value);
+};
+
+const onSortChange = (value) => {
+  const [orderby, order] = value.split('-');
+  shopStore.setSort(orderby, order);
 };
 
 const onPriceRangeChange = (value) => {
@@ -483,18 +508,19 @@ const getMaterialSize = (count) => {
 /* Filters Container (Two Columns) */
 .filters-container {
   @include make-row();
+  @extend .w-100;
 
 /* Tag Cloud (Left Column - 50%) */
-.tag-cloud {
-      @include make-col-ready();
-      @include media-breakpoint-up(lg) {
-      @include make-col(5);
-    }
-    @extend .pt-4;
-}
+    & .tag-cloud {
+        @include make-col-ready();
+        @include media-breakpoint-up(lg) {
+        @include make-col(6);
+      }
+      @extend .pt-4;
+  }
 
 /* Material Column */
-.material {
+    & .material {
       @include make-col-ready();
       @include media-breakpoint-up(lg) {
       @include make-col(3);
@@ -505,7 +531,7 @@ const getMaterialSize = (count) => {
 }
 
 /* Additional Filters (Right Column - 50%) */
-.additional-filters {
+    & .additional-filters {
       @include make-col-ready();
       @include media-breakpoint-up(lg) {
       @include make-col(12);
@@ -513,7 +539,7 @@ const getMaterialSize = (count) => {
 }
 
 /* Color Filters (Left Side of Additional Filters) */
-.color-filters {
+    & .color-filters {
       @include make-col-ready();
     
       @include media-breakpoint-up(md) {
@@ -521,7 +547,7 @@ const getMaterialSize = (count) => {
       }
 }
 
-.height-filter {
+    & .height-filter {
     @include make-col-ready();
 
     @include media-breakpoint-up(sm) {
@@ -532,7 +558,7 @@ const getMaterialSize = (count) => {
     }
 }
 
-.width-filter {
+    & .width-filter {
     @include make-col-ready();
 
     @include media-breakpoint-up(sm) {
@@ -543,7 +569,7 @@ const getMaterialSize = (count) => {
     }
 }
 
-.depth-filter {
+    & .depth-filter {
     @include make-col-ready();
 
     @include media-breakpoint-up(sm) {
@@ -554,89 +580,97 @@ const getMaterialSize = (count) => {
     }
 }
 
-// Vuetify v-select components handle their own styling
+// Vuetify v-select styling
+    & .height-filter,
+    & .width-filter,
+    & .depth-filter {
+      :deep(.v-label) {
+        font-size: 0.85rem;
+      }
+    }
 
-.extra-filters {
+    & .extra-filters {
       @include make-col-ready();
       @include media-breakpoint-up(lg) {
-      @include make-col(4);
+      @include make-col(3);
     }
     @extend .ps-3;
+    @extend .pe-0;
 }
 
 /* Price Filter */
-.price-filter {
-    @include make-col-ready();
+    & .price-filter {
+      @include make-col-ready();
 
-    @include media-breakpoint-up(md) {
-    @include make-col(12);
+      @include media-breakpoint-up(md) {
+      @include make-col(12);
+      }
+      @extend .pb-4;
+  }
+
+    & .price-range-info {
+      font-size: 0.85rem;
+      color: #666;
+      background: #fff3cd;
+      padding: 0.5rem;
+      border-radius: 4px;
+      text-align: center;
+      border: 1px solid #ffd700;
     }
-    @extend .pb-4;
-}
 
-.price-range-info {
-  font-size: 0.85rem;
-  color: #666;
-  background: #fff3cd;
-  padding: 0.5rem;
-  border-radius: 4px;
-  text-align: center;
-  border: 1px solid #ffd700;
-}
-
-.price-inputs {
+    & .price-inputs {
   display: flex;
   gap: 1rem;
   align-items: center;
 }
 
-.price-input-group {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
+    & .price-input-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
 
-.price-input-group label {
+    & .price-input-group label {
   font-size: 0.9rem;
   color: #666;
   min-width: 40px;
 }
 
-.price-input {
-  width: 80px;
-  padding: 0.5rem;
-  border: 2px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  text-align: center;
-}
+    & .price-input {
+      width: 80px;
+      padding: 0.5rem;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      text-align: center;
+    }
 
-.price-input:focus {
-  outline: none;
-  border-color: #000;
-}
+    & .price-input:focus {
+      outline: none;
+      border-color: #000;
+    }
 
-.price-input-group span {
-  font-size: 0.9rem;
-  color: #666;
-}
+    & .price-input-group span {
+      font-size: 0.9rem;
+      color: #666;
+    }
 
 /* Price Slider */
-.price-slider {
-  :deep(.v-slider-thumb__label::after) {
-    content: '€';
-    margin-left: 2px;
-  }
-}
+    & .price-slider {
+      :deep(.v-slider-thumb__label::after) {
+        content: '€';
+        margin-left: 2px;
+      }
+    }
 
-.filter-title {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0;
-  color: #333;
-}
+    & .filter-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0;
+      color: #333;
+    }
 
-.color-swatches {
+    & .color-swatches {
       @include make-col-ready();
     
       @include media-breakpoint-up(md) {
@@ -646,149 +680,149 @@ const getMaterialSize = (count) => {
       @extend .mb-3;
 }
 
-.color-swatch {
-  position: relative;
-  width: 1.55rem;
-  height: 1.55rem;
-  border-radius: 50%;
-  border: 2px solid #ddd;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  overflow: hidden;
-  @extend .me-2;
-}
+    & .color-swatch {
+      position: relative;
+      width: 1.55rem;
+      height: 1.55rem;
+      border-radius: 50%;
+      border: 2px solid #ddd;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      @extend .me-2;
+    }
 
-.color-swatch:hover {
-  transform: scale(1.1);
-  border-color: #999;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
+    & .color-swatch:hover {
+      transform: scale(1.1);
+      border-color: #999;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
 
-.color-swatch.active {
-  border-color: #000;
-  border-width: 4px;
-  box-shadow: 0 0 0 2px #ffd700;
-}
+    & .color-swatch.active {
+      border-color: #000;
+      border-width: 4px;
+      box-shadow: 0 0 0 2px #ffd700;
+    }
 
-.color-swatch.disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-  filter: grayscale(50%);
-}
+    & .color-swatch.disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      filter: grayscale(50%);
+    }
 
-.color-swatch.disabled:hover {
-  transform: none;
-  border-color: #ddd;
-  box-shadow: none;
-}
+    & .color-swatch.disabled:hover {
+      transform: none;
+      border-color: #ddd;
+      box-shadow: none;
+    }
 
-.color-name {
-  position: absolute;
-  bottom: -25px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.75rem;
-  color: #666;
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
+    & .color-name {
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      color: #666;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
 
-.color-swatch:hover .color-name {
-  opacity: 1;
-}
+    & .color-swatch:hover .color-name {
+      opacity: 1;
+    }
 
-.tag-btn {
-  @extend .btn;
-  @extend .btn-primary;
-  @extend .m-1;
-}
+    & .tag-btn {
+      @extend .btn;
+      @extend .btn-primary;
+      @extend .m-1;
+    }
 
-.tag-btn:hover {
- // border-color: #999;
-  background: $secondary;
-  transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+    & .tag-btn:hover {
+    // border-color: #999;
+      background: $secondary;
+      transform: translateY(-2px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
 
-.tag-btn.active {
-  background: #ffd700;
-  border-color: #ffd700;
-  color: #000;
-  font-weight: 600;
-}
+    & .tag-btn.active {
+      background: #ffd700;
+      border-color: #ffd700;
+      color: #000;
+      font-weight: 600;
+    }
 
-.tag-btn.active:hover {
-  background: #ffed4e;
-  border-color: #ffed4e;
-}
+    & .tag-btn.active:hover {
+      background: #ffed4e;
+      border-color: #ffed4e;
+    }
 
-.tag-btn.disabled {
-  background: #f5f5f5;
-  color: #ccc;
-  border-color: #e5e5e5;
-  cursor: not-allowed;
-  opacity: 0.5;
-}
+    & .tag-btn.disabled {
+      background: #f5f5f5;
+      color: #ccc;
+      border-color: #e5e5e5;
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
 
-.tag-btn.disabled:hover {
-  background: #f5f5f5;
-  border-color: #e5e5e5;
-  transform: none;
-  box-shadow: none;
-}
+    & .tag-btn.disabled:hover {
+      background: #f5f5f5;
+      border-color: #e5e5e5;
+      transform: none;
+      box-shadow: none;
+    }
 
-.tag-count {
-  font-size: 0.85em;
-  opacity: 0.7;
-  margin-left: 0.25rem;
-}
+    & .tag-count {
+      font-size: 0.85em;
+      opacity: 0.7;
+      margin-left: 0.25rem;
+    }
 
-.material-btn {
-  @extend .btn;
-  @extend .btn-primary;
-  @extend .m-1;
-}
+    & .material-btn {
+      @extend .btn;
+      @extend .btn-primary;
+      @extend .m-1;
+    }
 
-.material-btn:hover {
-  background: $secondary;
-  transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+    & .material-btn:hover {
+      background: $secondary;
+      transform: translateY(-2px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
 
-.material-btn.active {
-  background: #ffd700;
-  border-color: #ffd700;
-  color: #000;
-  font-weight: 600;
-}
+    & .material-btn.active {
+      background: #ffd700;
+      border-color: #ffd700;
+      color: #000;
+      font-weight: 600;
+    }
 
-.material-btn.active:hover {
-  background: #ffed4e;
-  border-color: #ffed4e;
-}
+    & .material-btn.active:hover {
+      background: #ffed4e;
+      border-color: #ffed4e;
+    }
 
-.material-btn.disabled {
-  background: #f5f5f5;
-  color: #ccc;
-  border-color: #e5e5e5;
-  cursor: not-allowed;
-  opacity: 0.5;
-}
+    & .material-btn.disabled {
+      background: #f5f5f5;
+      color: #ccc;
+      border-color: #e5e5e5;
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
 
-.material-btn.disabled:hover {
-  background: #f5f5f5;
-  border-color: #e5e5e5;
-  transform: none;
-  box-shadow: none;
-}
+    & .material-btn.disabled:hover {
+      background: #f5f5f5;
+      border-color: #e5e5e5;
+      transform: none;
+      box-shadow: none;
+    }
 
-.material-count {
-  font-size: 0.85em;
-  opacity: 0.7;
-  margin-left: 0.25rem;
-}
+    & .material-count {
+      font-size: 0.85em;
+      opacity: 0.7;
+      margin-left: 0.25rem;
+    }
 
 
 

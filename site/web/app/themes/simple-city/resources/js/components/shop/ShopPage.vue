@@ -81,12 +81,6 @@ onMounted(async () => {
 
   // Connect header search to Vue store
   setupHeaderSearch();
-
-  // Wait for DOM to update before setting up sort select
-  await nextTick();
-
-  // Connect sort select to Vue store
-  setupSortSelect();
 });
 
 function setupHeaderSearch() {
@@ -157,30 +151,6 @@ function updateButtonStates() {
   if (shopStore.gridColumns === 2 && grid2) grid2.classList.add('selected');
   if (shopStore.gridColumns === 4 && grid4) grid4.classList.add('selected');
   if (shopStore.gridColumns === 6 && grid6) grid6.classList.add('selected');
-}
-
-function setupSortSelect() {
-  const sortSelect = document.getElementById('sort-select');
-
-  if (sortSelect) {
-    // Set initial value from store
-    const currentValue = `${shopStore.filters.orderby}-${shopStore.filters.order}`;
-    sortSelect.value = currentValue;
-
-    // Listen for select changes
-    sortSelect.addEventListener('change', (e) => {
-      const value = e.target.value;
-      const [orderby, order] = value.split('-');
-      shopStore.setSort(orderby, order);
-    });
-
-    // Watch store changes to keep select in sync
-    watch(() => `${shopStore.filters.orderby}-${shopStore.filters.order}`, (newVal) => {
-      if (sortSelect.value !== newVal) {
-        sortSelect.value = newVal;
-      }
-    });
-  }
 }
 </script>
 

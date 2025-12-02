@@ -349,6 +349,7 @@ section {
                 display: inline-block;
                 cursor: pointer;
                 outline: revert;
+                @extend .mx-1;
                 }
                 & :nth-child(1) {
                 //@extend .test;
@@ -399,6 +400,11 @@ section {
                 }
                 @extend .d-flex;
                 @extend .justify-content-end;
+
+                & .v-input {
+                    @extend .d-flex;
+                    @extend .justify-content-end;
+                }
             }
             & .facetwp-facet {
                 @include make-col-ready();

@@ -46,7 +46,6 @@ const placeholderImage = computed(() => {
 
 <style scoped>
 .product-card {
-  background: #fff;
   border-radius: 8px;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -101,14 +100,10 @@ const placeholderImage = computed(() => {
 
 .product-title {
   font-size: 1rem;
-  font-weight: 600;
   margin: 0 0 0.5rem;
-  color: #333;
+  color: $primary;
   line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  font-family: 'PFBagueSansPro-Medium';
 }
 
 .product-price {
@@ -123,8 +118,7 @@ const placeholderImage = computed(() => {
 }
 
 .sale-price {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #dc3545;
+  font-size: 1rem;
+  color: $primary;
 }
 </style>
