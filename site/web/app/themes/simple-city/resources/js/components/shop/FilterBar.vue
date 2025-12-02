@@ -69,10 +69,31 @@
           {{ material.name }} <span class="material-count">({{ material.count }})</span>
         </button>
       </div>
+        <!-- Price Range Slider (Right Side) -->
+        <div class="extra-filters">
+          <div class="price-filter">
+        
+            <div v-if="isPriceRangeRestricted" class="price-range-info">
+              Διαθέσιμο: {{ shopStore.priceRange.filteredMin.toFixed(2) }}€ - {{ shopStore.priceRange.filteredMax.toFixed(2) }}€
+            </div>
 
-      <!-- Additional Filters (Right Column) -->
-      <div class="additional-filters">
-        <div class="row">
+            <div class="price-slider">
+              <v-range-slider
+                v-model="priceRange"
+                :min="shopStore.priceRange.filteredMin"
+                :max="shopStore.priceRange.filteredMax"
+                :step="1"
+                hide-details
+                color="primary"
+                track-color="#ddd"
+                @update:model-value="onPriceRangeChange"
+                class="mt-4"
+                thumb-label="always"
+              ></v-range-slider>
+            </div>
+          </div>
+             
+        
         <!-- Color Filters (Left Side) -->
         <div v-if="shopStore.colors.length > 0" class="color-filters">
 
@@ -94,8 +115,8 @@
               @click="toggleColor(color.id)"
             >
             </button>
-          </div>
-          </div>
+          
+       
         
 
         <!-- Height Filter -->
@@ -155,31 +176,10 @@
           </select>
         </div>
         </div>
-        <!-- Price Range Slider (Right Side) -->
-        <div class="extra-filters">
-          <div class="price-filter">
-        
-            <div v-if="isPriceRangeRestricted" class="price-range-info">
-              Διαθέσιμο: {{ shopStore.priceRange.filteredMin.toFixed(2) }}€ - {{ shopStore.priceRange.filteredMax.toFixed(2) }}€
-            </div>
-
-            <div class="price-slider">
-              <v-range-slider
-                v-model="priceRange"
-                :min="shopStore.priceRange.filteredMin"
-                :max="shopStore.priceRange.filteredMax"
-                :step="1"
-                hide-details
-                color="primary"
-                track-color="#ddd"
-                @update:model-value="onPriceRangeChange"
-                class="mt-4"
-                thumb-label="always"
-              ></v-range-slider>
-            </div>
-          </div>
-        </div>
       </div>
+        </div>
+              <!-- Additional Filters (Right Column) -->
+
     </div>
 
     <!-- Results Count -->
@@ -389,17 +389,20 @@ const getMaterialSize = (count) => {
 @import "bootstrap/scss/utilities/api";
 
 .filter-bar {
-  margin-bottom: 2rem;
+  @include make-row();
 }
 
 /* Category Menu */
 .category-menu {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  padding: 1rem 0;
-  margin-bottom: 1.5rem;
-  //border-bottom: 2px solid #e0e0e0;
+      @include make-col-ready();
+      @include media-breakpoint-up(lg) {
+      @include make-col(12);
+    }
+    @extend .py-5;
+ // overflow-x: auto;
+  @extend .d-flex;
+  @extend .justify-content-between;
+
 }
 
 .category-btn {
@@ -453,30 +456,32 @@ const getMaterialSize = (count) => {
 /* Filters Container (Two Columns) */
 .filters-container {
   @include make-row();
-}
 
 /* Tag Cloud (Left Column - 50%) */
 .tag-cloud {
-      @include make-col(4);
+      @include make-col-ready();
       @include media-breakpoint-up(lg) {
       @include make-col(5);
     }
+    @extend .pt-4;
 }
 
 /* Material Column */
 .material {
-      @include make-col(4);
+      @include make-col-ready();
       @include media-breakpoint-up(lg) {
       @include make-col(3);
     }
+      @extend .pt-4;
+      @extend .pe-0;
 
 }
 
 /* Additional Filters (Right Column - 50%) */
 .additional-filters {
-      @include make-col(4);
+      @include make-col-ready();
       @include media-breakpoint-up(lg) {
-      @include make-col(4);
+      @include make-col(12);
     }
 }
 
@@ -484,11 +489,8 @@ const getMaterialSize = (count) => {
 .color-filters {
                       @include make-col-ready();
     
-                    @include media-breakpoint-up(sm) {
-                        @include make-col(4);
-                    }
-                    @include media-breakpoint-up(lg) {
-                        @include make-col(4);
+                    @include media-breakpoint-up(md) {
+                        @include make-col(12);
                     }
 }
 
@@ -558,16 +560,21 @@ const getMaterialSize = (count) => {
 }
 
 .extra-filters {
-  flex: 2;
-  display: flex;
-  flex-direction: column;
+      @include make-col(4);
+      @include media-breakpoint-up(lg) {
+      @include make-col(4);
+    }
+    @extend .ps-3;
 }
 
 /* Price Filter */
 .price-filter {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+    @include make-col-ready();
+
+    @include media-breakpoint-up(md) {
+    @include make-col(12);
+    }
+    @extend .pb-4;
 }
 
 .price-range-info {
@@ -619,8 +626,7 @@ const getMaterialSize = (count) => {
 
 /* Price Slider */
 .price-slider {
-  margin-top: 0.5rem;
-  padding: 0 0.5rem;
+
 }
 
 .filter-title {
@@ -810,16 +816,14 @@ const getMaterialSize = (count) => {
   }
 
   .filters-container {
-    flex-direction: column;
-    gap: 1rem;
+          @include make-container();
   }
 
 
 
   .additional-filters {
-    flex-direction: column;
-    padding: 1rem 0.5rem;
-    min-height: auto;
+      @include make-row();
+    }
   }
 
   .color-swatch {

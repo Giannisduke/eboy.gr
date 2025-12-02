@@ -192,9 +192,17 @@ function setupSortSelect() {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'bootstrap/scss/functions';
+@import '../../../css/custom/shared-variables';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/maps';
+@import 'bootstrap/scss/mixins';
+@import "bootstrap/scss/containers";
+@import "bootstrap/scss/grid";
+
 .shop-page {
-  width: 100%;
+  @include make-container();
 }
 
 .products-grid {
