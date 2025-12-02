@@ -74,15 +74,7 @@ onMounted(async () => {
   await shopStore.fetchPriceRange();
   await shopStore.fetchProducts();
 
-  // Move .views div below .results-count
   await nextTick();
-  const viewsDiv = document.querySelector('.views');
-  const resultsCount = document.querySelector('.results-count');
-
-  if (viewsDiv && resultsCount) {
-    // Insert .views right after .results-count
-    resultsCount.parentNode.insertBefore(viewsDiv, resultsCount.nextSibling);
-  }
 
   // Connect grid view buttons to Vue store
   setupGridButtons();

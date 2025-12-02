@@ -69,10 +69,11 @@
           {{ material.name }} <span class="material-count">({{ material.count }})</span>
         </button>
       </div>
-        <!-- Price Range Slider (Right Side) -->
-        <div class="extra-filters">
+      <!-- Extra Filters (Right Side) -->
+      <div class="extra-filters">
+        <div class="row">
+          <!-- Price Range Slider -->
           <div class="price-filter">
-        
             <div v-if="isPriceRangeRestricted" class="price-range-info">
               Διαθέσιμο: {{ shopStore.priceRange.filteredMin.toFixed(2) }}€ - {{ shopStore.priceRange.filteredMax.toFixed(2) }}€
             </div>
@@ -92,100 +93,101 @@
               ></v-range-slider>
             </div>
           </div>
-             
-        
-        <!-- Color Filters (Left Side) -->
-        <div v-if="shopStore.colors.length > 0" class="color-filters">
 
-          <div class="color-swatches">
-            <button
-              v-for="color in shopStore.colors"
-              :key="color.id"
-              class="color-swatch"
-              :class="[
-                color.slug,
-                {
-                  active: shopStore.filters.colors.includes(color.id),
-                  disabled: color.available === false && !shopStore.filters.colors.includes(color.id)
-                }
-              ]"
-              :style="{ backgroundColor: color.slug }"
-              :title="color.name"
-              :disabled="color.available === false && !shopStore.filters.colors.includes(color.id)"
-              @click="toggleColor(color.id)"
-            >
-            </button>
-          
-       
-        
+          <!-- Color Filters -->
+          <div v-if="shopStore.colors.length > 0" class="color-filters">
+            <div class="color-swatches">
+              <button
+                v-for="color in shopStore.colors"
+                :key="color.id"
+                class="color-swatch"
+                :class="[
+                  color.slug,
+                  {
+                    active: shopStore.filters.colors.includes(color.id),
+                    disabled: color.available === false && !shopStore.filters.colors.includes(color.id)
+                  }
+                ]"
+                :style="{ backgroundColor: color.slug }"
+                :title="color.name"
+                :disabled="color.available === false && !shopStore.filters.colors.includes(color.id)"
+                @click="toggleColor(color.id)"
+              >
+              </button>
+            </div>
+          </div>
 
-        <!-- Height Filter -->
-        <div v-if="shopStore.heights.length > 0" class="height-filter">
-          <select
-            v-model="selectedHeight"
-            @change="onHeightChange"
-            class="height-select"
-          >
-            <option :value="null">Όλα τα ύψη</option>
-            <option
-              v-for="height in shopStore.heights"
-              :key="height.slug"
-              :value="height.slug"
-              :disabled="height.available === false"
-            >
-              {{ height.name }} ({{ height.count }})
-            </option>
-          </select>
-        </div>
+          <!-- Height Filter -->
+          <div v-if="shopStore.heights.length > 0" class="height-filter">
+            <v-select
+              v-model="selectedHeight"
+              :items="heightItems"
+              label="Ύψος"
+              variant="outlined"
+              density="compact"
+              hide-details
+              clearable
+              @update:model-value="onHeightChange"
+            ></v-select>
+          </div>
 
-        <!-- Width Filter -->
-        <div v-if="shopStore.widths.length > 0" class="width-filter">
-          <select
-            v-model="selectedWidth"
-            @change="onWidthChange"
-            class="width-select"
-          >
-            <option :value="null">Όλα τα πλάτη</option>
-            <option
-              v-for="width in shopStore.widths"
-              :key="width.slug"
-              :value="width.slug"
-              :disabled="width.available === false"
-            >
-              {{ width.name }} ({{ width.count }})
-            </option>
-          </select>
-        </div>
+          <!-- Width Filter -->
+          <div v-if="shopStore.widths.length > 0" class="width-filter">
+            <v-select
+              v-model="selectedWidth"
+              :items="widthItems"
+              label="Πλάτος"
+              variant="outlined"
+              density="compact"
+              hide-details
+              clearable
+              @update:model-value="onWidthChange"
+            ></v-select>
+          </div>
 
-        <!-- Depth Filter -->
-        <div v-if="shopStore.depths.length > 0" class="depth-filter">
-          <select
-            v-model="selectedDepth"
-            @change="onDepthChange"
-            class="depth-select"
-          >
-            <option :value="null">Όλα τα μήκη</option>
-            <option
-              v-for="depth in shopStore.depths"
-              :key="depth.slug"
-              :value="depth.slug"
-              :disabled="depth.available === false"
-            >
-              {{ depth.name }} ({{ depth.count }})
-            </option>
-          </select>
-        </div>
+          <!-- Depth Filter -->
+          <div v-if="shopStore.depths.length > 0" class="depth-filter">
+            <v-select
+              v-model="selectedDepth"
+              :items="depthItems"
+              label="Μήκος"
+              variant="outlined"
+              density="compact"
+              hide-details
+              clearable
+              @update:model-value="onDepthChange"
+            ></v-select>
+          </div>
         </div>
       </div>
-        </div>
-              <!-- Additional Filters (Right Column) -->
 
     </div>
+    
+    <div class="views">
+			<div class="row justify-content-between">
+			<div class="left">
+				<button id="grid_2" data-value="view_small"> </button>
+				<button id="grid_4" class="selected" data-value="view_normal"></button>
+				<button id="grid_6" data-value="view_large"></button>
+			</div>
 
-    <!-- Results Count -->
-    <div class="results-count">
-      Εμφάνιση {{ shopStore.products.length }} από {{ shopStore.pagination.total }} προϊόντα
-    </div>
+			<!-- Results Count -->
+			<div class="results-count">
+				Εμφάνιση {{ shopStore.products.length }} από {{ shopStore.pagination.total }} προϊόντα
+			</div>
+
+			<div class="right">
+				<select id="sort-select" class="sort-select">
+					<option value="menu_order-asc">Προεπιλεγμένη ταξινόμηση</option>
+					<option value="popularity-desc">Δημοφιλά</option>
+					<option value="date-desc">Πιο πρόσφατα</option>
+					<option value="price-asc">Τιμή: Χαμηλή προς Υψηλή</option>
+					<option value="price-desc">Τιμή: Υψηλή προς Χαμηλή</option>
+				</select>
+			</div>
+			</div>
+		</div>
+    
   </div>
 </template>
 
@@ -269,6 +271,31 @@ const isPriceRangeRestricted = computed(() => {
          shopStore.priceRange.filteredMax < shopStore.priceRange.max;
 });
 
+// Computed properties for v-select items
+const heightItems = computed(() => {
+  return shopStore.heights.map(height => ({
+    title: `${height.name} (${height.count})`,
+    value: height.slug,
+    disabled: height.available === false
+  }));
+});
+
+const widthItems = computed(() => {
+  return shopStore.widths.map(width => ({
+    title: `${width.name} (${width.count})`,
+    value: width.slug,
+    disabled: width.available === false
+  }));
+});
+
+const depthItems = computed(() => {
+  return shopStore.depths.map(depth => ({
+    title: `${depth.name} (${depth.count})`,
+    value: depth.slug,
+    disabled: depth.available === false
+  }));
+});
+
 // Category icon mapping
 const categoryIcons = {
   'bathroom': bathroomIcon,
@@ -319,16 +346,16 @@ const toggleMaterial = (materialId) => {
   shopStore.toggleMaterial(materialId);
 };
 
-const onHeightChange = () => {
-  shopStore.setHeight(selectedHeight.value);
+const onHeightChange = (value) => {
+  shopStore.setHeight(value);
 };
 
-const onWidthChange = () => {
-  shopStore.setWidth(selectedWidth.value);
+const onWidthChange = (value) => {
+  shopStore.setWidth(value);
 };
 
-const onDepthChange = () => {
-  shopStore.setDepth(selectedDepth.value);
+const onDepthChange = (value) => {
+  shopStore.setDepth(value);
 };
 
 const onPriceRangeChange = (value) => {
@@ -487,11 +514,11 @@ const getMaterialSize = (count) => {
 
 /* Color Filters (Left Side of Additional Filters) */
 .color-filters {
-                      @include make-col-ready();
+      @include make-col-ready();
     
-                    @include media-breakpoint-up(md) {
-                        @include make-col(12);
-                    }
+      @include media-breakpoint-up(md) {
+      @include make-col(12);
+      }
 }
 
 .height-filter {
@@ -501,7 +528,7 @@ const getMaterialSize = (count) => {
     @include make-col(4);
     }
     @include media-breakpoint-up(lg) {
-    @include make-col(3);
+    @include make-col(4);
     }
 }
 
@@ -512,7 +539,7 @@ const getMaterialSize = (count) => {
     @include make-col(4);
     }
     @include media-breakpoint-up(lg) {
-    @include make-col(3);
+    @include make-col(4);
     }
 }
 
@@ -523,44 +550,14 @@ const getMaterialSize = (count) => {
     @include make-col(4);
     }
     @include media-breakpoint-up(lg) {
-    @include make-col(3);
+    @include make-col(4);
     }
 }
 
-.height-select,
-.width-select,
-.depth-select {
-  padding: 0.5rem;
-  border: 2px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  background: white;
-  cursor: pointer;
-  transition: border-color 0.3s ease;
-}
-
-.height-select:hover,
-.width-select:hover,
-.depth-select:hover {
-  border-color: #999;
-}
-
-.height-select:focus,
-.width-select:focus,
-.depth-select:focus {
-  outline: none;
-  border-color: #000;
-}
-
-.height-select option:disabled,
-.width-select option:disabled,
-.depth-select option:disabled {
-  color: #ccc;
-  font-style: italic;
-}
+// Vuetify v-select components handle their own styling
 
 .extra-filters {
-      @include make-col(4);
+      @include make-col-ready();
       @include media-breakpoint-up(lg) {
       @include make-col(4);
     }
@@ -626,7 +623,10 @@ const getMaterialSize = (count) => {
 
 /* Price Slider */
 .price-slider {
-
+  :deep(.v-slider-thumb__label::after) {
+    content: '€';
+    margin-left: 2px;
+  }
 }
 
 .filter-title {
@@ -637,21 +637,25 @@ const getMaterialSize = (count) => {
 }
 
 .color-swatches {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: flex-start;
+      @include make-col-ready();
+    
+      @include media-breakpoint-up(md) {
+      @include make-col(12);
+      }
+      @extend .p-0;
+      @extend .mb-3;
 }
 
 .color-swatch {
   position: relative;
-  width: 25px;
-  height: 25px;
+  width: 1.55rem;
+  height: 1.55rem;
   border-radius: 50%;
   border: 2px solid #ddd;
   cursor: pointer;
   transition: all 0.3s ease;
   overflow: hidden;
+  @extend .me-2;
 }
 
 .color-swatch:hover {
@@ -786,13 +790,7 @@ const getMaterialSize = (count) => {
   margin-left: 0.25rem;
 }
 
-.results-count {
-  width: 100%;
-  text-align: center;
-  color: #666;
-  font-size: 0.95rem;
-  padding: 0.5rem;
-}
+
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
@@ -815,9 +813,7 @@ const getMaterialSize = (count) => {
     font-size: 0.8rem;
   }
 
-  .filters-container {
-          @include make-container();
-  }
+
 
 
 
@@ -826,10 +822,7 @@ const getMaterialSize = (count) => {
     }
   }
 
-  .color-swatch {
-    width: 40px;
-    height: 40px;
-  }
+
 
   .tag-btn {
     padding: 0.4rem 0.75rem;

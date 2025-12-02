@@ -336,12 +336,13 @@ section {
         max-width: 1440px;
 
         & .views {
-            @include make-row();
+            @include make-container();
+            @extend .mt-5;
             & .left {
                 @include make-col-ready();
 
                 @include media-breakpoint-up(sm) {
-                    @include make-col(6);
+                    @include make-col(4);
                 }
                 & button {
                 all: unset;
@@ -381,12 +382,20 @@ section {
                     }
                 }
             }
-
-            & .right {
+            & .results-count {
                 @include make-col-ready();
 
                 @include media-breakpoint-up(sm) {
-                    @include make-col(6);
+                    @include make-col(4);
+                }
+                @extend .text-center;
+            }
+
+            & .right { 
+                @include make-col-ready();
+
+                @include media-breakpoint-up(sm) {
+                    @include make-col(4);
                 }
                 @extend .d-flex;
                 @extend .justify-content-end;
