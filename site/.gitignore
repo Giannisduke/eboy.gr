@@ -6,6 +6,9 @@ web/app/mu-plugins/*/
 !web/app/plugins/enable-cors
 !web/app/plugins/facetwp
 !web/app/themes/simple-city
+!web/app/themes/monk
+web/app/themes/*
+web/app/ai1wm-backups
 web/app/upgrade
 web/app/uploads/*
 !web/app/uploads/.gitkeep
@@ -29,3 +32,5 @@ auth.json
 
 # WP-CLI
 wp-cli.local.yml
+
+

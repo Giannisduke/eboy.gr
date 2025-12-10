@@ -1,3 +1,8 @@
 .*
 !.gitignore
 matterial/
+.DS_Store
+site/web/.DS_Store
+site/web/app/themes/simple-city/.DS_Store
+site/web/app/ai1wm-backups/index.php
+site/web/app/themes/twentytwentyfive/functions.php

@@ -60,15 +60,11 @@ collect(['setup', 'filters'])
     });
 
 
-
-
-    function my_own_mime_types( $mimes ) {
+   function my_own_mime_types( $mimes ) {
         $mimes['svg'] = 'image/svg+xml';
         $mimes['csv'] = 'text/csv';
         return $mimes;
     }
-
-    
 add_action( 'init', function() {
     update_option( 'woocommerce_setup_complete', 'yes' );
 });

@@ -5,6 +5,19 @@
 function woodmart_child_enqueue_styles() {
 	wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', array( 'woodmart-style' ), woodmart_get_theme_info( 'Version' ) );
 }
+
+// Επιτρέπει CSV σε media uploader για admin
+function allow_csv_admin_uploads( $mime_types ) {
+    if ( current_user_can( 'administrator' ) ) {
+        $mime_types['csv'] = 'text/csv';
+        $mime_types['csv'] = 'application/csv';
+    }
+    return $mime_types;
+}
+    
+add_filter( 'upload_mimes', 'allow_csv_admin_uploads' );
+
+
 add_action( 'wp_enqueue_scripts', 'woodmart_child_enqueue_styles', 10010 );
 //antzel - custom product grid
 function jo_custom_cat_grid($attr){
