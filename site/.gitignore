@@ -5,6 +5,7 @@ web/app/mu-plugins/*/
 !web/app/plugins/lh-multisite-cors
 !web/app/plugins/enable-cors
 !web/app/plugins/facetwp
+!web/app/plugins/wordpress-importer
 !web/app/themes/simple-city
 !web/app/themes/monk
 web/app/themes/*
