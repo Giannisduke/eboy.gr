@@ -1,5 +1,6 @@
 # Application
 web/app/plugins/*
+web/app/themes/*
 !web/app/plugins/.gitkeep
 web/app/mu-plugins/*/
 !web/app/plugins/lh-multisite-cors
@@ -9,7 +10,9 @@ web/app/mu-plugins/*/
 !web/app/plugins/order-import-export-for-woocommerce
 !web/app/themes/simple-city
 !web/app/themes/monk
-web/app/themes/*
+!web/app/themes/woodmart
+!web/app/themes/woodmart-child
+
 web/app/ai1wm-backups
 web/app/upgrade
 web/app/uploads/*

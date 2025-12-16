@@ -9,7 +9,7 @@ php_display_errors: 'Off'
 php_display_startup_errors: 'Off'
 php_max_execution_time: 300
 php_max_input_time: 300
-php_max_input_vars: 1000
+php_max_input_vars: 2000
 php_memory_limit: 256M
 php_cli_memory_limit: -1
 php_mysqlnd_collect_memory_statistics: 'Off'
