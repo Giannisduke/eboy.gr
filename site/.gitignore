@@ -6,8 +6,10 @@ web/app/mu-plugins/*/
 !web/app/plugins/lh-multisite-cors
 !web/app/plugins/enable-cors
 !web/app/plugins/facetwp
+!web/app/plugins/woodmart-core
 !web/app/plugins/wordpress-importer
 !web/app/plugins/order-import-export-for-woocommerce
+!web/app/plugins/js_composer
 !web/app/themes/simple-city
 !web/app/themes/monk
 !web/app/themes/woodmart
