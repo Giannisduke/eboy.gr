@@ -10,6 +10,8 @@ web/app/mu-plugins/*/
 !web/app/plugins/wordpress-importer
 !web/app/plugins/order-import-export-for-woocommerce
 !web/app/plugins/js_composer
+!web/app/plugins/megamenu
+!web/app/plugins/megamenu-pro
 !web/app/themes/simple-city
 !web/app/themes/monk
 !web/app/themes/woodmart
