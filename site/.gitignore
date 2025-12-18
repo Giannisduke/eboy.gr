@@ -12,6 +12,7 @@ web/app/mu-plugins/*/
 !web/app/plugins/js_composer
 !web/app/plugins/megamenu
 !web/app/plugins/megamenu-pro
+!web/app/plugins/query-monitor
 !web/app/themes/simple-city
 !web/app/themes/monk
 !web/app/themes/woodmart
