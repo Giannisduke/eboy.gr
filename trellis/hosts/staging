@@ -2,7 +2,10 @@
 # List each machine only once per [group], even if it will host multiple sites.
 
 [staging]
-your_server_hostname
+68.183.216.93
 
 [web]
-your_server_hostname
+68.183.216.93
+
+[db]
+68.183.216.93
