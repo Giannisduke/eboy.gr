@@ -16,3 +16,6 @@ use Roots\WPConfig\Config;
  */
 
 Config::define('DISALLOW_INDEXING', true);
+
+// Allow Multisite UI (Tools → Network Setup)
+Config::define('WP_ALLOW_MULTISITE', true);
