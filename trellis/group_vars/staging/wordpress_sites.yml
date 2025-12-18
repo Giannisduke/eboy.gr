@@ -21,7 +21,7 @@ wordpress_sites:
     repo_subtree_path: site
 
     multisite:
-      enabled: true
+      enabled: false
       subdomains: true
 
     ssl:
