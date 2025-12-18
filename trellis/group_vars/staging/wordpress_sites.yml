@@ -6,16 +6,20 @@ wordpress_sites:
       - canonical: eboy.gr
         redirects:
           - www.eboy.gr
+
       - canonical: simple-city.eboy.gr
         redirects:
           - www.simple-city.eboy.gr
+
       - canonical: monk.eboy.gr
         redirects:
           - www.monk.eboy.gr
+
     local_path: ../site
     branch: main
     repo: git@github.com:Giannisduke/eboy.gr.git
     repo_subtree_path: site
+
     multisite:
       enabled: true
       subdomains: true
@@ -31,12 +35,5 @@ wordpress_sites:
       wp_env: staging
       wp_home: https://eboy.gr
       wp_siteurl: https://eboy.gr/wp
-
-      # Multisite flags (κρατάμε αυτά που ήδη είχες)
-      allow_multisite: true
-      multisite: true
-      subdomain_install: true
-
-      # Multisite core constants (πολύ χρήσιμα να είναι explicit)
       domain_current_site: eboy.gr
       path_current_site: /
