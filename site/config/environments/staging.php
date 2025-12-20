@@ -24,7 +24,7 @@ Config::define('DISALLOW_INDEXING', true);
 Config::define('WP_ENV', 'staging');
 
 /**
- * Multisite configuration
+ * Multisite
  */
 Config::define('WP_ALLOW_MULTISITE', true);
 
