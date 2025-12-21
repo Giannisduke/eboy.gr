@@ -2,10 +2,12 @@
 # List each machine only once per [group], even if it will host multiple sites.
 
 [staging]
-161.35.153.167
+eboy.gr ansible_host=68.183.216.93 ansible_user=root
 
 [web]
-161.35.153.167
+eboy.gr
 
 [db]
-161.35.153.167
+eboy.gr
+
+
