@@ -1,0 +1,20 @@
+# Created by trellis-cli v1.17.0
+# Documentation: https://roots.io/trellis/docs/wordpress-sites/
+
+wordpress_sites:
+  eboy.gr:
+    site_hosts:
+    - canonical: eboy.gr
+      redirects:
+      - www.eboy.gr
+    local_path: ../site
+    branch: main
+    repo: git@github.com:Giannisduke/eboy.gr.git
+    repo_subtree_path: site
+    multisite:
+      enabled: false
+    ssl:
+      enabled: false
+      provider: letsencrypt
+    cache:
+      enabled: false
