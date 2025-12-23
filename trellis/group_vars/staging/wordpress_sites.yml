@@ -12,9 +12,12 @@ wordpress_sites:
     repo: git@github.com:Giannisduke/eboy.gr.git
     repo_subtree_path: site
     multisite:
-      enabled: false
+      enabled: true
+      subdomains: true
     ssl:
       enabled: false
       provider: letsencrypt
     cache:
       enabled: false
+    env:
+      DOMAIN_CURRENT_SITE: eboy.gr
