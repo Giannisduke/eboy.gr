@@ -10,7 +10,7 @@ wordpress_sites:
     local_path: ../site
     admin_email: admin@eboy.test
     multisite:
-      enabled: false
+      enabled: true
     ssl:
       enabled: false
       provider: self-signed
