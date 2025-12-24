@@ -24,3 +24,9 @@ wordpress_sites:
       enabled: false
     env:
       wp_env: staging
+      MULTISITE: true
+      SUBDOMAIN_INSTALL: true
+      DOMAIN_CURRENT_SITE: eboy.gr
+      PATH_CURRENT_SITE: /
+      SITE_ID_CURRENT_SITE: 1
+      BLOG_ID_CURRENT_SITE: 1
