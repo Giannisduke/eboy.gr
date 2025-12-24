@@ -20,7 +20,7 @@ wordpress_sites:
     cache:
       enabled: false
     env:
-      domain_current_site: eboy.gr
+      DOMAIN_CURRENT_SITE: eboy.gr
       wp_env: staging
       wp_home: https://eboy.gr
       wp_siteurl: https://eboy.gr/wp
