@@ -19,7 +19,7 @@ Config::define('DISALLOW_INDEXING', true);
 
 
 /* Multisite */
-Config::define('WP_ALLOW_MULTISITE', env('ALLOW_MULTISITE'));
+//Config::define('WP_ALLOW_MULTISITE', env('ALLOW_MULTISITE'));
 //Config::define('MULTISITE', env('MULTISITE'));
 //Config::define('SUBDOMAIN_INSTALL', env('SUBDOMAIN_INSTALL')); // Set to true if using subdomains
 
