@@ -80,22 +80,7 @@ Config::define('CONTENT_DIR', '/app');
 Config::define('WP_CONTENT_DIR', $webroot_dir . Config::get('CONTENT_DIR'));
 Config::define('WP_CONTENT_URL', Config::get('WP_HOME') . Config::get('CONTENT_DIR'));
 
-/* Multisite */
-Config::define('WP_ALLOW_MULTISITE', env('ALLOW_MULTISITE'));
-Config::define('MULTISITE', env('MULTISITE'));
-Config::define('SUBDOMAIN_INSTALL', env('SUBDOMAIN_INSTALL')); // Set to true if using subdomains
 
-Config::define('DOMAIN_CURRENT_SITE', env('DOMAIN_CURRENT_SITE'));
-Config::define('PATH_CURRENT_SITE', env('PATH_CURRENT_SITE') ?: '/');
-Config::define('SITE_ID_CURRENT_SITE', env('SITE_ID_CURRENT_SITE') ?: 1);
-Config::define('BLOG_ID_CURRENT_SITE', env('BLOG_ID_CURRENT_SITE') ?: 1);
-/**
- * (Optional) Constants to help with assigning custom domains and prevent redirect login loops
- */
-Config::define('ADMIN_COOKIE_PATH', '/');
-Config::define('COOKIE_DOMAIN', '');
-Config::define('COOKIEPATH', '');
-Config::define('SITECOOKIEPATH', ''); 
 
 /**
  * DB settings
