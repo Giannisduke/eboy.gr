@@ -21,3 +21,6 @@ wordpress_sites:
       enabled: false
     env:
       domain_current_site: eboy.gr
+      wp_env: staging
+      wp_home: https://eboy.gr
+      wp_siteurl: https://eboy.gr/wp
