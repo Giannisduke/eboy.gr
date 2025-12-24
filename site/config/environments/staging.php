@@ -25,7 +25,7 @@ Config::define('WP_ALLOW_MULTISITE', true);
 Config::define('MULTISITE', true);
 Config::define('SUBDOMAIN_INSTALL', true); // Set to true if using subdomains
 Config::define('DOMAIN_CURRENT_SITE', 'eboy.gr');
-Config::define('PATH_CURRENT_SITE', '/wp');
+Config::define('PATH_CURRENT_SITE', '/wp/');
 Config::define('SITE_ID_CURRENT_SITE', 1);
 Config::define('BLOG_ID_CURRENT_SITE', 1);
 
