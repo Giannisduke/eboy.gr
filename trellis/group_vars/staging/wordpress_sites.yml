@@ -20,4 +20,4 @@ wordpress_sites:
     cache:
       enabled: false
     env:
-      DOMAIN_CURRENT_SITE: eboy.gr
+      domain_current_site: eboy.gr
