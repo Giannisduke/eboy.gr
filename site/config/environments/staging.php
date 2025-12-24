@@ -23,7 +23,7 @@ Config::define('DISALLOW_INDEXING', true);
  */
 Config::define('WP_ALLOW_MULTISITE', true);
 Config::define('MULTISITE', true);
-//Config::define('SUBDOMAIN_INSTALL', true); // Set to true if using subdomains
+Config::define('SUBDOMAIN_INSTALL', true); // Set to true if using subdomains
 //Config::define('DOMAIN_CURRENT_SITE', env('DOMAIN_CURRENT_SITE'));
 //Config::define('PATH_CURRENT_SITE', env('PATH_CURRENT_SITE') ?: '/');
 //Config::define('SITE_ID_CURRENT_SITE', env('SITE_ID_CURRENT_SITE') ?: 1);
