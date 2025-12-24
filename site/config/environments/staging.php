@@ -18,20 +18,23 @@ use Roots\WPConfig\Config;
 Config::define('DISALLOW_INDEXING', true);
 
 
-/* Multisite */
+/**
+ * (Required) Multisite Options
+ */
 Config::define('WP_ALLOW_MULTISITE', true);
-//Config::define('MULTISITE', true);
-//Config::define('SUBDOMAIN_INSTALL', false); // Set to true if using subdomains
-//Config::define('DOMAIN_CURRENT_SITE', env('DOMAIN_CURRENT_SITE'));
-//Config::define('PATH_CURRENT_SITE', env('PATH_CURRENT_SITE') ?: '/');
-//Config::define('SITE_ID_CURRENT_SITE', env('SITE_ID_CURRENT_SITE') ?: 1);
-//Config::define('BLOG_ID_CURRENT_SITE', env('BLOG_ID_CURRENT_SITE') ?: 1);
+Config::define('MULTISITE', true);
+Config::define('SUBDOMAIN_INSTALL', false); // Set to true if using subdomains
+Config::define('DOMAIN_CURRENT_SITE', env('DOMAIN_CURRENT_SITE'));
+Config::define('PATH_CURRENT_SITE', env('PATH_CURRENT_SITE') ?: '/');
+Config::define('SITE_ID_CURRENT_SITE', env('SITE_ID_CURRENT_SITE') ?: 1);
+Config::define('BLOG_ID_CURRENT_SITE', env('BLOG_ID_CURRENT_SITE') ?: 1);
+
 /**
  * (Optional) Constants to help with assigning custom domains and prevent redirect login loops
  */
-// Config::define('ADMIN_COOKIE_PATH', '/');
-// Config::define('COOKIE_DOMAIN', '');
-// Config::define('COOKIEPATH', '');
-// Config::define('SITECOOKIEPATH', ''); 
+Config::define('ADMIN_COOKIE_PATH', '/');
+Config::define('COOKIE_DOMAIN', '');
+Config::define('COOKIEPATH', '');
+Config::define('SITECOOKIEPATH', ''); 
 
 
