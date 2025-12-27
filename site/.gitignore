@@ -32,6 +32,7 @@ web/.htaccess
 /vendor
 !web/app/plugins/sitepress-multilingual-cms/vendor
 !web/app/plugins/woodmart-core/vendor
+!web/app/plugins/sitepress-multilingual-cms/addons/wpml-page-builders/vendor
 auth.json
 
 # WP-CLI
