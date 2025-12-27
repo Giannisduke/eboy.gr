@@ -30,6 +30,7 @@ web/.htaccess
 
 # Composer
 /vendor
+!web/app/plugins/sitepress-multilingual-cms/vendor
 auth.json
 
 # WP-CLI
