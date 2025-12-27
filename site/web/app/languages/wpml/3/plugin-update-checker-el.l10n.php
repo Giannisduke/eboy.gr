@@ -1,0 +1,2 @@
+<?php
+return ['messages'=>['Check for updates'=>'Έλεγχος για ενημερώσεις','There is no changelog available.'=>'Δεν υπάρχει διαθέσιμο changelog.','Unknown update checker status "%s"'=>'Άγνωστη κατάσταση ενημέρωσης "% s"','the plugin titleA new version of the %s plugin is available.'=>'Είναι διαθέσιμη μια νέα έκδοση του πρόσθετου %s plugin.','the plugin titleCould not determine if updates are available for %s.'=>'Δεν μπορέσαμε να εντοπίσουμε αν υπάρχει διαθέσιμη έκδοση του πρόσθετου %s.','the plugin titleThe %s plugin is up to date.'=>'Το πρόσθετο %s είναι ενημερωμένο.']];

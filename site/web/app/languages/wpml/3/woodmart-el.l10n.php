@@ -1,0 +1,2 @@
+<?php
+return ['messages'=>['Characteristics'=>'ΧΑΡΑΚΤΗΡΙΣΤΙΚΑ','Close'=>'Κλείσιμο','Filter'=>'Φιλτράρισμα','I have read and accept the %1$s Privacy Policy %2$s'=>'Έχω διαβάσει και αποδέχομαι την %1$s Πολιτική Απορρήτου %2$s','I have read and accept the <strong>[privacy_policy]</strong>'=>'Έχω διαβάσει και αποδέχομαι την <strong>[πολιτική_απόρρητου]</strong>','Quantity'=>'Ποσότητα','Shopping cart'=>'Καλάθι Αγορών','Sort by'=>'Ταξινόμηση κατά','submit buttonSearch for products'=>'Αναζήτηση προϊόντων']];

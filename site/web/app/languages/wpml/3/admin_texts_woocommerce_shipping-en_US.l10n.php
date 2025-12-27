@@ -1,0 +1,2 @@
+<?php
+return ['messages'=>['local_pickup3_shipping_method_title'=>'Pick up from store','tree_table_rate9708f00b4_acs_8kg_shipping_method_title'=>'Chania ACS < 8kg','tree_table_rate9c4e5aa62_shipping_method_title'=>'Pick up from store','tree_table_rate9e07c663f_simple_city_shipping_method_title'=>'Simple City shipping company','Μεταφορική Εταιρεία Simple City'=>'Simple City shipping company','Παραλαβή από το κατάστημα'=>'Pick up from store','Παραλαβή από το κατάστημα.'=>'Pick up from store','Χανιά ACS &lt; 8kg'=>'Chania ACS < 8kg']];

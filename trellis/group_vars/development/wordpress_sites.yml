@@ -7,12 +7,28 @@ wordpress_sites:
     - canonical: eboy.test
       redirects:
       - www.eboy.test
+    - canonical: simple-city.eboy.test
+      redirects:
+      - www.simple-city.eboy.test
+    - canonical: monk.eboy.test
+      redirects:
+      - www.monk.eboy.test
     local_path: ../site
     admin_email: admin@eboy.test
     multisite:
       enabled: true
+      subdomains: true
     ssl:
-      enabled: false
+      enabled: true
       provider: self-signed
     cache:
       enabled: false
+    env:
+      wp_env: development
+      MULTISITE: true
+      SUBDOMAIN_INSTALL: true
+      DOMAIN_CURRENT_SITE: eboy.test
+      PATH_CURRENT_SITE: /
+      SITE_ID_CURRENT_SITE: 1
+      BLOG_ID_CURRENT_SITE: 1
+      WP_DEBUG_DISPLAY: false

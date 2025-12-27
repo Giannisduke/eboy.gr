@@ -40,7 +40,9 @@
     "roots/bedrock-disallow-indexing": "^2.0",
     "roots/wordpress": "6.9",
     "roots/wp-config": "1.0.0",
-    "wpackagist-theme/twentytwentyfive": "^1.0"
+    "wpackagist-theme/twentytwentyfive": "^1.0",
+    "wpackagist-plugin/woocommerce": "10.4.3",
+    "wpackagist-plugin/wordpress-importer": "^0.9.5"
   },
   "require-dev": {
     "laravel/pint": "^1.18"

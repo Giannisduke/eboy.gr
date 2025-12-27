@@ -1,0 +1,12 @@
+.slogan_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 2rem;
+}
+
+.slogan > svg {
+  height: 4rem;
+}

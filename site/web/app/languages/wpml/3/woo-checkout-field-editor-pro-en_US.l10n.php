@@ -1,0 +1,2 @@
+<?php
+return ['messages'=>['Όνομα'=>'Name','Όνομα εταιρίας'=>'Company name','ΑΦΜ'=>'VAT Number','Αριθμός τηλεφώνου'=>'Phone number','Δ.Ο.Υ'=>'Tax office','Διεύθυνση'=>'Address','Διεύθυνση email'=>'Email address','Δραστηριότητα'=>'Business activity','Επίθετο'=>'Last name','Επιθυμώ την έκδοση τιμολογίου'=>'Issue invoice','Επιλέξτε Δ.Ο.Υ'=>'Choose tax office','Οδός και αριθμός'=>'Street and number','Περιφέρεια'=>'District','Πόλη / Κωμόπολη'=>'City','Ταχυδρομικός κώδικας'=>'Postal code']];

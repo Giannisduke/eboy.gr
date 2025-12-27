@@ -1,0 +1,2 @@
+<?php
+return ['messages'=>['I have read and accept the <a href="/en/privacy-policy">Privacy Policy</a>'=>'Έχω διαβάσει και αποδέχομαι την <a href="https://monk.gr/privacy-policy/">Πολιτική Απορρήτου</a>','I have read and accept the <a href="/privacy-policy">Privacy Policy</a>'=>'Έχω διαβάσει και αποδέχομαι την <a href="https://monk.gr/privacy-policy/">Πολιτικη Απορρητου</a>','Quantity'=>'Ποσότητα']];

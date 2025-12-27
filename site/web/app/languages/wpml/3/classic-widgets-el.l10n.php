@@ -1,0 +1,2 @@
+<?php
+return ['messages'=>['Enables the classic widgets settings screens in Appearance - Widgets and the Customizer. Disables the block editor from managing widgets.'=>'Ενεργοποιεί τις κλασικές οθόνες ρυθμίσεων μικροεφαρμογών στο Εμφάνιση - Μικροεφαρμογές και στον Προσαρμογέα. Απενεργοποιεί τον Επεξεργαστή Μπλοκ για τη διαχείριση μικροεφαρμογών.','WordPress Contributors'=>'Συντελεστές WordPress']];

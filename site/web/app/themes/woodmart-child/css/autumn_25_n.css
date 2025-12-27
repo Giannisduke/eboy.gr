@@ -1,0 +1,51 @@
+.monk_featured {
+    background: linear-gradient(0deg,rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 30%, rgba(248, 244, 245, 1) 70%, rgba(248, 244, 245, 1) 100%)
+}
+
+.slogan_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-wrap: wrap;
+  min-height: 80vh;
+  flex-direction: column;
+}
+
+.slogan {
+    display: flex;
+    padding: 0rem 0 2rem 0;
+}
+
+.slogan > div > svg {
+  height: 9.486875rem;
+}
+.n > svg {
+  margin: 0 0.916175rem;
+}
+
+.w > svg {
+  margin: 0 0.616175rem;
+}
+
+.slogan_wrapper > .arrivals {
+  width: 16.83125rem;
+    position: relative;
+    top: -9rem;
+}
+
+.embla {
+  overflow: hidden;
+}
+.embla__container {
+  display: flex;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  margin-left: -10px; /* example spacing */
+}
+.embla__slide {
+  position: relative;
+  min-width: 100%;
+  padding-left: 10px; /* example spacing */
+}
