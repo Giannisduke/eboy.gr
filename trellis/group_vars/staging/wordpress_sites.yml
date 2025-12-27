@@ -17,6 +17,7 @@ wordpress_sites:
     branch: local-new-setup
     repo: git@github.com:Giannisduke/eboy.gr.git
     repo_subtree_path: site
+    wp_cli_path: web/wp
     multisite:
       enabled: true
       subdomains: true
@@ -26,7 +27,7 @@ wordpress_sites:
     cache:
       enabled: false
     env:
-      wp_env: staging
+      WP_ENV: staging
       MULTISITE: true
       SUBDOMAIN_INSTALL: true
       DOMAIN_CURRENT_SITE: eboy.gr
