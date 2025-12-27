@@ -1,7 +1,6 @@
 # Application
 web/app/plugins/*
-!!web/app/plugins/js_composer
-!!web/app/plugins/js_composer
+!web/app/plugins/js_composer
 !web/app/plugins/sitepress-multilingual-cms
 !web/app/plugins/woocommerce-multilingual
 !web/app/plugins/woodmart-core
