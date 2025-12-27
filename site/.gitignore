@@ -35,6 +35,7 @@ web/.htaccess
 !web/app/plugins/sitepress-multilingual-cms/addons/wpml-page-builders/vendor
 !web/app/plugins/wpml-cms-nav/vendor
 !web/app/plugins/wpml-string-translation/vendor
+!web/app/plugins/woocommerce-multilingual/vendor
 auth.json
 
 # WP-CLI
