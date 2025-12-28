@@ -7,7 +7,7 @@ vault_users:
   password: POL8T3bcm1OpIcqJLDl2hQ40iSmYDiIdBfObeQAPVVgfccbO52xi6UNE6DwFgiZN
   salt: uzhhWYCyErh2tUUng8bafGkZEngAH6S8OPCtPgglT6p4GhOsApC6WLeXnEPx2PsJ
 vault_wordpress_sites:
-  eboy.gr:
+  simple-city.gr:
     admin_password: Vne2bRf1g3wMhh2sCzZHazCM9SKTnJAF8x7aP4KughrRccdsCchFDkJs1enI8k3e
     env:
       db_password: 0Q7hnPqtm6dBkVC9cjvHu2TkhD0RdjWh0mYpAADsoaxhzCI5uFgLaU7OlEMdp6fb

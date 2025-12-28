@@ -2,19 +2,31 @@
 # Documentation: https://roots.io/trellis/docs/wordpress-sites/
 
 wordpress_sites:
-  eboy.gr:
+  simple-city.gr:
     site_hosts:
-    - canonical: eboy.gr
-      redirects:
-      - www.eboy.gr
+      - canonical: simple-city.gr
+        redirects:
+          - www.simple-city.gr
+
     local_path: ../site
-    branch: master
-    repo: git@github.com:example/example.com.git
+    repo: git@github.com:Giannisduke/eboy.gr.git
+    branch: local-new-setup
     repo_subtree_path: site
+
     multisite:
-      enabled: false
+      enabled: true
+      subdomains: true
+
+    # προσωρινά self-signed
     ssl:
-      enabled: false
-      provider: letsencrypt
-    cache:
-      enabled: false
+      enabled: true
+      provider: self-signed
+
+    sites:
+      monk:
+        site_hosts:
+          - canonical: monk.simple-city.gr
+            redirects: []
+          - canonical: monk.gr
+            redirects:
+              - www.monk.gr

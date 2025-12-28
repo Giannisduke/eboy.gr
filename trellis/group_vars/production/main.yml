@@ -1,1 +1,16 @@
-mysql_root_password: "{{ vault_mysql_root_password }}" # Define this variable in group_vars/production/vault.yml
+env: production
+site_env: production
+timezone: Europe/Athens
+
+# DB
+mysql_root_password: "{{ vault_mysql_root_password }}"
+
+mysql_databases:
+  - name: simple_city_production
+    encoding: utf8mb4
+    collation: utf8mb4_unicode_ci
+
+mysql_users:
+  - name: simple_city
+    password: "{{ vault_mysql_simple_city_password }}"
+    priv: "simple_city_production.*:ALL"

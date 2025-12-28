@@ -2,7 +2,10 @@
 # List each machine only once per [group], even if it will host multiple sites.
 
 [production]
-your_server_hostname
+simple-city.gr ansible_host=64.225.96.143 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_ed25519
 
 [web]
-your_server_hostname
+simple-city.gr
+
+[db]
+simple-city.gr
