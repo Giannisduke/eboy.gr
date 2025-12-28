@@ -2,6 +2,7 @@
 # Documentation: https://roots.io/trellis/docs/vault/
 
 vault_mysql_root_password: 0Bgrz1p0SJkeeLlNozNUZlGujNBpYXkKkA48g2PnfXCwkhlEuPbGMguxvQ9NpJgc
+vault_mysql_simple_city_password: "8QEjAzCkuHFQaR9BYmMT9hxINEN3Dqy2TCRIMMgzxkNuTRpmfpV5peTZmrUg4UFP"
 vault_users:
 - name: '{{ admin_user }}'
   password: POL8T3bcm1OpIcqJLDl2hQ40iSmYDiIdBfObeQAPVVgfccbO52xi6UNE6DwFgiZN
