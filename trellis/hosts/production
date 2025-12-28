@@ -2,10 +2,10 @@
 # List each machine only once per [group], even if it will host multiple sites.
 
 [production]
-simple-city.gr
+64.225.96.143
 
 [web]
-simple-city.gr
+64.225.96.143
 
 [db]
-simple-city.gr
+64.225.96.143
