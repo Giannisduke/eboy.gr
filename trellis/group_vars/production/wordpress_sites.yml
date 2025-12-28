@@ -32,6 +32,9 @@ wordpress_sites:
               - www.monk.gr
     env:
       WP_ENV: production
+      db_name: simple_city_production
+      db_user: simple_city
+      db_password: "{{ vault_mysql_simple_city_password }}"
       MULTISITE: true
       SUBDOMAIN_INSTALL: true
       DOMAIN_CURRENT_SITE: simple-city.gr
