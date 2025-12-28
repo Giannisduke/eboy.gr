@@ -1,6 +1,3 @@
-# Created by trellis-cli v1.17.0
-# Documentation: https://roots.io/trellis/docs/wordpress-sites/
-
 wordpress_sites:
   simple-city.gr:
     site_hosts:
@@ -17,7 +14,6 @@ wordpress_sites:
       enabled: true
       subdomains: true
 
-    # προσωρινά self-signed
     ssl:
       enabled: true
       provider: self-signed
@@ -26,16 +22,17 @@ wordpress_sites:
       monk:
         site_hosts:
           - canonical: monk.simple-city.gr
-            redirects: []
           - canonical: monk.gr
             redirects:
               - www.monk.gr
+
     env:
       WP_ENV: production
 
       db_name: simple_city_production
       db_user: simple_city
       db_password: "{{ vault_mysql_simple_city_password }}"
+      db_host: localhost
 
       MULTISITE: true
       SUBDOMAIN_INSTALL: true

@@ -1,5 +1,4 @@
 env: production
-site_env: production
 timezone: Europe/Athens
 
 # DB
