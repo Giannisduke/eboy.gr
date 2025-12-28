@@ -1,39 +1,33 @@
+# Created by trellis-cli v1.17.0
+# Documentation: https://roots.io/trellis/docs/wordpress-sites/
+
 wordpress_sites:
-  simple-city.gr:
+  eboy.gr:
     site_hosts:
-      - canonical: simple-city.gr
-        redirects:
-          - www.simple-city.gr
-
+    - canonical: eboy.gr
+      redirects:
+      - www.eboy.gr
+    - canonical: simple-city.eboy.gr
+      redirects:
+      - www.simple-city.eboy.gr
+    - canonical: monk.eboy.gr
+      redirects:
+      - www.monk.eboy.gr
     local_path: ../site
-    repo: git@github.com:Giannisduke/eboy.gr.git
     branch: local-new-setup
+    repo: git@github.com:Giannisduke/eboy.gr.git
     repo_subtree_path: site
-
+    wp_cli_path: web/wp
     multisite:
       enabled: true
       subdomains: true
-
     ssl:
       enabled: true
       provider: self-signed
-
-    sites:
-      monk:
-        site_hosts:
-          - canonical: monk.simple-city.gr
-          - canonical: monk.gr
-            redirects:
-              - www.monk.gr
-
+    cache:
+      enabled: false
     env:
       WP_ENV: production
-
-      db_name: simple_city_production
-      db_user: simple_city
-      db_password: "{{ vault_mysql_simple_city_password }}"
-      db_host: localhost
-
       MULTISITE: true
       SUBDOMAIN_INSTALL: true
       DOMAIN_CURRENT_SITE: simple-city.gr
