@@ -2,7 +2,7 @@
 # List each machine only once per [group], even if it will host multiple sites.
 
 [production]
-64.225.96.143
+simple-city.gr
 
 [web]
 simple-city.gr
