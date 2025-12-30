@@ -7,8 +7,10 @@ wordpress_sites:
     - canonical: simple-city.gr
       redirects:
       - www.simple-city.gr
-    - canonical: monk.simple-city.gr
+    - canonical: monk.gr
       redirects:
+      - www.monk.gr
+      - monk.simple-city.gr
       - www.monk.simple-city.gr
     local_path: ../site
     branch: local-new-setup
@@ -20,7 +22,7 @@ wordpress_sites:
       subdomains: true
     ssl:
       enabled: true
-      provider: self-signed
+      provider: letsencrypt
     cache:
       enabled: false
     env:
