@@ -4,6 +4,15 @@ web/app/plugins/*
 !web/app/plugins/sitepress-multilingual-cms
 !web/app/plugins/woocommerce-multilingual
 !web/app/plugins/megamenu
+!web/app/plugins/contact-form-7
+!web/app/plugins/contact-form-7-multilingual
+!web/app/plugins/custom-fonts
+!web/app/plugins/google-site-kit
+!web/app/plugins/safe-svg
+!web/app/plugins/tbicreditgr
+!web/app/plugins/wp-seo-multilingual
+!web/app/plugins/string-locator
+!web/app/plugins/pixelyoursite-pro
 !web/app/plugins/woodmart-core
 !web/app/plugins/wpml-cms-nav
 !web/app/plugins/wpml-string-translation

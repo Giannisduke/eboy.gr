@@ -1,0 +1,237 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tbi bank GR\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-30 10:39+0000\n"
+"PO-Revision-Date: 2023-09-05 12:14+0000\n"
+"Last-Translator: \n"
+"Language-Team: Greek\n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.6.4; wp-6.2.2\n"
+"X-Domain: tbicreditgr"
+
+#: includes/functions.php:121 includes/functions.php:122
+#: includes/functions.php:128
+msgid "Buy now and pay later."
+msgstr "Αγοράστε τώρα και πληρώστε αργότερα."
+
+#: includes/functions.php:113 includes/functions.php:572
+msgid "Choose whether status you wish after checkout."
+msgstr "Επιλέξτε εάν επιθυμείτε την κατάσταση μετά την ολοκλήρωση της αγοράς."
+
+#: includes/tbigrredirect.php:201 includes/tbigririsredirect.php:167
+msgid "Communication problem or You have already sent this order!"
+msgstr "Πρόβλημα επικοινωνίας ή Έχετε ήδη στείλει αυτήν την παραγγελία!"
+
+#. Description of the plugin
+msgid "Credit calculator"
+msgstr "Αριθμομηχανή πίστωσης"
+
+#: includes/functions.php:1064
+msgid "CREDIT ONLINE INFORMATION WITH TBI BANK"
+msgstr "ΠΛΗΡΟΦΟΡΙΕΣ ΠΙΣΤΩΣΗΣ ONLINE ΜΕ TBI BANK"
+
+#: includes/functions.php:1064
+msgid "CREDIT ONLINE INFORMATION WITH TBI BANK!"
+msgstr "ΠΛΗΡΟΦΟΡΙΕΣ ΠΙΣΤΩΣΗΣ ONLINE ΜΕ TBI BANK!"
+
+#: includes/functions.php:119 includes/functions.php:578
+msgid "Description"
+msgstr "Περιγραφή"
+
+#: includes/functions.php:558
+msgid "Enable IRIS Pay"
+msgstr "Ενεργοποιήστε το IRIS Pay"
+
+#: includes/functions.php:99
+msgid "Enable tbi bank"
+msgstr "Ενεργοποίηση tbi bank"
+
+#: includes/functions.php:97 includes/functions.php:556
+msgid "Enable/Disable"
+msgstr "Ενεργοποιώ απενεργοποιώ"
+
+#: includes/functions.php:277 includes/functions.php:299
+#: includes/functions.php:971 includes/functions.php:992
+msgid "EUR"
+msgstr "EUR"
+
+#: includes/tbigr_import_admin.php:71
+msgid "Hide"
+msgstr "Κρύβω"
+
+#: includes/tbigr_import_admin.php:67
+msgid "Hide/Show module info"
+msgstr "Απόκρυψη/Εμφάνιση πληροφοριών μονάδας"
+
+#: includes/tbigr_import_admin.php:74
+msgid "Hide/Show module info pane on pages."
+msgstr "Απόκρυψη/Εμφάνιση παραθύρου πληροφοριών μονάδας στις σελίδες."
+
+#. Author URI of the plugin
+msgid "http://avalonbg.com"
+msgstr "http://avalonbg.com"
+
+#. Author of the plugin
+msgid "Ilko Ivanov"
+msgstr "Ilko Ivanov"
+
+#: includes/functions.php:126 includes/functions.php:585
+msgid "Instructions"
+msgstr "Οδηγίες"
+
+#: includes/functions.php:587
+msgid "Instructions that will be added to the thank you page and emails."
+msgstr "Οδηγίες που θα προστεθούν στη σελίδα ευχαριστιών και στα email."
+
+#: includes/tbigr_import_admin.php:115
+msgid "IRIS IBAN"
+msgstr "IRIS IBAN"
+
+#: includes/tbigr_import_admin.php:119
+msgid "IRIS IBAN."
+msgstr "IRIS IBAN."
+
+#: includes/tbigr_import_admin.php:124
+msgid "IRIS Key"
+msgstr "IRIS Key"
+
+#: includes/tbigr_import_admin.php:128
+msgid "IRIS Key."
+msgstr "IRIS Key."
+
+#: includes/functions.php:565
+msgid "IRIS Pay"
+msgstr "IRIS Pay"
+
+#: includes/functions.php:685
+msgid "IRIS Pay. "
+msgstr "IRIS Pay. "
+
+#: includes/functions.php:277 includes/functions.php:299
+#: includes/functions.php:971 includes/functions.php:992
+msgid "months"
+msgstr "μήνες"
+
+#: includes/functions.php:110 includes/functions.php:569
+msgid "Order Status"
+msgstr "Κατάσταση παραγγελίας"
+
+#: includes/tbigr_import_admin.php:106
+msgid "Password for eCommerce tbi bank system"
+msgstr "Κωδικός πρόσβασης για το ηλεκτρονικό εμπόριο tbi bank system"
+
+#: includes/tbigr_import_admin.php:110
+msgid ""
+"Password for eCommerce tbi bank system. Required for system authentication."
+msgstr ""
+"Κωδικός πρόσβασης για το ηλεκτρονικό εμπόριο tbi bank system. Απαιτείται για "
+"έλεγχο ταυτότητας συστήματος."
+
+#: includes/functions.php:532
+msgid "Pay width IRIS Pay"
+msgstr "Πλάτος πληρωμής IRIS Pay"
+
+#: includes/functions.php:73
+msgid "Pay width tbi bank"
+msgstr "Πλάτος πληρωμής tbi bank"
+
+#: includes/functions.php:580
+msgid "Payment method description that the customer will see on your checkout."
+msgstr "Περιγραφή του τρόπου πληρωμής που θα δει ο πελάτης στο ταμείο σας."
+
+#: includes/tbigr_import_admin.php:134
+msgid "Save changes"
+msgstr "Αποθήκευσε τις αλλαγές"
+
+#: includes/tbigr_import_admin.php:46
+msgid "Settings saved successfully."
+msgstr "Οι ρυθμίσεις αποθηκεύτηκαν με επιτυχία."
+
+#: includes/tbigr_import_admin.php:72
+msgid "Show"
+msgstr "προβολή"
+
+#: includes/tbigr_import_admin.php:88
+msgid "Store ID for eCommerce tbi bank system"
+msgstr "Αναγνωριστικό καταστήματος για σύστημα eCommerce tbi bank"
+
+#: includes/tbigr_import_admin.php:92
+msgid ""
+"Store ID for eCommerce tbi bank system. Required for system authentication."
+msgstr ""
+"Αναγνωριστικό καταστήματος για σύστημα eCommerce tbi bank. Απαιτείται για "
+"έλεγχο ταυτότητας συστήματος."
+
+#: includes/tbigr_import_admin.php:63
+msgid "System settings"
+msgstr "Ρυθμίσεις συστήματος"
+
+#: includes/functions.php:105 includes/functions.php:106
+msgid "tbi bank (3-60 installments without card & 100% online)"
+msgstr "tbi bank (3-60 δόσεις χωρίς κάρτα & 100% online)"
+
+#: includes/tbigr_import_admin.php:59
+msgid "tbi bank - all the module settings"
+msgstr "tbi bank - όλες οι ρυθμίσεις της μονάδας"
+
+#: includes/admin.php:4
+msgid "tbi bank - Module settings"
+msgstr "tbi bank - Ρυθμίσεις μονάδας"
+
+#. Name of the plugin
+msgid "tbi bank GR"
+msgstr "tbi bank GR"
+
+#: includes/admin.php:4
+msgid "tbi bank settings"
+msgstr "ρυθμίσεις tbi bank"
+
+#: includes/functions.php:36
+msgid "tbi bank Status"
+msgstr "tbi bank κατάσταση"
+
+#: includes/functions.php:315
+msgid "tbi bank. "
+msgstr "tbi bank."
+
+#: includes/functions.php:564
+msgid "This controls the title which the user sees during checkout."
+msgstr ""
+"Αυτό ελέγχει τον τίτλο που βλέπει ο χρήστης κατά την ολοκλήρωση αγοράς."
+
+#: includes/functions.php:103 includes/functions.php:562
+msgid "Title"
+msgstr "Τίτλος"
+
+#: includes/tbigr_import_admin.php:79
+msgid "Unique shop identifier"
+msgstr "Μοναδικό αναγνωριστικό καταστήματος"
+
+#: includes/tbigr_import_admin.php:83
+msgid "Unique shop identifier in the tbi bank GR system."
+msgstr "Μοναδικό αναγνωριστικό καταστήματος στο σύστημα tbi bank GR."
+
+#: includes/tbigr_import_admin.php:97
+msgid "Username for eCommerce tbi bank system"
+msgstr "Όνομα χρήστη για το ηλεκτρονικό εμπόριο tbi bank system"
+
+#: includes/tbigr_import_admin.php:101
+msgid ""
+"Username for eCommerce tbi bank system. Required for system authentication."
+msgstr ""
+"Όνομα χρήστη για το ηλεκτρονικό εμπόριο tbi bank system. Απαιτείται για "
+"έλεγχο ταυτότητας συστήματος."
+
+#: includes/functions.php:533 includes/functions.php:581
+msgid "You pay for the merchandise with IRIS Pay"
+msgstr "Πληρώνετε για τα εμπορεύματα με το IRIS Pay"
+
+#: includes/functions.php:74
+msgid "You pay for the merchandise with tbi bank"
+msgstr "Πληρώνετε για τα εμπορεύματα με την tbi bank"
