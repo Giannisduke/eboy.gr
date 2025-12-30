@@ -46,6 +46,7 @@ web/.htaccess
 !web/app/plugins/wpml-string-translation/vendor
 !web/app/plugins/woocommerce-multilingual/vendor
 !web/app/plugins/contact-form-7-multilingual/vendor
+!web/app/plugins/safe-svg/vendor
 auth.json
 
 # WP-CLI
