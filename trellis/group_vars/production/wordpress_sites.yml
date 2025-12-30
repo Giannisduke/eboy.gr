@@ -29,3 +29,5 @@ wordpress_sites:
       PATH_CURRENT_SITE: /
       SITE_ID_CURRENT_SITE: 1
       BLOG_ID_CURRENT_SITE: 1
+      WP_HOME: https://monk.gr
+      WP_SITEURL: https://monk.gr/wp
