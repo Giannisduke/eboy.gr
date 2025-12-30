@@ -4,14 +4,10 @@
 wordpress_sites:
   simple-city.gr:
     site_hosts:
-    - canonical: simple-city.gr
-      redirects:
-      - www.simple-city.gr
-    - canonical: monk.gr
-      redirects:
-      - www.monk.gr
-      - monk.simple-city.gr
-      - www.monk.simple-city.gr
+      - canonical: monk.gr
+        redirects:
+          - www.monk.gr
+          
     local_path: ../site
     branch: local-new-setup
     repo: git@github.com:Giannisduke/eboy.gr.git
