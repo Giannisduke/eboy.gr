@@ -19,6 +19,14 @@ Config::define('DISALLOW_INDEXING', true);
 
 
 /**
+ * Debugging Settings
+ */
+Config::define('WP_DEBUG_DISPLAY', true);
+Config::define('WP_DEBUG_LOG', true);
+Config::define('SCRIPT_DEBUG', false);
+ini_set('display_errors', '0');
+
+/**
  * (Required) Multisite Options
  */
 Config::define('WP_ALLOW_MULTISITE', true);
