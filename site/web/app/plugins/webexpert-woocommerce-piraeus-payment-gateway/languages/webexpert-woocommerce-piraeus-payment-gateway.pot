@@ -1,0 +1,361 @@
+# Copyright (C) 2024 Web Expert
+# This file is distributed under the Web Expert license.
+msgid ""
+msgstr ""
+"Project-Id-Version: Web Expert Piraeus Bank WooCommerce Payment Gateway 2.0.0\n"
+"Report-Msgid-Bugs-To: https://woocommerce.com/my-account/create-a-ticket/\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-09-11T10:17:05+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.6.0\n"
+"language-team: LANGUAGE <EMAIL@ADDRESS>\n"
+"X-Domain: webexpert-woocommerce-piraeus-payment-gateway\n"
+
+#. Plugin Name of the plugin
+msgid "Web Expert Piraeus Bank WooCommerce Payment Gateway"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://www.webexpert.gr/wordpress/piraeus-bank-woocommerce-payment-gateway"
+msgstr ""
+
+#. Description of the plugin
+msgid "Web Expert Piraeus Bank WooCommerce Payment Gateway allows you to accept payments through various credit cards such as Maestro, Mastercard, and Visa on your Woocommerce Site."
+msgstr ""
+
+#. Author of the plugin
+msgid "Web Expert"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "http://www.webexpert.gr"
+msgstr ""
+
+#: includes/blocks/class-webexpert-epay-gateway-blocks.php:96
+#: includes/class-webexpert-epay-gateway.php:132
+#: includes/class-webexpert-epay-gateway.php:137
+msgid "No installments"
+msgid_plural "%d installments from %s per month"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-webexpert-epay-gateway.php:10
+msgid "Proceed for payment"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:14
+#: includes/class-webexpert-epay-gateway.php:32
+msgid "Piraeus Bank Gateway allows you to accept payment through various channels such as Maestro, Mastercard and Visa cards."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:15
+#: includes/class-webexpert-epay-gateway.php:31
+#: includes/class-webexpert-epay-gateway.php:249
+#: webexpert-woocommerce-piraeus-payment-gateway.php:136
+#: assets/frontend/blocks.js:14
+msgid "Piraeus Bank Gateway"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:116
+#: includes/class-webexpert-epay-gateway.php:156
+#: includes/class-webexpert-epay-gateway.php:167
+#: includes/class-webexpert-epay-gateway.php:312
+#: webexpert-woocommerce-piraeus-payment-gateway.php:193
+msgid "Installments"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:231
+msgid "Enable/Disable"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:233
+msgid "Enable Piraeus Bank Gateway"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:234
+msgid "Enable or disable the gateway."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:239
+msgid "Test Environment"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:241
+msgid "Enables test environment for Piraeus Bank Gateway for test cases."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:246
+msgid "Title"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:248
+msgid "This controls the title which the user sees during checkout."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:253
+msgid "Description"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:255
+msgid "This controls the description which the user sees during checkout."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:256
+msgid "Pay Via Piraeus Bank: Accepts  Mastercard, Visa cards and etc."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:260
+#: webexpert-woocommerce-piraeus-payment-gateway.php:183
+msgid "Instructions"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:262
+msgid "Instructions that will be added to the thank you page and emails."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:267
+msgid "Merchant ID"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:269
+msgid "Enter Your Piraeus Bank Merchant ID"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:274
+msgid "Acquirer ID"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:276
+msgid "Enter Your Piraeus Bank Acquirer ID"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:281
+msgid "POS ID"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:283
+msgid "Enter your Piraeus Bank POS ID"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:287
+msgid "Username"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:289
+msgid "Enter your Piraeus Bank Username"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:293
+msgid "Password"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:295
+msgid "Enter your Piraeus Bank Password"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:299
+msgid "Pre-Authorize"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:301
+msgid "Enable to capture preauthorized payments"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:303
+msgid "Default payment method is Purchase, enable for Pre-Authorized payments. You will then need to accept them from Peiraeus Bank AdminTool"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:307
+msgid "Max Installments"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:309
+msgid "Number of installments, 1 for one time payment"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:314
+msgid "Validate"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:314
+msgid "Set rules of installments. Please put one rule per line.<br><strong>Rule format</strong><br>\"{amount}-{amount}\":\"{min_installments} - {max_installments}\",<br>\"{amount}-{amount}\":\"{installments}\"<br><br><strong>Example (with range)</strong><br>\"0-100\":\"2-4\", (From 0 to 100 cart total, 2 to 4 installments)<br>\"101-300\":\"5-8\" (From 101 to 300 cart total, 5 to 8 installments)<br><br><strong>Example (without range)</strong><br>\"0-100\":\"4\", (From 0 to 100 cart total, 4 installments)<br>\"101-300\":\"8\" (From 101 to 300 cart total, 8 installments)<br><br><strong>Important:</strong> If cart total is not in range, max installments will be used<br><strong>Important:</strong> Please do not leave any extra spaces."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:317
+msgid "Log"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:319
+msgid "Showing 20 latest transactions"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:442
+msgid "Thank you for your order. We are now redirecting you to Piraeus Bank to make payment."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:481
+msgid "Pay via Pireaus Bank"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:481
+msgid "Cancel order &amp; restore cart"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:489
+msgid "An error occurred, please contact system administrator"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:491
+msgid "Result code"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:493
+msgid "Error validating IP address"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:495
+msgid "Authentication Error. Wrong username or/and password"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:497
+msgid "Wrong merchant ID"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:499
+msgid "Too many installments asked."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:501
+msgid "Duplicate transaction references are not allowed."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:503
+msgid "Transaction already processed and completed"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:505
+msgid "Wrong amount value"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:507
+msgid "Communication problem with the transaction processing system"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:523
+msgid "%1$s is not properly configured."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:594
+#: includes/class-webexpert-epay-gateway.php:680
+msgid "The transaction wasn't successful because of a recharge attempt.<br />The requested transaction was already processed and completed. Re-send the transaction using a different «MerchantReference» value."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:596
+#: includes/class-webexpert-epay-gateway.php:682
+msgid "The transaction wasn't successful as a technical problem occurred.<br />Communication problem with the transaction processing system. Try again later when the problem has been rectified."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:598
+#: includes/class-webexpert-epay-gateway.php:684
+msgid "The transaction wasn't successful as no valid values were used in card details or unsupported card was used. Please resend the transaction using correct card details."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:600
+#: includes/class-webexpert-epay-gateway.php:686
+msgid "The transaction wasn't successful as duplicate transaction references are not allowed.<br />The request was sent with the same «MerchantReference» as that of a transaction currently processed by ePOS Paycenter. Try again later in order for the initial transaction to be completed."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:602
+#: includes/class-webexpert-epay-gateway.php:688
+msgid "The transaction wasn't successful as pack is still closing.<br />The batch settlement process is in progress. Try again later after the batch has been closed."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:604
+#: includes/class-webexpert-epay-gateway.php:690
+msgid "The transaction wasn't successful as an error has occurred. Please check your data or else contact Winbank PayCenter administrator.<br />Try again later when the problem has been rectified."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:606
+#: includes/class-webexpert-epay-gateway.php:692
+msgid "The transaction wasn't successful as a technical problem occurred. Payment wasn't received."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:629
+msgid "Thank you for choosing us for your online shopping. <br />However, the transaction wasn't successful, payment wasn't received."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:636
+msgid "Payment Via Peiraeus Bank."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:637
+msgid "Thank you for choosing us for your online shopping.<br />Your transaction was successful, payment was received.<br />Your order is currently being processed."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:643
+msgid "Thank you for choosing us for your online shopping.<br />Your transaction was previously received."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:648
+msgid "Thank you for choosing us for your online shopping. <br />However, the transaction was declined by the Issuer, payment wasn't received. Please contact your bank or use another card."
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:695
+msgid "Payment Via Peiraeus Bank"
+msgstr ""
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:82
+msgid "Payment Via Peiraeus Bank (follow-up)."
+msgstr ""
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:108
+msgid "Every minute"
+msgstr ""
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:112
+msgid "Every 5 minutes"
+msgstr ""
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:161
+msgid "You can setup the payment gateway at "
+msgstr ""
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:161
+msgid "WooCommerce Settings"
+msgstr ""
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:162
+msgid "Please fill in the email address and the license key you received when purchasing the Piraeus Bank WooCoommerce Payment Gateway to enable automatic updates and ensure the full functionality of the plugin."
+msgstr ""
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:163
+msgid "For any inquiries please contact "
+msgstr ""
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:163
+msgid "or visit our Helpdesk at "
+msgstr ""
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:184
+msgid "If you have applied to Piraeus Bank ePOS, you will be requested to provide some information about your website. The details are"
+msgstr ""
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:205
+msgid "Settings"
+msgstr ""
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:206
+msgid "Support"
+msgstr ""
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:221
+msgid "Please activate <strong>Web Expert Piraeusbank WooCommerce Payment Gateway</strong> to enable all it's features and automatic updates."
+msgstr ""
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:228
+msgid "The license for <strong>Web Expert Piraeusbank WooCommerce Payment Gateway</strong> is invalid. Please fill in a valid license key."
+msgstr ""

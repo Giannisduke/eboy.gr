@@ -1,0 +1,612 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Peiraus Bank WooCommerce Payment Gateway\n"
+"POT-Creation-Date: 2024-09-11 12:42+0300\n"
+"PO-Revision-Date: 2024-09-11 12:42+0300\n"
+"Last-Translator: Dimitrios Selimidis <ds@webexpert.gr>\n"
+"Language-Team: \n"
+"Language: el_GR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: node_modules\n"
+
+#: assets/js/frontend/blocks.js:1 includes/class-webexpert-epay-gateway.php:132
+#: includes/class-webexpert-epay-gateway.php:137
+#: resources/js/frontend/index.js:86
+#, javascript-format
+msgid "No installments"
+msgid_plural "%d installments from %s per month"
+msgstr[0] "Χωρίς δόσεις"
+msgstr[1] "%d δόσεις από %s το μήνα"
+
+#: includes/class-webexpert-epay-gateway.php:10
+msgid "Proceed for payment"
+msgstr "Μετάβαση για πληρωμή"
+
+#: includes/class-webexpert-epay-gateway.php:14
+#: includes/class-webexpert-epay-gateway.php:32
+msgid ""
+"Piraeus Bank Gateway allows you to accept payment through various channels "
+"such as Maestro, Mastercard and Visa cards."
+msgstr ""
+"Η πύλη πληρωμών της Πειραιώς σας επιτρέπει να λαμβάνεται πληρωμές μέσω "
+"καρτών  Maestro, Mastercard και Visa."
+
+#: includes/class-webexpert-epay-gateway.php:15
+#: includes/class-webexpert-epay-gateway.php:31
+#: includes/class-webexpert-epay-gateway.php:249
+#: resources/js/frontend/index.js:13
+#: webexpert-woocommerce-piraeus-payment-gateway.php:136
+msgid "Piraeus Bank Gateway"
+msgstr "Πύλη πληρωμών τράπεζας Πειραιώς"
+
+#: includes/class-webexpert-epay-gateway.php:116
+#: includes/class-webexpert-epay-gateway.php:156
+#: includes/class-webexpert-epay-gateway.php:167
+#: includes/class-webexpert-epay-gateway.php:312
+#: webexpert-woocommerce-piraeus-payment-gateway.php:193
+msgid "Installments"
+msgstr "Αριθμός δόσεων"
+
+#: includes/class-webexpert-epay-gateway.php:231
+msgid "Enable/Disable"
+msgstr "Ενεργοποίηση/Απενεργοποίηση"
+
+#: includes/class-webexpert-epay-gateway.php:233
+msgid "Enable Piraeus Bank Gateway"
+msgstr "Ενεργοποίηση πύλης πληρωμών Τράπεζας Πειραιώς"
+
+#: includes/class-webexpert-epay-gateway.php:234
+msgid "Enable or disable the gateway."
+msgstr "Ενεργοποίηση ή απενεργοποίηση της πύλης πληρωμών."
+
+#: includes/class-webexpert-epay-gateway.php:239
+msgid "Test Environment"
+msgstr "Ενεργοποίηση δοκιμαστικού περιβάλλοντος"
+
+#: includes/class-webexpert-epay-gateway.php:241
+msgid "Enables test environment for Piraeus Bank Gateway for test cases."
+msgstr ""
+"Ενεργοποιεί την δοκιμαστική λειτουργία για τις δοκιμές που χρειάζεται η "
+"τράπεζα Πειραιώς."
+
+#: includes/class-webexpert-epay-gateway.php:246
+msgid "Title"
+msgstr "Τίτλος"
+
+#: includes/class-webexpert-epay-gateway.php:248
+msgid "This controls the title which the user sees during checkout."
+msgstr "Ελέγχει το τίτλο που εμφανίζεται στο χρήστη κατά τη πληρωμή."
+
+#: includes/class-webexpert-epay-gateway.php:253
+msgid "Description"
+msgstr "Περιγραφή"
+
+#: includes/class-webexpert-epay-gateway.php:255
+msgid "This controls the description which the user sees during checkout."
+msgstr "Ελέγχει την περιγραφή που εμφανίζεται στον χρήστη κατά τη πληρωμή."
+
+#: includes/class-webexpert-epay-gateway.php:256
+msgid "Pay Via Piraeus Bank: Accepts  Mastercard, Visa cards and etc."
+msgstr "Πληρωμή μέσω Τράπεζας Πειραιώς: Δέχεται Mastercard, Visa και Maestro."
+
+#: includes/class-webexpert-epay-gateway.php:260
+#: webexpert-woocommerce-piraeus-payment-gateway.php:183
+msgid "Instructions"
+msgstr "Οδηγίες"
+
+#: includes/class-webexpert-epay-gateway.php:262
+msgid "Instructions that will be added to the thank you page and emails."
+msgstr "Οδηγίες που θα προστεθούν στη σελίδα ευχαριστιών και στα emails."
+
+#: includes/class-webexpert-epay-gateway.php:267
+msgid "Merchant ID"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:269
+msgid "Enter Your Piraeus Bank Merchant ID"
+msgstr "Εισάγεται το Merchant ID από τη Τράπεζα Πειραιώς"
+
+#: includes/class-webexpert-epay-gateway.php:274
+msgid "Acquirer ID"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:276
+msgid "Enter Your Piraeus Bank Acquirer ID"
+msgstr "Εισάγεται το Acquirer ID της Τράπεζας Πειραιώς"
+
+#: includes/class-webexpert-epay-gateway.php:281
+msgid "POS ID"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:283
+msgid "Enter your Piraeus Bank POS ID"
+msgstr "Εισάγεται το POS ID της Τράπεζας Πειραιώς"
+
+#: includes/class-webexpert-epay-gateway.php:287
+msgid "Username"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:289
+msgid "Enter your Piraeus Bank Username"
+msgstr "Εισάγεται το Username της Τράπεζας Πειραιώς"
+
+#: includes/class-webexpert-epay-gateway.php:293
+msgid "Password"
+msgstr ""
+
+#: includes/class-webexpert-epay-gateway.php:295
+msgid "Enter your Piraeus Bank Password"
+msgstr "Εισάγεται το Password της Τράπεζας Πειραιώς"
+
+#: includes/class-webexpert-epay-gateway.php:299
+msgid "Pre-Authorize"
+msgstr "Προ-Έγκριση"
+
+#: includes/class-webexpert-epay-gateway.php:301
+msgid "Enable to capture preauthorized payments"
+msgstr "Ενεργοποιήστε για να συλλέγεται προεγκεκριμένες πληρωμές"
+
+#: includes/class-webexpert-epay-gateway.php:303
+msgid ""
+"Default payment method is Purchase, enable for Pre-Authorized payments. You "
+"will then need to accept them from Peiraeus Bank AdminTool"
+msgstr ""
+"Ο προεπιλεγμένος τρόπος πληρωμής είναι Αγορά, ενεργοποιήστε για Προ-Έγκριση "
+"πληρωμών. Στη συνέχεια θα πρέπει να αποδέχεστε τις πληρωμές μέσα από το "
+"Admin Tool της Τράπεζας Πειραιώς"
+
+#: includes/class-webexpert-epay-gateway.php:307
+msgid "Max Installments"
+msgstr "Μέγιστες άτοκες δόσεις"
+
+#: includes/class-webexpert-epay-gateway.php:309
+msgid "Number of installments, 1 for one time payment"
+msgstr "Αριθμός δόσεων, 1 για εφάπαξ πληρωμή"
+
+#: includes/class-webexpert-epay-gateway.php:314
+msgid "Validate"
+msgstr "Έλεγχος"
+
+#: includes/class-webexpert-epay-gateway.php:314
+msgid ""
+"Set rules of installments. Please put one rule per line.<br><strong>Rule "
+"format</strong><br>\"{amount}-{amount}\":\"{min_installments} - "
+"{max_installments}\",<br>\"{amount}-{amount}\":"
+"\"{installments}\"<br><br><strong>Example (with range)</strong><br>\"0-100\":"
+"\"2-4\", (From 0 to 100 cart total, 2 to 4 installments)<br>\"101-300\":"
+"\"5-8\" (From 101 to 300 cart total, 5 to 8 "
+"installments)<br><br><strong>Example (without range)</strong><br>\"0-100\":"
+"\"4\", (From 0 to 100 cart total, 4 installments)<br>\"101-300\":\"8\" (From "
+"101 to 300 cart total, 8 installments)<br><br><strong>Important:</strong> If "
+"cart total is not in range, max installments will be "
+"used<br><strong>Important:</strong> Please do not leave any extra spaces."
+msgstr ""
+"Ορίστε τους κανόνες των δόσεων. Μέχρι ένας κανόνας, ανα γραμμή."
+"<br><strong>Μορφοποίηση κανόνων</strong><br>\"{ποσό}-{ποσό}\":"
+"\"{ελάχιστη_δόση} - {μέγιστη_δόση}\"<br>\"{ποσό}-{ποσό}\":\"{δόσεις}"
+"<br><br><strong>Παράδειγμα (με εύρος)</strong><br>\"0-100\":\"2-4\", (Από 0 "
+"έως 100 σύνολο καλαθιού, 2 έως 4 δόσεις)<br>\"101-300\":\"5-8\" (Από 101 έως "
+"300 σύνολο καλαθιού, 5 έως 8 δόσεις)<br><br><strong>Παράδειγμα (χωρίς "
+"εύρος)</strong><br>\"0-100\":\"4\", (Από 0 έως 100 σύνολο καλαθιού, 4 "
+"δόσεις)<br>\"101-300\":\"8\" (Από 101 έως 300 σύνολο καλαθιού, 8 "
+"δόσεις)<br><br><strong>Σημαντικό:</strong> Αν το σύνολο του καλαθιού "
+"υπερβαίνει τα όρια που θέσατε, θα χρησιμοποιηθεί ο μέγιστος αριθμός "
+"δόσεων<br><strong>Σημαντικό:</strong> Παρακαλώ, μην αφήνετε έξτρα κενά."
+
+#: includes/class-webexpert-epay-gateway.php:317
+msgid "Log"
+msgstr "Αρχείο καταγραφής"
+
+#: includes/class-webexpert-epay-gateway.php:319
+msgid "Showing 20 latest transactions"
+msgstr "Εμφάνιση των 20 τελευταίων συναλλαγών"
+
+#: includes/class-webexpert-epay-gateway.php:442
+msgid ""
+"Thank you for your order. We are now redirecting you to Piraeus Bank to make "
+"payment."
+msgstr ""
+"Ευχαριστούμε για τη παραγγελία. Σας ανακατευθύνουμε στη Τράπεζα Πειραιώς για "
+"να πραγματοποιηθεί πληρωμή."
+
+#: includes/class-webexpert-epay-gateway.php:481
+msgid "Pay via Pireaus Bank"
+msgstr "Πληρωμή μέσω Τράπεζας Πειραιώς"
+
+#: includes/class-webexpert-epay-gateway.php:481
+msgid "Cancel order &amp; restore cart"
+msgstr "Ακύρωση παραγγελίας &amp; άδειασμα καλαθιού"
+
+#: includes/class-webexpert-epay-gateway.php:489
+msgid "An error occurred, please contact system administrator"
+msgstr "Συνέβη ένα σφάλμα, επικοινωνήστε με το διαχειριστή"
+
+#: includes/class-webexpert-epay-gateway.php:491
+msgid "Result code"
+msgstr "Κωδικός αποτελέσματος"
+
+#: includes/class-webexpert-epay-gateway.php:493
+msgid "Error validating IP address"
+msgstr "Πρόβλημα επικύρωσης διεύθυνσης IP"
+
+#: includes/class-webexpert-epay-gateway.php:495
+msgid "Authentication Error. Wrong username or/and password"
+msgstr ""
+"Σφάλμα ελέγχου ταυτότητας. Λανθασμένο όνομα χρήστη ή/και κωδικός πρόσβασης"
+
+#: includes/class-webexpert-epay-gateway.php:497
+msgid "Wrong merchant ID"
+msgstr "Λανθασμένος κωδικός εμπόρου"
+
+#: includes/class-webexpert-epay-gateway.php:499
+msgid "Too many installments asked."
+msgstr ""
+"Το πλήθος δόσεων που χρησιμοποιήθηκε είναι μεγαλύτερο από το μέγιστο "
+"επιτρεπτό για τη συγκεκριμένη επιχείρηση."
+
+#: includes/class-webexpert-epay-gateway.php:501
+msgid "Duplicate transaction references are not allowed."
+msgstr "Δεν επιτρέπονται διπλές αναφορές συναλλαγών."
+
+#: includes/class-webexpert-epay-gateway.php:503
+msgid "Transaction already processed and completed"
+msgstr ""
+"Έχει ήδη πραγματοποιηθεί επιτυχής συναλλαγή με το συγκεκριμένο "
+"«MerchantReference»"
+
+#: includes/class-webexpert-epay-gateway.php:505
+msgid "Wrong amount value"
+msgstr "Εσφαλμένη αξία ποσού"
+
+#: includes/class-webexpert-epay-gateway.php:507
+msgid "Communication problem with the transaction processing system"
+msgstr "Πρόβλημα επικοινωνίας με το σύστημα επεξεργασίας συναλλαγών"
+
+#: includes/class-webexpert-epay-gateway.php:511
+#: includes/class-webexpert-epay-gateway.php:512
+msgid "Error"
+msgstr "Σφάλμα"
+
+#: includes/class-webexpert-epay-gateway.php:523
+#, php-format
+msgid "%1$s is not properly configured."
+msgstr "%1$s δεν έχει ρυθμιστεί σωστά."
+
+#: includes/class-webexpert-epay-gateway.php:594
+#: includes/class-webexpert-epay-gateway.php:680
+msgid ""
+"The transaction wasn't successful because of a recharge attempt.<br />The "
+"requested transaction was already processed and completed. Re-send the "
+"transaction using a different «MerchantReference» value."
+msgstr ""
+"Η συναλλαγή δεν ήταν επιτυχής εξαιτίας μιας απόπειρα διπλοχρέωσης συναλλαγής."
+"<br />Η συναλλαγή που ζητήθηκε έχει ήδη χρησιμοποιηθεί σε εγκεκριμένη "
+"συναλλαγή. Στείλτε εκ νέου τη συναλλαγή χρησιμοποιώντας διαφορετική τιμή "
+"«MerchantReference»."
+
+#: includes/class-webexpert-epay-gateway.php:596
+#: includes/class-webexpert-epay-gateway.php:682
+msgid ""
+"The transaction wasn't successful as a technical problem occurred.<br /"
+">Communication problem with the transaction processing system. Try again "
+"later when the problem has been rectified."
+msgstr ""
+"Η συναλλαγή δεν ήταν επιτυχής, καθώς παρουσιάστηκε τεχνικό πρόβλημα.<br /"
+">Πρόβλημα επικοινωνίας με το σύστημα επεξεργασίας των συναλλαγών. "
+"Προσπαθήστε ξανά αργότερα, όταν το πρόβλημα έχει αποκατασταθεί."
+
+#: includes/class-webexpert-epay-gateway.php:598
+#: includes/class-webexpert-epay-gateway.php:684
+msgid ""
+"The transaction wasn't successful as no valid values were used in card "
+"details or unsupported card was used. Please resend the transaction using "
+"correct card details."
+msgstr ""
+"Η συναλλαγή δεν ήταν επιτυχής, καθώς έγινε εισαγωγή λανθασμένων στοιχείων "
+"κάρτας ή χρησιμοποιήθηκε κάρτα που δεν υποστηρίζεται. Παρακαλούμε στείλτε "
+"ξανά τη συναλλαγή χρησιμοποιώντας τα σωστά στοιχεία της κάρτας."
+
+#: includes/class-webexpert-epay-gateway.php:600
+#: includes/class-webexpert-epay-gateway.php:686
+msgid ""
+"The transaction wasn't successful as duplicate transaction references are "
+"not allowed.<br />The request was sent with the same «MerchantReference» as "
+"that of a transaction currently processed by ePOS Paycenter. Try again later "
+"in order for the initial transaction to be completed."
+msgstr ""
+"Η συναλλαγή δεν ήταν επιτυχής, καθώς δεν επιτρέπονται διπλές αναφορές "
+"συναλλαγών.<br />Η συναλλαγή στάλθηκε με τιμή στο «MerchantReference» η "
+"οποία χρησιμοποιείται σε άλλη συναλλαγή που αυτή τη στιγμή βρίσκεται υπό "
+"επεξεργασία στο EPOS Paycenter. Προσπαθήστε ξανά αργότερα, προκειμένου να "
+"ολοκληρωθεί η αρχική συναλλαγή."
+
+#: includes/class-webexpert-epay-gateway.php:602
+#: includes/class-webexpert-epay-gateway.php:688
+msgid ""
+"The transaction wasn't successful as pack is still closing.<br />The batch "
+"settlement process is in progress. Try again later after the batch has been "
+"closed."
+msgstr ""
+"Η συναλλαγή δεν ήταν επιτυχής, καθώς βρίσκεται σε εξέλιξη η διαδικασία "
+"εκκαθάρισης των συναλλαγών του τρέχοντος πακέτου (κλείσιμο πακέτου).<br /"
+">Προσπαθήστε ξανά αργότερα ώστε να ολοκληρωθεί το κλείσιμο του πακέτου."
+
+#: includes/class-webexpert-epay-gateway.php:604
+#: includes/class-webexpert-epay-gateway.php:690
+msgid ""
+"The transaction wasn't successful as an error has occurred. Please check "
+"your data or else contact Winbank PayCenter administrator.<br />Try again "
+"later when the problem has been rectified."
+msgstr ""
+"Η συναλλαγή δεν ήταν επιτυχής, καθώς παρουσιάστηκε τεχνικό πρόβλημα. "
+"Παρακαλώ ελέγξτε τα δεδομένα σας ή επικοινωνήστε με το Winbank PayCenter."
+"<br /> Προσπαθήστε ξανά αργότερα, ώστε να έχει αποκατασταθεί το πρόβλημα."
+
+#: includes/class-webexpert-epay-gateway.php:606
+#: includes/class-webexpert-epay-gateway.php:692
+msgid ""
+"The transaction wasn't successful as a technical problem occurred. Payment "
+"wasn't received."
+msgstr ""
+"Ένα τεχνικό πρόβλημα συνέβη και η συναλλαγή δεν ήταν επιτυχής. Δε λάβαμε την "
+"πληρωμή."
+
+#: includes/class-webexpert-epay-gateway.php:629
+msgid ""
+"Thank you for choosing us for your online shopping. <br />However, the "
+"transaction wasn't successful, payment wasn't received."
+msgstr ""
+"Ευχαριστούμε που μας επιλέγετε για τις ηλεκτρονικές αγορές σας. <br /"
+">Ωστόσο, η συναλλαγή δεν ήταν επιτυχής και δεν λάβαμε την πληρωμή."
+
+#: includes/class-webexpert-epay-gateway.php:636
+msgid "Payment Via Peiraeus Bank."
+msgstr "Πληρωμή μέσω Τράπεζας Πειραιώς."
+
+#: includes/class-webexpert-epay-gateway.php:637
+msgid ""
+"Thank you for choosing us for your online shopping.<br />Your transaction "
+"was successful, payment was received.<br />Your order is currently being "
+"processed."
+msgstr ""
+"Ευχαριστούμε που μας επιλέγετε για τις ηλεκτρονικές αγορές σας.<br/> Η "
+"συναλλαγή ήταν επιτυχής και λάβαμε τη πληρωμή.<br />Η παραγγελία σας είναι "
+"υπό επεξεργασία."
+
+#: includes/class-webexpert-epay-gateway.php:643
+msgid ""
+"Thank you for choosing us for your online shopping.<br />Your transaction "
+"was previously received."
+msgstr ""
+"Ευχαριστούμε που μας επιλέγετε για τις ηλεκτρονικές αγορές σας.<br/> Η "
+"συναλλαγή έχει ήδη πραγματοποιηθεί."
+
+#: includes/class-webexpert-epay-gateway.php:648
+msgid ""
+"Thank you for choosing us for your online shopping. <br />However, the "
+"transaction was declined by the Issuer, payment wasn't received. Please "
+"contact your bank or use another card."
+msgstr ""
+"Ευχαριστούμε που μας επιλέγετε για τις ηλεκτρονικές αγορές σας. <br /"
+">Ωστόσο, η συναλλαγή δεν ήταν επιτυχής. Η συναλλαγή απορρίφθηκε από την "
+"εκδότρια τράπεζα. Παρακαλώ επικοινωνήστε με την τράπεζα σας ή χρησιμοποιήστε "
+"άλλη κάρτα."
+
+#: includes/class-webexpert-epay-gateway.php:695
+msgid "Payment Via Peiraeus Bank"
+msgstr "Πληρωμή μέσω Τράπεζας Πειραιώς"
+
+#: includes/update/Puc/v4p10/Plugin/Ui.php:54
+msgid "View details"
+msgstr "Προβολή λεπτομεριών"
+
+#: includes/update/Puc/v4p10/Plugin/Ui.php:77
+#, php-format
+msgid "More information about %s"
+msgstr "Περισσότερες πληροφορίες σχετικά με %s"
+
+#: includes/update/Puc/v4p10/Plugin/Ui.php:128
+msgid "Check for updates"
+msgstr "Έλεγχος για ενημερώσεις"
+
+#: includes/update/Puc/v4p10/Plugin/Ui.php:213
+#, php-format
+msgctxt "the plugin title"
+msgid "The %s plugin is up to date."
+msgstr "Το πρόσθετο %s είναι ενημερωμένο."
+
+#: includes/update/Puc/v4p10/Plugin/Ui.php:215
+#, php-format
+msgctxt "the plugin title"
+msgid "A new version of the %s plugin is available."
+msgstr "Είναι διαθέσιμη μια νέα έκδοση του πρόσθετου %s."
+
+#: includes/update/Puc/v4p10/Plugin/Ui.php:217
+#, php-format
+msgctxt "the plugin title"
+msgid "Could not determine if updates are available for %s."
+msgstr ""
+"Δεν μπορέσαμε να εντοπίσουμε αν υπάρχει διαθέσιμη έκδοση του πρόσθετου %s."
+
+#: includes/update/Puc/v4p10/Plugin/Ui.php:223
+#, php-format
+msgid "Unknown update checker status \"%s\""
+msgstr "Άγνωστη κατάσταση ενημέρωσης \"%s\""
+
+#: includes/update/Puc/v4p10/Vcs/PluginUpdateChecker.php:98
+msgid "There is no changelog available."
+msgstr "Δεν υπάρχει διαθέσιμο changelog."
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:82
+msgid "Payment Via Peiraeus Bank (follow-up)."
+msgstr "Πληρωμή μέσω Τράπεζας Πειραιώς (follow up)."
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:108
+msgid "Every minute"
+msgstr "Κάθε λεπτό"
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:112
+msgid "Every 5 minutes"
+msgstr "Κάθε 5 λεπτά"
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:161
+msgid "You can setup the payment gateway at "
+msgstr "Μπορείτε να ρυθμίσετε την πύλη πληρωμών στις  "
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:161
+msgid "WooCommerce Settings"
+msgstr "Ρυθμίσεις του WooCommerce"
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:162
+msgid ""
+"Please fill in the email address and the license key you received when "
+"purchasing the Piraeus Bank WooCoommerce Payment Gateway to enable automatic "
+"updates and ensure the full functionality of the plugin."
+msgstr ""
+"Παρακαλούμε συμπληρώστε τη διεύθυνση Email και το License Key που λάβατε "
+"κατά την αγορά του πρόσθετου Piraeus Bank WooCoommerce Payment Gateway για "
+"να ενεργοποιήσετε τις αυτόματες ενημερώσεις και να εξασφαλίσετε την πλήρη "
+"λειτουργία του πρόσθετου."
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:163
+msgid "For any inquiries please contact "
+msgstr "Για θέματα υποστήριξης, παρακαλούμε επικοινωνήστε με το "
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:163
+msgid "or visit our Helpdesk at "
+msgstr "ή επισκεφθείτε το Helpdesk στη διεύθυνση "
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:184
+msgid ""
+"If you have applied to Piraeus Bank ePOS, you will be requested to provide "
+"some information about your website. The details are"
+msgstr ""
+"Εάν έχετε αιτηθεί για λογαριασμό στην Piraeus Bank ePOS, θα σας ζητηθεί να "
+"κοινοποιήσετε ορισμένες πληροφορίες. Οι πληροφορίες είναι"
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:205
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:206
+msgid "Support"
+msgstr "Υποστήριξη"
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:221
+msgid ""
+"Please activate <strong>Web Expert Piraeusbank WooCommerce Payment Gateway</"
+"strong> to enable all it's features and automatic updates."
+msgstr ""
+"Εισάγετε την άδεια χρήσης του πρόσθετου <strong>Web Expert Piraeus Bank "
+"WooCommerce Payment Gateway</strong> για να ενεργοποιήσετε όλες τις "
+"δυνατότητες και τις αυτόματες ενημερώσεις του."
+
+#: webexpert-woocommerce-piraeus-payment-gateway.php:228
+msgid ""
+"The license for <strong>Web Expert Piraeusbank WooCommerce Payment Gateway</"
+"strong> is invalid. Please fill in a valid license key."
+msgstr ""
+"Η άδεια χρήσης για το πρόσθετο <strong>Web Expert Piraeus Bank WooCommerce "
+"Payment Gateway</strong> δεν είναι έγκυρη. Παρακαλώ συμπληρώστε μια έγκυρη "
+"άδεια χρήσης."
+
+#~ msgid ""
+#~ "Thank you - your order is now pending payment. You should be "
+#~ "automatically redirected to Peiraeus Paycenter to make payment."
+#~ msgstr ""
+#~ "Ευχαριστούμε - η παραγγελία σας αναμένει πληρωμή. Θα ανακατευθυνθείται "
+#~ "αυτόματα στο Paycenter της Τράπεζας Πειραιώς για να πραγματοποιήσετε την "
+#~ "πληρωμή."
+
+#~ msgid "Payment received, your order is now complete."
+#~ msgstr "Λάβαμε τη πληρωμή, η παραγγελία έχει ολοκληρωθεί."
+
+#~ msgid "Payment received, your order is currently being processed."
+#~ msgstr "Λάβαμε τη πληρωμή, η παραγγελία σας βρίσκεται υπό επεξεργασία."
+
+#~ msgid "Return Page"
+#~ msgstr "Σελίδα Επιστροφής"
+
+#~ msgid "Select Page"
+#~ msgstr "Επιλέξτε σελίδα"
+
+#~ msgid "URL of success page"
+#~ msgstr "URL σελίδας επιστροφής"
+
+#~ msgid "Default page (recommended)"
+#~ msgstr "Προεπιλεγμένη σελίδα (συνιστάται)"
+
+#~ msgid ""
+#~ "Thank you for choosing us for your online shopping.<br />Your transaction "
+#~ "was successful, payment was received.<br />Your order is now complete."
+#~ msgstr ""
+#~ "Ευχαριστούμε που μας επιλέγετε για τις ηλεκτρονικές αγορές σας.<br/>Η "
+#~ "συναλλαγή ήταν επιτυχής και λάβαμε τη πληρωμή. <br/> H παραγγελία σας "
+#~ "έχει ολοκληρωθεί."
+
+#~ msgid ""
+#~ "The transaction wasn't successful as a technical problem occurred.<br /"
+#~ ">Payment wasn't received."
+#~ msgstr ""
+#~ "Ένα τεχνικό πρόβλημα συνέβη και η συναλλαγή δεν ήταν επιτυχής. Δε λάβαμε "
+#~ "την πληρωμή."
+
+#, fuzzy
+#~| msgid ""
+#~| "A technical problem occured. <br />The transaction wasn't successful, "
+#~| "payment wasn't received."
+#~ msgid ""
+#~ "The transaction wasn't successful as a technical problem occurred.<br /"
+#~ ">The transaction wasn't successful, payment wasn't received."
+#~ msgstr ""
+#~ "Ένα τεχνικό πρόβλημα συνέβει. </br> Η συναλλαγή δεν ήταν επιτυχής, δε "
+#~ "λάβαμε πληρωμή."
+
+#~ msgid ""
+#~ "Thank you for choosing us for your online shopping.<br />However, the "
+#~ "transaction wasn't successful, card has expired and has not been renewed. "
+#~ "Please use another card."
+#~ msgstr ""
+#~ "Ευχαριστούμε που μας επιλέγετε για τις ηλεκτρονικές αγορές σας. <br /"
+#~ ">Ωστόσο, η συναλλαγή δεν ήταν επιτυχής και δεν λάβαμε την πληρωμή. Η "
+#~ "κάρτα έχει λήξει και δεν έχει ανανεωθεί. Παρακαλώ χρησιμοποιήστε άλλη "
+#~ "κάρτα."
+
+#~ msgid ""
+#~ "Web Expert Piraeus Bank WooCommerce Payment Gateway allows you to accept "
+#~ "payments through various credit cards such as Maestro, Mastercard, and "
+#~ "Visa on your Woocommerce Site."
+#~ msgstr ""
+#~ "Η πύλη πληρωμών Πειραιώς της Web Expert σας επιτρέπει να λαμβάνεται "
+#~ "πληρωμές μέσω καρτών  Maestro, Mastercard και Visa στο Woocommerce "
+#~ "ηλεκτρονικό κατάστημά σας."
+
+#~ msgid "Piraeus Bank Merchant ID"
+#~ msgstr "Merchant ID Τράπεζας Πειραιώς"
+
+#~ msgid "Piraeus Bank POS ID"
+#~ msgstr "POS ID Τράπεζας Πειραιώς"
+
+#~ msgid "Piraeus Bank Username"
+#~ msgstr "Username Τράπεζας Πειραιώς"
+
+#~ msgid "Piraeus Bank Password"
+#~ msgstr "Password Τράπεζας Πειραιώς"
+
+#~ msgid ""
+#~ "Payment Received.<br />Your order is currently being processed.<br />We "
+#~ "will be shipping your order to you soon.<br />Peiraeus Bank ID: "
+#~ msgstr ""
+#~ "Έχουμε λάβει την πληρωμή. <br/> Η παραγγελία σας είναι υπό επεξεργασία. "
+#~ "<br/> Θα σας αποστείλουμε τη παραγγελία σας το συντομότερο δυνατό.<br/> "
+#~ "ID Συναλλαγής Τράπεζας Πειραιώς: "
