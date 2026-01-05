@@ -588,3 +588,127 @@ add_action('init', function () {
 
 
 });
+
+
+/**
+ * Dynamic -50% sale for products in a specific product category (by slug),
+ * ignoring any stored sale prices.
+ *
+ * Target category: christoygenniatika-dentra
+ */
+
+add_action('init', function () {
+
+	$target_cat_slug     = 'christoygenniatika-dentra';
+	$discount_multiplier = 0.20; // -20%
+	$taxonomy            = 'product_cat';
+
+	/**
+	 * Checks if a product belongs to target category (including descendants).
+	 * Also supports variations by checking parent product.
+	 */
+	$in_target_cat = function ( $product ) use ( $target_cat_slug, $taxonomy ) : bool {
+		if ( ! $product || ! is_a( $product, 'WC_Product' ) ) return false;
+
+		$product_id = $product->get_id();
+
+		// If variation, check categories of parent product
+		if ( $product->is_type('variation') ) {
+			$parent_id = $product->get_parent_id();
+			if ( $parent_id ) $product_id = $parent_id;
+		}
+
+		$term = get_term_by('slug', $target_cat_slug, $taxonomy);
+		if ( ! $term || is_wp_error($term) ) return false;
+
+		// has_term() doesn't include children by default, so we explicitly include descendants
+		$children = get_term_children((int)$term->term_id, $taxonomy);
+		if ( is_wp_error($children) ) $children = [];
+
+		$term_ids = array_map('intval', (array)$children);
+		$term_ids[] = (int)$term->term_id;
+
+		return has_term( $term_ids, $taxonomy, $product_id );
+	};
+
+	$get_discounted_from_regular = function ( WC_Product $product ) use ( $discount_multiplier ) : ?float {
+		$regular = $product->get_regular_price();
+
+		// If no regular price, fallback to current price
+		if ( $regular === '' || $regular === null ) {
+			$p = $product->get_price();
+			if ( $p === '' || $p === null ) return null;
+			return (float) $p * $discount_multiplier;
+		}
+
+		return (float) $regular * $discount_multiplier;
+	};
+
+	/**
+	 * SIMPLE PRODUCTS
+	 * - sale_price: dynamic 50% off (ignore stored sale)
+	 * - price: equals discounted
+	 * - on_sale: true (to show strike-through + badge)
+	 */
+	add_filter('woocommerce_product_get_sale_price', function ( $sale_price, $product ) use ( $in_target_cat, $get_discounted_from_regular ) {
+		if ( ! $in_target_cat( $product ) ) return $sale_price;
+
+		$discounted = $get_discounted_from_regular( $product );
+		return $discounted === null ? '' : $discounted;
+	}, 9999, 2);
+
+	add_filter('woocommerce_product_get_price', function ( $price, $product ) use ( $in_target_cat, $get_discounted_from_regular ) {
+		if ( ! $in_target_cat( $product ) ) return $price;
+
+		$discounted = $get_discounted_from_regular( $product );
+		return $discounted === null ? $price : $discounted;
+	}, 9999, 2);
+
+	add_filter('woocommerce_product_is_on_sale', function ( $on_sale, $product ) use ( $in_target_cat, $get_discounted_from_regular ) {
+		if ( ! $in_target_cat( $product ) ) return $on_sale;
+
+		$discounted = $get_discounted_from_regular( $product );
+		return $discounted !== null;
+	}, 9999, 2);
+
+	/**
+	 * VARIATIONS
+	 */
+	add_filter('woocommerce_product_variation_get_sale_price', function ( $sale_price, $variation ) use ( $in_target_cat, $get_discounted_from_regular ) {
+		if ( ! $in_target_cat( $variation ) ) return $sale_price;
+
+		$discounted = $get_discounted_from_regular( $variation );
+		return $discounted === null ? '' : $discounted;
+	}, 9999, 2);
+
+	add_filter('woocommerce_product_variation_get_price', function ( $price, $variation ) use ( $in_target_cat, $get_discounted_from_regular ) {
+		if ( ! $in_target_cat( $variation ) ) return $price;
+
+		$discounted = $get_discounted_from_regular( $variation );
+		return $discounted === null ? $price : $discounted;
+	}, 9999, 2);
+
+	// Fix variable product price ranges (cached arrays)
+	add_filter('woocommerce_variation_prices_sale_price', function ( $sale_price, $variation, $product ) use ( $in_target_cat, $get_discounted_from_regular ) {
+		if ( ! ( $in_target_cat( $variation ) || $in_target_cat( $product ) ) ) return $sale_price;
+
+		$discounted = $get_discounted_from_regular( $variation );
+		return $discounted === null ? '' : $discounted;
+	}, 9999, 3);
+
+	add_filter('woocommerce_variation_prices_price', function ( $price, $variation, $product ) use ( $in_target_cat, $get_discounted_from_regular ) {
+		if ( ! ( $in_target_cat( $variation ) || $in_target_cat( $product ) ) ) return $price;
+
+		$discounted = $get_discounted_from_regular( $variation );
+		return $discounted === null ? $price : $discounted;
+	}, 9999, 3);
+
+	// Bust variation prices cache so ranges recalc
+	add_filter('woocommerce_get_variation_prices_hash', function ( $hash, $product, $display ) use ( $target_cat_slug, $discount_multiplier ) {
+		$hash['cat_dynamic_discount'] = $target_cat_slug . '|' . $discount_multiplier;
+		return $hash;
+	}, 10, 3);
+
+
+
+});
