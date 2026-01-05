@@ -712,3 +712,64 @@ add_action('init', function () {
 
 
 });
+
+
+/**
+ * Shortcode: [product_categories_tree]
+ * Displays all WooCommerce product categories and subcategories in a tree.
+ */
+
+add_shortcode('product_categories_tree', function ($atts) {
+
+	if ( ! function_exists('wc_get_page_permalink') ) {
+		return '<p>WooCommerce not active.</p>';
+	}
+
+	$atts = shortcode_atts([
+		'hide_empty' => '0',  // 1 για να δείχνει μόνο κατηγορίες με προϊόντα
+		'show_count' => '0',  // 1 για να δείχνει πλήθος προϊόντων
+	], $atts, 'product_categories_tree');
+
+	$hide_empty = ($atts['hide_empty'] === '1');
+	$show_count = ($atts['show_count'] === '1');
+
+	$terms = get_terms([
+		'taxonomy'   => 'product_cat',
+		'hide_empty' => $hide_empty,
+	]);
+
+	if ( is_wp_error($terms) || empty($terms) ) {
+		return '<p>Δεν βρέθηκαν κατηγορίες.</p>';
+	}
+
+	// index by parent
+	$by_parent = [];
+	foreach ($terms as $t) {
+		$by_parent[(int)$t->parent][] = $t;
+	}
+
+	$render = function($parent_id, $depth) use (&$render, $by_parent, $show_count) {
+		if ( empty($by_parent[$parent_id]) ) return '';
+
+		$html = '<ul class="product-cats-tree depth-' . (int)$depth . '">';
+		foreach ($by_parent[$parent_id] as $term) {
+			$link = get_term_link($term);
+			if ( is_wp_error($link) ) continue;
+
+			$count_html = $show_count ? ' <span class="cat-count">(' . (int)$term->count . ')</span>' : '';
+			$html .= '<li class="cat-item cat-item-' . (int)$term->term_id . '">';
+			$html .= '<a href="' . esc_url($link) . '">' . esc_html($term->name) . '</a>' . $count_html;
+			$html .= $render((int)$term->term_id, $depth + 1);
+			$html .= '</li>';
+		}
+		$html .= '</ul>';
+
+		return $html;
+	};
+
+	$out  = '<div class="product-categories-tree">';
+	$out .= $render(0, 0);
+	$out .= '</div>';
+
+	return $out;
+});
