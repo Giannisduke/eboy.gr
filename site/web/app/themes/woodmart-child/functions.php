@@ -600,7 +600,7 @@ add_action('init', function () {
 add_action('init', function () {
 
 	$target_cat_slug     = 'christoygenniatika-dentra';
-	$discount_multiplier = 0.20; // -20%
+	$discount_multiplier = 0.80; // -20%
 	$taxonomy            = 'product_cat';
 
 	/**
