@@ -484,3 +484,116 @@ if (!function_exists('additional_font_styles')) {
     }
     add_action('wp_enqueue_scripts', 'additional_font_styles');
 }
+
+
+<?php
+/**
+ * Category-based dynamic -50% sale, ignoring any stored sale prices.
+ * Category slug: christoygenna-2
+ */
+
+add_action('init', function () {
+
+	$target_cat_slug      = 'christoygenna-2'; // ✅ χωρίς το leading "/"
+	$discount_multiplier  = 0.50;              // ✅ -50%
+
+	$in_target_cat = function ( $product ) use ( $target_cat_slug ) : bool {
+		if ( ! $product || ! is_a( $product, 'WC_Product' ) ) return false;
+
+		$product_id = $product->get_id();
+
+		// If variation, check parent product categories
+		if ( $product->is_type('variation') ) {
+			$parent_id = $product->get_parent_id();
+			if ( $parent_id ) $product_id = $parent_id;
+		}
+
+		return has_term( $target_cat_slug, 'product_cat', $product_id );
+	};
+
+	$get_discounted_from_regular = function ( WC_Product $product ) use ( $discount_multiplier ) : ?float {
+		$regular = $product->get_regular_price();
+
+		// If no regular price, fallback to current price
+		if ( $regular === '' || $regular === null ) {
+			$p = $product->get_price();
+			if ( $p === '' || $p === null ) return null;
+			return (float) $p * $discount_multiplier;
+		}
+
+		return (float) $regular * $discount_multiplier;
+	};
+
+	/**
+	 * SIMPLE PRODUCTS
+	 */
+	add_filter('woocommerce_product_get_sale_price', function ( $sale_price, $product ) use ( $in_target_cat, $get_discounted_from_regular ) {
+		if ( ! $in_target_cat( $product ) ) return $sale_price;
+
+		$discounted = $get_discounted_from_regular( $product );
+		return $discounted === null ? '' : $discounted;
+	}, 9999, 2);
+
+	add_filter('woocommerce_product_get_price', function ( $price, $product ) use ( $in_target_cat, $get_discounted_from_regular ) {
+		if ( ! $in_target_cat( $product ) ) return $price;
+
+		$discounted = $get_discounted_from_regular( $product );
+		return $discounted === null ? $price : $discounted;
+	}, 9999, 2);
+
+	add_filter('woocommerce_product_is_on_sale', function ( $on_sale, $product ) use ( $in_target_cat, $get_discounted_from_regular ) {
+		if ( ! $in_target_cat( $product ) ) return $on_sale;
+
+		$discounted = $get_discounted_from_regular( $product );
+		return $discounted !== null; // true => show strike-through + badge logic
+	}, 9999, 2);
+
+	/**
+	 * VARIATIONS
+	 */
+	add_filter('woocommerce_product_variation_get_sale_price', function ( $sale_price, $variation ) use ( $in_target_cat, $get_discounted_from_regular ) {
+		if ( ! $in_target_cat( $variation ) ) return $sale_price;
+
+		$discounted = $get_discounted_from_regular( $variation );
+		return $discounted === null ? '' : $discounted;
+	}, 9999, 2);
+
+	add_filter('woocommerce_product_variation_get_price', function ( $price, $variation ) use ( $in_target_cat, $get_discounted_from_regular ) {
+		if ( ! $in_target_cat( $variation ) ) return $price;
+
+		$discounted = $get_discounted_from_regular( $variation );
+		return $discounted === null ? $price : $discounted;
+	}, 9999, 2);
+
+	// Fix variable product price ranges (cached arrays)
+	add_filter('woocommerce_variation_prices_sale_price', function ( $sale_price, $variation, $product ) use ( $in_target_cat, $get_discounted_from_regular ) {
+		if ( ! ( $in_target_cat( $variation ) || $in_target_cat( $product ) ) ) return $sale_price;
+
+		$discounted = $get_discounted_from_regular( $variation );
+		return $discounted === null ? '' : $discounted;
+	}, 9999, 3);
+
+	add_filter('woocommerce_variation_prices_price', function ( $price, $variation, $product ) use ( $in_target_cat, $get_discounted_from_regular ) {
+		if ( ! ( $in_target_cat( $variation ) || $in_target_cat( $product ) ) ) return $price;
+
+		$discounted = $get_discounted_from_regular( $variation );
+		return $discounted === null ? $price : $discounted;
+	}, 9999, 3);
+
+	// Bust variation prices cache
+	add_filter('woocommerce_get_variation_prices_hash', function ( $hash, $product, $display ) use ( $target_cat_slug, $discount_multiplier ) {
+		$hash['cat_dynamic_discount'] = $target_cat_slug . '|' . $discount_multiplier;
+		return $hash;
+	}, 10, 3);
+
+	/**
+	 * Optional: show "-50%" badge instead of "Sale!"
+	 */
+	add_filter('woocommerce_sale_flash', function ( $html, $post, $product ) use ( $in_target_cat ) {
+		if ( $product && $in_target_cat( $product ) ) {
+			return '<span class="onsale">-50%</span>';
+		}
+		return $html;
+	}, 10, 3);
+
+});
