@@ -486,7 +486,6 @@ if (!function_exists('additional_font_styles')) {
 }
 
 
-<?php
 /**
  * Category-based dynamic -50% sale, ignoring any stored sale prices.
  * Category slug: christoygenna-2
