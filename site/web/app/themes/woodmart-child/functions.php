@@ -585,14 +585,6 @@ add_action('init', function () {
 		return $hash;
 	}, 10, 3);
 
-	/**
-	 * Optional: show "-50%" badge instead of "Sale!"
-	 */
-	add_filter('woocommerce_sale_flash', function ( $html, $post, $product ) use ( $in_target_cat ) {
-		if ( $product && $in_target_cat( $product ) ) {
-			return '<span class="onsale">-50%</span>';
-		}
-		return $html;
-	}, 10, 3);
+
 
 });
