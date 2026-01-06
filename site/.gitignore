@@ -17,6 +17,7 @@ web/app/plugins/*
 !web/app/plugins/wpml-cms-nav
 !web/app/plugins/wpml-string-translation
 !web/app/plugins/webexpert-woocommerce-piraeus-payment-gateway
+!web/app/plugins/complianz-gdpr-premium
 web/app/mu-plugins/*/
 !web/app/themes/twentytwentyfive/
 !web/app/themes/woodmart
