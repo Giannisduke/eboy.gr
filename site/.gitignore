@@ -18,6 +18,7 @@ web/app/plugins/*
 !web/app/plugins/wpml-string-translation
 !web/app/plugins/webexpert-woocommerce-piraeus-payment-gateway
 !web/app/plugins/cookie-law-info
+!web/app/plugins/cookiebot
 !web/app/plugins/complianz-gdpr-premium/**
 web/app/mu-plugins/*/
 !web/app/themes/twentytwentyfive/
@@ -59,6 +60,9 @@ web/.htaccess
 !web/app/plugins/complianz-gdpr-premium/pro/assets/
 !web/app/plugins/complianz-gdpr-premium/pro/assets/vendor/
 !web/app/plugins/complianz-gdpr-premium/pro/assets/vendor/**
+
+
+!web/app/plugins/cookiebot/vendor
 
 auth.json
 
