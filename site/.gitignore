@@ -49,6 +49,7 @@ web/.htaccess
 !web/app/plugins/woocommerce-multilingual/vendor
 !web/app/plugins/contact-form-7-multilingual/vendor
 !web/app/plugins/safe-svg/vendor
+!web/app/plugins/complianz-gdpr-premium/assets/vendor
 
 auth.json
 
