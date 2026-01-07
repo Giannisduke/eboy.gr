@@ -66,6 +66,7 @@ web/.htaccess
 
 
 !web/app/plugins/cookiebot/vendor
+!web/app/plugins/superfly-menu/includes/vendor
 
 auth.json
 
