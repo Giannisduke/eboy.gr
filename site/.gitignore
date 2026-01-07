@@ -20,6 +20,7 @@ web/app/plugins/*
 !web/app/plugins/cookie-law-info
 !web/app/plugins/cookiebot
 !web/app/plugins/complianz-gdpr-premium/**
+!web/app/plugins/megamenu-pro
 web/app/mu-plugins/*/
 !web/app/themes/twentytwentyfive/
 !web/app/themes/woodmart
