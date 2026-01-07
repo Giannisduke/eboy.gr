@@ -22,6 +22,7 @@ web/app/plugins/*
 !web/app/plugins/antzel-tools
 !web/app/plugins/complianz-gdpr-premium/**
 !web/app/plugins/megamenu-pro
+!web/app/plugins/superfly-menu
 web/app/mu-plugins/*/
 !web/app/themes/twentytwentyfive/
 !web/app/themes/woodmart

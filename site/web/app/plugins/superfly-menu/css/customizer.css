@@ -1,0 +1,526 @@
+.sf-num {
+    max-width: 50px;
+}
+
+.sf-customize-section-title {
+    margin-top: 20px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #d6d6d6;
+    padding-bottom: 5px;
+    font-size: 16px;
+}
+
+.customize-control-nav_menu_item textarea {
+    width: 100%;
+}
+
+#customize-control-sf_section_1 .customize-control-title {
+    margin-top: 10px;
+}
+
+#customize-control-sf_options-sf_video_bg label {
+    margin-top: 10px;
+}
+
+#customize-control-sf_options-sf_tab_logo img {
+    max-width: 100px;
+}
+
+label[for="_customize-input-sf_options[sf_sidebar_pos]-radio-left"] {
+    width: 65px;
+    height: 45px;
+    display: inline-block;
+    background: url(../img/sidebar-layout.png) 0 0 no-repeat #0000;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+label[for="_customize-input-sf_options[sf_sidebar_pos]-radio-right"]  {
+    width: 65px;
+    height: 45px;
+    display: inline-block;
+    background: url(../img/sidebar-layout.png) 0 -76px no-repeat #0000;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+label[for="_customize-input-sf_options[sf_skew_type]-radio-top"] {
+    width: 65px;
+    height: 45px;
+    display: inline-block;
+    background: url(../img/skew-type.png) 0 0 no-repeat #0000;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+label[for="_customize-input-sf_options[sf_skew_type]-radio-bottom"]  {
+    width: 65px;
+    height: 45px;
+    display: inline-block;
+    background: url(../img/skew-type.png) 0 -76px no-repeat #0000;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+#customize-control-sf_options-sf_sidebar_pos .customize-inside-control-row,
+#customize-control-sf_options-sf_skew_type .customize-inside-control-row {
+    display: inline-block;
+    margin-top: 10px;
+}
+
+[id="_customize-input-sf_options[sf_sidebar_pos]-radio-right"],
+[id="_customize-input-sf_options[sf_skew_type]-radio-bottom"] {
+    margin-left: -12px !important;
+}
+
+#customize-controls .customize-info.is-in-view, #customize-controls .customize-section-title.is-in-view {
+    z-index: 100;
+}
+
+.sf-media {
+    float: left;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.sf-media-cont {
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    cursor: default;
+    border: 1px dashed #b4b9be;
+    box-sizing: border-box;
+    margin: 0px 15px 0 0;
+    line-height: 20px;
+}
+
+.sf-media .button {
+    margin-top: 6px;
+}
+
+.sf-media-input {
+    display: none;
+}
+
+.sf-media .sfm-img-remove-button,
+.sf-media .sfm-icon-remove-button {
+    display: none;
+}
+
+.sfm-img-added .sf-media .sfm-img-remove-button,
+.sfm-icon-added .sf-media .sfm-icon-remove-button {
+    display: inline-block;
+}
+
+.sfm-img-added .sf-image-cont,
+.sfm-icon-added .sf-icon-cont {
+    float: left;
+}
+
+.sfm-img-added .sf-media .sfm-img-remove-button,
+.sfm-icon-added .sf-media .sfm-icon-remove-button {
+    margin-top: 0px;
+}
+
+[sfm-item-id] .customize-control-title {
+    margin: 6px 0 12px;
+    border-bottom: 1px solid #d6d6d6;
+    font-size: 14px;
+    clear: both;
+    padding: 10px 0 6px;
+    display: block;
+    overflow: hidden;
+    float: left;
+    width: 100%;
+}
+
+.sfm-chooser {
+    display: inline-block;
+    margin: 10px 0 0 0;
+}
+
+.sfm-chooser input {
+    display: none !important;
+}
+
+.sfm-chooser label {
+    float: left !important;
+    border: 1px solid #a8a8a7;
+    font-size: 14px;
+    padding: 6px .8vw;
+    margin: 0 -1px 0 0;
+    color: #6A6865;
+    line-height: 24px;
+    border-radius: 0;
+    position: relative;
+    min-width: 54px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.sfm-chooser input:first-child + label {
+    /* border-right-width: 0px; */
+    border-radius: 3px 0 0 3px;
+}
+
+.sfm-chooser label:last-child {
+    border-left-width: 0px;
+    border-radius: 0 3px 3px 0;
+    border: 1px solid #a8a8a7;
+}
+
+.sfm-chooser input:checked + label {
+    color: #F89336;
+    border-color: #F89336;
+    /* border: none; */
+    /* box-shadow: 0px 0px 0px 1px #F89336; */
+    /* padding: 6px 16px; */
+    z-index: 10;
+    background: white;
+}
+
+#sub-accordion-section-sf_settings_panel .customize-control,
+#sub-accordion-section-sf_settings_extra .customize-control {
+    margin-bottom: 22px;
+}
+
+#sub-accordion-section-sf_settings_extra .mce-toolbar .mce-btn button {
+    padding: 2px 2px;
+}
+
+input.sfm-switcher {
+    position: absolute;
+    opacity: 0;
+}
+
+input[type="checkbox"].sfm-switcher + div {
+    -webkit-transition: all .2s linear 0s;
+    -moz-transition: all .2s linear 0s;
+    -ms-transition: all .2s linear 0s;
+    -o-transition: all .2s linear 0s;
+    transition: all .2s linear 0s;
+}
+
+/* Normal Track */
+input[type="checkbox"].sfm-switcher + div {
+    vertical-align: middle;
+    width: 64px;
+    height: 24px;
+    border: 1px solid rgba(0, 0, 0, .4);
+    border-radius: 999px;
+    /*background-color: rgba(0, 0, 0, 0.1);*/
+    box-shadow: inset 0 0 0 0px rgba(0, 0, 0, 0.4);
+    margin: 10px 0 0;
+    position: relative;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Checked Track (Blue) */
+input[type="checkbox"].sfm-switcher:checked + div {
+    background-position: 0 0;
+    /*background-color: #3b89ec;*/
+    background-color: white;
+    border: 1px solid #F89336;
+    color: #F89336;
+    /*box-shadow: inset 0 0 0 10px rgba(59,137,259,1);*/
+}
+
+input[type="checkbox"].sfm-switcher + div:before {
+    position: absolute;
+    content: 'No';
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    line-height: 24px;
+    font-size: 14px;
+    padding: 0 15px 0 0;
+    text-align: right;
+    box-sizing: border-box;
+}
+
+input[type="checkbox"].sfm-switcher:checked + div:before {
+    content: 'Yes';
+    text-align: left;
+    padding: 0 0 0 10px;
+}
+
+/* Normal Knob */
+input[type="checkbox"].sfm-switcher + div > div {
+    float: left;
+    width: 18px;
+    height: 18px;
+    border-radius: inherit;
+    background: rgba(0, 0, 0, .4);
+    /*box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3), 0px 0px 0 1px rgba(0, 0, 0, 0.4);*/
+    pointer-events: none;
+    margin-top: 3px;
+    margin-left: 3px;
+}
+
+input[type="checkbox"].sfm-switcher + div {
+    -webkit-transition: all .2s linear 0s;
+    -moz-transition: all .2s linear 0s;
+    -ms-transition: all .2s linear 0s;
+    -o-transition: all .2s linear 0s;
+    transition: all .2s linear 0s;
+}
+
+input[type="checkbox"].sfm-switcher + div > div {
+    -webkit-transition: all .2s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s;
+    -moz-transition: all .2s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s;
+    -ms-transition: all .2s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s;
+    -o-transition: all .2s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s;
+    transition: all .2s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s;
+}
+
+/* Checked Knob (Blue Style) */
+input[type="checkbox"].sfm-switcher:checked + div > div {
+    -webkit-transform: translate3d(39px, 0, 0);
+    transform: translate3d(39px, 0, 0);
+    background-color: #F89336;
+    /*box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3), 0px 0px 0 1px rgba(8, 80, 172,1);*/
+}
+
+/*icon manager*/
+
+#sfm-icon-container-wrapper {
+    opacity: 0;
+    visibility: hidden;
+    -webkit-transition: opacity 0.35s cubic-bezier(0.215, 0.061, 0.355, 1), visibility 0s ease 0.35s !important;
+    transition: opacity 0.35s cubic-bezier(0.215, 0.061, 0.355, 1), visibility 0s ease 0.35s !important;
+}
+
+#sfm-icon-container-wrapper.sfm-modal-opened {
+    opacity: 1;
+    visibility: visible;
+    -webkit-transition: opacity 0.35s cubic-bezier(0.215, 0.061, 0.355, 1), visibility 0s ease 0s !important;
+    transition: opacity 0.35s cubic-bezier(0.215, 0.061, 0.355, 1), visibility 0s ease 0s !important;
+}
+
+#sfm-icon-container {
+    position: fixed;
+    top: 30px;
+    left: 30%;
+    right: 30%;
+    bottom: 30px;
+    z-index: 560000;
+    min-height: 300px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.7);
+    background: #fcfcfc;
+    padding: 40px 40px;
+    overflow: auto;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+#sfm-icons-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: 360px;
+    background: #000;
+    opacity: 0.7;
+    z-index: 559900;
+}
+.wp-customizer .la-icon-manager .icon-manager-body > .a-scroll {
+    max-height: none;
+    overflow-y: visible;
+}
+
+.sfm-modal-desc {
+    padding: 0px 0 20px;
+    font-size: 15px;
+    font-style: italic;
+}
+
+.sf-icon-cont {
+    font-size: 30px;
+}
+
+.sf-icon-cont i {
+    line-height: 40px;
+}
+
+.wp-customizer .la-icon-manager .icon-manager-header .search {
+    width: calc(100% - 10px);
+    max-width: calc(100% - 10px)
+}
+
+/*.wp-customizer .la-icon-manager .icon-manager-header .preview:not(:empty) + .search {
+    width: calc(100% - 52px);
+    max-width: calc(100% - 52px)
+}*/
+
+.wp-customizer .la-icon-manager .preview {
+    display: none !important;
+}
+
+#sfm-icon-container .media-modal-close {
+    position: fixed;
+    right: calc(30% + 10px);
+    top: 30px;
+}
+
+.wp-customizer .icons-list li {
+    position: relative;
+}
+
+/*.wp-customizer .icons-list .active:hover:after {
+    content: 'Apply icon';
+    position: absolute;
+    top: 105%;
+    z-index: 200;
+    background: #689acb;
+    left: -19px;
+    white-space: nowrap;
+    padding: 3px 5px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 12px;
+}*/
+
+/**
+ * Alpha Color Picker CSS
+ */
+
+.customize-control-alpha-color .wp-picker-container .iris-picker {
+    border-bottom:none;
+}
+
+.customize-control-alpha-color .wp-picker-container {
+    max-width: 257px;
+}
+
+.customize-control-alpha-color .wp-picker-open + .wp-picker-input-wrap {
+    width: 100%;
+}
+
+.customize-control-alpha-color .wp-picker-input-wrap input[type="text"].wp-color-picker.alpha-color-control {
+    float: left;
+    width: 195px;
+}
+
+.customize-control-alpha-color .wp-picker-input-wrap .button {
+    margin-left: 0;
+    float: right;
+}
+
+.wp-picker-container .wp-picker-open ~ .wp-picker-holder .alpha-color-picker-container {
+    display: block;
+}
+
+.alpha-color-picker-container {
+    border: 1px solid #dfdfdf;
+    border-top: none;
+    display: none;
+    background: #FFF;
+    padding: 0 11px 10px;
+    position: relative;
+}
+
+.alpha-color-picker-container .ui-widget-content,
+.alpha-color-picker-container .ui-widget-header,
+.alpha-color-picker-wrap .ui-state-focus {
+    background: transparent;
+    border: none;
+}
+
+.alpha-color-picker-wrap a.iris-square-value:focus {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.alpha-color-picker-container .ui-slider {
+    position: relative;
+    z-index: 1;
+    height: 24px;
+    text-align: center;
+    margin: 0 auto;
+    width: 88%;
+    width: calc( 100% - 28px );
+}
+
+.alpha-color-picker-container .ui-slider-handle,
+.alpha-color-picker-container .ui-widget-content .ui-state-default {
+    color: #777;
+    background-color: #FFF;
+    text-shadow: 0 1px 0 #FFF;
+    text-decoration: none;
+    position: absolute;
+    z-index: 2;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    border: 1px solid #aaa;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    margin-top: -2px;
+    top: 0;
+    height: 26px;
+    width: 26px;
+    cursor: ew-resize;
+    font-size: 0;
+    padding: 0;
+    line-height: 27px;
+    margin-left: -14px;
+}
+
+.alpha-color-picker-container .ui-slider-handle.show-opacity {
+    font-size: 12px;
+}
+
+.alpha-color-picker-container .click-zone {
+    width: 14px;
+    height: 24px;
+    display: block;
+    position: absolute;
+    left: 10px;
+}
+
+.alpha-color-picker-container .max-click-zone {
+    right: 10px;
+    left: auto;
+}
+
+.alpha-color-picker-container .transparency {
+    height: 24px;
+    width: 100%;
+    background-color: #FFF;
+    background-image: url(../img/transparency-grid.png);
+    box-shadow: 0 0 5px rgba(0,0,0,0.4) inset;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding: 0;
+    margin-top: -24px;
+}
+
+@media only screen and (max-width: 782px) {
+    .customize-control-alpha-color .wp-picker-input-wrap input[type="text"].wp-color-picker.alpha-color-control {
+        width: 184px;
+    }
+}
+
+@media only screen and (max-width: 640px) {
+    .customize-control-alpha-color .wp-picker-input-wrap input[type="text"].wp-color-picker.alpha-color-control {
+        width: 172px;
+        height: 33px;
+    }
+}
