@@ -47,10 +47,10 @@
 # NOTE: το src στο copy πρέπει να δείχνει σε role files/, όχι templates/.
 # Αν έχεις το h5bp στο roles/nginx/files/h5bp/ (όπως στο Trellis), άφησέ το έτσι:
 - name: Copy h5bp configs
-  ansible.builtin.copy:
-    src: h5bp
+  copy:
+    src: templates/h5bp
     dest: "{{ nginx_path }}"
-    mode: "0755"
+    mode: '0755'
   notify: reload nginx
 
 - name: Create nginx.conf
