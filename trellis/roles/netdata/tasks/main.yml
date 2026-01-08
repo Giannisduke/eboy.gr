@@ -20,18 +20,27 @@
     creates: /usr/sbin/netdata
   when: netdata_install_method == "official_script"
 
-# -------------------------------------------------
-# NGINX stub_status (σωστό include path για Trellis)
-# -------------------------------------------------
-- name: Netdata | Nginx stub_status | Install vhost (conf.d)
+# -----------------------
+# NGINX stub_status (Option A - includes.d/http)
+# -----------------------
+- name: Netdata | Ensure nginx includes.d/http exists
+  ansible.builtin.file:
+    path: /etc/nginx/includes.d/http
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  when: netdata_nginx_stub_status_enabled | default(false)
+
+- name: Netdata | Install nginx stub_status vhost
   ansible.builtin.template:
-    src: nginx/netdata-stub-status.conf.j2
-    dest: /etc/nginx/conf.d/netdata-stub-status.conf
+    src: netdata-stub-status.conf.j2
+    dest: /etc/nginx/includes.d/http/netdata-stub-status.conf
     owner: root
     group: root
     mode: "0644"
+  when: netdata_nginx_stub_status_enabled | default(false)
   notify: Reload nginx
-  when: netdata_nginx_stub_status_enabled | default(true)
 
 # -------------------------------------------------
 # Netdata nginx collector config
