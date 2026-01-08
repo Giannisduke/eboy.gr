@@ -1,5 +1,6 @@
+# Netdata nginx stub_status endpoint (loopback only)
 server {
-  listen 127.0.0.1:81;
+  listen {{ netdata_nginx_stub_status_host | default('127.0.0.1') }}:{{ netdata_nginx_stub_status_port | default(81) }};
   server_name 127.0.0.1;
 
   access_log off;

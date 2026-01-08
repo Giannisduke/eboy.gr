@@ -1,7 +1,7 @@
 ---
 - name: Netdata | Skip if disabled
   ansible.builtin.meta: end_host
-  when: not netdata_enabled
+  when: not (netdata_enabled | default(false))
 
 - name: Netdata | Install dependencies
   ansible.builtin.apt:
@@ -9,21 +9,24 @@
       - curl
       - ca-certificates
       - gnupg
+      - python3-pymysql
     state: present
     update_cache: yes
 
 - name: Netdata | Install via official kickstart
   ansible.builtin.shell: |
-    curl -fsSL https://get.netdata.cloud/kickstart.sh | bash -s -- --dont-wait --stable-channel
+    curl -fsSL https://get.netdata.cloud/kickstart.sh | bash -s -- \
+      --dont-wait \
+      --{{ netdata_channel | default('stable') }}-channel
   args:
     executable: /bin/bash
     creates: /usr/sbin/netdata
-  when: netdata_install_method == "official_script"
+  when: (netdata_install_method | default('official_script')) == "official_script"
 
 # -----------------------
-# NGINX stub_status (Option A - includes.d/http)
+# NGINX stub_status (Trellis nginx.conf includes /etc/nginx/includes.d/http/*.conf)
 # -----------------------
-- name: Netdata | Ensure nginx includes.d/http exists
+- name: Netdata | Nginx stub_status | Ensure includes dir exists
   ansible.builtin.file:
     path: /etc/nginx/includes.d/http
     state: directory
@@ -32,7 +35,7 @@
     mode: "0755"
   when: netdata_nginx_stub_status_enabled | default(false)
 
-- name: Netdata | Install nginx stub_status vhost
+- name: Netdata | Nginx stub_status | Install vhost
   ansible.builtin.template:
     src: netdata-stub-status.conf.j2
     dest: /etc/nginx/includes.d/http/netdata-stub-status.conf
@@ -42,56 +45,49 @@
   when: netdata_nginx_stub_status_enabled | default(false)
   notify: Reload nginx
 
-# -------------------------------------------------
-# Netdata nginx collector config
-# -------------------------------------------------
-- name: Netdata | Configure go.d nginx collector
+- name: Netdata | Netdata nginx collector | Configure go.d
   ansible.builtin.template:
-    src: netdata/go.d/nginx.conf.j2
+    src: go.d/nginx.conf.j2
     dest: /etc/netdata/go.d/nginx.conf
     owner: root
     group: root
     mode: "0644"
+  when: netdata_nginx_stub_status_enabled | default(false)
   notify: Restart netdata
-  when: netdata_nginx_stub_status_enabled | default(true)
 
-# -------------------------------------------------
-# MySQL / MariaDB collector
-# -------------------------------------------------
+# -----------------------
+# MySQL / MariaDB collector (local socket)
+# -----------------------
 - name: Netdata | MySQL/MariaDB | Create netdata user
   community.mysql.mysql_user:
     name: "{{ netdata_mysql_user }}"
-    host: "localhost"
+    host: "{{ netdata_mysql_host | default('localhost') }}"
     password: "{{ netdata_mysql_password }}"
-    priv: "*.*:USAGE,PROCESS,REPLICATION CLIENT,SELECT"
     state: present
     login_unix_socket: "{{ netdata_mysql_socket }}"
     login_user: root
     check_implicit_admin: true
-  when: netdata_mysql_enabled | default(true)
+    priv:
+      "*.*": "USAGE,PROCESS,REPLICATION CLIENT"
+      "performance_schema.*": "SELECT"
+      "information_schema.*": "SELECT"
+  when: netdata_mysql_enabled | default(false)
 
-- name: Netdata | Configure go.d mysql collector
+- name: Netdata | Netdata mysql collector | Configure go.d
   ansible.builtin.template:
-    src: netdata/go.d/mysql.conf.j2
+    src: go.d/mysql.conf.j2
     dest: /etc/netdata/go.d/mysql.conf
     owner: root
     group: root
     mode: "0640"
+  when: netdata_mysql_enabled | default(false)
   notify: Restart netdata
-  when: netdata_mysql_enabled | default(true)
 
+# -----------------------
+# Service
+# -----------------------
 - name: Netdata | Ensure service enabled and started
   ansible.builtin.service:
     name: netdata
     state: started
     enabled: yes
-
-- name: Netdata | Configure go.d mysql collector (socket)
-  ansible.builtin.template:
-    src: netdata/go.d/mysql.conf.j2
-    dest: /etc/netdata/go.d/mysql.conf
-    owner: root
-    group: root
-    mode: "0640"
-  notify: Restart netdata
-  when: netdata_mysql_enabled | default(true)

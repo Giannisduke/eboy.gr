@@ -28,11 +28,15 @@
     - sites-available
     - sites-enabled
 
-- name: Ensure conf.d directory exists
+# Trellis nginx.conf includes: include includes.d/http/*.conf;
+- name: Ensure includes.d directories exist
   ansible.builtin.file:
-    path: "{{ nginx_path }}/conf.d"
+    path: "{{ nginx_path }}/includes.d/{{ item }}"
     state: directory
     mode: "0755"
+  loop:
+    - http
+    - all
 
 - name: Create SSL directory
   ansible.builtin.file:
@@ -40,9 +44,11 @@
     path: "{{ nginx_path }}/ssl"
     state: directory
 
+# NOTE: το src στο copy πρέπει να δείχνει σε role files/, όχι templates/.
+# Αν έχεις το h5bp στο roles/nginx/files/h5bp/ (όπως στο Trellis), άφησέ το έτσι:
 - name: Copy h5bp configs
   ansible.builtin.copy:
-    src: templates/h5bp
+    src: h5bp
     dest: "{{ nginx_path }}"
     mode: "0755"
   notify: reload nginx
@@ -61,11 +67,11 @@
     state: absent
   notify: reload nginx
 
-# ✅ Netdata stub_status endpoint on 127.0.0.1:<port>
-- name: Netdata | Install stub_status vhost in conf.d
+# ✅ Netdata stub_status endpoint (loopback only) - τοποθέτηση στο includes.d/http
+- name: Netdata | Install stub_status vhost in includes.d/http
   ansible.builtin.template:
     src: netdata-stub-status.conf.j2
-    dest: "{{ nginx_path }}/conf.d/netdata-stub-status.conf"
+    dest: "{{ nginx_path }}/includes.d/http/netdata-stub-status.conf"
     mode: "0644"
   notify: reload nginx
   when: netdata_enabled | default(false)
