@@ -1,0 +1,13 @@
+# Netdata nginx stub_status (local only)
+server {
+  listen 127.0.0.1:81;
+  server_name 127.0.0.1 localhost;
+
+  location {{ netdata_nginx_stub_status_path | default('/stub_status') }} {
+    stub_status;
+    access_log off;
+
+    allow 127.0.0.1;
+    deny all;
+  }
+}
