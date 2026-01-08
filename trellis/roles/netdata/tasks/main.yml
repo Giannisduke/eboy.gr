@@ -1,7 +1,9 @@
 ---
+# roles/netdata/tasks/main.yml
+
 - name: Netdata | Skip if disabled
   ansible.builtin.meta: end_host
-  when: not netdata_enabled
+  when: not (netdata_enabled | default(false) | bool)
 
 - name: Netdata | Install dependencies
   ansible.builtin.apt:
@@ -10,18 +12,30 @@
       - ca-certificates
       - gnupg
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Netdata | Install via official kickstart
   ansible.builtin.shell: |
     set -e
-    curl -fsSL https://get.netdata.cloud/kickstart.sh | bash -s -- --dont-wait --stable-channel
+    if [ "{{ netdata_channel | default('stable') }}" = "nightly" ]; then
+      curl -fsSL https://get.netdata.cloud/kickstart.sh | bash -s -- --dont-wait --nightly-channel
+    else
+      curl -fsSL https://get.netdata.cloud/kickstart.sh | bash -s -- --dont-wait --stable-channel
+    fi
   args:
     executable: /bin/bash
     creates: /usr/sbin/netdata
-  when: netdata_install_method == "official_script"
+  when: (netdata_install_method | default('official_script')) == "official_script"
 
-- name: Netdata | Configure bind address/port
+- name: Netdata | Ensure config directory exists
+  ansible.builtin.file:
+    path: /etc/netdata
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Netdata | Configure bind address/port (optional)
   ansible.builtin.template:
     src: netdata.conf.j2
     dest: /etc/netdata/netdata.conf
@@ -29,9 +43,11 @@
     group: root
     mode: "0644"
   notify: Restart netdata
+  when: netdata_manage_config | default(true) | bool
 
 - name: Netdata | Ensure service enabled and started
-  ansible.builtin.service:
+  ansible.builtin.systemd:
     name: netdata
     state: started
-    enabled: yes
+    enabled: true
+    daemon_reload: true

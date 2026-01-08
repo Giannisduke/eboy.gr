@@ -1,5 +1,7 @@
 ---
+# roles/netdata/handlers/main.yml
+
 - name: Restart netdata
-  ansible.builtin.service:
+  ansible.builtin.systemd:
     name: netdata
     state: restarted
