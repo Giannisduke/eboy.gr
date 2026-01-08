@@ -1,9 +1,7 @@
 ---
-# roles/netdata/tasks/main.yml
-
 - name: Netdata | Skip if disabled
   ansible.builtin.meta: end_host
-  when: not (netdata_enabled | default(false) | bool)
+  when: not netdata_enabled
 
 - name: Netdata | Install dependencies
   ansible.builtin.apt:
@@ -12,52 +10,79 @@
       - ca-certificates
       - gnupg
     state: present
-    update_cache: true
+    update_cache: yes
 
 - name: Netdata | Install via official kickstart
   ansible.builtin.shell: |
-    set -e
-    if [ "{{ netdata_channel | default('stable') }}" = "nightly" ]; then
-      curl -fsSL https://get.netdata.cloud/kickstart.sh | bash -s -- --dont-wait --nightly-channel
-    else
-      curl -fsSL https://get.netdata.cloud/kickstart.sh | bash -s -- --dont-wait --stable-channel
-    fi
+    curl -fsSL https://get.netdata.cloud/kickstart.sh | bash -s -- --dont-wait --stable-channel
   args:
     executable: /bin/bash
     creates: /usr/sbin/netdata
-  when: (netdata_install_method | default('official_script')) == "official_script"
+  when: netdata_install_method == "official_script"
 
-- name: Netdata | Ensure config directory exists
-  ansible.builtin.file:
-    path: /etc/netdata
-    state: directory
-    owner: root
-    group: root
-    mode: "0755"
-
-- name: Netdata | Configure bind address/port (optional)
+# -------------------------------------------------
+# NGINX stub_status (σωστό include path για Trellis)
+# -------------------------------------------------
+- name: Netdata | Nginx stub_status | Install vhost (conf.d)
   ansible.builtin.template:
-    src: netdata.conf.j2
-    dest: /etc/netdata/netdata.conf
-    owner: root
-    group: root
-    mode: "0644"
-  notify: Restart netdata
-  when: netdata_manage_config | default(true) | bool
-
-- name: Netdata | Ensure service enabled and started
-  ansible.builtin.systemd:
-    name: netdata
-    state: started
-    enabled: true
-    daemon_reload: true
-
-- name: Netdata | Nginx stub_status (local 127.0.0.1:81)
-  ansible.builtin.template:
-    src: nginx-stub-status.conf.j2
+    src: nginx/netdata-stub-status.conf.j2
     dest: /etc/nginx/conf.d/netdata-stub-status.conf
     owner: root
     group: root
     mode: "0644"
   notify: Reload nginx
   when: netdata_nginx_stub_status_enabled | default(true)
+
+# -------------------------------------------------
+# Netdata nginx collector config
+# -------------------------------------------------
+- name: Netdata | Configure go.d nginx collector
+  ansible.builtin.template:
+    src: netdata/go.d/nginx.conf.j2
+    dest: /etc/netdata/go.d/nginx.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart netdata
+  when: netdata_nginx_stub_status_enabled | default(true)
+
+# -------------------------------------------------
+# MySQL / MariaDB collector
+# -------------------------------------------------
+- name: Netdata | MySQL/MariaDB | Create netdata user
+  community.mysql.mysql_user:
+    name: "{{ netdata_mysql_user }}"
+    host: "localhost"
+    password: "{{ netdata_mysql_password }}"
+    priv: "*.*:USAGE,PROCESS,REPLICATION CLIENT,SELECT"
+    state: present
+    login_unix_socket: "{{ netdata_mysql_socket }}"
+    login_user: root
+    check_implicit_admin: true
+  when: netdata_mysql_enabled | default(true)
+
+- name: Netdata | Configure go.d mysql collector
+  ansible.builtin.template:
+    src: netdata/go.d/mysql.conf.j2
+    dest: /etc/netdata/go.d/mysql.conf
+    owner: root
+    group: root
+    mode: "0640"
+  notify: Restart netdata
+  when: netdata_mysql_enabled | default(true)
+
+- name: Netdata | Ensure service enabled and started
+  ansible.builtin.service:
+    name: netdata
+    state: started
+    enabled: yes
+
+- name: Netdata | Configure go.d mysql collector (socket)
+  ansible.builtin.template:
+    src: netdata/go.d/mysql.conf.j2
+    dest: /etc/netdata/go.d/mysql.conf
+    owner: root
+    group: root
+    mode: "0640"
+  notify: Restart netdata
+  when: netdata_mysql_enabled | default(true)
