@@ -61,17 +61,15 @@
 - name: Netdata | MySQL/MariaDB | Create netdata user
   community.mysql.mysql_user:
     name: "{{ netdata_mysql_user }}"
-    host: "{{ netdata_mysql_host | default('localhost') }}"
+    host: "localhost"
     password: "{{ netdata_mysql_password }}"
     state: present
-    login_unix_socket: "{{ netdata_mysql_socket }}"
-    login_user: root
+    login_unix_socket: "{{ netdata_mysql_socket | default('/var/run/mysqld/mysqld.sock') }}"
     check_implicit_admin: true
-    priv:
-      "*.*": "USAGE,PROCESS,REPLICATION CLIENT"
-      "performance_schema.*": "SELECT"
-      "information_schema.*": "SELECT"
-  when: netdata_mysql_enabled | default(false)
+    priv: >-
+      *.*:PROCESS,REPLICATION CLIENT/
+      mysql.*:SELECT/
+      performance_schema.*:SELECT
 
 - name: Netdata | Netdata mysql collector | Configure go.d
   ansible.builtin.template:
