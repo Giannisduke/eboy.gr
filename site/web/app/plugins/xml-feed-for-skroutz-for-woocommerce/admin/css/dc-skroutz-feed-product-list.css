@@ -1,0 +1,14 @@
+/**
+ * CSS about admin products list.
+ */
+.fixed .column-dicha_skroutz_feed_custom_availability {
+	width: 18ch;
+}
+
+.inline-edit-row fieldset label.dicha-skroutz-availability-field span.title {
+	width: 7em;
+}
+
+.inline-edit-row fieldset label.dicha-skroutz-availability-field span.input-text-wrap {
+	margin-left: 7em;
+}

@@ -1,0 +1,7 @@
+/**
+ * CSS about product edit page.
+ */
+#woocommerce-product-data ul.wc-tabs li.dicha_export_feeds_settings_options a:before {
+	font-family: dashicons;
+	content: '\f463';
+}

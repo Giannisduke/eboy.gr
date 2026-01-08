@@ -24,6 +24,7 @@ web/app/plugins/*
 !web/app/plugins/megamenu-pro
 !web/app/plugins/acs-voucher-for-woocommerce
 !web/app/plugins/superfly-menu
+!web/app/plugins/xml-feed-for-skroutz-for-woocommerce
 web/app/mu-plugins/*/
 !web/app/themes/twentytwentyfive/
 !web/app/themes/woodmart

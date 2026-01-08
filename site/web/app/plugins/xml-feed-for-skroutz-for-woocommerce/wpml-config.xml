@@ -1,0 +1,5 @@
+<wpml-config>
+    <custom-fields>
+        <custom-field action="copy" label="Skroutz XML Feed Availability">dicha_skroutz_feed_custom_availability</custom-field>
+    </custom-fields>
+</wpml-config>

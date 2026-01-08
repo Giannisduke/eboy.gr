@@ -1,0 +1,541 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: XML Feed for Skroutz for WooCommerce\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-30 23:13+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.6.14; wp-6.7.1\n"
+"X-Domain: xml-feed-for-skroutz-for-woocommerce"
+
+#. 1: A select input for cron schedule. 2: the CSS class for schedule description. 3: CSS styles. 4: Number representing the minute
+#: admin/class-dc-skroutz-feed-admin.php:627
+#, php-format
+msgid ""
+"%1$s<span class=\"%2$s\" style=\"%3$s\">, starting at 00:XX, where XX is the "
+"%4$s minute.</span>"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:640
+msgid ""
+"<strong>Fill the \"minute\" field with a number between 0-59.</strong> If "
+"you insert the value \"45\", then the import will start running at 00:45 at "
+"night (UTC time), and then every X hours, depending on the \"hour\" field. "
+"Suggested values: 45-55 so that the feed is ready when Skroutz fetches your "
+"XML."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:975
+msgid ""
+"Add new field for inserting the EAN/Barcode info. The field will appear "
+"under WooCommerce SKU field."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1508
+#, php-format
+msgid "Alert about Skroutz XML generation at %1$s (%2$s)"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:224
+msgid "Attributes in Product name"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1260
+msgid "Available"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1261
+msgid "Available from 1 to 3 days"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1263
+msgid "Available from 4 to 10 days"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1262
+msgid "Available from 4 to 6 days"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:754
+#: admin/class-dc-skroutz-feed-admin.php:785
+#: admin/class-dc-skroutz-feed-admin.php:807
+#: admin/class-dc-skroutz-feed-admin.php:898
+msgid "Available product attributes:"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1264
+msgid "Available up to 12 days"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1265
+msgid "Available up to 30 days"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1082
+msgid "Basic logging"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1099
+msgid "Basic logging only shows info about feed generation."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:531
+msgid "Changes have been saved."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:194
+msgid "Color"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:387
+msgid "Create XML feed"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:212
+msgid "Default Availability"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1270
+msgid "Default availability"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:206
+msgid "Default size if missing"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1258
+msgid "Deprecated"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:940
+msgid "Description"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:230
+msgid "Description to display"
+msgstr ""
+
+#. Author of the plugin
+msgid "Digital Challenge"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:573
+msgid ""
+"Do NOT use the same attribute in multiple fields, for example in both Color "
+"and Size."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:399
+msgid "Documentation for Developers"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1606
+#: admin/class-dc-skroutz-feed-admin.php:1721
+msgid "EAN/Barcode"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:242
+msgid "EAN/Barcode field"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:296
+msgid "Email Address to Notify"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1117
+msgid ""
+"Enable a monitor to alert you if the XML generation fails. An email will be "
+"sent to the email address below."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:290
+msgid "Enable Generation Monitor"
+msgstr ""
+
+#. %d: A number representing the hour interval.
+#: admin/class-dc-skroutz-feed-admin.php:699
+msgid "Every %d hour"
+msgid_plural "Every %d hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: admin/class-dc-skroutz-feed-admin.php:725
+msgid "Exact minute (0-59) of the hour to start the feed generation."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:998
+#: admin/class-dc-skroutz-feed-admin.php:1031
+msgid "Exclude"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1550
+msgid "Export Feeds"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:174
+msgid "Feed generation monitor"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:153
+msgid "Feed generation schedule"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1844
+msgid "Filter by Skroutz Availability"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:272
+msgid "Fixed Shipping Cost"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:278
+msgid "Free Shipping over"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:693
+msgid "Frequency of feed generation in hours."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1083
+msgid "Full logging"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1101
+msgid ""
+"Full logging also shows problematic products and the reasons for skipping "
+"them."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:236
+msgid "Global Price Increase (%)"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1266
+msgid "Hide from XML"
+msgstr ""
+
+#. URI of the plugin
+msgid ""
+"https://github.com/Digital-Challenge/xml-feed-for-skroutz-for-woocommerce"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://www.dicha.gr"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:641
+msgid ""
+"If \"No WP Cron\" is selected, then the XML generation will not run "
+"automatically using WP Cron, so you need to setup server cron jobs manually. "
+"This option is best for large eshops that need frequent updates on specific "
+"time, and need more server resources."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:854
+msgid ""
+"If you are not sure what to choose, consult <a href=\"https://developer."
+"skroutz.gr/el/feedspec/#availability\" target=\"_blank\">Skroutz "
+"instructions</a>."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1001
+#: admin/class-dc-skroutz-feed-admin.php:1034
+msgid "Include"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:218
+msgid "Include products on backorder"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:869
+msgid "Include products on backorder in XML."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:996
+#: admin/class-dc-skroutz-feed-admin.php:1029
+msgid "Include/Exclude mode"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:373
+msgid "Last XML feed generated at:"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:284
+msgid "Log level"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:167
+msgid "Log settings"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:188
+msgid "Manufacturer"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:589
+msgid ""
+"Monitor the XML feed generation time and get notified in case of a problem."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:374
+msgid "Never"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1081
+msgid "No logging"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:694
+msgid "No WP Cron"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:959
+msgid ""
+"Note: The products with an assigned \"Skroutz Price\" in their product data "
+"will not be affected by this increase."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:762
+msgid "Other brand taxonomies:"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:907
+msgid "Other taxonomies:"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:103
+#: admin/class-dc-skroutz-feed-admin.php:105
+msgid "Plugin's Homepage"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1523
+#, php-format
+msgid ""
+"Possible error in Skroutz XML generation process. Last time generated: %s"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:260
+msgid "Product categories filter"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:266
+msgid "Product tags filter"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:636
+msgid "Select how frequently the XML feed will be updated."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:816
+msgid ""
+"Select only the size attributes that will create size variations, <u><strong>"
+"not</strong></u> all sizes. This depends on Skroutz <a href=\"https:"
+"//partnersupport.skroutz.gr/hc/en-us/sections/34841019047057-Technical-"
+"Specifications-by-Category\" target=\"_blank\">Technical Specifications by "
+"Category</a>."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:639
+msgid ""
+"Select the frequency of the XML feed generation, or disable automatic "
+"generation using WP Cron scheduling."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:2000
+msgid "Settings"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:581
+msgid "Settings about logging during the feed generation."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:563
+msgid "Settings about the scheduling of Skroutz/BestPrice XML feed generation."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:160
+msgid "Settings for Plugin Skroutz/Best Price XML"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:571
+msgid "Settings to control the product data for the XML feed."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:392
+msgid "Setup Guide & Documentation"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:395
+msgid "Setup Guide for Users/Shop managers"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:934
+msgid "Short description"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:831
+msgid "Show \"One Size\" for products that are missing size information."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:200
+msgid "Sizes for Variations"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1800
+#: admin/class-dc-skroutz-feed-admin.php:1902
+#: admin/class-dc-skroutz-feed-admin.php:1927
+msgid "Skroutz availability"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1843
+msgid "Skroutz availability filter"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1624
+#: admin/class-dc-skroutz-feed-admin.php:1710
+msgid "Skroutz Price"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1572
+#: admin/class-dc-skroutz-feed-admin.php:1697
+msgid "Skroutz/BestPrice Availability"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:80
+msgid "Skroutz/BestPrice XML"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:376
+msgid "Submit the following URL to Skroutz or BestPrice:"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1120
+#, php-format
+msgid ""
+"The alert is sent if the XML has not been updated for more than %s hours."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1575
+#: admin/class-dc-skroutz-feed-admin.php:1699
+msgid ""
+"The availability to show in XML feed for Skroutz/BestPrice. If you select "
+"the \"Default availability\" option, the default availability from the "
+"plugin's settings will be used."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1137
+msgid ""
+"The email address that the alert will be sent to. Enter only one email "
+"address."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:957
+msgid ""
+"The product prices in the XML feed will be increased by this percentage."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1609
+msgid ""
+"The product's official EAN code or Barcode. A unique EAN/Barcode is "
+"allocated to each separate retail product."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1526
+#, php-format
+msgid ""
+"The Skroutz XML file generation was successful and is back on schedule. Last "
+"time generated: %s"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1724
+msgid ""
+"The variation's official EAN code or Barcode. A unique EAN/Barcode is "
+"allocated to each separate retail product."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:917
+msgid ""
+"These attributes will be added to XML product name (if not included already)."
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"This plugin helps you create an XML feed for Skroutz and BestPrice "
+"marketplaces."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1626
+msgid "This price will be the product price in the Skroutz feed."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1712
+msgid "This price will be the variation price in the Skroutz feed."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1121
+msgid "To change this limit, check out the documentation for developers."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:387
+msgid "Update XML feed"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:539
+msgid "View XML"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:383
+msgid "View XML feed"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:977
+msgid ""
+"We suggest keeping this unchecked. Use the new native WooCommerce field "
+"called \"GTIN, UPC, EAN, or ISBN\" which is located under the \"SKU\" field."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:182
+msgid "WP Cron Schedule"
+msgstr ""
+
+#. Name of the plugin
+msgid "XML Feed for Skroutz & BestPrice for WooCommerce"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:544
+msgid ""
+"XML feed generation failed. Enable and then check plugin logs for more "
+"details."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:372
+msgid "XML Feed Tools"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:537
+msgid "XML feed was generated successfully!"
+msgstr ""
+
+#. %s: Link to WooCommerce Logs page
+#: admin/class-dc-skroutz-feed-admin.php:1097
+#, php-format
+msgid ""
+"You can find the logs in the <a href=\"%s\" target=\"_blank\">WooCommerce "
+"Logs</a> page."
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:140
+msgid "Δείτε όλα τα plugins της Digital Challenge"
+msgstr ""
+
+#: admin/class-dc-skroutz-feed-admin.php:1930
+msgid "— No Change —"
+msgstr ""
