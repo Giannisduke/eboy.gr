@@ -12,12 +12,14 @@
     state: present
     update_cache: yes
 
-- name: Netdata | Install via official kickstart (stable)
+- name: Netdata | Install via official kickstart
   ansible.builtin.shell: |
-    set -euo pipefail
-    curl -fsSL https://get.netdata.cloud/kickstart.sh | sh -s -- --stable-channel --dont-wait
+    set -e
+    curl -fsSL https://get.netdata.cloud/kickstart.sh | bash -s -- --dont-wait --stable-channel
   args:
+    executable: /bin/bash
     creates: /usr/sbin/netdata
+  when: netdata_install_method == "official_script"
 
 - name: Netdata | Configure bind address/port
   ansible.builtin.template:
