@@ -1,0 +1,50 @@
+---
+# Προσπαθούμε πρώτα με unix socket (συνήθως δουλεύει σε Trellis/MariaDB local)
+- name: Netdata | Ensure netdata MariaDB user exists (via unix socket)
+  community.mysql.mysql_user:
+    name: "{{ netdata_mysql_user }}"
+    host: "{{ netdata_mysql_host | default('localhost') }}"
+    password: "{{ netdata_mysql_password }}"
+    priv: "*.*:USAGE,PROCESS,REPLICATION CLIENT"
+    state: present
+    login_unix_socket: "{{ netdata_mysql_socket | default('/var/run/mysqld/mysqld.sock') }}"
+    check_implicit_admin: true
+  register: _netdata_mysql_user_socket
+  failed_when: false
+  changed_when: _netdata_mysql_user_socket.changed | default(false)
+
+# Αν socket login αποτύχει (π.χ. άλλα auth), fallback με root password (αν υπάρχει)
+- name: Netdata | Ensure netdata MariaDB user exists (fallback login)
+  community.mysql.mysql_user:
+    name: "{{ netdata_mysql_user }}"
+    host: "{{ netdata_mysql_host | default('localhost') }}"
+    password: "{{ netdata_mysql_password }}"
+    priv: "*.*:USAGE,PROCESS,REPLICATION CLIENT"
+    state: present
+    login_user: root
+    login_password: "{{ vault_mysql_root_password }}"
+  when: _netdata_mysql_user_socket is failed
+
+# Read-only πρόσβαση που χρειάζεται ο collector (performance_schema)
+- name: Netdata | Grant SELECT on performance_schema to netdata (via unix socket)
+  community.mysql.mysql_user:
+    name: "{{ netdata_mysql_user }}"
+    host: "{{ netdata_mysql_host | default('localhost') }}"
+    priv: "performance_schema.*:SELECT"
+    append_privs: true
+    state: present
+    login_unix_socket: "{{ netdata_mysql_socket | default('/var/run/mysqld/mysqld.sock') }}"
+    check_implicit_admin: true
+  register: _netdata_mysql_perf_socket
+  failed_when: false
+
+- name: Netdata | Grant SELECT on performance_schema to netdata (fallback login)
+  community.mysql.mysql_user:
+    name: "{{ netdata_mysql_user }}"
+    host: "{{ netdata_mysql_host | default('localhost') }}"
+    priv: "performance_schema.*:SELECT"
+    append_privs: true
+    state: present
+    login_user: root
+    login_password: "{{ vault_mysql_root_password }}"
+  when: _netdata_mysql_perf_socket is failed

@@ -6,3 +6,5 @@ vault_mail_password: smtp_password
 #
 # vault_wordpress_env_defaults:
 #   my_api_key: 'available to all environments'
+
+vault_netdata_mysql_password: "UunY6wCIbYHdLLLZvp7Fr3KdyXqmtHkmUa"

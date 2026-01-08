@@ -5,7 +5,7 @@
     state: present
 
 - name: Add Nginx PPA
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "{{ nginx_ppa }}"
     update_cache: yes
   register: result
@@ -20,44 +20,58 @@
     update_cache: true
 
 - name: Ensure site directories exist
-  file:
+  ansible.builtin.file:
     path: "{{ nginx_path }}/{{ item }}"
     state: directory
-    mode: '0755'
+    mode: "0755"
   loop:
     - sites-available
     - sites-enabled
 
+- name: Ensure conf.d directory exists
+  ansible.builtin.file:
+    path: "{{ nginx_path }}/conf.d"
+    state: directory
+    mode: "0755"
+
 - name: Create SSL directory
-  file:
-    mode: '0700'
+  ansible.builtin.file:
+    mode: "0700"
     path: "{{ nginx_path }}/ssl"
     state: directory
 
 - name: Copy h5bp configs
-  copy:
+  ansible.builtin.copy:
     src: templates/h5bp
     dest: "{{ nginx_path }}"
-    mode: '0755'
+    mode: "0755"
   notify: reload nginx
 
 - name: Create nginx.conf
-  template:
+  ansible.builtin.template:
     src: "{{ nginx_conf }}"
     dest: "{{ nginx_path }}/nginx.conf"
-    mode: '0644'
+    mode: "0644"
   notify: reload nginx
   tags: nginx-includes
 
 - name: Disable default server
-  file:
+  ansible.builtin.file:
     path: "{{ nginx_path }}/sites-enabled/default"
     state: absent
   notify: reload nginx
 
+# ✅ Netdata stub_status endpoint on 127.0.0.1:<port>
+- name: Netdata | Install stub_status vhost in conf.d
+  ansible.builtin.template:
+    src: netdata-stub-status.conf.j2
+    dest: "{{ nginx_path }}/conf.d/netdata-stub-status.conf"
+    mode: "0644"
+  notify: reload nginx
+  when: netdata_enabled | default(false)
+
 - name: Enable Nginx to start on boot
-  service:
+  ansible.builtin.service:
     name: nginx
     enabled: yes
     state: started
-    use: service

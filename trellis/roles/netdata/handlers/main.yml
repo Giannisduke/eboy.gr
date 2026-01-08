@@ -1,7 +1,10 @@
 ---
-# roles/netdata/handlers/main.yml
+- name: Reload nginx
+  ansible.builtin.service:
+    name: nginx
+    state: reloaded
 
 - name: Restart netdata
-  ansible.builtin.systemd:
+  ansible.builtin.service:
     name: netdata
     state: restarted

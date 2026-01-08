@@ -1,0 +1,15 @@
+server {
+  listen {{ netdata_nginx_stub_status_host | default('127.0.0.1') }}:{{ netdata_nginx_stub_status_port | default(81) }};
+  server_name localhost;
+
+  location = {{ netdata_nginx_stub_status_path | default('/stub_status') }} {
+    stub_status;
+    access_log off;
+    allow 127.0.0.1;
+    deny all;
+  }
+
+  location / {
+    return 404;
+  }
+}
