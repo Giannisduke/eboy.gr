@@ -1,0 +1,40 @@
+#webexpert-acs-track-order-form [type="submit"] {
+    margin-top:10px;
+    display:inline-block;
+}
+
+.track-results-acs ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.track-results-acs ul li:nth-child(odd) {
+    background: #f5f5f5;
+}
+
+.track-results-acs ul li {
+	padding: 10px 8px;
+}
+
+.track-results-acs ul li .Status {
+display: inline-block;
+width: 58%;
+font-weight: 500;
+letter-spacing: .5px;
+
+}
+
+.track-results-acs ul li .Status+.Shop {
+    width: 41%;
+}
+
+.track-results-acs ul li .Shop {
+    color: #4a80d0;
+}
+.track-results-acs ul li .Shop, .track-results-acs ul li .StatusDate {
+    width: 20%;
+    text-align: right;
+    display: inline-block;
+    font-size: 13px;
+}

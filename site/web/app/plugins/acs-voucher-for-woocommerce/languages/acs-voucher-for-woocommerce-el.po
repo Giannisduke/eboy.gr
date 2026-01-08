@@ -1,0 +1,715 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ACS Voucher For WooCommerce\n"
+"POT-Creation-Date: 2023-07-24 16:53+0300\n"
+"PO-Revision-Date: 2023-07-24 16:54+0300\n"
+"Last-Translator: Dimitrios Selimidis <ds@webexpert.gr>\n"
+"Language-Team: Dimitrios Selimidis <ds@webexpert.gr>\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: acs-voucher-for-woocommerce.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+"X-Poedit-SearchPathExcluded-1: *.js\n"
+
+#: acs-voucher-for-woocommerce.php:94 acs-voucher-for-woocommerce.php:126
+#: admin/class-acs-voucher-for-woocommerce-admin.php:289
+msgid "ACS Voucher"
+msgstr "ACS Voucher"
+
+#: acs-voucher-for-woocommerce.php:101
+#: admin/class-acs-voucher-for-woocommerce-admin.php:1849
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+#: acs-voucher-for-woocommerce.php:113
+#: admin/class-acs-voucher-for-woocommerce-admin.php:130
+msgid "Jobs"
+msgstr "Εργασίες"
+
+#: acs-voucher-for-woocommerce.php:263
+msgid "Account ID:"
+msgstr ""
+
+#: acs-voucher-for-woocommerce.php:266
+msgid "Sender"
+msgstr "Αποστολέας"
+
+#: acs-voucher-for-woocommerce.php:270
+msgid "Company ID"
+msgstr ""
+
+#: acs-voucher-for-woocommerce.php:274
+msgid "Company Password"
+msgstr ""
+
+#: acs-voucher-for-woocommerce.php:278
+msgid "User ID"
+msgstr "ID Χρήστη"
+
+#: acs-voucher-for-woocommerce.php:282
+msgid "User Password"
+msgstr ""
+
+#: acs-voucher-for-woocommerce.php:286
+msgid "Billing Code"
+msgstr ""
+
+#: acs-voucher-for-woocommerce.php:290
+msgid "API key"
+msgstr ""
+
+#: acs-voucher-for-woocommerce.php:297
+msgid "(+) Add extra account"
+msgstr "(+) Προσθήκη νέου λογαριασμού"
+
+#: acs-voucher-for-woocommerce.php:302
+msgid "Auto close pending jobs"
+msgstr "Αυτόματη κλείσιμο εκκρεμών εργασιών"
+
+#: acs-voucher-for-woocommerce.php:306
+msgid "Default weight"
+msgstr "Προκαθορισμένο βάρος"
+
+#: acs-voucher-for-woocommerce.php:310
+msgid "Auto issue"
+msgstr "Αυτόματη έκδοση"
+
+#: acs-voucher-for-woocommerce.php:313
+msgid "Auto issue voucher upon order completion"
+msgstr "Αυτόματη έκδοση voucher κατά την ολοκλήρωση της παραγγελίας"
+
+#: acs-voucher-for-woocommerce.php:317
+msgid "Default ACS Account"
+msgstr "Προεπιλεγμένος λογαριασμός ACS"
+
+#: acs-voucher-for-woocommerce.php:336
+msgid "Disable on specific Payment Gateways"
+msgstr "Απενεργοποίηση έκδοσης σε επιλεγμένες μεθόδους πληρωμής"
+
+#: acs-voucher-for-woocommerce.php:350
+msgid "Disable on specific Shipping Methods"
+msgstr "Απενεργοποίηση έκδοσης σε επιλεγμένες μεθόδους αποστολής"
+
+#: acs-voucher-for-woocommerce.php:383
+msgid "Auto issue Paper Size"
+msgstr "Εκτύπωση voucher"
+
+#: acs-voucher-for-woocommerce.php:386 acs-voucher-for-woocommerce.php:454
+#: admin/class-acs-voucher-for-woocommerce-admin.php:232
+#: admin/class-acs-voucher-for-woocommerce-admin.php:539
+msgid "Flyer"
+msgstr "Φυλλάδιο"
+
+#: acs-voucher-for-woocommerce.php:389 acs-voucher-for-woocommerce.php:453
+#: admin/class-acs-voucher-for-woocommerce-admin.php:233
+#: admin/class-acs-voucher-for-woocommerce-admin.php:536
+#: admin/class-acs-voucher-for-woocommerce-admin.php:542
+msgid "Sticker"
+msgstr "Αυτοκόλλητο"
+
+#: acs-voucher-for-woocommerce.php:394
+msgid "Enable address validation and autofill on checkout"
+msgstr ""
+"Ενεργοποίηση επικύρωσης διεύθυνσης και αυτόματης συμπλήρωσης κατά την "
+"ολοκλήρωση παραγγελίας"
+
+#: acs-voucher-for-woocommerce.php:397
+msgid "Yes"
+msgstr "Ναι"
+
+#: acs-voucher-for-woocommerce.php:400
+msgid "No"
+msgstr "Όχι"
+
+#: acs-voucher-for-woocommerce.php:405
+msgid "Dimensions"
+msgstr "Διαστάσεις"
+
+#: acs-voucher-for-woocommerce.php:408
+msgid "Disable volumetric weight calculation based on dimensions"
+msgstr "Απενεργοποίηση υπολογισμού ογκομετρικού βάρους βάσει διαστάσεων"
+
+#: acs-voucher-for-woocommerce.php:411
+msgid "Inaccessible check"
+msgstr "Δυσπρόσιτη Περιοχή"
+
+#: acs-voucher-for-woocommerce.php:414
+msgid "Enable inaccessible check upon order complete"
+msgstr ""
+"Ενεργοποίηση του ελέγχου Δυσπρόσιτης Περιοχής κατά την ολοκλήρωση της "
+"παραγγελίας"
+
+#: acs-voucher-for-woocommerce.php:418
+msgid "Debug"
+msgstr "Αποσφαλμάτωση"
+
+#: acs-voucher-for-woocommerce.php:421
+msgid "Debug mode logs every request made"
+msgstr "Καταγραφή όλων των αιτημάτων προς την ACS"
+
+#: acs-voucher-for-woocommerce.php:424
+msgid "Default method for ACS shipping calculator"
+msgstr "Προεπιλεγμένη μέθοδος για τον υπολογισμό μεταφορικών μέσω ACS"
+
+#: acs-voucher-for-woocommerce.php:427
+msgid "Address"
+msgstr "Διεύθυνση"
+
+#: acs-voucher-for-woocommerce.php:430
+msgid "Zipcode"
+msgstr "Ταχυδρομικός Κώδικας"
+
+#: acs-voucher-for-woocommerce.php:447 acs-voucher-for-woocommerce.php:462
+#: admin/class-acs-voucher-for-woocommerce-admin.php:546
+msgid "Print voucher"
+msgstr "Εκτύπωση voucher"
+
+#: acs-voucher-for-woocommerce.php:451 acs-voucher-for-woocommerce.php:473
+msgid "Voucher No"
+msgstr "Αρ. Voucher"
+
+#: acs-voucher-for-woocommerce.php:469 acs-voucher-for-woocommerce.php:481
+#: admin/class-acs-voucher-for-woocommerce-admin.php:554
+msgid "Cancel voucher"
+msgstr "Ακύρωση voucher"
+
+#: acs-voucher-for-woocommerce.php:470
+#: admin/class-acs-voucher-for-woocommerce-admin.php:245
+#: admin/class-acs-voucher-for-woocommerce-admin.php:553
+msgid "Voucher has been cancelled"
+msgstr "Το voucher έχει ακυρωθεί"
+
+#: acs-voucher-for-woocommerce.php:488
+msgid "Print Pickup Lists"
+msgstr "Εκτύπωση Λίστας Συλλογής"
+
+#: acs-voucher-for-woocommerce.php:489
+msgid "No Pickup Lists found"
+msgstr "Δεν βρέθηκαν Λίστες Συλλογής"
+
+#: acs-voucher-for-woocommerce.php:492 acs-voucher-for-woocommerce.php:512
+#: public/class-acs-voucher-for-woocommerce-public.php:97
+#: public/class-acs-voucher-for-woocommerce-public.php:127
+msgid "Date"
+msgstr "Ημερομηνία"
+
+#: acs-voucher-for-woocommerce.php:500
+msgid "Find Pickup Lists"
+msgstr "Εύρεση Λίστας Συλλογής"
+
+#: acs-voucher-for-woocommerce.php:508 acs-voucher-for-woocommerce.php:520
+msgid "COD Beneficiary Info"
+msgstr "Ανάλυση απόδοσης αντικαταβολών"
+
+#: acs-voucher-for-woocommerce.php:509
+msgid "No COD Beneficiary info found"
+msgstr "Δεν βρέθηκαν αποδόσεις αντικαταβολών"
+
+#: acs-voucher-for-woocommerce.php:528 acs-voucher-for-woocommerce.php:530
+msgid "Export Orders"
+msgstr "Εξαγωγή παραγγελιών"
+
+#: acs-voucher-for-woocommerce.php:532
+msgid ""
+"Please install Web Expert WooCommerce Order Tracking in order to enable "
+"exporter."
+msgstr ""
+"Εγκαταστήστε το πρόσθετο Web Expert WooCommerce Order Tracking ώστε να "
+"ενεργοποιηθεί ο εξαγωγέας."
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:111
+msgctxt "post type general name"
+msgid "Jobs"
+msgstr "Εργασίες"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:112
+msgctxt "post type singular name"
+msgid "Job"
+msgstr "Εργασία"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:113
+msgctxt "admin menu"
+msgid "Jobs"
+msgstr "Εργασίες"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:114
+msgctxt "add new on admin bar"
+msgid "Jobs"
+msgstr "Εργασίες"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:115
+msgctxt "book"
+msgid "Add New"
+msgstr "Προσθήκη νέας"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:116
+msgid "Add New Job"
+msgstr "Προσθήκη νέας εργασίας"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:117
+msgid "New Job"
+msgstr "Νέα εργασία"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:118
+msgid "Edit Job"
+msgstr "Επεξεργασία εργασίας"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:119
+msgid "View Job"
+msgstr "Προβολή εργασίας"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:120
+msgid "All Jobs"
+msgstr "Όλες οι εργασίες"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:121
+msgid "Search Jobs"
+msgstr "Αναζήτηση εργασιών"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:122
+msgid "Parent Jobs:"
+msgstr "Γονικές εργασίες:"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:123
+msgid "No jobs found."
+msgstr "Δεν βρέθηκαν εργασίες."
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:124
+msgid "No jobs found in Trash."
+msgstr "Δεν βρέθηκαν εργασίες στον Κάδο."
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:129
+msgid "Job"
+msgstr "Εργασία"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:151
+#: includes/class-acs-voucher-for-woocommerce-shipping-class.php:36
+msgid "Title"
+msgstr "Τίτλος"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:152
+msgid "Job Status"
+msgstr "Κατάσταση εργασίας"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:153
+msgid "Carrier"
+msgstr "Μεταφορέας"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:154
+#: admin/class-acs-voucher-for-woocommerce-admin.php:415
+msgid "Track & Trace"
+msgstr "Κατάσταση αποστολής"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:155
+msgid "Print"
+msgstr "Εκτύπωση"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:156
+msgid "Actions"
+msgstr "Ενέργειες"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:177
+msgid "By"
+msgstr "Από"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:200
+#: admin/class-acs-voucher-for-woocommerce-admin.php:1789
+#: includes/class-acs-voucher-for-woocommerce-shipping-class.php:10
+#: includes/class-acs-voucher-for-woocommerce-shipping-class.php:17
+msgid "ACS Courier"
+msgstr "ACS Courier"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:245
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:266
+msgid "Opened"
+msgstr "Ανοιχτή"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:269
+msgid "Cancelled"
+msgstr "Ακυρωμένη"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:272
+msgid "Closed"
+msgstr "Ολοκληρωμένη"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:275
+msgid "Not initialized"
+msgstr "Δεν έχει αρχικοποιηθεί"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:399
+msgid "Voucher"
+msgstr "Voucher"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:406
+msgid "Sub Voucher"
+msgstr "Υπο vouchers"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:412
+#: public/class-acs-voucher-for-woocommerce-public.php:98
+#: public/class-acs-voucher-for-woocommerce-public.php:128
+msgid "Status"
+msgstr "Κατάσταση"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:412
+msgid "-"
+msgstr "-"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:422
+msgid "Parcels"
+msgstr "Δέματα"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:430
+msgid "Weight (in kg)"
+msgstr "Βάρος (σε kg)"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:449
+msgid "Pickup Date"
+msgstr "Ημερομηνία Παραλαβής"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:458
+msgid "Cash on delivery price"
+msgstr "Αντικαταβολή"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:469
+msgid "Services"
+msgstr "Υπηρεσίες"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:475
+msgid "Insurance"
+msgstr "Ασφάλεια Αποστολής"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:476
+msgid "Saturday Delivery"
+msgstr "Παράδοση Σάββατο"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:477
+msgid "COD"
+msgstr "Αντικαταβολη μετρητοίς"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:478
+msgid "Inaccessible Area"
+msgstr "Δυσπρόσιτη Περιοχή"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:479
+msgid "Reception Delivery"
+msgstr "Παράδοση Reception"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:480
+msgid "Return Shipment Service"
+msgstr "Επιστροφή δικαιολογητικών"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:481
+msgid "Cyprus Economy"
+msgstr ""
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:482
+msgid "Point to Point (Cyprus)"
+msgstr ""
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:483
+msgid "Door to Point (Cyprus)"
+msgstr ""
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:484
+msgid "Point to Door (Cyprus)"
+msgstr ""
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:490
+msgid "Insurance Amount"
+msgstr "Ασφάλεια Αποστολής"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:498
+msgid "Comments"
+msgstr "Σχόλια"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:506
+msgid "Select your account"
+msgstr "Επιλέξτε λογαριασμό"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:530
+msgid "There was an error issuing the voucher."
+msgstr "Παρουσιάστηκε σφάλμα κατά την έκδοση του voucher."
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:530
+msgid "Vouchers have been created!"
+msgstr "Το voucher έχει δημιουργηθεί!"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:530
+msgid "Create voucher"
+msgstr "Δημιουργία voucher"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:555
+msgid "Are you sure you want to reset voucher process for this order?"
+msgstr ""
+"Είστε βέβαιοι ότι θέλετε να επαναφέρετε τη διαδικασία έκδοσης voucher για "
+"αυτήν την παραγγελία;"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:555
+msgid "Reset job"
+msgstr "Επαναφορά εργασίας"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:593
+msgid "All pending vouchers are closed"
+msgstr "Όλες οι εκκρεμείς εργασίες ολοκληρώθηκαν"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:594
+msgid "Issue pickup list (ACS Courier)"
+msgstr "Έκδοση λίστας συλλογής (ACS Courier)"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:600
+msgid "Filter jobs:"
+msgstr "Εύρεση κατά ημερομηνία:"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:601
+msgid "Date From"
+msgstr "Από"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:601
+msgid "Date To"
+msgstr "Μέχρι"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:640
+msgid "Print jobs (ACS Courier)"
+msgstr "Εκτύπωση εργασιών (ACS Courier)"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:641
+msgid "Cancel jobs (ACS Courier)"
+msgstr "Ακύρωση εργασιών (ACS Courier)"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:642
+msgid "Delete jobs"
+msgstr "Διαγραφή εργασιών"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:649
+msgid "Selected jobs were cancelled"
+msgstr "Οι επιλεγμένες εργασίες έχουν ακυρωθεί"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:654
+msgid "You should select jobs that have been created by the same ACS account"
+msgstr ""
+"Θα πρέπει να επιλέξετε εργασίες που έχουν δημιουργηθεί από τον ίδιο "
+"λογαριασμό ACS"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:798
+msgid "Voucher number could not be found!"
+msgstr "Δεν βρέθηκε το voucher!"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:801
+msgid "Job could not be found!"
+msgstr "Δεν βρέθηκε η εργασία!"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:1470
+msgid "Job for order"
+msgstr "Εργασία για την παραγγελία"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:1818
+msgid "Tracking"
+msgstr "Κατάσταση αποστολής"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:1829
+msgid ""
+"Please activate <strong>Web Expert ACS Voucher for WooCommerce</strong> to "
+"enable all it's features and automatic updates."
+msgstr ""
+"Εισάγετε την άδεια χρήσης του πρόσθετου <strong>Web Expert ACS Voucher for "
+"WooCommerce</strong> για να ενεργοποιήσετε όλες τις δυνατότητες και τις "
+"αυτόματες ενημερώσεις του."
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:1836
+msgid ""
+"The license for <strong>Web Expert ACS Voucher for WooCommerce</strong> is "
+"invalid. Please fill in a valid license key."
+msgstr ""
+"Η άδεια χρήσης για το πρόσθετο <strong>Web Expert ACS Voucher for "
+"WooCommerce</strong> δεν είναι έγκυρη. Παρακαλώ συμπληρώστε μια έγκυρη άδεια "
+"χρήσης."
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:1850
+msgid "Support"
+msgstr "Υποστήριξη"
+
+#: admin/class-acs-voucher-for-woocommerce-admin.php:2010
+msgid "Delivered"
+msgstr "Παραδόθηκε"
+
+#: includes/class-acs-voucher-for-woocommerce-shipping-class.php:11
+msgid "Allows you to calculate shipping based on ACS web service"
+msgstr ""
+"Σας επιτρέπει να υπολογίσετε τα μεταφορικά βάσει του web service της ACS"
+
+#: includes/class-acs-voucher-for-woocommerce-shipping-class.php:38
+msgid "The display title on the page"
+msgstr "Ο τίτλος εμφάνισης στην ιστοσελίδα"
+
+#: includes/class-acs-voucher-for-woocommerce-shipping-class.php:39
+msgid "Shipping by ACS"
+msgstr "Αποστολή με ACS"
+
+#: includes/class-acs-voucher-for-woocommerce-shipping-class.php:43
+msgid "Tax status"
+msgstr "Κατάσταση φόρου"
+
+#: includes/class-acs-voucher-for-woocommerce-shipping-class.php:48
+msgid "Taxable"
+msgstr "Φορολογήσιμο"
+
+#: includes/class-acs-voucher-for-woocommerce-shipping-class.php:49
+msgctxt "Tax status"
+msgid "None"
+msgstr "Κανένας"
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:54
+msgid "View details"
+msgstr "Προβολή λεπτομεριών"
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:77
+#, php-format
+msgid "More information about %s"
+msgstr "Περισσότερες πληροφορίες για το %s"
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:128
+msgid "Check for updates"
+msgstr "Έλεγχος για ενημερώσεις"
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:214
+#, php-format
+msgctxt "the plugin title"
+msgid "The %s plugin is up to date."
+msgstr "Το πρόσθετο %s είναι ενημερωμένο."
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:216
+#, php-format
+msgctxt "the plugin title"
+msgid "A new version of the %s plugin is available."
+msgstr "Είναι διαθέσιμη μια νέα έκδοση του πρόσθετου %s."
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:218
+#, php-format
+msgctxt "the plugin title"
+msgid "Could not determine if updates are available for %s."
+msgstr ""
+"Δεν μπορέσαμε να εντοπίσουμε αν υπάρχει διαθέσιμη έκδοση του πρόσθετου %s."
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:224
+#, php-format
+msgid "Unknown update checker status \"%s\""
+msgstr "Άγνωστη κατάσταση \"%s\""
+
+#: includes/update/Puc/v4p11/Vcs/PluginUpdateChecker.php:98
+msgid "There is no changelog available."
+msgstr "Δεν υπάρχει διαθέσιμο changelog."
+
+#: public/class-acs-voucher-for-woocommerce-public.php:78
+#: public/class-acs-voucher-for-woocommerce-public.php:79
+#: public/class-acs-voucher-for-woocommerce-public.php:96
+#: public/class-acs-voucher-for-woocommerce-public.php:126
+msgid "Order ID"
+msgstr "Αριθμός παραγγελίας"
+
+#: public/class-acs-voucher-for-woocommerce-public.php:82
+msgid "E-mail or Telephone"
+msgstr "Διεύθυνση E-mail ή τηλέφωνο"
+
+#: public/class-acs-voucher-for-woocommerce-public.php:83
+msgid "E-mail address"
+msgstr "Διεύθυνση E-mail"
+
+#: public/class-acs-voucher-for-woocommerce-public.php:85
+msgid "Order ID is not valid"
+msgstr "O αριθμός παραγγελίας δεν είναι έγκυρος"
+
+#: public/class-acs-voucher-for-woocommerce-public.php:85
+msgid "Submit"
+msgstr "Υποβολή"
+
+#: public/class-acs-voucher-for-woocommerce-public.php:94
+#: public/class-acs-voucher-for-woocommerce-public.php:124
+msgid "Order Status"
+msgstr "Κατάσταση παραγγελίας"
+
+#: public/class-acs-voucher-for-woocommerce-public.php:103
+#: public/class-acs-voucher-for-woocommerce-public.php:132
+msgid "Shipping Status"
+msgstr "Κατάσταση αποστολής"
+
+#: public/class-acs-voucher-for-woocommerce-public.php:105
+msgid "Wrong order ID or e-mail address"
+msgstr "Λάθος αριθμός παραγγελίας ή διεύθυνση e-mail"
+
+#. Plugin Name of the plugin/theme
+msgid "ACS Voucher For WooCommerce"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid ""
+"https://www.webexpert.gr/plugin/woocommerce/courier/acs-voucher-for-"
+"woocommerce"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"ACS Voucher for WooCommerce allows you to easily issue/print and track your "
+"vouchers for ACS via WooCommerce Admin"
+msgstr ""
+"Το ACS Voucher για WooCommerce σας επιτρέπει να δημιουργείτε/εκδίδετε και "
+"ελέγχετε τα voucher αποστολής για την ACS"
+
+#. Author of the plugin/theme
+msgid "Web Expert"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://www.webexpert.gr/"
+msgstr ""
+
+#~ msgid "Date from"
+#~ msgstr "Ημερομηνία από"
+
+#~ msgid "Date to"
+#~ msgstr "Ημερομηνία μέχρι"
+
+#~ msgid "Export"
+#~ msgstr "Εξαγωγή"
+
+#~ msgid "No orders found"
+#~ msgstr "Δεν βρέθηκαν παραγγελίες"
+
+#~ msgid "Morning Delivery Commitment"
+#~ msgstr "Πρωινή Δέσμευση Παράδοσης"
+
+#~ msgid "Delivery Time Commitment"
+#~ msgstr "Χρονική Δέσμευση Παράδοσης"
+
+#, fuzzy
+#~| msgid "ACS Courier"
+#~ msgid "Close jobs (ACS Courier)"
+#~ msgstr "ACS Courier"
+
+#~ msgid "Close jobs"
+#~ msgstr "Κλείσιμο εργασιών"
+
+#~ msgid "Cancel jobs"
+#~ msgstr "Ακύρωση εργασιών"
+
+#~ msgid "Test mode"
+#~ msgstr "Δοκιμαστική λειτουργία"
+
+#~ msgid "Activate test mode"
+#~ msgstr "Ενεργοποίηση δοκιμαστικής λειτουργίας"
+
+#~ msgid "Job Options"
+#~ msgstr "Επιλογές εργασίας"

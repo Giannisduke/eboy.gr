@@ -1,0 +1,29 @@
+---
+- name: Install Netdata dependencies
+  apt:
+    name:
+      - curl
+      - gnupg
+      - apt-transport-https
+    state: present
+    update_cache: yes
+
+- name: Download Netdata installer
+  get_url:
+    url: https://my-netdata.io/kickstart.sh
+    dest: /tmp/netdata-kickstart.sh
+    mode: '0755'
+
+- name: Install Netdata
+  command: >
+    bash /tmp/netdata-kickstart.sh
+    --dont-wait
+    --disable-telemetry
+  args:
+    creates: /usr/sbin/netdata
+
+- name: Ensure Netdata is running
+  systemd:
+    name: netdata
+    state: started
+    enabled: yes

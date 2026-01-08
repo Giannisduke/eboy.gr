@@ -1,0 +1,143 @@
+/**
+ * All of the CSS for your admin-specific functionality should be
+ * included in this file.
+ */
+
+.webexpert-acs-account-table {
+    background:#fff;
+    padding:20px 60px;
+    border-radius:5px;
+    margin-bottom:10px;
+    width:fit-content;
+    position:relative;
+}
+
+.webexpert-acs-account-table table {
+    margin-top:20px;
+}
+
+.webexpert-acs-account-delete {
+    position:absolute;
+    top:5px;
+    right:15px;
+    font-size:24px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+input[name="mishaDateFrom"], input[name="mishaDateTo"]{
+    line-height: 29px;
+    height: 29px;
+    margin: 0;
+}
+
+.webexpert-job-status {
+    display: -webkit-inline-box;
+    display: inline-flex;
+    padding: 2px 14px;
+    color: #777;
+    background: #e5e5e5;
+    border-radius: 3px;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+    white-space: nowrap;
+    max-width: 100%;
+    font-size: 12px;
+}
+
+.webexpert-job-status.we-voucher-open{
+    background: #c6e1c6;
+    color: #5b841b;
+}
+.webexpert-job-status.we-voucher-closed{
+    background: #c8d7e1;
+    color: #2e4453;
+}
+.webexpert-job-status.we-voucher-cancelled{
+    color: #777;
+    background: #e5e5e5;
+}
+.webexpert-field {
+    position: relative;
+    margin: 15px 0px;
+}
+
+.webexpert-field-group{
+    padding: 15px 12px;
+    background: #f8f8f8;
+    border: 1px solid #EEEEEE;
+    margin-top:15px
+}
+
+.webexpert-field-group:first-child{
+    margin-top:0;
+}
+
+.webexpert-field-label {
+    vertical-align: top;
+    margin: 0 0 10px;
+}
+
+.webexpert-field-label label {
+    display: block;
+    font-weight: bold;
+    margin: 0 0 3px;
+    padding: 0;
+}
+
+.webexpert-field-input input:not([type=checkbox]):not([type=radio]) {
+    width: 100%;
+    padding: 3px 5px;
+    resize: none;
+    margin: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+@keyframes spinner {
+    to {transform: rotate(360deg);}
+}
+
+.button.has-spinner{
+    position:relative;
+}
+
+.button.has-spinner .we_spinner:before{
+    display:none;
+}
+
+.button.has-spinner.is-active{
+    padding-right:30px;
+}
+
+.button.has-spinner.is-active .we_spinner:before {
+    display:block;
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 14px;
+    height: 14px;
+    margin-top: -7px;
+    margin-left: -7px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    border-top-color: #000;
+    animation: spinner .6s linear infinite;
+}
+
+#acs_insurance_amount_container{display: none}
+
+.webexpert-delivered-icon {
+    display: inline-block;
+    margin-right: 3px;
+}
+.webexpert-delivered-icon .woocommerce-help-tip{
+    background-image:url('../img/deliver.svg')
+}
+.webexpert-delivered-icon .woocommerce-help-tip:after{
+    display:none
+}

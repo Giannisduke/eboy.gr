@@ -24,6 +24,8 @@
     - { role: mariadb, tags: [mariadb] }
     - { role: ssmtp, tags: [ssmtp, mail] }
     - { role: php, tags: [php] }
+        # ✅ Netdata (monitoring)
+    - { role: netdata, tags: [netdata] }
     - { role: memcached, tags: [memcached], when: sites_using_memcached | count }
     - { role: redis, tags: [redis], when: sites_using_redis | count }
     - { role: nginx, tags: [nginx] }
