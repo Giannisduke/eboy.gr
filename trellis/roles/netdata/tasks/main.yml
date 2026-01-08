@@ -1,29 +1,35 @@
 ---
-- name: Install Netdata dependencies
-  apt:
+- name: Netdata | Skip if disabled
+  ansible.builtin.meta: end_host
+  when: not netdata_enabled
+
+- name: Netdata | Install dependencies
+  ansible.builtin.apt:
     name:
       - curl
+      - ca-certificates
       - gnupg
-      - apt-transport-https
     state: present
     update_cache: yes
 
-- name: Download Netdata installer
-  get_url:
-    url: https://my-netdata.io/kickstart.sh
-    dest: /tmp/netdata-kickstart.sh
-    mode: '0755'
-
-- name: Install Netdata
-  command: >
-    bash /tmp/netdata-kickstart.sh
-    --dont-wait
-    --disable-telemetry
+- name: Netdata | Install via official kickstart (stable)
+  ansible.builtin.shell: |
+    set -euo pipefail
+    curl -fsSL https://get.netdata.cloud/kickstart.sh | sh -s -- --stable-channel --dont-wait
   args:
     creates: /usr/sbin/netdata
 
-- name: Ensure Netdata is running
-  systemd:
+- name: Netdata | Configure bind address/port
+  ansible.builtin.template:
+    src: netdata.conf.j2
+    dest: /etc/netdata/netdata.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart netdata
+
+- name: Netdata | Ensure service enabled and started
+  ansible.builtin.service:
     name: netdata
     state: started
     enabled: yes
