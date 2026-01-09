@@ -14,10 +14,11 @@ mysql_users:
     password: "{{ vault_mysql_simple_city_password }}"
     priv: "simple_city_production.*:ALL"
 
-  # SoftOne integration user (Trellis-managed)
-  # Προτείνεται να έχει τα ελάχιστα δικαιώματα που χρειάζεται η γέφυρα.
-  # Αν η γέφυρα γράφει στη DB, θα χρειαστεί να επεκτείνουμε τα privileges (θα το κάνουμε όταν δούμε τι ακριβώς χρειάζεται).
-  - name: softone_user
-    password: "{{ vault_mysql_softone_password }}"
-    priv: "simple_city_production.*:SELECT"
-    host: "%"
+    # --- SoftOne MySQL integration user (Trellis-managed)
+mysql_additional_users:
+  - name: "softone_user"
+    host: "%"                 # καλύτερα βάλε IP του SoftOne όταν είσαι έτοιμος (π.χ. "1.2.3.4")
+    password: "{{ vault_softone_mysql_password }}"
+    priv: "{{ vault_softone_mysql_priv }}"   # θα το ορίσουμε στο vault
+    state: present
+

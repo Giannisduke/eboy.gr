@@ -1,0 +1,13 @@
+---
+- name: MySQL | Create additional mysql users
+  community.mysql.mysql_user:
+    name: "{{ item.name }}"
+    host: "{{ item.host | default('localhost') }}"
+    password: "{{ item.password }}"
+    priv: "{{ item.priv }}"
+    state: "{{ item.state | default('present') }}"
+    login_unix_socket: "{{ mariadb_socket | default('/var/run/mysqld/mysqld.sock') }}"
+    check_implicit_admin: true
+  loop: "{{ mysql_additional_users | default([]) }}"
+  no_log: true
+  when: (mysql_additional_users | default([])) | length > 0
