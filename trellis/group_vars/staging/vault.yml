@@ -2,6 +2,10 @@
 # Documentation: https://roots.io/trellis/docs/vault/
 
 vault_mysql_root_password: p3Ip7viiQJ0uFZmruHnf52YU8huX8W3t04U7Hh3kZxRdIphJUOVrguzyhfDmbV6t
+vault_mysql_simple_city_password: "8QEjAzCkuHFQaR9BYmMT9hxINEN3Dqy2TCRIMMgzxkNuTRpmfpV5peTZmrUg4UFP"
+vault_softone_mysql_password: "5usyq5Am33WArE5TJz2xfwW6pSJ5wT6gaTPNd6yrHbzfzu73PqXujYpJtBtALXCq"
+# Επιλογή A: πρόσβαση SELECT σε όλη τη βάση (πιο συμβατό, λιγότερο σπάσιμο)
+vault_softone_mysql_priv: "eboy_gr_staging.*:SELECT"
 vault_users:
 - name: '{{ admin_user }}'
   password: rS1bCdsKouPj2tM4zrcbbxkT96Oa1j8CePnFYbXrprSSXVpvgKg4WQakrg9Ao9BF

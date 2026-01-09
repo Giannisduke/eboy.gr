@@ -5,7 +5,7 @@ timezone: Europe/Athens
 mysql_root_password: "{{ vault_mysql_root_password }}"
 
 mysql_databases:
-  - name: simple_city_production
+  - name: simple-city_gr_production
     encoding: utf8mb4
     collation: utf8mb4_unicode_ci
 
