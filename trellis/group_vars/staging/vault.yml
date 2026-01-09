@@ -5,7 +5,26 @@ vault_mysql_root_password: p3Ip7viiQJ0uFZmruHnf52YU8huX8W3t04U7Hh3kZxRdIphJUOVrg
 vault_mysql_simple_city_password: "8QEjAzCkuHFQaR9BYmMT9hxINEN3Dqy2TCRIMMgzxkNuTRpmfpV5peTZmrUg4UFP"
 vault_softone_mysql_password: "5usyq5Am33WArE5TJz2xfwW6pSJ5wT6gaTPNd6yrHbzfzu73PqXujYpJtBtALXCq"
 # Επιλογή A: πρόσβαση SELECT σε όλη τη βάση (πιο συμβατό, λιγότερο σπάσιμο)
-vault_softone_mysql_priv: "eboy_gr_staging.*:SELECT"
+vault_softone_mysql_priv: >-
+  `simple-city_gr_production`.`wp_2_posts`:SELECT,INSERT,UPDATE/
+  `simple-city_gr_production`.`wp_2_postmeta`:SELECT,INSERT,UPDATE,DELETE/
+  `simple-city_gr_production`.`wp_2_terms`:SELECT/
+  `simple-city_gr_production`.`wp_2_term_taxonomy`:SELECT,INSERT,UPDATE/
+  `simple-city_gr_production`.`wp_2_term_relationships`:SELECT,INSERT,DELETE/
+  `simple-city_gr_production`.`wp_2_termmeta`:SELECT,INSERT,UPDATE,DELETE/
+  `simple-city_gr_production`.`wp_2_wc_orders`:SELECT,INSERT,UPDATE/
+  `simple-city_gr_production`.`wp_2_wc_order_addresses`:SELECT,INSERT,UPDATE/
+  `simple-city_gr_production`.`wp_2_wc_orders_meta`:SELECT,INSERT,UPDATE,DELETE/
+  `simple-city_gr_production`.`wp_2_wc_order_operational_data`:SELECT,INSERT,UPDATE/
+  `simple-city_gr_production`.`wp_2_wc_order_stats`:SELECT,INSERT,UPDATE/
+  `simple-city_gr_production`.`wp_2_wc_order_product_lookup`:SELECT,INSERT,UPDATE,DELETE/
+  `simple-city_gr_production`.`wp_2_wc_customer_lookup`:SELECT,INSERT,UPDATE/
+  `simple-city_gr_production`.`wp_2_woocommerce_order_items`:SELECT,INSERT,UPDATE,DELETE/
+  `simple-city_gr_production`.`wp_2_woocommerce_order_itemmeta`:SELECT,INSERT,UPDATE,DELETE/
+  `simple-city_gr_production`.`wp_2_icl_translations`:SELECT,INSERT,UPDATE,DELETE/
+  `simple-city_gr_production`.`wp_2_icl_translation_status`:SELECT,INSERT,UPDATE,DELETE/
+  `simple-city_gr_production`.`wp_users`:SELECT,INSERT,UPDATE/
+  `simple-city_gr_production`.`wp_usermeta`:SELECT,INSERT,UPDATE,DELETE
 vault_users:
 - name: '{{ admin_user }}'
   password: rS1bCdsKouPj2tM4zrcbbxkT96Oa1j8CePnFYbXrprSSXVpvgKg4WQakrg9Ao9BF
