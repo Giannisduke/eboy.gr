@@ -34,3 +34,5 @@ wordpress_sites:
       PATH_CURRENT_SITE: /
       SITE_ID_CURRENT_SITE: 1
       BLOG_ID_CURRENT_SITE: 1
+      WP_MEMORY_LIMIT: "512M"
+      WP_MAX_MEMORY_LIMIT: "1024M"
