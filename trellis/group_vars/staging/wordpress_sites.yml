@@ -18,6 +18,7 @@ wordpress_sites:
     repo: git@github.com:Giannisduke/eboy.gr.git
     repo_subtree_path: site
     wp_cli_path: web/wp
+    wp_memory_limit: 256M
     multisite:
       enabled: true
       subdomains: true
