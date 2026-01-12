@@ -37,6 +37,17 @@ netdata_mysql_password: "{{ vault_netdata_mysql_password }}"
 netdata_mysql_socket: "/var/run/mysqld/mysqld.sock"
 netdata_mysql_host: "localhost"   # για grants @localhost
 
+
+# PHP-FPM tuning (pool: wordpress)
+php_fpm_pools:
+  wordpress:
+    pm: dynamic
+    pm_max_children: 25
+    pm_start_servers: 6
+    pm_min_spare_servers: 6
+    pm_max_spare_servers: 12
+    pm_max_requests: 500
+
 # Values of raw_vars will be wrapped in `{% raw %}` to avoid templating problems if values include `{%` and `{{`.
 raw_vars:
   - vault_mail_password
