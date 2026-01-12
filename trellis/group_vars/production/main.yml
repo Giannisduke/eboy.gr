@@ -1,6 +1,15 @@
 env: production
 timezone: Europe/Athens
 
+# PHP-FPM pool settings
+php_fpm_pm: dynamic
+
+php_fpm_max_children: 24
+php_fpm_start_servers: 6
+php_fpm_min_spare_servers: 4
+php_fpm_max_spare_servers: 12
+php_fpm_max_requests: 500
+
 # DB
 mysql_root_password: "{{ vault_mysql_root_password }}"
 

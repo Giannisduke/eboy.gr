@@ -1,6 +1,23 @@
 env: staging
 timezone: Europe/Athens
 
+# PHP limits
+php_memory_limit: "768M"
+php_upload_max_filesize: "64M"
+php_post_max_size: "64M"
+
+# WordPress memory
+wordpress_memory_limit: 512M
+wordpress_max_memory_limit: 512M
+
+# PHP-FPM tuning
+php_fpm_pm: dynamic
+php_fpm_max_children: 24
+php_fpm_start_servers: 6
+php_fpm_min_spare_servers: 4
+php_fpm_max_spare_servers: 12
+php_fpm_max_requests: 500
+
 # DB
 mysql_root_password: "{{ vault_mysql_root_password }}"
 
