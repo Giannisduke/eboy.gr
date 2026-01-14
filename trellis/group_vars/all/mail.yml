@@ -1,5 +1,5 @@
 # Documentation: https://roots.io/trellis/docs/mail/
-mail_smtp_server: smtp.eu.mailgun.org:587
+mail_smtp_server: smtp.eu.mailgun.org:2525
 mail_admin: admin@system.monk.gr
 mail_hostname: system.monk.gr
 mail_user: postmaster@system.monk.gr
