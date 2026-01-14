@@ -1,0 +1,14 @@
+ .form-field-left{
+    float: left;
+    clear: left;
+    width: 48%;
+    padding: 0;
+    margin: 9px 0 0;
+ }
+ #order_data .order_data_column .form-field.form-field-right{
+    float: right;
+    clear: right;
+    width: 48%;
+    padding: 0;
+    margin: 9px 0 0;
+ }

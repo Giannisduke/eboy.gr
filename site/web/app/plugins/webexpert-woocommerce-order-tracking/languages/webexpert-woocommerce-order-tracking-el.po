@@ -1,0 +1,544 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Web Expert WooCommerce Order Tracking\n"
+"POT-Creation-Date: 2023-01-10 12:35+0200\n"
+"PO-Revision-Date: 2023-01-10 12:39+0200\n"
+"Last-Translator: Dimitrios Selimidis <ds@webexpert.gr>\n"
+"Language-Team: Dimitrios Selimidis <ds@webexpert.gr>\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: webexpert-woocommerce-order-tracking.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:26
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:95
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:44
+msgid "Tracking number"
+msgstr "Αριθμός αποστολής"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:27
+msgctxt "placeholder"
+msgid "Tracking number"
+msgstr "Αριθμός αποστολής"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:45
+msgid "Send tracking number"
+msgstr "Αποστολή μηνύματος με αριθμό αποστολής"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:68
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:145
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:146
+msgid "Multi-Carriers"
+msgstr "Πολλαπλές Courier"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:133
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:166
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:352
+msgid "ACS Courier"
+msgstr "ACS Courier"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:134
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:169
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:355
+msgid "Courier Center"
+msgstr "Courier Center"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:135
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:172
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:358
+msgid "Taxydema"
+msgstr "Ταχυδέμα"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:136
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:175
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:361
+msgid "ELTA Courier"
+msgstr "ΕΛΤΑ Courier"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:137
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:178
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:364
+msgid "Geniki Taxydromiki"
+msgstr "Γενική Ταχυδρομική"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:138
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:181
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:367
+msgid "Speedex"
+msgstr "Speedex"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:144
+msgid ""
+"Pick the preferred carrier before completing the order, so the automated "
+"email will include it's tracking names and URLs."
+msgstr ""
+"Επιλέξτε την προτιμώμενη courier πριν ολοκληρώσετε την παραγγελία, ώστε το "
+"αυτοματοποιημένο email να περιλαμβάνει το όνομα της courier και το URL "
+"παρακολούθησης."
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:147
+msgid "Pick the preferred carrier"
+msgstr "Επιλέξτε τον προτιμώμενο courier"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:224
+msgid ""
+"Please activate <strong>Web Expert Order Tracking</strong> to enable all "
+"it's features and automatic updates."
+msgstr ""
+"Εισάγετε την άδεια χρήσης του πρόσθετου <strong>Web Expert Order Tracking</"
+"strong> για να ενεργοποιήσετε όλες τις δυνατότητες και τις αυτόματες "
+"ενημερώσεις του."
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:231
+msgid ""
+"The license for <strong>Web Expert Order Tracking</strong> is invalid. "
+"Please fill in a valid license key."
+msgstr ""
+"Η άδεια χρήσης για το πρόσθετο <strong>Web Expert Order Tracking</strong> "
+"δεν είναι έγκυρη. Παρακαλώ συμπληρώστε μια έγκυρη άδεια χρήσης."
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:244
+#: webexpert-woocommerce-order-tracking.php:143
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:245
+msgid "Support"
+msgstr "Υποστήριξη"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:373
+msgid "ID"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:374
+msgid "Status"
+msgstr "Καταστάσεις παραγγελιών"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:375
+msgid "Total"
+msgstr "Σύνολο"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:376
+msgid "Buyer"
+msgstr "Αγοραστής"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:377
+msgid "Email"
+msgstr "Email"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:378
+msgid "Phone"
+msgstr "Τηλέφωνο"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:379
+msgid "City"
+msgstr "Πόλη / Περιοχή"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:380
+msgid "Postcode"
+msgstr "Ταχυδρομικός κώδικας"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:381
+msgid "Courier"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:382
+msgid "Voucher"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:383
+msgid "Comments"
+msgstr "Σχόλια"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:384
+msgid "Tracking"
+msgstr "Εξέλιξη αποστολής"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:387
+msgid "No orders found"
+msgstr "Δεν βρέθηκαν παραγγελίες"
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:24
+msgid "Shipping number importer"
+msgstr "Εισαγωγέας αριθμών αποστολής"
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:40
+msgid ""
+"This importer allows you to import Shipping Numbers to your store via a csv "
+"file and optionally update order status."
+msgstr ""
+"Αυτός ο εισαγωγέας σας επιτρέπει να εισαγάγετε αριθμούς αποστολής στο "
+"κατάστημά σας μέσω ενός αρχείου csv και προαιρετικά να ενημερώσετε την "
+"κατάσταση της παραγγελίας."
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:41
+msgid "CSV columns are"
+msgstr "Οι στήλες του CSV αρχείου είναι"
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:43
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:44
+msgid "required"
+msgstr "υποχρεωτικό"
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:43
+msgid "Order ID"
+msgstr "Αριθμός παραγγελίας"
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:45
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:46
+msgid "optional"
+msgstr "προαιρετικό"
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:45
+msgid "Desired order status."
+msgstr "Επιθυμητή κατάσταση παραγγελίας."
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:45
+msgid "Accepts:"
+msgstr "Δέχεται:"
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:50
+msgid "Choose the CSV file from your computer:<br>"
+msgstr "Επιλέξτε το αρχείο CSV από τον υπολογιστή σας:<br>"
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:110
+#, php-format
+msgid "All done. <a href=\"%s\">Have fun!</a>"
+msgstr "Τελειώσαμε. <a href=\"%s\">Καλή διασκέδαση!</a>"
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:113
+msgid "Shipping tracking numbers added: "
+msgstr "Αριθμοί αποστολής που προστέθηκαν: "
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:115
+msgid "Order statuses updated: "
+msgstr "Καταστάσεις παραγγελιών που ενημερώθηκαν: "
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:145
+msgid "Web Expert shipping number importer"
+msgstr "Web Expert εισαγωγέας αριθμών αποστολής"
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:145
+msgid ""
+"Imports Shipping Numbers to your store via a csv file and optionally update "
+"order status."
+msgstr ""
+"Εισάγει τους αριθμούς αποστολής των voucher στο κατάστημά σας μέσω ενός "
+"αρχείου csv και, προαιρετικά, ενημερώνει την κατάσταση της παραγγελίας."
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:14
+msgid "Order Tracking Voucher"
+msgstr "Αριθμός αποστολής"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:15
+msgid ""
+"Order Tracking emails are sent to customers when an order is marked as "
+"completed and indicate that their orders have been shipped."
+msgstr ""
+"Τα email Ολοκλήρωσης Παραγγελίας αποστέλλεται στον πελάτη όταν η παραγγελία "
+"του έχει επισημανθεί ως Ολοκληρωμένη και συνήθως υποδεικνύουν ότι η "
+"παραγγελία έχει ολοκληρωθεί."
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:61
+msgid "Your {site_title} order tracking voucher"
+msgstr "Η παραγγελία σας από το κατάστημα {site_title} εστάλη"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:65
+msgid "https://www.shipping.com/track/{tracking_number}"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:69
+msgid ""
+"Your order #{order_number} has been shipped via {shipping_company} with "
+"voucher code {tracking_number}."
+msgstr ""
+"Η παραγγελία σας #{order_number} έχει αποσταλεί με {shipping_company} και "
+"αρ. αποστολής {tracking_number}."
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:73
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:167
+msgid "Shipping company name"
+msgstr "Εταιρία αποστολής"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:98
+msgid "Thank you for your order"
+msgstr "Ευχαριστούμε για την παραγγελία σας"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:136
+msgid "Enable/Disable"
+msgstr "Ενεργοποίηση/Απενεργοποίηση"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:138
+msgid "Enable this email notification"
+msgstr "Ενεργοποίηση αυτής της ειδοποίησης μέσω email"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:142
+msgid "Subject"
+msgstr "Θέμα"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:145
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:153
+#, php-format
+msgid "Available placeholders: %s"
+msgstr "Διαθέσιμες επιλογές: %s"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:150
+msgid "Email heading"
+msgstr "Κεφαλίδα email"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:158
+msgid "Email type"
+msgstr "Τύπος email"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:160
+msgid "Choose which format of email to send."
+msgstr "Επιλέξτε ποια μορφή του email θα αποστέλλεται."
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:170
+msgid "The name of the shipping company"
+msgstr "Εταιρία αποστολής"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:175
+msgid "Shipping tracking URL"
+msgstr "Ηλ. διεύθυνση εξέλιξης αποστολής"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:178
+msgid ""
+"The dynamic URL of order tracking with {tracking_number} and {order_id} "
+"variable"
+msgstr ""
+"Η ηλ. διεύθυνση της υπηρεσίας παρακολούθησης αποστολής με {tracking_number} "
+"μεταβλητή"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:183
+msgid "Custom support email address"
+msgstr "Διεύθυνση επικοινωνίας"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:186
+msgid "The email address printed on the shipping message"
+msgstr "Η διεύθυνση ηλεκτρονικού ταχυδρομείου τυπώνεται στο μήνυμα αποστολής"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:190
+msgid "Disable order complete email"
+msgstr "Απενεργοποίηση του μηνύματος Ολοκλήρωσης Παραγγελίας"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:193
+msgid "Disable WooCommerce default Order Complete email"
+msgstr "Απενεργοποίηση του μηνύματος Ολοκλήρωσης Παραγγελίας"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:200
+msgid "Enable SMS integration"
+msgstr "Ενεργοποίηση ειδοποίησης με SMS"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:203
+msgid ""
+"Send SMS when user has filled in cellphone via Web Expert Woocommerce SMS"
+msgstr ""
+"Αποστολή μηνύματος SMS εφόσον ο χρήστης έχει συμπληρώσει κινητό τηλέφωνο, με "
+"την χρήση του Web Expert Woocommerce SMS"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:207
+msgid "SMS message"
+msgstr "Μήνυμα SMS"
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:210
+msgid ""
+"SMS message sent to customer. Use variables {order_number}, "
+"{shipping_company}, {tracking_number}"
+msgstr ""
+"Το μήνυμα SMS που αποστέλλεται στον πελάτη. Χρησιμοποιείστε τις μεταβλητές "
+"{order_number}, {shipping_company}, {tracking_number}"
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:54
+msgid "View details"
+msgstr "Προβολή λεπτομεριών"
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:77
+#, php-format
+msgid "More information about %s"
+msgstr "Περισσότερες πληροφορίες για το %s"
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:128
+msgid "Check for updates"
+msgstr "Έλεγχος για ενημερώσεις"
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:214
+#, php-format
+msgctxt "the plugin title"
+msgid "The %s plugin is up to date."
+msgstr "Το πρόσθετο %s είναι ενημερωμένο."
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:216
+#, php-format
+msgctxt "the plugin title"
+msgid "A new version of the %s plugin is available."
+msgstr "Υπάρχει διαθέσιμη μια νέα έκδοση του %s."
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:218
+#, php-format
+msgctxt "the plugin title"
+msgid "Could not determine if updates are available for %s."
+msgstr ""
+"Δεν μπορέσαμε να εντοπίσουμε αν υπάρχει διαθέσιμη έκδοση του πρόσθετου %s."
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:224
+#, php-format
+msgid "Unknown update checker status \"%s\""
+msgstr "Άγνωστη κατάσταση \"%s\""
+
+#: includes/update/Puc/v4p11/Vcs/PluginUpdateChecker.php:98
+msgid "There is no changelog available."
+msgstr "Δεν υπάρχει διαθέσιμο changelog."
+
+#. translators: %s: Customer first name
+#: templates/emails/plain/webexpert-woocommerce-customer-order-tracking.php:25
+#: templates/emails/webexpert-woocommerce-customer-order-tracking.php:11
+#, php-format
+msgid "Hi %s,"
+msgstr "Γειά σου %s,"
+
+#: templates/emails/plain/webexpert-woocommerce-customer-order-tracking.php:27
+#: templates/emails/webexpert-woocommerce-customer-order-tracking.php:12
+#, php-format
+msgid ""
+"We are happy to inform you that your order #%s has been shipped via %s with "
+"voucher code %s and should be with you shortly."
+msgstr ""
+"Είμαστε στην ευχάριστη θέση να σας ενημερώσουμε ότι η παραγγελία #%s έχει "
+"αποσταλεί με %s, με αριθμό αποστολής %s και θα βρίσκεται σύντομα κοντά σας."
+
+#: templates/emails/plain/webexpert-woocommerce-customer-order-tracking.php:28
+#: templates/emails/webexpert-woocommerce-customer-order-tracking.php:13
+msgid ""
+"If you want to track the shipping process of your order, please follow the "
+"link below:"
+msgstr ""
+"Αν θέλετε να δείτε την εξέλιξη αποστολής της παραγγελίας σας, ακολουθήστε "
+"τον παρακάτω σύνδεσμο:"
+
+#: templates/emails/plain/webexpert-woocommerce-customer-order-tracking.php:30
+#: templates/emails/webexpert-woocommerce-customer-order-tracking.php:18
+#, php-format
+msgid "If you have any questions, send us an email at %s"
+msgstr "Αν έχετε οποιαδήποτε απορία, επικοινωνήστε μαζί μας στο %s"
+
+#: templates/emails/plain/webexpert-woocommerce-customer-order-tracking.php:32
+#: templates/emails/webexpert-woocommerce-customer-order-tracking.php:20
+msgid "Thanks for shopping with us."
+msgstr "Ευχαριστούμε που μας επιλέξατε."
+
+#: templates/emails/webexpert-woocommerce-customer-order-tracking.php:15
+msgid "Track and trace"
+msgstr "Εξέλιξη αποστολής"
+
+#: webexpert-woocommerce-order-tracking.php:81
+msgid "Order Tracking"
+msgstr "Εξέλιξη αποστολής"
+
+#: webexpert-woocommerce-order-tracking.php:94
+msgid "WooCommerce Order Tracking"
+msgstr ""
+
+#: webexpert-woocommerce-order-tracking.php:134
+msgid "You can setup the plugin at"
+msgstr "Μπορείτε να ρυθμίσετε το πρόσθετο στις"
+
+#: webexpert-woocommerce-order-tracking.php:134
+msgid "WooCommerce Settings"
+msgstr "Ρυθμίσεις του WooCommerce"
+
+#: webexpert-woocommerce-order-tracking.php:135
+msgid ""
+"Please fill in the email address and the license key you received when "
+"purchasing the WooCommerce Order Tracking to enable automatic updates and "
+"ensure the full functionality of the plugin."
+msgstr ""
+"Παρακαλούμε συμπληρώστε τη διεύθυνση Email και το License Key που λάβατε "
+"κατά την αγορά του πρόσθετου WooCommerce Order Tracking για να "
+"ενεργοποιήσετε τις αυτόματες ενημερώσεις και να εξασφαλίσετε την πλήρη "
+"λειτουργία του πρόσθετου."
+
+#: webexpert-woocommerce-order-tracking.php:136
+msgid "For any inquiries please contact "
+msgstr "Για θέματα υποστήριξης. παρακαλούμε επικοινωνήστε με το "
+
+#: webexpert-woocommerce-order-tracking.php:136
+msgid "or visit our Helpdesk at "
+msgstr "ή επισκεφθείτε το Helpdesk στη διεύθυνση "
+
+#: webexpert-woocommerce-order-tracking.php:145
+msgid "Multiple Vendors"
+msgstr "Πολλαπλές Courier"
+
+#: webexpert-woocommerce-order-tracking.php:148
+msgid ""
+"Enable multi-carrier feature only if you have multiple carriers as shipping "
+"option"
+msgstr ""
+"Ενεργοποίηση της δυνατότητας πολλαπλών Courier. Ενεργοποιήστε το μόνο εάν "
+"έχετε πολλαπλές courier ως επιλογή αποστολής"
+
+#: webexpert-woocommerce-order-tracking.php:155
+msgid "Export vouchers"
+msgstr "Εξαγωγή"
+
+#: webexpert-woocommerce-order-tracking.php:159
+msgid "Order Statuses"
+msgstr "Καταστάσεις παραγγελιών"
+
+#: webexpert-woocommerce-order-tracking.php:173
+msgid "Payment Methods"
+msgstr "Μέθοδοι πληρωμής"
+
+#: webexpert-woocommerce-order-tracking.php:186
+msgid "Date from"
+msgstr "Ημερομηνία από"
+
+#: webexpert-woocommerce-order-tracking.php:192
+msgid "Date to"
+msgstr "Ημερομηνία μέχρι"
+
+#: webexpert-woocommerce-order-tracking.php:200
+msgid "Export"
+msgstr "Εξαγωγή"
+
+#. Plugin Name of the plugin/theme
+msgid "Web Expert WooCommerce Order Tracking"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://www.webexpert.gr/wordpress/webexpert-woocommerce-order-tracking"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Web Expert WooCommerce Order Tracking allows you to send an automated email "
+"with shipping tracking number via email. It can be used with Web Expert "
+"WooCommerce SMS to send tracking number via SMS as well."
+msgstr ""
+"Το πρόσθετο Web Expert WooCommerce Order Tracking σας επιτρέπει να στέλνετε "
+"ένα αυτοματοποιημένο email στον πελάτη, με αριθμό αποστολής και σύνδεσμο "
+"παρακολούθησης. Το πρόσθετο μπορεί να χρησιμοποιηθεί με το Web Expert "
+"WooCommerce SMS για να στέλνετε τον αριθμό παρακολούθησης και μέσω SMS."
+
+#. Author of the plugin/theme
+msgid "Web Expert"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://www.webexpert.gr"
+msgstr ""
+
+#~ msgid "Elta Courier"
+#~ msgstr "ΕΛΤΑ Courier"

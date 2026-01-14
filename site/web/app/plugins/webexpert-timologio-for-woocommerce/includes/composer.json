@@ -1,0 +1,6 @@
+{
+    "require": {
+        "dragonbe/vies": "^2.1",
+        "mpdf/mpdf": "^8.0"
+    }
+}

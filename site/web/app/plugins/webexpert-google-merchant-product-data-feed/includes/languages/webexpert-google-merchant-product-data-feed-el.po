@@ -1,0 +1,366 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Web Expert WooCommerce Google Merchant Product Data "
+"Feed\n"
+"POT-Creation-Date: 2023-12-06 15:07+0200\n"
+"PO-Revision-Date: 2024-05-01 10:08+0300\n"
+"Last-Translator: Dimitrios Selimidis <ds@webexpert.gr>\n"
+"Language-Team: Dimitrios Selimidis <ds@webexpert.gr>\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+"X-Poedit-Basepath: ../..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: webexpert-google-merchant-product-data-feed.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: includes\n"
+"X-Poedit-SearchPath-1: .\n"
+"X-Poedit-SearchPath-2: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+
+#: includes/class-wp-admin.php:48 includes/class-wp-admin.php:60
+msgid "Google Merchant Product Data Feed"
+msgstr ""
+
+#: includes/class-wp-admin.php:204
+msgid ""
+"Please activate <strong>Web Expert WooCommerce Google Merchant Product Data "
+"Feed</strong> to enable all it's features and automatic updates."
+msgstr ""
+"Εισάγετε την άδεια χρήσης του πρόσθετου <strong>Web Expert WooCommerce "
+"Google Merchant Product Data Feed</strong> για να ενεργοποιήσετε όλες τις "
+"δυνατότητες και τις αυτόματες ενημερώσεις του."
+
+#: includes/class-wp-admin.php:211
+msgid ""
+"The license for <strong>Web Expert WooCommerce Google Merchant Product Data "
+"Feed</strong> is invalid. Please fill in a valid license key."
+msgstr ""
+"Η άδεια χρήσης για το πρόσθετο <strong>Web Expert WooCommerce Google "
+"Merchant Product Data Feed</strong> δεν είναι έγκυρη. Παρακαλώ συμπληρώστε "
+"μια έγκυρη άδεια χρήσης."
+
+#: includes/class-wp-admin.php:224 includes/templates/admin.index.php:65
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+#: includes/class-wp-admin.php:225
+msgid "Support"
+msgstr "Υποστήριξη"
+
+#: includes/class-wp-admin.php:239
+msgid "Never"
+msgstr "Ποτέ"
+
+#: includes/class-wp-admin.php:248
+msgid "Google Merchant category"
+msgstr "Κατηγορία Google Merchant"
+
+#: includes/class-wp-admin.php:250 includes/class-wp-admin.php:270
+#: includes/templates/admin.index.php:161
+msgid "(None)"
+msgstr "(Καμία)"
+
+#: includes/class-wp-admin.php:256
+msgid "Google Merchant product category mapping"
+msgstr "Χαρτογράφηση κατηγορίας Google Merchant"
+
+#: includes/class-wp-admin.php:267
+msgid "Google Merchant categories"
+msgstr "Κατηγορίες Google Merchant"
+
+#: includes/class-wp-admin.php:276 includes/templates/admin.index.php:167
+msgid "Google Merchant category mapping"
+msgstr "Χαρτογράφηση κατηγορίας Google Merchant"
+
+#: includes/scripts/google-merchant-engine.php:152
+msgid "XML could not be generated or copied."
+msgstr "Δεν ήταν δυνατή η δημιουργία του αρχείου XML."
+
+#: includes/scripts/google-merchant-engine.php:152
+#: includes/scripts/google-merchant-engine.php:155
+#: includes/scripts/google-merchant-engine.php:160
+#: includes/templates/admin.index.php:50
+msgid "View XML"
+msgstr "Προβολή αρχείου XML"
+
+#: includes/scripts/google-merchant-engine.php:155
+#: includes/scripts/google-merchant-engine.php:160
+msgid "XML Data Feed was generated successfully."
+msgstr "Το αρχείο XML δημιουργήθηκε με επιτυχία."
+
+#: includes/templates/admin.index.php:38
+msgid "WooCommerce Google Merchant Product Data Feed"
+msgstr ""
+
+#: includes/templates/admin.index.php:40
+msgid "Last update"
+msgstr "Τελευταία ενημέρωση"
+
+#: includes/templates/admin.index.php:42
+msgid "Submit the following URL to Google Merchant."
+msgstr "Κοινοποιήστε την διεύθυνση του αρχείου XML Feed στην Google Merchant."
+
+#: includes/templates/admin.index.php:52
+msgid "Error: XML file does not exist"
+msgstr "Σφάλμα: Το αρχείο XML δεν υπάρχει"
+
+#: includes/templates/admin.index.php:55
+msgid "Statistics"
+msgstr "Στατιστικά"
+
+#: includes/templates/admin.index.php:56
+msgid "Percentage completed"
+msgstr "Ποσοστό ολοκλήρωσης"
+
+#: includes/templates/admin.index.php:57
+msgid "Simple products"
+msgstr "Απλά προϊόντα"
+
+#: includes/templates/admin.index.php:58
+msgid "Separate variations"
+msgstr "Παραλλαγές"
+
+#: includes/templates/admin.index.php:61
+msgid "Update feed"
+msgstr "Ενημέρωση αρχείου XML"
+
+#: includes/templates/admin.index.php:68
+msgid "Cron schedule"
+msgstr "Χρόνος ανανέωσης XML"
+
+#: includes/templates/admin.index.php:71
+msgid "Choose"
+msgstr "Επιλέξτε"
+
+#: includes/templates/admin.index.php:72
+msgid "Disabled"
+msgstr "Απενεργοποίηση"
+
+#: includes/templates/admin.index.php:73
+msgid "Hourly"
+msgstr "Μία φορά την ώρα"
+
+#: includes/templates/admin.index.php:74
+msgid "Twice Daily"
+msgstr "Δύο φορές την ημέρα"
+
+#: includes/templates/admin.index.php:75
+msgid "Daily"
+msgstr "Μία φορά την ημέρα"
+
+#: includes/templates/admin.index.php:80
+msgid "Brand"
+msgstr "Μάρκα"
+
+#: includes/templates/admin.index.php:83 includes/templates/admin.index.php:100
+#: includes/templates/admin.index.php:117
+msgid "Choose attributes"
+msgstr "Επιλέξτε ιδιότητα"
+
+#: includes/templates/admin.index.php:88 includes/templates/admin.index.php:105
+#: includes/templates/admin.index.php:122
+msgid "or taxonomies"
+msgstr "ή ταξινομία"
+
+#: includes/templates/admin.index.php:97
+msgid "Color"
+msgstr "Χρώμα"
+
+#: includes/templates/admin.index.php:114
+msgid "Size"
+msgstr "Μέγεθος"
+
+#: includes/templates/admin.index.php:131
+#: includes/templates/admin.index.php:133
+#: includes/templates/admin.index.php:135
+msgid "Description"
+msgstr "Περιγραφή"
+
+#: includes/templates/admin.index.php:134
+msgid "Short description"
+msgstr "Σύντομη περιγραφή"
+
+#: includes/templates/admin.index.php:140
+msgid "Out of stock visibility"
+msgstr "Ορατότητα Εξάντλησης Αποθέματος"
+
+#: includes/templates/admin.index.php:143
+#: includes/templates/admin.index.php:146
+msgid "Hide out of stock items from XML feed"
+msgstr "Αποκρύψτε τα εξαντλημένα προϊόντα από το XML"
+
+#: includes/templates/admin.index.php:152
+msgid "Default Google product category"
+msgstr "Κατηγορία Google Merchant"
+
+#: includes/templates/admin.index.php:171
+#: includes/templates/admin.index.php:189
+#: includes/templates/admin.index.php:207
+msgid "Exclude"
+msgstr "Απόκρυψη"
+
+#: includes/templates/admin.index.php:171
+#: includes/templates/admin.index.php:189
+#: includes/templates/admin.index.php:207
+msgid "Include"
+msgstr "Εμφάνιση"
+
+#: includes/templates/admin.index.php:171
+msgid " products from these categories"
+msgstr " προϊόντων από τις κατηγορίες"
+
+#: includes/templates/admin.index.php:189
+msgid " products with these tags"
+msgstr " προϊόντων με ετικέτα"
+
+#: includes/templates/admin.index.php:207
+msgid " products with these attributes"
+msgstr " προϊόντων με ιδιότητα"
+
+#: includes/templates/admin.index.php:229
+msgid "Overrides"
+msgstr "Παρακάμψεις"
+
+#: includes/templates/admin.index.php:232
+msgid "Custom Product ID field"
+msgstr "Εξατομικευμένο πεδίο ID"
+
+#: includes/templates/admin.index.php:236
+msgid "Custom Product MPN field"
+msgstr "Εξατομικευμένο πεδίο MPN"
+
+#: includes/templates/admin.index.php:240
+msgid "Custom Product GTIN field"
+msgstr "Εξατομικευμένο πεδίο GTIN"
+
+#: includes/templates/admin.index.php:244
+msgid "Custom Product weight field"
+msgstr "Εξατομικευμένο πεδίο Βάρος"
+
+#: includes/templates/admin.index.php:248
+msgid "Max Page Size"
+msgstr "Μέγιστο Page Size"
+
+#: includes/templates/admin.index.php:252
+msgid "License"
+msgstr "Άδεια χρήσης"
+
+#: includes/templates/admin.index.php:264
+msgid "Save settings"
+msgstr "Αποθήκευση ρυθμίσεων"
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:54
+msgid "View details"
+msgstr "Προβολή λεπτομεριών"
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:77
+#, php-format
+msgid "More information about %s"
+msgstr "Περισσότερες πληροφορίες για το %s"
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:128
+msgid "Check for updates"
+msgstr "Έλεγχος για ενημερώσεις"
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:214
+#, php-format
+msgctxt "the plugin title"
+msgid "The %s plugin is up to date."
+msgstr "Το πρόσθετο %s είναι ενημερωμένο."
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:216
+#, php-format
+msgctxt "the plugin title"
+msgid "A new version of the %s plugin is available."
+msgstr "Είναι διαθέσιμη μια νέα έκδοση του πρόσθετου %s."
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:218
+#, php-format
+msgctxt "the plugin title"
+msgid "Could not determine if updates are available for %s."
+msgstr ""
+"Δεν μπορέσαμε να εντοπίσουμε αν υπάρχει διαθέσιμη έκδοση του πρόσθετου %s."
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:224
+#, php-format
+msgid "Unknown update checker status \"%s\""
+msgstr "Άγνωστη κατάσταση \"%s\""
+
+#: includes/update/Puc/v4p11/Vcs/PluginUpdateChecker.php:98
+msgid "There is no changelog available."
+msgstr "Δεν υπάρχει διαθέσιμο changelog."
+
+#. Plugin Name of the plugin/theme
+msgid "Web Expert WooCommerce Google Merchant Product Data Feed"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://www.webexpert.gr/woocommerce-google-merchant-xml-feed"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Web Expert WooCommerce Google Merchant Product Data Feed is a WooCommerce "
+"plugin that creates valid data feed for Google Merchant."
+msgstr ""
+"Το Web Expert WooCommerce Google Merchant Product Data Feed είναι ένα "
+"πρόσθετο για το WooCommerce που δημιουργεί έγκυρη ροή δεδομένων για το "
+"Google Merchant."
+
+#. Author of the plugin/theme
+msgid "Web Expert"
+msgstr "Web Expert"
+
+#. Author URI of the plugin/theme
+msgid "http://www.webexpert.gr"
+msgstr ""
+
+#~ msgid ""
+#~ "This attribute is optional but is strongly recommended for categories "
+#~ "where retail products have the same product brand but variations in "
+#~ "weight, colour etc. A unique EAN is allocated to each separate retail "
+#~ "product."
+#~ msgstr ""
+#~ "Αυτό το πεδίο είναι προαιρετικό αλλά συνίσταται για τις κατηγορίες με "
+#~ "προϊόντα που είναι του ίδιου είδους αλλά έχουν διαφοροποιήσεις στο βάρος, "
+#~ "χρώμα κτλ. Ένα μοναδικό EAN χρησιμοποιείται για κάθε ξεχωριστό προϊόν."
+
+#~ msgid "MPN"
+#~ msgstr "MPN"
+
+#~ msgid ""
+#~ "This attribute is optional but is strongly recommended for categories "
+#~ "where retail products have the same product brand but variations in "
+#~ "weight, colour etc. A unique MPN is allocated to each separate retail "
+#~ "product."
+#~ msgstr ""
+#~ "Αυτό το πεδίο είναι προαιρετικό αλλά συνίσταται για τις κατηγορίες με "
+#~ "προϊόντα που είναι του ίδιου είδους αλλά έχουν διαφοροποιήσεις στο βάρος, "
+#~ "χρώμα κτλ. Ένα μοναδικό MPN χρησιμοποιείται για κάθε ξεχωριστό προϊόν."
+
+#~ msgid ""
+#~ "You define the shipping lead time at product level. If you leave the "
+#~ "'Default' value, the shipping lead time from plugin settings will be used."
+#~ msgstr ""
+#~ "Ορίζετε το χρόνος προετοιμασίας δέματος σε επίπεδο προϊόντος. Εάν αφήσετε "
+#~ "την προκαθορισμένη τιμή, θα χρησιμοποιηθεί ο χρόνος προετοιμασίας δέματος "
+#~ "από τις ρυθμίσεις του πρόσθετου."
+
+#~ msgid "Shipping Lead Time for Wellcomm"
+#~ msgstr "Xρόνος προετοιμασίας δέματος (Wellcomm)"
+
+#~ msgid ""
+#~ "You define the shipping lead time at variation level. If you leave the "
+#~ "'Default' value, the shipping lead time from product or plugin settings "
+#~ "will be used."
+#~ msgstr ""
+#~ "Ορίζετε το χρόνο προετοιμασίας δέματος σε επίπεδο παραλλαγής. Εάν αφήσετε "
+#~ "την προκαθορισμένη τιμή, θα χρησιμοποιηθεί ο χρόνος προετοιμασίας δέματος "
+#~ "από το προϊόν ή τις ρυθμίσεις του πρόσθετου."

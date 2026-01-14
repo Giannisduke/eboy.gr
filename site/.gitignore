@@ -25,6 +25,10 @@ web/app/plugins/*
 !web/app/plugins/acs-voucher-for-woocommerce
 !web/app/plugins/superfly-menu
 !web/app/plugins/xml-feed-for-skroutz-for-woocommerce
+!web/app/plugins/webexpert-woocommerce-order-tracking
+!web/app/plugins/webexpert-timologio-for-woocommerce
+!web/app/plugins/webexpert-google-merchant-product-data-feed
+!web/app/plugins/
 web/app/mu-plugins/*/
 !web/app/themes/twentytwentyfive/
 !web/app/themes/woodmart

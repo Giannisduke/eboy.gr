@@ -1,0 +1,11 @@
+.we-google-merchant-smart-switch{
+    text-transform: capitalize;
+    border-bottom: 1px dashed #0073aa;
+    text-decoration: none;
+    box-shadow: none;
+    color: #0073aa;
+}
+a.we-google-merchant-smart-switch, a.we-google-merchant-smart-switch:hover, a.we-google-merchant-smart-switch:focus {
+    color: #0073aa;
+}
+.we-google-merchant-smart-switch-checkbox{display:none!important;}

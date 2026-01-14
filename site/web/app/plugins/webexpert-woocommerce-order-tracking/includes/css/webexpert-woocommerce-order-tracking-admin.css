@@ -1,0 +1,215 @@
+.track-results-acs ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.track-results-acs ul li:nth-child(odd) {
+    background: #f5f5f5;
+}
+
+.track-results-acs ul li {
+    padding: 10px 8px;
+}
+
+.track-results-acs ul li .Status {
+    display: inline-block;
+    width: 58%;
+    font-weight: 500;
+    letter-spacing: .5px;
+
+}
+
+.track-results-acs ul li .Status+.Shop {
+    width: 41%;
+}
+
+.track-results-acs ul li .Shop {
+    color: #4a80d0;
+}
+.track-results-acs ul li .Shop, .track-results-acs ul li .StatusDate {
+    width: 20%;
+    text-align: right;
+    display: inline-block;
+    font-size: 13px;
+}
+
+.track-results-elta ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.track-results-elta ul li:nth-child(odd) {
+    background: #f5f5f5;
+}
+
+.track-results-elta ul li {
+    padding: 10px 8px;
+}
+
+.track-results-elta ul li .Status {
+    display: inline-block;
+    width: 58%;
+    font-weight: 500;
+    letter-spacing: .5px;
+
+}
+
+.track-results-elta ul li .Status+.Shop {
+    width: 41%;
+}
+
+.track-results-elta ul li .Shop {
+    color: #4a80d0;
+}
+.track-results-elta ul li .Shop, .track-results-elta ul li .StatusDate {
+    width: 20%;
+    text-align: right;
+    display: inline-block;
+    font-size: 13px;
+}
+
+.track-results-speedex ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.track-results-speedex ul li:nth-child(odd) {
+    background: #f5f5f5;
+}
+
+.track-results-speedex ul li {
+    padding: 10px 8px;
+}
+
+.track-results-speedex ul li .Status {
+    display: inline-block;
+    width: 58%;
+    font-weight: 500;
+    letter-spacing: .5px;
+
+}
+
+.track-results-speedex ul li .Status+.Shop {
+    width: 41%;
+}
+
+.track-results-speedex ul li .Shop {
+    color: #4a80d0;
+}
+.track-results-speedex ul li .Shop, .track-results-speedex ul li .StatusDate {
+    width: 20%;
+    text-align: right;
+    display: inline-block;
+    font-size: 13px;
+}
+
+.track-results-geniki-taxydromiki ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.track-results-geniki-taxydromiki ul li:nth-child(odd) {
+    background: #f5f5f5;
+}
+
+.track-results-geniki-taxydromiki ul li {
+    padding: 10px 8px;
+}
+
+.track-results-geniki-taxydromiki ul li .Status {
+    display: inline-block;
+    width: 58%;
+    font-weight: 500;
+    letter-spacing: .5px;
+
+}
+
+.track-results-geniki-taxydromiki ul li .Status+.Shop {
+    width: 41%;
+}
+
+.track-results-geniki-taxydromiki ul li .Shop {
+    color: #4a80d0;
+}
+.track-results-geniki-taxydromiki ul li .Shop, .track-results-geniki-taxydromiki ul li .StatusDate {
+    width: 20%;
+    text-align: right;
+    display: inline-block;
+    font-size: 13px;
+}
+
+.track-results-mycouriernow ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.track-results-mycouriernow ul li:nth-child(odd) {
+    background: #f5f5f5;
+}
+
+.track-results-mycouriernow ul li {
+    padding: 10px 8px;
+}
+
+.track-results-mycouriernow ul li .Status {
+    display: inline-block;
+    width: 58%;
+    font-weight: 500;
+    letter-spacing: .5px;
+
+}
+
+.track-results-mycouriernow ul li .Status+.Shop {
+    width: 41%;
+}
+
+.track-results-mycouriernow ul li .Shop {
+    color: #4a80d0;
+}
+.track-results-mycouriernow ul li .Shop, .track-results-mycouriernow ul li .StatusDate {
+    width: 20%;
+    text-align: right;
+    display: inline-block;
+    font-size: 13px;
+}
+
+.track-results-courier-center ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.track-results-courier-center ul li:nth-child(odd) {
+    background: #f5f5f5;
+}
+
+.track-results-courier-center ul li {
+    padding: 10px 8px;
+}
+
+.track-results-courier-center ul li .Status {
+    display: inline-block;
+    width: 58%;
+    font-weight: 500;
+    letter-spacing: .5px;
+
+}
+
+.track-results-courier-center ul li .Status+.Shop {
+    width: 41%;
+}
+
+.track-results-courier-center ul li .Shop {
+    color: #4a80d0;
+}
+.track-results-courier-center ul li .Shop, .track-results-courier-center ul li .StatusDate {
+    width: 20%;
+    text-align: right;
+    display: inline-block;
+    font-size: 13px;
+}

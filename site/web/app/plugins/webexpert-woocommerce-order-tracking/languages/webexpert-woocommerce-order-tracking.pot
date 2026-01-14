@@ -1,0 +1,454 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Web Expert WooCommerce Order Tracking\n"
+"POT-Creation-Date: 2023-01-10 12:23+0200\n"
+"PO-Revision-Date: 2020-05-12 15:52+0300\n"
+"Last-Translator: Dimitrios Selimidis <ds@webexpert.gr>\n"
+"Language-Team: Dimitrios Selimidis <ds@webexpert.gr>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: webexpert-woocommerce-order-tracking.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:26
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:95
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:44
+msgid "Tracking number"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:27
+msgctxt "placeholder"
+msgid "Tracking number"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:45
+msgid "Send tracking number"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:68
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:145
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:146
+msgid "Multi-Carriers"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:133
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:166
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:350
+msgid "ACS Courier"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:134
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:169
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:353
+msgid "Courier Center"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:135
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:172
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:356
+msgid "Taxydema"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:136
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:175
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:359
+msgid "ELTA Courier"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:137
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:178
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:362
+msgid "Geniki Taxydromiki"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:138
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:181
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:365
+msgid "Speedex"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:144
+msgid ""
+"Pick the preferred carrier before completing the order, so the automated "
+"email will include it's tracking names and URLs."
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:147
+msgid "Pick the preferred carrier"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:224
+msgid ""
+"Please activate <strong>Web Expert Order Tracking</strong> to enable all "
+"it's features and automatic updates."
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:231
+msgid ""
+"The license for <strong>Web Expert Order Tracking</strong> is invalid. "
+"Please fill in a valid license key."
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:244
+#: webexpert-woocommerce-order-tracking.php:143
+msgid "Settings"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:245
+msgid "Support"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-admin.php:385
+msgid "No orders found"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:24
+msgid "Shipping number importer"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:40
+msgid ""
+"This importer allows you to import Shipping Numbers to your store via a csv "
+"file and optionally update order status."
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:41
+msgid "CSV columns are"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:43
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:44
+msgid "required"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:43
+msgid "Order ID"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:45
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:46
+msgid "optional"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:45
+msgid "Desired order status."
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:45
+msgid "Accepts:"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:50
+msgid "Choose the CSV file from your computer:<br>"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:110
+#, php-format
+msgid "All done. <a href=\"%s\">Have fun!</a>"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:113
+msgid "Shipping tracking numbers added: "
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:115
+msgid "Order statuses updated: "
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:145
+msgid "Web Expert shipping number importer"
+msgstr ""
+
+#: includes/class-webexpert-woocommerce-order-tracking-importer.php:145
+msgid ""
+"Imports Shipping Numbers to your store via a csv file and optionally update "
+"order status."
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:14
+msgid "Order Tracking Voucher"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:15
+msgid ""
+"Order Tracking emails are sent to customers when an order is marked as "
+"completed and indicate that their orders have been shipped."
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:61
+msgid "Your {site_title} order tracking voucher"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:65
+msgid "https://www.shipping.com/track/{tracking_number}"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:69
+msgid ""
+"Your order #{order_number} has been shipped via {shipping_company} with "
+"voucher code {tracking_number}."
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:73
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:167
+msgid "Shipping company name"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:98
+msgid "Thank you for your order"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:136
+msgid "Enable/Disable"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:138
+msgid "Enable this email notification"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:142
+msgid "Subject"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:145
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:153
+#, php-format
+msgid "Available placeholders: %s"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:150
+msgid "Email heading"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:158
+msgid "Email type"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:160
+msgid "Choose which format of email to send."
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:170
+msgid "The name of the shipping company"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:175
+msgid "Shipping tracking URL"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:178
+msgid ""
+"The dynamic URL of order tracking with {tracking_number} and {order_id} "
+"variable"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:183
+msgid "Custom support email address"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:186
+msgid "The email address printed on the shipping message"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:190
+msgid "Disable order complete email"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:193
+msgid "Disable WooCommerce default Order Complete email"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:200
+msgid "Enable SMS integration"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:203
+msgid ""
+"Send SMS when user has filled in cellphone via Web Expert Woocommerce SMS"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:207
+msgid "SMS message"
+msgstr ""
+
+#: includes/emails/class-webexpert-woocommerce-order-tracking-email.php:210
+msgid ""
+"SMS message sent to customer. Use variables {order_number}, "
+"{shipping_company}, {tracking_number}"
+msgstr ""
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:54
+msgid "View details"
+msgstr ""
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:77
+#, php-format
+msgid "More information about %s"
+msgstr ""
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:128
+msgid "Check for updates"
+msgstr ""
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:214
+#, php-format
+msgctxt "the plugin title"
+msgid "The %s plugin is up to date."
+msgstr ""
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:216
+#, php-format
+msgctxt "the plugin title"
+msgid "A new version of the %s plugin is available."
+msgstr ""
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:218
+#, php-format
+msgctxt "the plugin title"
+msgid "Could not determine if updates are available for %s."
+msgstr ""
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:224
+#, php-format
+msgid "Unknown update checker status \"%s\""
+msgstr ""
+
+#: includes/update/Puc/v4p11/Vcs/PluginUpdateChecker.php:98
+msgid "There is no changelog available."
+msgstr ""
+
+#. translators: %s: Customer first name
+#: templates/emails/plain/webexpert-woocommerce-customer-order-tracking.php:25
+#: templates/emails/webexpert-woocommerce-customer-order-tracking.php:11
+#, php-format
+msgid "Hi %s,"
+msgstr ""
+
+#: templates/emails/plain/webexpert-woocommerce-customer-order-tracking.php:27
+#: templates/emails/webexpert-woocommerce-customer-order-tracking.php:12
+#, php-format
+msgid ""
+"We are happy to inform you that your order #%s has been shipped via %s with "
+"voucher code %s and should be with you shortly."
+msgstr ""
+
+#: templates/emails/plain/webexpert-woocommerce-customer-order-tracking.php:28
+#: templates/emails/webexpert-woocommerce-customer-order-tracking.php:13
+msgid ""
+"If you want to track the shipping process of your order, please follow the "
+"link below:"
+msgstr ""
+
+#: templates/emails/plain/webexpert-woocommerce-customer-order-tracking.php:30
+#: templates/emails/webexpert-woocommerce-customer-order-tracking.php:18
+#, php-format
+msgid "If you have any questions, send us an email at %s"
+msgstr ""
+
+#: templates/emails/plain/webexpert-woocommerce-customer-order-tracking.php:32
+#: templates/emails/webexpert-woocommerce-customer-order-tracking.php:20
+msgid "Thanks for shopping with us."
+msgstr ""
+
+#: templates/emails/webexpert-woocommerce-customer-order-tracking.php:15
+msgid "Track and trace"
+msgstr ""
+
+#: webexpert-woocommerce-order-tracking.php:81
+msgid "Order Tracking"
+msgstr ""
+
+#: webexpert-woocommerce-order-tracking.php:94
+msgid "WooCommerce Order Tracking"
+msgstr ""
+
+#: webexpert-woocommerce-order-tracking.php:134
+msgid "You can setup the plugin at"
+msgstr ""
+
+#: webexpert-woocommerce-order-tracking.php:134
+msgid "WooCommerce Settings"
+msgstr ""
+
+#: webexpert-woocommerce-order-tracking.php:135
+msgid ""
+"Please fill in the email address and the license key you received when "
+"purchasing the WooCommerce Order Tracking to enable automatic updates and "
+"ensure the full functionality of the plugin."
+msgstr ""
+
+#: webexpert-woocommerce-order-tracking.php:136
+msgid "For any inquiries please contact "
+msgstr ""
+
+#: webexpert-woocommerce-order-tracking.php:136
+msgid "or visit our Helpdesk at "
+msgstr ""
+
+#: webexpert-woocommerce-order-tracking.php:145
+msgid "Multiple Vendors"
+msgstr ""
+
+#: webexpert-woocommerce-order-tracking.php:148
+msgid ""
+"Enable multi-carrier feature only if you have multiple carriers as shipping "
+"option"
+msgstr ""
+
+#: webexpert-woocommerce-order-tracking.php:155
+msgid "Export vouchers"
+msgstr ""
+
+#: webexpert-woocommerce-order-tracking.php:159
+msgid "Order Statuses"
+msgstr ""
+
+#: webexpert-woocommerce-order-tracking.php:173
+msgid "Payment Methods"
+msgstr ""
+
+#: webexpert-woocommerce-order-tracking.php:186
+msgid "Date from"
+msgstr ""
+
+#: webexpert-woocommerce-order-tracking.php:192
+msgid "Date to"
+msgstr ""
+
+#: webexpert-woocommerce-order-tracking.php:200
+msgid "Export"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Web Expert WooCommerce Order Tracking"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://www.webexpert.gr/wordpress/webexpert-woocommerce-order-tracking"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Web Expert WooCommerce Order Tracking allows you to send an automated email "
+"with shipping tracking number via email. It can be used with Web Expert "
+"WooCommerce SMS to send tracking number via SMS as well."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Web Expert"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://www.webexpert.gr"
+msgstr ""

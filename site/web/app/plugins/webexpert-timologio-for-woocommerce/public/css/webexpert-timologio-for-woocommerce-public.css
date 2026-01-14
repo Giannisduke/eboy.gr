@@ -1,0 +1,13 @@
+/**
+ * All of the CSS for your public-facing functionality should be
+ * included in this file.
+ */
+#billing_invoice_field .optional{display:none}
+.select2-container {
+    width: 100% !important;
+}
+.select2-container--open{z-index: 100000!important;}
+
+#billing_invoice_field input[type="radio"] {margin-right: 0.3342343017em;}
+#billing_invoice_field label[for="billing_invoice_n"],#billing_invoice_field label[for="billing_invoice_y"]{display: inline-block;}
+#billing_invoice_field input#billing_invoice_y {margin-left:20px}

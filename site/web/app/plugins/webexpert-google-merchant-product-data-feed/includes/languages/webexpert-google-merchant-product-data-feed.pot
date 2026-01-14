@@ -1,0 +1,306 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Web Expert WooCommerce Google Merchant Product Data "
+"Feed\n"
+"POT-Creation-Date: 2022-05-24 16:27+0300\n"
+"PO-Revision-Date: 2022-05-24 14:43+0300\n"
+"Last-Translator: Dimitrios Selimidis <ds@webexpert.gr>\n"
+"Language-Team: Dimitrios Selimidis <ds@webexpert.gr>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Poedit-Basepath: ../..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: webexpert-google-merchant-product-data-feed.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
+"_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: includes\n"
+"X-Poedit-SearchPath-1: .\n"
+"X-Poedit-SearchPath-2: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+
+#: includes/class-wp-admin.php:48 includes/class-wp-admin.php:61
+msgid "Google Merchant Product Data Feed"
+msgstr ""
+
+#: includes/class-wp-admin.php:200
+msgid ""
+"Please activate <strong>Web Expert WooCommerce Google Merchant Product Data "
+"Feed</strong> to enable all it's features and automatic updates."
+msgstr ""
+
+#: includes/class-wp-admin.php:207
+msgid ""
+"The license for <strong>Web Expert WooCommerce Google Merchant Product Data "
+"Feed</strong> is invalid. Please fill in a valid license key."
+msgstr ""
+
+#: includes/class-wp-admin.php:220 includes/templates/admin.index.php:65
+msgid "Settings"
+msgstr ""
+
+#: includes/class-wp-admin.php:221
+msgid "Support"
+msgstr ""
+
+#: includes/class-wp-admin.php:235
+msgid "Never"
+msgstr ""
+
+#: includes/class-wp-admin.php:244
+msgid "Google Merchant category"
+msgstr ""
+
+#: includes/class-wp-admin.php:251
+msgid "Google Merchant product category mapping"
+msgstr ""
+
+#: includes/class-wp-admin.php:262
+msgid "Google Merchant categories"
+msgstr ""
+
+#: includes/class-wp-admin.php:270
+msgid "Google Merchant category mapping"
+msgstr ""
+
+#: includes/scripts/google-merchant-engine.php:143
+msgid "XML could not be generated or copied."
+msgstr ""
+
+#: includes/scripts/google-merchant-engine.php:143
+#: includes/scripts/google-merchant-engine.php:146
+#: includes/scripts/google-merchant-engine.php:151
+#: includes/templates/admin.index.php:50
+msgid "View XML"
+msgstr ""
+
+#: includes/scripts/google-merchant-engine.php:146
+#: includes/scripts/google-merchant-engine.php:151
+msgid "XML Data Feed was generated successfully."
+msgstr ""
+
+#: includes/templates/admin.index.php:38
+msgid "WooCommerce Google Merchant Product Data Feed"
+msgstr ""
+
+#: includes/templates/admin.index.php:40
+msgid "Last update"
+msgstr ""
+
+#: includes/templates/admin.index.php:42
+msgid "Submit the following URL to Google Merchant."
+msgstr ""
+
+#: includes/templates/admin.index.php:52
+msgid "Error: XML file does not exist"
+msgstr ""
+
+#: includes/templates/admin.index.php:55
+msgid "Statistics"
+msgstr ""
+
+#: includes/templates/admin.index.php:56
+msgid "Percentage completed"
+msgstr ""
+
+#: includes/templates/admin.index.php:57
+msgid "Simple products"
+msgstr ""
+
+#: includes/templates/admin.index.php:58
+msgid "Separate variations"
+msgstr ""
+
+#: includes/templates/admin.index.php:61
+msgid "Update feed"
+msgstr ""
+
+#: includes/templates/admin.index.php:68
+msgid "Cron schedule"
+msgstr ""
+
+#: includes/templates/admin.index.php:71
+msgid "Choose"
+msgstr ""
+
+#: includes/templates/admin.index.php:72
+msgid "Disabled"
+msgstr ""
+
+#: includes/templates/admin.index.php:73
+msgid "Hourly"
+msgstr ""
+
+#: includes/templates/admin.index.php:74
+msgid "Twice Daily"
+msgstr ""
+
+#: includes/templates/admin.index.php:75
+msgid "Daily"
+msgstr ""
+
+#: includes/templates/admin.index.php:80
+msgid "Brand"
+msgstr ""
+
+#: includes/templates/admin.index.php:83
+#: includes/templates/admin.index.php:100
+#: includes/templates/admin.index.php:117
+msgid "Choose attributes"
+msgstr ""
+
+#: includes/templates/admin.index.php:88
+#: includes/templates/admin.index.php:105
+#: includes/templates/admin.index.php:122
+msgid "or taxonomies"
+msgstr ""
+
+#: includes/templates/admin.index.php:97
+msgid "Color"
+msgstr ""
+
+#: includes/templates/admin.index.php:114
+msgid "Size"
+msgstr ""
+
+#: includes/templates/admin.index.php:131
+#: includes/templates/admin.index.php:133
+#: includes/templates/admin.index.php:135
+msgid "Description"
+msgstr ""
+
+#: includes/templates/admin.index.php:134
+msgid "Short description"
+msgstr ""
+
+#: includes/templates/admin.index.php:140
+msgid "Out of stock visibility"
+msgstr ""
+
+#: includes/templates/admin.index.php:143
+#: includes/templates/admin.index.php:146
+msgid "Hide out of stock items from XML feed"
+msgstr ""
+
+#: includes/templates/admin.index.php:151
+#: includes/templates/admin.index.php:169
+#: includes/templates/admin.index.php:187
+msgid "Exclude"
+msgstr ""
+
+#: includes/templates/admin.index.php:151
+#: includes/templates/admin.index.php:169
+#: includes/templates/admin.index.php:187
+msgid "Include"
+msgstr ""
+
+#: includes/templates/admin.index.php:151
+msgid " products from these categories"
+msgstr ""
+
+#: includes/templates/admin.index.php:169
+msgid " products with these tags"
+msgstr ""
+
+#: includes/templates/admin.index.php:187
+msgid " products with these attributes"
+msgstr ""
+
+#: includes/templates/admin.index.php:209
+msgid "Overrides"
+msgstr ""
+
+#: includes/templates/admin.index.php:212
+msgid "Custom Product ID field"
+msgstr ""
+
+#: includes/templates/admin.index.php:216
+msgid "Custom Product MPN field"
+msgstr ""
+
+#: includes/templates/admin.index.php:220
+msgid "Custom Product GTIN field"
+msgstr ""
+
+#: includes/templates/admin.index.php:224
+msgid "Custom Product weight field"
+msgstr ""
+
+#: includes/templates/admin.index.php:228
+msgid "Max Page Size"
+msgstr ""
+
+#: includes/templates/admin.index.php:232
+msgid "License"
+msgstr ""
+
+#: includes/templates/admin.index.php:244
+msgid "Save settings"
+msgstr ""
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:54
+msgid "View details"
+msgstr ""
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:77
+#, php-format
+msgid "More information about %s"
+msgstr ""
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:128
+msgid "Check for updates"
+msgstr ""
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:214
+#, php-format
+msgctxt "the plugin title"
+msgid "The %s plugin is up to date."
+msgstr ""
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:216
+#, php-format
+msgctxt "the plugin title"
+msgid "A new version of the %s plugin is available."
+msgstr ""
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:218
+#, php-format
+msgctxt "the plugin title"
+msgid "Could not determine if updates are available for %s."
+msgstr ""
+
+#: includes/update/Puc/v4p11/Plugin/Ui.php:224
+#, php-format
+msgid "Unknown update checker status \"%s\""
+msgstr ""
+
+#: includes/update/Puc/v4p11/Vcs/PluginUpdateChecker.php:98
+msgid "There is no changelog available."
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Web Expert WooCommerce Google Merchant Product Data Feed"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://www.webexpert.gr/woocommerce-google-merchant-xml-feed"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Web Expert WooCommerce Google Merchant Product Data Feed is a WooCommerce "
+"plugin that creates valid data feed for Google Merchant."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Web Expert"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.webexpert.gr"
+msgstr ""

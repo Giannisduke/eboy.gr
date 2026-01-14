@@ -1,0 +1,806 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: Timologio for Woocommerce\n"
+"POT-Creation-Date: 2021-08-05 09:58+0300\n"
+"PO-Revision-Date: 2020-10-02 10:54+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: webexpert-timologio-for-woocommerce.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
+"_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:37
+#: public/class-webexpert-timologio-for-woocommerce-public.php:53
+msgid "I want to issue an invoice"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:38
+#: public/class-webexpert-timologio-for-woocommerce-public.php:54
+msgctxt "placeholder"
+msgid "Invoice"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:42
+#: public/class-webexpert-timologio-for-woocommerce-public.php:59
+msgid "No"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:43
+#: public/class-webexpert-timologio-for-woocommerce-public.php:60
+msgid "Yes"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:52
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:88
+#: public/class-webexpert-timologio-for-woocommerce-public.php:82
+#: public/class-webexpert-timologio-for-woocommerce-public.php:112
+#: public/class-webexpert-timologio-for-woocommerce-public.php:145
+msgid "Business activity"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:53
+#: public/class-webexpert-timologio-for-woocommerce-public.php:83
+msgctxt "placeholder"
+msgid "Business activity"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:62
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:89
+#: includes/templates/invoice_template.php:61
+#: includes/templates/invoice_template.php:65
+#: public/class-webexpert-timologio-for-woocommerce-public.php:91
+#: public/class-webexpert-timologio-for-woocommerce-public.php:116
+#: public/class-webexpert-timologio-for-woocommerce-public.php:142
+#: public/class-webexpert-timologio-for-woocommerce-public.php:148
+msgid "VAT number"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:63
+#: public/class-webexpert-timologio-for-woocommerce-public.php:92
+msgctxt "placeholder"
+msgid "VAT number"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:70
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:90
+#: public/class-webexpert-timologio-for-woocommerce-public.php:99
+#: public/class-webexpert-timologio-for-woocommerce-public.php:120
+#: public/class-webexpert-timologio-for-woocommerce-public.php:139
+msgid "Tax office"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:71
+#: public/class-webexpert-timologio-for-woocommerce-public.php:100
+msgctxt "placeholder"
+msgid "Tax office"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:114
+#: webexpert-timologio-for-woocommerce.php:245
+msgid "VAT ID"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:115
+msgid "The vat ID of your business."
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:124
+#: webexpert-timologio-for-woocommerce.php:429
+msgid "Tax exempt when buyer has a valid Vat on Vies."
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:139
+msgid "Exemption of tax due to POL1150 / 2017"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:144
+#: webexpert-timologio-for-woocommerce.php:515
+msgid "POL1150 / 2017"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:149
+msgid "Exemption of tax"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:177
+msgid "Invoice Generator"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:178
+msgid "Invoice Upload"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:190
+msgid "You have attached an invoice for this order"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:192
+msgid "See Invoice"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:193
+msgid "Delete Invoice"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:196
+msgid ""
+"Want to upload your own invoice? This one will replace the generated "
+"invoices."
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:241
+msgid "Wrong action or not authorized"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:246
+msgid "Order could not be found"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:480
+msgid "Generate an invoice for this order"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:483
+msgid "Download Order Receipt"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:487
+msgid "Download Order Invoice"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:493
+msgid "Download Cancellation Receipt"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:497
+msgid "Generate Cancellation Receipt"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:504
+msgid "Download Return Receipt"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:508
+msgid "Generate Return Receipt"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:515
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:537
+msgid "Download Cancellation Invoice"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:520
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:541
+msgid "Generate Cancellation Invoice"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:527
+msgid "Download Credit Note"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:531
+msgid "Generate Credit Note"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:545
+msgid "Generate Order Invoice"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:550
+msgid "Download Delivery Note"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:554
+msgid "Generate Delivery Note"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:562
+msgid "Finalization"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:566
+msgid ""
+"Finalizing means that the customer will be able to see the invoice on \"My "
+"Orders\" page."
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:771
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:1140
+#: public/class-webexpert-timologio-for-woocommerce-public.php:72
+msgid "Receipt"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:774
+msgid "Cancellation"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:777
+msgid "Receipt Cancellation"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:780
+msgid "Credit"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:783
+msgid "Return Receipt"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:786
+msgid "Delivery Note"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:789
+msgid "Document Invoice"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:879
+msgid "Send invoice to customer's email"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:1063
+#: public/class-webexpert-timologio-for-woocommerce-public.php:400
+msgid "AADE service is down"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:1123
+msgid "Success"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:1129
+msgid "AADE Unknown Error"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:1140
+msgid "Finance document"
+msgstr ""
+
+#: admin/class-webexpert-timologio-for-woocommerce-admin.php:1140
+#: public/class-webexpert-timologio-for-woocommerce-public.php:73
+#: public/class-webexpert-timologio-for-woocommerce-public.php:501
+msgid "Invoice"
+msgstr ""
+
+#: admin/emails/class_wc_webexpert_send_invoice.php:24
+msgid "Send an invoice to the customer"
+msgstr ""
+
+#: admin/emails/class_wc_webexpert_send_invoice.php:25
+msgid "Send the invoice to your customer"
+msgstr ""
+
+#: admin/emails/class_wc_webexpert_send_invoice.php:28
+msgid "Your invoice"
+msgstr ""
+
+#: admin/emails/class_wc_webexpert_send_invoice.php:30
+#, php-format
+msgctxt "default email subject for cancelled emails sent to the customer"
+msgid "[%s] Your Invoice "
+msgstr ""
+
+#: includes/templates/invoice_template.php:70
+msgid "Tax Office"
+msgstr ""
+
+#: includes/templates/invoice_template.php:75
+#: webexpert-timologio-for-woocommerce.php:622
+msgid "Email"
+msgstr ""
+
+#: includes/templates/invoice_template.php:80
+msgid "Phone Number"
+msgstr ""
+
+#: includes/templates/invoice_template.php:93
+msgid "INVOICE TYPE"
+msgstr ""
+
+#: includes/templates/invoice_template.php:94
+msgid "CODE"
+msgstr ""
+
+#: includes/templates/invoice_template.php:95
+msgid "DATE"
+msgstr ""
+
+#: includes/templates/invoice_template.php:96
+msgid "TIME"
+msgstr ""
+
+#: includes/templates/invoice_template.php:118
+msgid "CUSTOMER INFO"
+msgstr ""
+
+#: includes/templates/invoice_template.php:124
+msgid "FULL NAME"
+msgstr ""
+
+#: includes/templates/invoice_template.php:129
+msgid "EMAIL"
+msgstr ""
+
+#: includes/templates/invoice_template.php:134
+msgid "PHONE"
+msgstr ""
+
+#: includes/templates/invoice_template.php:139
+msgid "ORDER DATE"
+msgstr ""
+
+#: includes/templates/invoice_template.php:145
+msgid "COMPANY NAME"
+msgstr ""
+
+#: includes/templates/invoice_template.php:152
+msgid "VAT NUMBER"
+msgstr ""
+
+#: includes/templates/invoice_template.php:159
+msgid "ACTIVITY"
+msgstr ""
+
+#: includes/templates/invoice_template.php:166
+msgid "TAX OFFICE"
+msgstr ""
+
+#: includes/templates/invoice_template.php:179
+msgid "ADDRESS"
+msgstr ""
+
+#: includes/templates/invoice_template.php:185
+msgid "STREET"
+msgstr ""
+
+#: includes/templates/invoice_template.php:189
+msgid "CITY"
+msgstr ""
+
+#: includes/templates/invoice_template.php:193
+msgid "POST CODE"
+msgstr ""
+
+#: includes/templates/invoice_template.php:207
+msgid "Νο."
+msgstr ""
+
+#: includes/templates/invoice_template.php:208
+msgid "PRODUCT"
+msgstr ""
+
+#: includes/templates/invoice_template.php:209
+msgid "QTY"
+msgstr ""
+
+#: includes/templates/invoice_template.php:210
+msgid "NET PRICE"
+msgstr ""
+
+#: includes/templates/invoice_template.php:211
+msgid "VAT"
+msgstr ""
+
+#: includes/templates/invoice_template.php:212
+#: includes/templates/invoice_template.php:229
+msgid "TOTAL"
+msgstr ""
+
+#: includes/templates/invoice_template.php:226
+msgid "PAYMENT METHOD"
+msgstr ""
+
+#: includes/templates/invoice_template.php:227
+msgid "TOTAL NET PRICE"
+msgstr ""
+
+#: includes/templates/invoice_template.php:228
+msgid "TOTAL VAT PRICE"
+msgstr ""
+
+#: includes/update/Puc/v4p10/Plugin/Ui.php:54
+msgid "View details"
+msgstr ""
+
+#: includes/update/Puc/v4p10/Plugin/Ui.php:77
+#, php-format
+msgid "More information about %s"
+msgstr ""
+
+#: includes/update/Puc/v4p10/Plugin/Ui.php:128
+msgid "Check for updates"
+msgstr ""
+
+#: includes/update/Puc/v4p10/Plugin/Ui.php:213
+#, php-format
+msgctxt "the plugin title"
+msgid "The %s plugin is up to date."
+msgstr ""
+
+#: includes/update/Puc/v4p10/Plugin/Ui.php:215
+#, php-format
+msgctxt "the plugin title"
+msgid "A new version of the %s plugin is available."
+msgstr ""
+
+#: includes/update/Puc/v4p10/Plugin/Ui.php:217
+#, php-format
+msgctxt "the plugin title"
+msgid "Could not determine if updates are available for %s."
+msgstr ""
+
+#: includes/update/Puc/v4p10/Plugin/Ui.php:223
+#, php-format
+msgid "Unknown update checker status \"%s\""
+msgstr ""
+
+#: includes/update/Puc/v4p10/Vcs/PluginUpdateChecker.php:98
+msgid "There is no changelog available."
+msgstr ""
+
+#: public/class-webexpert-timologio-for-woocommerce-public.php:45
+msgid "Company Name"
+msgstr ""
+
+#: public/class-webexpert-timologio-for-woocommerce-public.php:46
+msgctxt "placeholder"
+msgid "Company Name"
+msgstr ""
+
+#: public/class-webexpert-timologio-for-woocommerce-public.php:139
+#: public/class-webexpert-timologio-for-woocommerce-public.php:142
+#: public/class-webexpert-timologio-for-woocommerce-public.php:145
+#, php-format
+msgid "%s is a required field."
+msgstr ""
+
+#: public/class-webexpert-timologio-for-woocommerce-public.php:139
+#: public/class-webexpert-timologio-for-woocommerce-public.php:142
+#: public/class-webexpert-timologio-for-woocommerce-public.php:145
+#: public/class-webexpert-timologio-for-woocommerce-public.php:148
+#, php-format
+msgid "Billing %s"
+msgstr ""
+
+#: public/class-webexpert-timologio-for-woocommerce-public.php:148
+#, php-format
+msgid "%s is not valid VAT number."
+msgstr ""
+
+#: public/class-webexpert-timologio-for-woocommerce-public.php:371
+msgid "Timologio for WooCommerce alert"
+msgstr ""
+
+#: public/class-webexpert-timologio-for-woocommerce-public.php:371
+msgid "VIES is not available at the moment"
+msgstr ""
+
+#: public/class-webexpert-timologio-for-woocommerce-public.php:400
+msgid ""
+"AADE service is down! Please de-activate the VAT validation and VAT auto "
+"complete on Web Expert Timologio for WooCommerce"
+msgstr ""
+
+#: templates/emails/plain/wc-ebexpert-send-invoice.php:28
+#: templates/emails/wc-ebexpert-send-invoice.php:13
+#, php-format
+msgid "We have attached your invoice for order #%d."
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:111
+msgid "Timologio for WooCommerce"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:127
+msgid "Timologio"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:241
+msgid "Checkout settings"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:253
+msgid "IAPR Username"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:261
+msgid "IAPR Password"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:270
+msgid "Check IAPR Connection"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:278
+msgid "VAT Validation"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:282
+msgid "Validate VAT number via IAPR."
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:287
+msgid "Autocomplete details via IAPR."
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:292
+msgid "Validate VAT number via VIES."
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:298
+msgid "Display"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:301
+msgid "Display as"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:303
+msgid "Display as select box"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:308
+msgid "Display as radio"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:313
+msgid "Repositioning select2 (Appearance bug fix)"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:318
+#: webexpert-timologio-for-woocommerce.php:320
+msgid "Uppercase Checkout Fields"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:326
+msgid "Invoices"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:330
+msgid "Invoice Logo Url"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:332
+msgid "Logo Url"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:337
+msgid "Invoice Settings"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:339
+#: webexpert-timologio-for-woocommerce.php:348
+#: webexpert-timologio-for-woocommerce.php:358
+#: webexpert-timologio-for-woocommerce.php:367
+#: webexpert-timologio-for-woocommerce.php:376
+#: webexpert-timologio-for-woocommerce.php:386
+msgid "Sequence"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:340
+#: webexpert-timologio-for-woocommerce.php:349
+#: webexpert-timologio-for-woocommerce.php:359
+#: webexpert-timologio-for-woocommerce.php:368
+#: webexpert-timologio-for-woocommerce.php:377
+#: webexpert-timologio-for-woocommerce.php:387
+msgid "Starting Number"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:341
+#: webexpert-timologio-for-woocommerce.php:350
+#: webexpert-timologio-for-woocommerce.php:360
+#: webexpert-timologio-for-woocommerce.php:369
+#: webexpert-timologio-for-woocommerce.php:378
+#: webexpert-timologio-for-woocommerce.php:388
+msgid "QR Code"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:346
+msgid "Receipt Invoice Settings"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:356
+msgid "Credit Invoice Settings"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:365
+msgid "Cancel Invoice Settings"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:374
+msgid "Return Receipt Settings"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:384
+msgid "Cancellation Receipt Settings"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:396
+msgid "Automatically generate invoice "
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:399
+#: webexpert-timologio-for-woocommerce.php:413
+#: webexpert-timologio-for-woocommerce.php:424
+msgid "Tax exempt"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:402
+msgid "Automatically generate invoice order's status change to Completed  "
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:410
+msgid "Automatically finalize and send "
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:416
+msgid ""
+"Automatically finalize invoice and send to customer's emails when order's "
+"status change to Completed  "
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:435
+msgid "Tax exempt when buyer selects a non europe country"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:444
+msgid "Invoice Your Shop's Name"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:446
+msgid "Your shop's name that will be appeared on invoice"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:451
+msgid "Invoice Your Shop's Vat number"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:453
+msgid "Your shop's Vat number that will be appeared on invoice"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:458
+msgid "Invoice Your Shop's Email"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:460
+msgid "Your shop's Email that will be appeared on invoice"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:466
+msgid "Invoice Your Shop's Phone Number"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:468
+msgid "Your shop's Phone Number that will be appeared on invoice"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:474
+msgid "Invoice Your Shop's Tax Office"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:476
+msgid "Your shop's Tax Office that will be appeared on invoice"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:483
+msgid "QR Code Delimiter"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:485
+msgid "Delimiter for QR code"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:490
+msgid "QR Code Decimal Digits Seperator"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:492
+msgid "Delimiter for QR code decimal digits"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:498
+msgid "QR Code Thousands Digits Seperator"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:500
+msgid "Delimiter for QR code thousands digits"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:505
+#: webexpert-timologio-for-woocommerce.php:508
+#: webexpert-timologio-for-woocommerce.php:510
+#: webexpert-timologio-for-woocommerce.php:567
+msgid "Debug mode"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:518
+msgid "VAT Exempt"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:522
+msgid "Categories that should be tax exempt"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:535
+msgid "Select zero rate class tax"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:548
+msgid ""
+"Tax exempt on POL 1150/2017 categories when buyer has a valid Vat on IAPR"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:564
+msgid "Reduced Taxes for islands"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:569
+msgid "Enable"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:575
+msgid "Island reduced tax for 24%"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:589
+msgid "Island reduced tax for 13%"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:603
+msgid "Island reduced tax for 6%"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:619
+msgid "License"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:626
+msgid "License Key"
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:642
+msgid ""
+"Please activate <strong>Web Expert Timologio for WooCommerce</strong> to "
+"enable all it's features and automatic updates."
+msgstr ""
+
+#: webexpert-timologio-for-woocommerce.php:649
+msgid ""
+"The license for <strong>Web Expert Timologio for WooCommerce</strong> is "
+"invalid. Please fill in a valid license key."
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Timologio for Woocommerce"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://www.webexpert.gr/wordpress/timologio-for-woocommerce"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Web Expert Timologio for WooCommerce extends WooCommerce to support invoice "
+"functionality on checkout, according to Greek law. Optionally incorporates "
+"exemption option due to VIES or POL1150 / 2017."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Web Expert"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://www.webexpert.gr/"
+msgstr ""
