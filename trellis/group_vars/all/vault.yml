@@ -1,5 +1,5 @@
 # Documentation: https://roots.io/trellis/docs/vault/
-vault_mail_password: smtp_password
+vault_mail_password: REDACTED
 
 # Variables to accompany `wordpress_env_defaults` in `group_vars/all/helpers.yml`
 # Note: These values can be overridden by `vault_wordpress_sites.*.env`
