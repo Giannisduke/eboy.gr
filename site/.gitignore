@@ -28,7 +28,7 @@ web/app/plugins/*
 !web/app/plugins/webexpert-woocommerce-order-tracking
 !web/app/plugins/webexpert-timologio-for-woocommerce
 !web/app/plugins/webexpert-google-merchant-product-data-feed
-!web/app/plugins/
+!web/app/plugins/recaptcha-woo
 web/app/mu-plugins/*/
 !web/app/themes/twentytwentyfive/
 !web/app/themes/woodmart
