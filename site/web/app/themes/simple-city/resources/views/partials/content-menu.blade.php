@@ -1,0 +1,1 @@
+@php $terms = get_terms(array('taxonomy' => 'product_tag', 'hide_empty' => false)); @endphp

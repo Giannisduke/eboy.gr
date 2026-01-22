@@ -1,0 +1,6 @@
+/node_modules
+/vendor
+!/plugins/*
+!/public/*
+.env
+npm-debug.log

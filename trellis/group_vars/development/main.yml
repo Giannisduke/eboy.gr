@@ -3,3 +3,26 @@ env: development
 mysql_root_password: "{{ vault_mysql_root_password }}" # Define this variable in group_vars/development/vault.yml
 web_user: "{{ ansible_user | default ('web') }}"
 php_max_input_vars: 5000
+
+# =========================
+# Option B (8GB VM) — PHP 1G
+# =========================
+
+# PHP limits
+php_memory_limit: "1024M"
+php_upload_max_filesize: "128M"
+php_post_max_size: "128M"
+
+# WordPress memory
+# (frontend πιο χαμηλά, admin/cron/WP-CLI μπορεί να πάει έως 1G)
+wordpress_memory_limit: 384M
+wordpress_max_memory_limit: 1024M
+
+# PHP-FPM tuning
+# (κρίσιμο: μειώνουμε max_children για να μην πνίγει το 8GB VM)
+php_fpm_pm: dynamic
+php_fpm_max_children: 10
+php_fpm_start_servers: 4
+php_fpm_min_spare_servers: 2
+php_fpm_max_spare_servers: 6
+php_fpm_max_requests: 500

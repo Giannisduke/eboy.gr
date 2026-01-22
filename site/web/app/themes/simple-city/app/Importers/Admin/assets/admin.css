@@ -1,0 +1,97 @@
+/* XML Importer Admin Styles */
+
+.progress-bar-wrapper {
+    width: 100%;
+    height: 30px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+#progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #2271b1 0%, #135e96 100%);
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.progress-text {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+}
+
+#import-stats {
+    background: #f9f9f9;
+    padding: 10px;
+    border-left: 3px solid #2271b1;
+}
+
+#import-stats .stat {
+    display: inline-block;
+    margin-right: 20px;
+    font-size: 14px;
+}
+
+#import-log {
+    border: 1px solid #ddd;
+}
+
+#import-log div {
+    padding: 2px 0;
+    border-bottom: 1px solid #eee;
+}
+
+#import-log div:last-child {
+    border-bottom: none;
+}
+
+.progress-section {
+    margin-bottom: 20px;
+}
+
+.card {
+    margin-top: 20px;
+}
+
+#settings-message {
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.widefat td, .widefat th {
+    padding: 10px;
+}
+
+.import-single-supplier {
+    margin-right: 10px;
+    margin-bottom: 5px;
+}
+
+.import-single-supplier:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#import-controls hr {
+    border: 0;
+    border-top: 1px solid #ddd;
+}
+
+#clear-logs-btn {
+    color: #b32d2e;
+    border-color: #b32d2e;
+}
+
+#clear-logs-btn:hover {
+    background: #b32d2e;
+    color: white;
+    border-color: #b32d2e;
+}
+
+#logs-message {
+    margin-left: 10px;
+    font-weight: bold;
+}

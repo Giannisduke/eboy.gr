@@ -2,20 +2,22 @@ env: staging
 timezone: Europe/Athens
 
 # PHP limits
-php_memory_limit: "768M"
-php_upload_max_filesize: "64M"
-php_post_max_size: "64M"
+php_memory_limit: "1024M"
+php_upload_max_filesize: "128M"
+php_post_max_size: "128M"
 
 # WordPress memory
-wordpress_memory_limit: 512M
-wordpress_max_memory_limit: 512M
+# (frontend πιο χαμηλά, admin/cron/WP-CLI μπορεί να πάει έως 1G)
+wordpress_memory_limit: 384M
+wordpress_max_memory_limit: 1024M
 
 # PHP-FPM tuning
+# (κρίσιμο: μειώνουμε max_children για να μην πνίγει το 8GB VM)
 php_fpm_pm: dynamic
-php_fpm_max_children: 24
-php_fpm_start_servers: 6
-php_fpm_min_spare_servers: 4
-php_fpm_max_spare_servers: 12
+php_fpm_max_children: 10
+php_fpm_start_servers: 4
+php_fpm_min_spare_servers: 2
+php_fpm_max_spare_servers: 6
 php_fpm_max_requests: 500
 
 # DB

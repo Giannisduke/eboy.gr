@@ -1,0 +1,167 @@
+<?php
+/**
+ * XML Downloader
+ * Downloads XML feeds from supplier URLs
+ */
+
+namespace App\Importers;
+
+class XMLDownloader {
+    private $urls_file;
+    private $cache_dir;
+
+    public function __construct() {
+        // Use app/xml_files directory
+        $app_dir = WP_CONTENT_DIR . '/themes/' . get_template() . '/app/xml_files/';
+
+        $this->urls_file = $app_dir . 'xml_urls.txt';
+        $this->cache_dir = $app_dir;
+
+        // Ensure cache directory exists
+        if (!file_exists($this->cache_dir)) {
+            wp_mkdir_p($this->cache_dir);
+        }
+    }
+
+    /**
+     * Read URLs from file
+     */
+    public function getURLs() {
+        if (!file_exists($this->urls_file)) {
+            throw new \Exception("URLs file not found: {$this->urls_file}");
+        }
+
+        $content = file_get_contents($this->urls_file);
+        $urls = array_filter(array_map('trim', explode("\n", $content)));
+
+        return $urls;
+    }
+
+    /**
+     * Download all XML feeds
+     */
+    public function downloadAll() {
+        $urls = $this->getURLs();
+        $results = [];
+
+        foreach ($urls as $url) {
+            try {
+                $supplier = $this->identifySupplier($url);
+                $result = $this->downloadFeed($url, $supplier);
+                $results[$supplier] = $result;
+            } catch (\Exception $e) {
+                $results[$url] = [
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ];
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Download single XML feed
+     */
+    public function downloadFeed($url, $supplier = null) {
+        if (!$supplier) {
+            $supplier = $this->identifySupplier($url);
+        }
+
+        $filename = $this->cache_dir . $supplier . '.xml';
+
+        // Use WordPress HTTP API
+        $response = wp_remote_get($url, [
+            'timeout' => 120,
+            'sslverify' => false
+        ]);
+
+        if (is_wp_error($response)) {
+            throw new \Exception("Failed to download XML from {$url}: " . $response->get_error_message());
+        }
+
+        $status_code = wp_remote_retrieve_response_code($response);
+        if ($status_code !== 200) {
+            throw new \Exception("HTTP Error {$status_code} when downloading from {$url}");
+        }
+
+        $body = wp_remote_retrieve_body($response);
+
+        if (empty($body)) {
+            throw new \Exception("Empty response from {$url}");
+        }
+
+        // Validate XML
+        libxml_use_internal_errors(true);
+        $test = simplexml_load_string($body);
+        if ($test === false) {
+            $errors = libxml_get_errors();
+            libxml_clear_errors();
+            throw new \Exception("Invalid XML from {$url}");
+        }
+
+        // Save to file
+        $bytes_written = file_put_contents($filename, $body);
+
+        if ($bytes_written === false) {
+            throw new \Exception("Failed to save XML to {$filename}");
+        }
+
+        return [
+            'success' => true,
+            'supplier' => $supplier,
+            'filename' => $filename,
+            'size' => $bytes_written,
+            'downloaded_at' => current_time('mysql')
+        ];
+    }
+
+    /**
+     * Identify supplier from URL
+     */
+    private function identifySupplier($url) {
+        $url_lower = strtolower($url);
+
+        if (strpos($url_lower, 'libertab2b') !== false) {
+            return 'libertab2b';
+        } elseif (strpos($url_lower, 'b2bmarkt') !== false) {
+            return 'b2bmarkt';
+        } elseif (strpos($url_lower, 'estiahomeart') !== false) {
+            return 'estiahomeart';
+        } elseif (strpos($url_lower, 'pakoworld') !== false) {
+            return 'pakoworld';
+        }
+
+        // Default: use domain name
+        $parsed = parse_url($url);
+        return str_replace(['www.', '.com', '.gr'], '', $parsed['host']);
+    }
+
+    /**
+     * Get local XML file path for supplier
+     */
+    public function getLocalFile($supplier) {
+        $filename = $this->cache_dir . $supplier . '.xml';
+
+        if (!file_exists($filename)) {
+            return false;
+        }
+
+        return $filename;
+    }
+
+    /**
+     * Check if local files exist
+     */
+    public function hasLocalFiles() {
+        $suppliers = ['libertab2b', 'b2bmarkt', 'estiahomeart', 'pakoworld'];
+
+        foreach ($suppliers as $supplier) {
+            if ($this->getLocalFile($supplier)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
