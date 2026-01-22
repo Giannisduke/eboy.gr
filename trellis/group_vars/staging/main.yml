@@ -33,11 +33,4 @@ mysql_users:
     password: "{{ vault_mysql_simple_city_password }}"
     priv: "eboy_gr_staging.*:ALL"
 
-    # --- SoftOne MySQL integration user (Trellis-managed)
-mysql_additional_users:
-  - name: "softone_user"
-    host: "80.107.51.120"                 # καλύτερα βάλε IP του SoftOne όταν είσαι έτοιμος (π.χ. "1.2.3.4")
-    password: "{{ vault_softone_mysql_password }}"
-    priv: "{{ vault_softone_mysql_priv }}"   # θα το ορίσουμε στο vault
-    state: present
 
