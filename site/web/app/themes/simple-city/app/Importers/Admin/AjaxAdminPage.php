@@ -10,11 +10,9 @@ use App\Importers\Importer;
 use App\Importers\BatchImporter;
 
 class AjaxAdminPage {
-    private $importer;
     private $batch_importer;
 
     public function __construct() {
-        $this->importer = new Importer();
         $this->batch_importer = new BatchImporter();
 
         add_action('admin_menu', [$this, 'addAdminMenu']);
@@ -22,10 +20,16 @@ class AjaxAdminPage {
 
         // AJAX handlers
         add_action('wp_ajax_xml_import_download', [$this, 'ajaxDownload']);
+        add_action('wp_ajax_xml_import_enhance', [$this, 'ajaxEnhance']);
+        add_action('wp_ajax_xml_import_check_ai_progress', [$this, 'ajaxCheckAIProgress']);
         add_action('wp_ajax_xml_import_batch', [$this, 'ajaxBatch']);
+        add_action('wp_ajax_xml_import_smart', [$this, 'ajaxSmartImport']);
+        add_action('wp_ajax_xml_import_fast_sync', [$this, 'ajaxFastSync']);
+        add_action('wp_ajax_xml_import_detect_new', [$this, 'ajaxDetectNew']);
         add_action('wp_ajax_xml_import_save_settings', [$this, 'ajaxSaveSettings']);
         add_action('wp_ajax_xml_import_save_results', [$this, 'ajaxSaveResults']);
         add_action('wp_ajax_xml_import_clear_logs', [$this, 'ajaxClearLogs']);
+        add_action('wp_ajax_xml_import_stop_ai', [$this, 'ajaxStopAI']);
     }
 
     /**
@@ -122,9 +126,29 @@ class AjaxAdminPage {
             <p class="description">Import will be processed in batches to avoid timeouts.</p>
 
             <div id="import-controls">
+                <div class="card" style="background: #f0f7ff; border-left: 4px solid #2271b1; padding: 15px; margin-bottom: 20px;">
+                    <h3 style="margin-top: 0;">⚡ Daily Stock Sync (Most Common)</h3>
+
+                    <p>
+                        <button type="button" id="fast-stock-sync" class="button button-primary button-large">
+                            ⚡ Fast Stock & Price Sync
+                        </button>
+                    </p>
+                    <p class="description">
+                        <strong>Daily sync:</strong> Updates ONLY stock quantities and prices (5-10 minutes). No AI processing.
+                    </p>
+                </div>
+
+                <hr style="margin: 20px 0;">
+
+                <h3>Import Products by Supplier</h3>
+                <p class="description" style="margin-bottom: 15px;">
+                    Downloads XML from supplier and imports products to WooCommerce.
+                </p>
+
                 <p>
                     <button type="button" id="start-import" class="button button-primary button-large">
-                        🚀 Start Full Import (All Suppliers)
+                        🚀 Full Import (All Suppliers)
                     </button>
                     <button type="button" id="cancel-import" class="button" style="display:none;">
                         Cancel
@@ -133,21 +157,70 @@ class AjaxAdminPage {
 
                 <hr style="margin: 20px 0;">
 
-                <p><strong>Import Single Supplier:</strong></p>
-                <p>
-                    <button type="button" class="button import-single-supplier" data-supplier="pakoworld">
-                        Import Pakoworld
-                    </button>
-                    <button type="button" class="button import-single-supplier" data-supplier="b2bmarkt">
-                        Import B2BMarkt
-                    </button>
-                    <button type="button" class="button import-single-supplier" data-supplier="libertab2b">
-                        Import Libertab2b
-                    </button>
-                    <button type="button" class="button import-single-supplier" data-supplier="estiahomeart">
-                        Import Estiah
-                    </button>
+                <h4>Import Single Supplier</h4>
+                <p class="description" style="margin-bottom: 15px;">
+                    <strong>Product Limit:</strong> Set the maximum number of products to import (0 = all products).
+                    Useful for testing or gradual imports.
                 </p>
+
+                <table class="form-table" style="margin-top: 0;">
+                    <tr>
+                        <td style="padding: 10px 0; width: 150px;">
+                            <strong>Pakoworld</strong>
+                        </td>
+                        <td style="padding: 10px 0;">
+                            <input type="number" id="limit-pakoworld" class="supplier-limit" min="0" max="10000" value="0" style="width: 100px; margin-right: 10px;" placeholder="0 = all">
+                            <span style="color: #666; font-size: 12px;">products</span>
+                        </td>
+                        <td style="padding: 10px 0;">
+                            <button type="button" class="button import-single-supplier" data-supplier="pakoworld">
+                                Import Pakoworld
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px 0;">
+                            <strong>B2BMarkt</strong>
+                        </td>
+                        <td style="padding: 10px 0;">
+                            <input type="number" id="limit-b2bmarkt" class="supplier-limit" min="0" max="10000" value="0" style="width: 100px; margin-right: 10px;" placeholder="0 = all">
+                            <span style="color: #666; font-size: 12px;">products</span>
+                        </td>
+                        <td style="padding: 10px 0;">
+                            <button type="button" class="button import-single-supplier" data-supplier="b2bmarkt">
+                                Import B2BMarkt
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px 0;">
+                            <strong>Libertab2b</strong>
+                        </td>
+                        <td style="padding: 10px 0;">
+                            <input type="number" id="limit-libertab2b" class="supplier-limit" min="0" max="10000" value="0" style="width: 100px; margin-right: 10px;" placeholder="0 = all">
+                            <span style="color: #666; font-size: 12px;">products</span>
+                        </td>
+                        <td style="padding: 10px 0;">
+                            <button type="button" class="button import-single-supplier" data-supplier="libertab2b">
+                                Import Libertab2b
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px 0;">
+                            <strong>Estiah</strong>
+                        </td>
+                        <td style="padding: 10px 0;">
+                            <input type="number" id="limit-estiahomeart" class="supplier-limit" min="0" max="10000" value="0" style="width: 100px; margin-right: 10px;" placeholder="0 = all">
+                            <span style="color: #666; font-size: 12px;">products</span>
+                        </td>
+                        <td style="padding: 10px 0;">
+                            <button type="button" class="button import-single-supplier" data-supplier="estiahomeart">
+                                Import Estiah
+                            </button>
+                        </td>
+                    </tr>
+                </table>
             </div>
 
             <div id="import-progress" style="display:none; margin-top: 20px;">
@@ -356,6 +429,350 @@ class AjaxAdminPage {
     }
 
     /**
+     * AJAX: Run AI Enhancement
+     */
+    public function ajaxEnhance() {
+        check_ajax_referer('xml_importer_ajax', 'nonce');
+
+        if (!current_user_can('manage_woocommerce')) {
+            wp_send_json_error(['message' => 'Unauthorized']);
+        }
+
+        try {
+            // Use __DIR__ to get actual filesystem path
+            // __DIR__ = /path/to/theme/app/Importers/Admin
+            // Theme root = __DIR__ . '/../../..'
+            $theme_root = dirname(dirname(dirname(__DIR__)));
+            $script_dir = $theme_root . '/scripts/product-ai-processor';
+            $xml_dir = $theme_root . '/xml_files/';
+
+            if (!file_exists($script_dir)) {
+                wp_send_json_error(['message' => "AI Enhancement script directory not found at: {$script_dir}. Theme root: {$theme_root}"]);
+            }
+
+            $python_script = $script_dir . '/main.py';
+            $venv_python = $script_dir . '/venv/bin/python3';
+
+            // Check if files exist
+            if (!file_exists($python_script)) {
+                wp_send_json_error(['message' => "AI Enhancement script not found at: {$python_script}"]);
+            }
+
+            if (!file_exists($venv_python)) {
+                wp_send_json_error(['message' => 'Python virtual environment not found. Please run setup first.']);
+            }
+
+            // Get requested supplier or process all
+            $supplier = isset($_POST['supplier']) ? sanitize_text_field($_POST['supplier']) : null;
+            $suppliers = $supplier ? [$supplier] : ['pakoworld', 'b2bmarkt', 'libertab2b', 'estiahomeart'];
+
+            $results = [];
+
+            foreach ($suppliers as $sup) {
+                $input_xml = $xml_dir . $sup . '.xml';
+                $output_xml = $xml_dir . $sup . '-enhanced.xml';
+
+                // Skip if original XML doesn't exist
+                if (!file_exists($input_xml)) {
+                    $results[$sup] = [
+                        'success' => false,
+                        'message' => 'Original XML not found. Please download first.'
+                    ];
+                    continue;
+                }
+
+                // Build the command
+                $command = sprintf(
+                    'cd %s && %s %s --mode process --input %s --output %s --skip-images > /dev/null 2>&1 &',
+                    escapeshellarg($script_dir),
+                    escapeshellarg($venv_python),
+                    escapeshellarg($python_script),
+                    escapeshellarg($input_xml),
+                    escapeshellarg($output_xml)
+                );
+
+                // Execute in background
+                exec($command, $output, $return_code);
+
+                $results[$sup] = [
+                    'success' => true,
+                    'message' => 'AI Enhancement started in background'
+                ];
+            }
+
+            wp_send_json_success([
+                'results' => $results,
+                'message' => 'AI Enhancement started. This may take 10-30 minutes depending on the number of products.'
+            ]);
+
+        } catch (\Exception $e) {
+            wp_send_json_error(['message' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * AJAX: Check AI Enhancement Progress
+     */
+    public function ajaxCheckAIProgress() {
+        check_ajax_referer('xml_importer_ajax', 'nonce');
+
+        if (!current_user_can('manage_woocommerce')) {
+            wp_send_json_error(['message' => 'Unauthorized']);
+        }
+
+        $supplier = isset($_POST['supplier']) ? sanitize_text_field($_POST['supplier']) : '';
+
+        if (empty($supplier)) {
+            wp_send_json_error(['message' => 'Supplier is required']);
+        }
+
+        $xml_dir = get_template_directory() . '/xml_files/';
+        $progress_file = $xml_dir . $supplier . '-progress.json';
+        $enhanced_xml = $xml_dir . $supplier . '-enhanced.xml';
+
+        // Check if progress file exists
+        if (!file_exists($progress_file)) {
+            // No progress file - check if enhanced XML exists
+            if (file_exists($enhanced_xml) && filesize($enhanced_xml) > 1000) {
+                wp_send_json_success([
+                    'status' => 'complete',
+                    'current' => 100,
+                    'total' => 100,
+                    'percent' => 100
+                ]);
+            } else {
+                wp_send_json_success([
+                    'status' => 'not_started',
+                    'current' => 0,
+                    'total' => 0,
+                    'percent' => 0
+                ]);
+            }
+            return;
+        }
+
+        // Read progress file
+        $progress_data = json_decode(file_get_contents($progress_file), true);
+
+        if (!$progress_data) {
+            wp_send_json_error(['message' => 'Failed to read progress file']);
+        }
+
+        wp_send_json_success($progress_data);
+    }
+
+    /**
+     * AJAX: Fast Stock & Price Sync
+     */
+    public function ajaxFastSync() {
+        check_ajax_referer('xml_importer_ajax', 'nonce');
+
+        if (!current_user_can('manage_woocommerce')) {
+            wp_send_json_error(['message' => 'Unauthorized']);
+        }
+
+        try {
+            require_once(__DIR__ . '/../FastStockSync.php');
+            $fast_sync = new \App\Importers\FastStockSync();
+
+            $supplier = isset($_POST['supplier']) ? sanitize_text_field($_POST['supplier']) : null;
+
+            if ($supplier) {
+                $results = $fast_sync->syncSupplier($supplier);
+                wp_send_json_success([
+                    'supplier' => $supplier,
+                    'stats' => $results,
+                    'message' => "Fast sync completed for {$supplier}"
+                ]);
+            } else {
+                $results = $fast_sync->syncAll();
+                wp_send_json_success([
+                    'results' => $results,
+                    'message' => 'Fast stock sync completed for all suppliers'
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            wp_send_json_error(['message' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * AJAX: Detect New Products
+     */
+    public function ajaxDetectNew() {
+        check_ajax_referer('xml_importer_ajax', 'nonce');
+
+        if (!current_user_can('manage_woocommerce')) {
+            wp_send_json_error(['message' => 'Unauthorized']);
+        }
+
+        try {
+            require_once(__DIR__ . '/../SKUTracker.php');
+            require_once(__DIR__ . '/../IncrementalImporter.php');
+
+            $incremental = new \App\Importers\IncrementalImporter();
+
+            $supplier = isset($_POST['supplier']) ? sanitize_text_field($_POST['supplier']) : null;
+
+            if ($supplier) {
+                $diff = $incremental->detectNewProducts($supplier);
+                wp_send_json_success([
+                    'supplier' => $supplier,
+                    'new_count' => count($diff['new']),
+                    'deleted_count' => count($diff['deleted']),
+                    'existing_count' => count($diff['existing']),
+                    'new_skus' => array_slice($diff['new'], 0, 10), // First 10 for preview
+                    'message' => "Found " . count($diff['new']) . " new products"
+                ]);
+            } else {
+                // Check all suppliers
+                $suppliers = ['pakoworld', 'b2bmarkt', 'libertab2b', 'estiahomeart'];
+                $all_results = [];
+
+                foreach ($suppliers as $sup) {
+                    try {
+                        $diff = $incremental->detectNewProducts($sup);
+                        $all_results[$sup] = [
+                            'new_count' => count($diff['new']),
+                            'deleted_count' => count($diff['deleted'])
+                        ];
+                    } catch (\Exception $e) {
+                        $all_results[$sup] = ['error' => $e->getMessage()];
+                    }
+                }
+
+                wp_send_json_success([
+                    'results' => $all_results,
+                    'message' => 'Detection completed for all suppliers'
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            wp_send_json_error(['message' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * AJAX: Smart Incremental Import
+     * Download → Detect New → AI Enhancement (new only) → Import
+     */
+    public function ajaxSmartImport() {
+        check_ajax_referer('xml_importer_ajax', 'nonce');
+
+        if (!current_user_can('manage_woocommerce')) {
+            wp_send_json_error(['message' => 'Unauthorized']);
+        }
+
+        try {
+            require_once(__DIR__ . '/../SKUTracker.php');
+            require_once(__DIR__ . '/../IncrementalImporter.php');
+            require_once(__DIR__ . '/../FastStockSync.php');
+
+            $supplier = isset($_POST['supplier']) ? sanitize_text_field($_POST['supplier']) : null;
+
+            if (!$supplier) {
+                wp_send_json_error(['message' => 'Supplier is required']);
+            }
+
+            // Step 1: Download XML
+            $downloader = new \App\Importers\XMLDownloader();
+            $download_result = $downloader->downloadFeed(
+                $this->getSupplierURL($supplier),
+                $supplier
+            );
+
+            if (!$download_result['success']) {
+                wp_send_json_error(['message' => 'Failed to download XML']);
+            }
+
+            // Step 2: Detect new products
+            $incremental = new \App\Importers\IncrementalImporter();
+            $diff = $incremental->detectNewProducts($supplier);
+
+            $response = [
+                'supplier' => $supplier,
+                'new_count' => count($diff['new']),
+                'deleted_count' => count($diff['deleted']),
+                'existing_count' => count($diff['existing'])
+            ];
+
+            // Step 3: AI Enhancement for new products (if any)
+            if (!empty($diff['new'])) {
+                // Python AI processor script (in project root /scripts/)
+            $script_dir = get_template_directory() . '/../../../../../scripts/product-ai-processor';
+                $python_script = $script_dir . '/main.py';
+                $venv_python = $script_dir . '/venv/bin/python3';
+                $xml_dir = get_template_directory() . '/xml_files/';
+
+                $input_xml = $xml_dir . $supplier . '.xml';
+                $output_xml = $xml_dir . $supplier . '-enhanced.xml';
+
+                // Create SKU list (comma-separated)
+                $sku_list = implode(',', $diff['new']);
+
+                // Build command with SKU filter
+                $command = sprintf(
+                    'cd %s && %s %s --mode process --input %s --output %s --skus %s --skip-images > /dev/null 2>&1 &',
+                    escapeshellarg($script_dir),
+                    escapeshellarg($venv_python),
+                    escapeshellarg($python_script),
+                    escapeshellarg($input_xml),
+                    escapeshellarg($output_xml),
+                    escapeshellarg($sku_list)
+                );
+
+                // Execute in background
+                exec($command);
+
+                $response['ai_enhancement'] = 'started';
+                $response['message'] = "Smart import started: " . count($diff['new']) . " new products will be AI-enhanced in background. Existing products will sync stock/price only.";
+            } else {
+                // No new products - just fast sync
+                $fast_sync = new \App\Importers\FastStockSync();
+                $sync_stats = $fast_sync->syncSupplier($supplier);
+
+                $response['ai_enhancement'] = 'skipped';
+                $response['sync_stats'] = $sync_stats;
+                $response['message'] = "No new products found. Updated stock/price for {$sync_stats['updated']} existing products.";
+            }
+
+            // Trash deleted products
+            if (!empty($diff['deleted'])) {
+                $trashed = $incremental->trashDeletedProducts($supplier);
+                $response['trashed'] = $trashed;
+            }
+
+            wp_send_json_success($response);
+
+        } catch (\Exception $e) {
+            wp_send_json_error(['message' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Get supplier URL from xml_urls.txt
+     */
+    private function getSupplierURL($supplier) {
+        $xml_dir = get_template_directory() . '/xml_files/';
+        $urls_file = $xml_dir . 'xml_urls.txt';
+
+        if (!file_exists($urls_file)) {
+            return null;
+        }
+
+        $urls = file($urls_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+        foreach ($urls as $url) {
+            if (stripos($url, $supplier) !== false) {
+                return trim($url);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * AJAX: Process batch
      */
     public function ajaxBatch() {
@@ -367,15 +784,18 @@ class AjaxAdminPage {
 
         $supplier = isset($_POST['supplier']) ? sanitize_text_field($_POST['supplier']) : '';
         $offset = isset($_POST['offset']) ? intval($_POST['offset']) : 0;
+        $limit = isset($_POST['limit']) ? intval($_POST['limit']) : 0;
 
         if (empty($supplier)) {
             wp_send_json_error(['message' => 'Supplier is required']);
         }
 
         try {
-            error_log("AJAX Batch: Processing {$supplier} offset={$offset}");
+            $limit_msg = $limit > 0 ? " limit={$limit}" : "";
+            error_log("AJAX Batch: Processing {$supplier} offset={$offset}{$limit_msg}");
 
-            $result = $this->batch_importer->processBatch($supplier, $offset);
+            // processBatch($supplier, $offset, $total_limit, $batch_size)
+            $result = $this->batch_importer->processBatch($supplier, $offset, $limit);
 
             error_log("AJAX Batch: Success for {$supplier} offset={$offset}");
 
@@ -452,6 +872,20 @@ class AjaxAdminPage {
     }
 
     /**
+     * Get parser class for supplier
+     */
+    private function getParserClass($supplier) {
+        $parser_map = [
+            'pakoworld' => '\\App\\Importers\\Parsers\\PakoworldParser',
+            'b2bmarkt' => '\\App\\Importers\\Parsers\\B2BMarktParser',
+            'libertab2b' => '\\App\\Importers\\Parsers\\LibertaParser',
+            'estiahomeart' => '\\App\\Importers\\Parsers\\EstiahParser'
+        ];
+
+        return $parser_map[$supplier] ?? '\\App\\Importers\\Parsers\\PakoworldParser';
+    }
+
+    /**
      * AJAX: Clear logs
      */
     public function ajaxClearLogs() {
@@ -464,5 +898,46 @@ class AjaxAdminPage {
         Importer::clearLogs();
 
         wp_send_json_success(['message' => 'Logs cleared successfully']);
+    }
+
+    /**
+     * AJAX: Stop AI processing
+     * Called when user closes/refreshes page during AI enhancement
+     */
+    public function ajaxStopAI() {
+        check_ajax_referer('xml_importer_ajax', 'nonce');
+
+        if (!current_user_can('manage_woocommerce')) {
+            wp_send_json_error(['message' => 'Unauthorized']);
+        }
+
+        error_log("AjaxAdminPage: Stopping AI processing (user closed page)");
+
+        // Use __FILE__ for reliable path resolution
+        $theme_root = dirname(dirname(dirname(dirname(__FILE__))));
+        $xml_dir = $theme_root . '/xml_files/';
+
+        // Kill Python AI processes
+        $kill_command = "pkill -9 -f 'product-ai-processor'";
+        shell_exec($kill_command);
+        error_log("AjaxAdminPage: Killed AI processes");
+
+        // Clean up progress files for all suppliers
+        $suppliers = ['pakoworld', 'b2bmarkt', 'libertab2b', 'estiahomeart'];
+        foreach ($suppliers as $supplier) {
+            $progress_file = $xml_dir . $supplier . '-progress.json';
+            $ready_file = $xml_dir . $supplier . '-ready.json';
+
+            if (file_exists($progress_file)) {
+                unlink($progress_file);
+            }
+            if (file_exists($ready_file)) {
+                unlink($ready_file);
+            }
+        }
+
+        error_log("AjaxAdminPage: Cleaned up progress files");
+
+        wp_send_json_success(['message' => 'AI processing stopped']);
     }
 }

@@ -12,9 +12,12 @@ class ProductSync {
     private $markup_settings;
     private $stats;
     private $synced_skus = []; // Track SKUs that were synced
+    private $sku_tracker = null;
+    private $auto_track_enhancements = false;
 
-    public function __construct() {
+    public function __construct($auto_track_enhancements = false) {
         $this->markup_settings = get_option('xml_importer_markup', []);
+        $this->auto_track_enhancements = $auto_track_enhancements;
         $this->stats = [
             'created' => 0,
             'updated' => 0,
@@ -22,6 +25,12 @@ class ProductSync {
             'errors' => 0,
             'trashed' => 0
         ];
+
+        // Initialize SKU tracker if auto-tracking enabled
+        if ($this->auto_track_enhancements) {
+            require_once(__DIR__ . '/SKUTracker.php');
+            $this->sku_tracker = new SKUTracker();
+        }
     }
 
     /**
@@ -117,6 +126,25 @@ class ProductSync {
             $this->createProduct($product);
             $this->stats['created']++;
         }
+
+        // Auto-track if this product has AI enhancements
+        if ($this->auto_track_enhancements && $this->hasAIEnhancements($product)) {
+            $this->sku_tracker->markEnhanced($product->sku, $product->supplier, [
+                'import_date' => current_time('mysql'),
+                'has_ai_title' => !empty($product->name),
+                'has_ai_description' => !empty($product->description),
+                'has_ai_tags' => !empty($product->tags),
+                'has_ai_category' => !empty($product->woo_category)
+            ]);
+        }
+    }
+
+    /**
+     * Check if product has AI enhancements
+     */
+    private function hasAIEnhancements($product) {
+        // Check if product has AI-enhanced fields
+        return !empty($product->woo_category) || !empty($product->tags);
     }
 
     /**
@@ -151,6 +179,13 @@ class ProductSync {
             throw new \Exception("Product not found: {$product_id}");
         }
 
+        // If product is trashed, restore it (untrash)
+        $post_status = get_post_status($product_id);
+        if ($post_status === 'trash') {
+            wp_untrash_post($product_id);
+            error_log("ProductSync: Restored trashed product {$product->sku} (ID: {$product_id})");
+        }
+
         $this->setProductData($wc_product, $product);
 
         $wc_product->save();
@@ -178,10 +213,14 @@ class ProductSync {
 
         // Prices
         $markup = $this->getMarkupForSupplier($product->supplier);
+
+        // If retail_price exists, use it directly (already has VAT from supplier)
+        // Otherwise calculate from wholesale_price with markup
         $final_price = $product->calculateFinalPrice($markup);
         $wc_product->set_regular_price($final_price);
 
-        if (!empty($product->sale_price) && $product->sale_price < $final_price) {
+        // Set sale price if exists and is lower than regular price
+        if (!empty($product->sale_price) && $product->sale_price > 0 && $product->sale_price < $final_price) {
             $wc_product->set_sale_price($product->sale_price);
         }
 
@@ -306,19 +345,15 @@ class ProductSync {
      * Set product categories
      */
     private function setProductCategories($product_id, NormalizedProduct $product) {
-        if (empty($product->categories)) {
-            return;
-        }
-
         $category_ids = [];
 
-        foreach ($product->categories as $cat) {
-            $cat_name = $cat['name'];
-            $term = get_term_by('name', $cat_name, 'product_cat');
+        // Priority 1: Use AI-enhanced WooCommerce category if available
+        if (!empty($product->woo_category)) {
+            $term = get_term_by('name', $product->woo_category, 'product_cat');
 
             if (!$term) {
-                // Create category
-                $new_term = wp_insert_term($cat_name, 'product_cat');
+                // Create AI category
+                $new_term = wp_insert_term($product->woo_category, 'product_cat');
                 if (!is_wp_error($new_term)) {
                     $category_ids[] = $new_term['term_id'];
                 }
@@ -326,9 +361,31 @@ class ProductSync {
                 $category_ids[] = $term->term_id;
             }
         }
+        // Priority 2: Fallback to supplier categories
+        elseif (!empty($product->categories)) {
+            foreach ($product->categories as $cat) {
+                $cat_name = $cat['name'];
+                $term = get_term_by('name', $cat_name, 'product_cat');
+
+                if (!$term) {
+                    // Create category
+                    $new_term = wp_insert_term($cat_name, 'product_cat');
+                    if (!is_wp_error($new_term)) {
+                        $category_ids[] = $new_term['term_id'];
+                    }
+                } else {
+                    $category_ids[] = $term->term_id;
+                }
+            }
+        }
 
         if (!empty($category_ids)) {
             wp_set_object_terms($product_id, $category_ids, 'product_cat');
+        }
+
+        // Set AI-generated tags
+        if (!empty($product->tags)) {
+            wp_set_object_terms($product_id, $product->tags, 'product_tag');
         }
     }
 

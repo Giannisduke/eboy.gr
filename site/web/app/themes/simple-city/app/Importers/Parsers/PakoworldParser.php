@@ -62,6 +62,18 @@ class PakoworldParser extends AbstractParser {
             }
         }
 
+        // AI-Enhanced Fields (if available)
+        if (isset($node->woo_category)) {
+            $product->woo_category = $this->getNodeValue($node->woo_category);
+        }
+
+        if (isset($node->tags)) {
+            $tagsString = $this->getNodeValue($node->tags);
+            if (!empty($tagsString)) {
+                $product->tags = array_map('trim', explode(',', $tagsString));
+            }
+        }
+
         // Attributes
         if (isset($node->attributes->attribute)) {
             foreach ($node->attributes->attribute as $attr) {

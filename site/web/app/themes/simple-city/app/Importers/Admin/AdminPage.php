@@ -15,6 +15,7 @@ class AdminPage {
         add_action('admin_menu', [$this, 'addAdminMenu']);
         add_action('admin_post_xml_import_run', [$this, 'handleImportAction']);
         add_action('admin_post_xml_import_download', [$this, 'handleDownloadAction']);
+        add_action('admin_post_xml_import_enhance', [$this, 'handleEnhanceAction']);
         add_action('admin_post_xml_import_process', [$this, 'handleProcessAction']);
         add_action('admin_post_xml_import_save_settings', [$this, 'handleSaveSettings']);
     }
@@ -43,6 +44,43 @@ class AdminPage {
         ?>
         <div class="wrap">
             <h1>XML Product Importer</h1>
+
+            <?php
+            // Display messages
+            if (isset($_GET['message'])) {
+                $message = $_GET['message'];
+                $class = 'notice notice-success is-dismissible';
+                $text = '';
+
+                switch ($message) {
+                    case 'enhance_started':
+                        $text = 'AI Enhancement started in background. This may take a while depending on the number of products. Check back in 10-30 minutes.';
+                        break;
+                    case 'enhance_error':
+                        $class = 'notice notice-error is-dismissible';
+                        $text = 'AI Enhancement Error: ' . (isset($_GET['error']) ? urldecode($_GET['error']) : 'Unknown error');
+                        break;
+                    case 'import_success':
+                        $text = 'Products imported successfully!';
+                        break;
+                    case 'import_error':
+                        $class = 'notice notice-error is-dismissible';
+                        $text = 'Import Error: ' . (isset($_GET['error']) ? urldecode($_GET['error']) : 'Unknown error');
+                        break;
+                    case 'download_success':
+                        $text = 'XML files downloaded successfully!';
+                        break;
+                    case 'download_error':
+                        $class = 'notice notice-error is-dismissible';
+                        $text = 'Download Error: ' . (isset($_GET['error']) ? urldecode($_GET['error']) : 'Unknown error');
+                        break;
+                }
+
+                if ($text) {
+                    echo '<div class="' . esc_attr($class) . '"><p>' . esc_html($text) . '</p></div>';
+                }
+            }
+            ?>
 
             <h2 class="nav-tab-wrapper">
                 <a href="?page=xml-product-importer&tab=import" class="nav-tab <?php echo $active_tab === 'import' ? 'nav-tab-active' : ''; ?>">
@@ -106,13 +144,19 @@ class AdminPage {
             <form method="post" action="<?php echo admin_url('admin-post.php'); ?>" style="display: inline-block; margin-right: 10px;">
                 <?php wp_nonce_field('xml_import_download'); ?>
                 <input type="hidden" name="action" value="xml_import_download">
-                <button type="submit" class="button">Download XMLs Only</button>
+                <button type="submit" class="button">1. Download XMLs Only</button>
+            </form>
+
+            <form method="post" action="<?php echo admin_url('admin-post.php'); ?>" style="display: inline-block; margin-right: 10px;">
+                <?php wp_nonce_field('xml_import_enhance'); ?>
+                <input type="hidden" name="action" value="xml_import_enhance">
+                <button type="submit" class="button button-secondary">2. Run AI Enhancement</button>
             </form>
 
             <form method="post" action="<?php echo admin_url('admin-post.php'); ?>" style="display: inline-block;">
                 <?php wp_nonce_field('xml_import_process'); ?>
                 <input type="hidden" name="action" value="xml_import_process">
-                <button type="submit" class="button">Process Local XMLs</button>
+                <button type="submit" class="button button-primary">3. Import Enhanced XMLs</button>
             </form>
         </div>
 
@@ -329,6 +373,85 @@ class AdminPage {
             wp_redirect(add_query_arg([
                 'page' => 'xml-product-importer',
                 'message' => 'download_error',
+                'error' => urlencode($e->getMessage())
+            ], admin_url('admin.php')));
+        }
+
+        exit;
+    }
+
+    /**
+     * Handle AI enhancement action
+     */
+    public function handleEnhanceAction() {
+        check_admin_referer('xml_import_enhance');
+
+        if (!current_user_can('manage_woocommerce')) {
+            wp_die('Unauthorized');
+        }
+
+        try {
+            // Get the path to the Python script
+            $script_dir = WP_CONTENT_DIR . '/../../scripts/product-ai-processor';
+            $python_script = $script_dir . '/main.py';
+            $venv_python = $script_dir . '/venv/bin/python3';
+
+            // Check if files exist
+            if (!file_exists($python_script)) {
+                throw new \Exception("AI Enhancement script not found at: {$python_script}");
+            }
+
+            if (!file_exists($venv_python)) {
+                throw new \Exception("Python virtual environment not found. Please run setup first.");
+            }
+
+            // Get XML directory
+            $xml_dir = get_template_directory() . '/xml_files/';
+
+            // Run enhancement for each supplier
+            $suppliers = ['pakoworld', 'b2bmarkt', 'libertab2b', 'estiahomeart'];
+            $results = [];
+
+            foreach ($suppliers as $supplier) {
+                $input_xml = $xml_dir . $supplier . '.xml';
+                $output_xml = $xml_dir . $supplier . '-enhanced.xml';
+
+                // Skip if original XML doesn't exist
+                if (!file_exists($input_xml)) {
+                    $results[$supplier] = 'Skipped - XML not found';
+                    continue;
+                }
+
+                // Build the command
+                $command = sprintf(
+                    'cd %s && %s %s --mode process --input %s --output %s --skip-images > /dev/null 2>&1 &',
+                    escapeshellarg($script_dir),
+                    escapeshellarg($venv_python),
+                    escapeshellarg($python_script),
+                    escapeshellarg($input_xml),
+                    escapeshellarg($output_xml)
+                );
+
+                // Execute in background
+                exec($command);
+                $results[$supplier] = 'Started (background process)';
+            }
+
+            // Store results for display
+            update_option('xml_importer_enhance_status', [
+                'date' => current_time('mysql'),
+                'results' => $results
+            ]);
+
+            wp_redirect(add_query_arg([
+                'page' => 'xml-product-importer',
+                'message' => 'enhance_started'
+            ], admin_url('admin.php')));
+
+        } catch (\Exception $e) {
+            wp_redirect(add_query_arg([
+                'page' => 'xml-product-importer',
+                'message' => 'enhance_error',
                 'error' => urlencode($e->getMessage())
             ], admin_url('admin.php')));
         }

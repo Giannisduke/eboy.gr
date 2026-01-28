@@ -1,0 +1,133 @@
+# Supplier-specific configuration
+# Each supplier has different XML structure and field mappings
+
+suppliers:
+  pakoworld:
+    xml_structure:
+      product_element: ".//product"  # XPath for product elements
+      case_sensitive: false
+
+    field_mappings:
+      sku: ".//model"
+      name: ".//name"
+      category: ".//category"
+      description: ".//description"
+      price: ".//price"
+      main_image: ".//main_image"
+      gallery_images: ".//images/image"
+      attributes: ".//attributes/attribute"
+
+    # Title optimization preferences
+    title_max_length: 60
+    title_keep_brand: true
+
+    # Description preferences
+    description_target_length: 300
+    description_style: "bullet_points"  # bullet_points, paragraph, mixed
+
+    # Category mapping hints
+    category_separator: " > "
+    category_depth: 2  # How many levels in category hierarchy
+
+  estiahomeart:
+    xml_structure:
+      product_element: ".//Product"  # PascalCase
+      case_sensitive: true
+
+    field_mappings:
+      sku: ".//SKU"
+      name: ".//Name"
+      category_parent: ".//CategoryParent"
+      category: ".//Category"
+      description: ".//Description"  # Usually empty
+      price: ".//Price"
+      price_retail: ".//PriceRetail"
+      main_image: ".//imageurl"
+      gallery_images: null  # No gallery in estiah
+      attributes: ".//ProductSpecification"  # Multiple elements
+
+    # Build category from parent + child
+    category_format: "{category_parent} > {category}"
+
+    title_max_length: 60
+    title_keep_brand: true
+    title_remove_sku: true
+
+    description_target_length: 250
+    description_style: "mixed"
+
+    category_separator: " > "
+    category_depth: 2
+
+  b2bmarkt:
+    xml_structure:
+      product_element: ".//Product"
+      case_sensitive: true
+
+    field_mappings:
+      sku: ".//ProductCode"
+      name: ".//Name"
+      category: ".//Categories/Category[@level='1']"
+      description: ".//ExtendedDescription"
+      price: ".//RetailCurrentPrice"
+      main_image: ".//ImagesLocation/image[1]"
+      gallery_images: ".//ImagesLocation/image"
+      attributes: ".//Filters/Filter"
+
+    title_max_length: 60
+    title_keep_brand: true
+
+    description_target_length: 300
+    description_style: "bullet_points"
+
+    category_separator: " > "
+    category_depth: 2
+
+  libertab2b:
+    xml_structure:
+      product_element: ".//product"
+      case_sensitive: false
+
+    field_mappings:
+      sku: ".//sku"
+      name: ".//name"
+      category: ".//category"
+      description: ".//description"
+      price: ".//price"
+      main_image: ".//main_image"
+      gallery_images: ".//images/image"
+      attributes: ".//attributes/attribute"
+
+    title_max_length: 60
+    title_keep_brand: true
+
+    description_target_length: 300
+    description_style: "bullet_points"
+
+    category_separator: " > "
+    category_depth: 2
+
+# Default configuration for unknown suppliers
+default:
+  xml_structure:
+    product_element: ".//product"
+    case_sensitive: false
+
+  field_mappings:
+    sku: ".//sku"
+    name: ".//name"
+    category: ".//category"
+    description: ".//description"
+    price: ".//price"
+    main_image: ".//main_image"
+    gallery_images: ".//images/image"
+    attributes: ".//attributes/attribute"
+
+  title_max_length: 60
+  title_keep_brand: true
+
+  description_target_length: 300
+  description_style: "bullet_points"
+
+  category_separator: " > "
+  category_depth: 2

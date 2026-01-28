@@ -11,11 +11,11 @@ class XMLDownloader {
     private $cache_dir;
 
     public function __construct() {
-        // Use app/xml_files directory
-        $app_dir = WP_CONTENT_DIR . '/themes/' . get_template() . '/app/xml_files/';
+        // Use xml_files directory inside theme
+        $xml_dir = get_template_directory() . '/xml_files/';
 
-        $this->urls_file = $app_dir . 'xml_urls.txt';
-        $this->cache_dir = $app_dir;
+        $this->urls_file = $xml_dir . 'xml_urls.txt';
+        $this->cache_dir = $xml_dir;
 
         // Ensure cache directory exists
         if (!file_exists($this->cache_dir)) {
@@ -139,15 +139,38 @@ class XMLDownloader {
 
     /**
      * Get local XML file path for supplier
+     *
+     * @param string $supplier Supplier name
+     * @param bool $enhanced_only If true, ONLY return enhanced XML. If false, prefer enhanced with fallback to original.
+     * @return string|false File path or false if not found
      */
-    public function getLocalFile($supplier) {
-        $filename = $this->cache_dir . $supplier . '.xml';
+    public function getLocalFile($supplier, $enhanced_only = false) {
+        $enhanced_filename = $this->cache_dir . $supplier . '-enhanced.xml';
+        $original_filename = $this->cache_dir . $supplier . '.xml';
 
-        if (!file_exists($filename)) {
-            return false;
+        // If enhanced_only is true, ONLY return enhanced XML
+        if ($enhanced_only) {
+            if (!file_exists($enhanced_filename)) {
+                error_log("XMLDownloader: Enhanced XML not found for {$supplier}");
+                return false;
+            }
+            error_log("XMLDownloader: Using AI-enhanced XML (enhanced_only mode) for {$supplier}");
+            return $enhanced_filename;
         }
 
-        return $filename;
+        // Default behavior: Prefer enhanced XML, fallback to original
+        if (file_exists($enhanced_filename)) {
+            error_log("XMLDownloader: Using AI-enhanced XML for {$supplier}");
+            return $enhanced_filename;
+        }
+
+        if (file_exists($original_filename)) {
+            error_log("XMLDownloader: Using original XML for {$supplier} (enhanced not found)");
+            return $original_filename;
+        }
+
+        error_log("XMLDownloader: No XML found for {$supplier}");
+        return false;
     }
 
     /**

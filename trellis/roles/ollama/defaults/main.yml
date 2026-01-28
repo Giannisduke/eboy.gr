@@ -1,0 +1,29 @@
+---
+# Ollama AI Model Server Configuration
+
+ollama_enabled: false
+ollama_version: "latest"
+ollama_install_dir: "/srv/ollama"
+ollama_data_dir: "/srv/ollama/data"
+ollama_user: "ollama"
+ollama_group: "ollama"
+
+# Network Configuration
+ollama_bind_address: "127.0.0.1"
+ollama_port: 11434
+
+# Model Configuration
+ollama_models:
+  - "ilsp/llama-krikri-8b-instruct"  # ~6GB, Greek language model from ILSP
+
+# Resource Limits
+ollama_max_loaded_models: 1
+ollama_num_parallel: 1  # Process 1 request at a time to conserve memory
+
+# Logging
+ollama_log_dir: "/var/log/ollama"
+ollama_log_level: "info"
+
+# Download URL (will be set dynamically based on architecture)
+# Don't override this unless you need a specific version
+ollama_download_url: ""

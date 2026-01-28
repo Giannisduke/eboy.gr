@@ -1,0 +1,35 @@
+[Unit]
+Description=Ollama AI Model Server
+Documentation=https://ollama.com/
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ ollama_user }}
+Group={{ ollama_group }}
+ExecStart=/usr/local/bin/ollama serve
+Environment="OLLAMA_HOST={{ ollama_bind_address }}:{{ ollama_port }}"
+Environment="OLLAMA_MODELS={{ ollama_data_dir }}"
+Environment="OLLAMA_MAX_LOADED_MODELS={{ ollama_max_loaded_models }}"
+Environment="OLLAMA_NUM_PARALLEL={{ ollama_num_parallel }}"
+Environment="OLLAMA_DEBUG=false"
+Restart=always
+RestartSec=10
+StandardOutput=append:{{ ollama_log_dir }}/ollama.log
+StandardError=append:{{ ollama_log_dir }}/ollama-error.log
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths={{ ollama_data_dir }} {{ ollama_log_dir }}
+
+# Resource limits (important for 8GB VM)
+MemoryMax=2.5G
+MemoryHigh=2G
+CPUQuota=200%
+
+[Install]
+WantedBy=multi-user.target

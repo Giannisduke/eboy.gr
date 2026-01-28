@@ -1,0 +1,130 @@
+---
+- name: Check if Ollama is enabled
+  debug:
+    msg: "Ollama installation is {{ ollama_enabled | ternary('enabled', 'disabled') }}"
+
+- name: Ollama installation tasks
+  when: ollama_enabled | default(false)
+  block:
+    - name: Detect system architecture
+      set_fact:
+        ollama_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"
+
+    - name: Set Ollama download URL based on architecture
+      set_fact:
+        ollama_download_url: "{{ 'https://ollama.ai/download/ollama-linux-arm64' if ollama_arch == 'arm64' else 'https://ollama.ai/download/ollama-linux-amd64' }}"
+      when: ollama_download_url == ""
+
+    - name: Display detected architecture
+      debug:
+        msg: "Detected architecture: {{ ansible_architecture }} -> using {{ ollama_arch }} binary"
+
+    - name: Create Ollama system group
+      group:
+        name: "{{ ollama_group }}"
+        system: true
+        state: present
+
+    - name: Create Ollama system user
+      user:
+        name: "{{ ollama_user }}"
+        group: "{{ ollama_group }}"
+        system: true
+        shell: /bin/false
+        home: "{{ ollama_install_dir }}"
+        create_home: false
+        comment: "Ollama AI Model Server"
+        state: present
+
+    - name: Create Ollama directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ ollama_user }}"
+        group: "{{ ollama_group }}"
+        mode: "0755"
+      loop:
+        - "{{ ollama_install_dir }}"
+        - "{{ ollama_data_dir }}"
+        - "{{ ollama_log_dir }}"
+
+    - name: Check if Ollama binary exists
+      stat:
+        path: "/usr/local/bin/ollama"
+      register: ollama_binary
+
+    - name: Install Ollama using official install script
+      shell: curl -fsSL https://ollama.com/install.sh | sh
+      args:
+        creates: "/usr/local/bin/ollama"
+      when: not ollama_binary.stat.exists or (ollama_version == 'latest')
+      register: ollama_install
+
+    - name: Create Ollama systemd service
+      template:
+        src: ollama.service.j2
+        dest: /etc/systemd/system/ollama.service
+        owner: root
+        group: root
+        mode: "0644"
+      notify:
+        - restart ollama
+
+    - name: Enable and start Ollama service
+      systemd:
+        name: ollama
+        enabled: true
+        state: started
+        daemon_reload: true
+
+    - name: Wait for Ollama to be ready
+      uri:
+        url: "http://{{ ollama_bind_address }}:{{ ollama_port }}/api/version"
+        method: GET
+        status_code: 200
+      register: ollama_health
+      until: ollama_health.status == 200
+      retries: 30
+      delay: 2
+      ignore_errors: true
+
+    - name: Pull Ollama models
+      command: "/usr/local/bin/ollama pull {{ item }}"
+      environment:
+        OLLAMA_HOST: "{{ ollama_bind_address }}:{{ ollama_port }}"
+      loop: "{{ ollama_models }}"
+      register: ollama_pull
+      changed_when: "'pulling' in ollama_pull.stdout"
+      failed_when: false
+      become: true
+      become_user: "{{ ollama_user }}"
+
+    - name: Configure log rotation for Ollama
+      copy:
+        dest: /etc/logrotate.d/ollama
+        content: |
+          {{ ollama_log_dir }}/*.log {
+              daily
+              rotate 7
+              compress
+              delaycompress
+              missingok
+              notifempty
+              create 0640 {{ ollama_user }} {{ ollama_group }}
+              sharedscripts
+              postrotate
+                  systemctl reload ollama > /dev/null 2>&1 || true
+              endscript
+          }
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Display Ollama installation info
+      debug:
+        msg:
+          - "Ollama has been installed successfully!"
+          - "API endpoint: http://{{ ollama_bind_address }}:{{ ollama_port }}"
+          - "Data directory: {{ ollama_data_dir }}"
+          - "Log directory: {{ ollama_log_dir }}"
+          - "Loaded models: {{ ollama_models | join(', ') }}"

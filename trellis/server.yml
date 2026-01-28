@@ -28,6 +28,7 @@
     - { role: netdata, tags: [netdata] }
     - { role: memcached, tags: [memcached], when: sites_using_memcached | count }
     - { role: redis, tags: [redis], when: sites_using_redis | count }
+    - { role: ollama, tags: [ollama], when: ollama_enabled | default(false) }
     - { role: nginx, tags: [nginx] }
     - { role: logrotate, tags: [logrotate] }
     - { role: composer, tags: [composer] }

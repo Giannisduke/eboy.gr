@@ -1,0 +1,25 @@
+---
+- name: restart ollama
+  systemd:
+    name: ollama
+    state: restarted
+    daemon_reload: true
+  when: ollama_enabled | default(false)
+
+- name: reload ollama
+  systemd:
+    name: ollama
+    state: reloaded
+  when: ollama_enabled | default(false)
+
+- name: stop ollama
+  systemd:
+    name: ollama
+    state: stopped
+  when: ollama_enabled | default(false)
+
+- name: enable ollama
+  systemd:
+    name: ollama
+    enabled: true
+  when: ollama_enabled | default(false)

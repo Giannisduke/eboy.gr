@@ -4,6 +4,9 @@ mysql_root_password: "{{ vault_mysql_root_password }}" # Define this variable in
 web_user: "{{ ansible_user | default ('web') }}"
 php_max_input_vars: 5000
 
+# Ollama AI Configuration
+ollama_enabled: true
+
 # =========================
 # Option B (8GB VM) — PHP 1G
 # =========================

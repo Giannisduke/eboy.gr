@@ -2,7 +2,7 @@
 # List each machine only once per [group], even if it will host multiple sites.
 
 [development]
-192.168.56.5
+127.0.0.1 ansible_port=52226 ansible_user=eboy
 
 [web]
-192.168.56.5
+127.0.0.1 ansible_port=52226 ansible_user=eboy

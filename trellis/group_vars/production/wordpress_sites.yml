@@ -34,3 +34,7 @@ wordpress_sites:
       BLOG_ID_CURRENT_SITE: 1
       WP_HOME: https://monk.gr # hack to make sure WP_HOME is set to the primary domain
       WP_SITEURL: https://monk.gr/wp # hack to make sure WP_SITEURL is set to the primary domain
+      WP_DEBUG: true
+      WP_DEBUG_LOG: true
+      WP_DEBUG_DISPLAY: false
+      SCRIPT_DEBUG: false

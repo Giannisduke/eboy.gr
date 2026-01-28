@@ -57,10 +57,11 @@ class Importer {
      * Process single supplier
      */
     public function processSupplier($supplier) {
-        $xml_file = $this->downloader->getLocalFile($supplier);
+        // IMPORTANT: Only import from AI-enhanced XML files
+        $xml_file = $this->downloader->getLocalFile($supplier, true);
 
         if (!$xml_file) {
-            throw new \Exception("XML file not found for supplier: {$supplier}");
+            throw new \Exception("AI-Enhanced XML file not found for supplier: {$supplier}. Please run AI enhancement first!");
         }
 
         // Get appropriate parser

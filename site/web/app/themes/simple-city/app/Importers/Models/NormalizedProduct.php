@@ -30,6 +30,8 @@ class NormalizedProduct {
 
     // Categories
     public $categories = [];
+    public $woo_category; // AI-enhanced WooCommerce category
+    public $tags = []; // AI-generated product tags
 
     // Attributes
     public $attributes = [];
@@ -55,6 +57,7 @@ class NormalizedProduct {
 
     public function __construct() {
         $this->categories = [];
+        $this->tags = [];
         $this->attributes = [];
         $this->gallery_image_urls = [];
         $this->related_skus = [];
@@ -93,9 +96,12 @@ class NormalizedProduct {
      * Get final price after markup
      */
     public function calculateFinalPrice($markup_percentage = 0, $add_vat = false, $vat_rate = 24) {
-        $base_price = $this->wholesale_price ?: $this->retail_price;
+        // Priority: use retail_price if available (already includes VAT from supplier)
+        // Otherwise use wholesale_price and apply markup
+        $base_price = $this->retail_price ?: $this->wholesale_price;
 
-        if ($markup_percentage > 0) {
+        // Only apply markup if using wholesale_price
+        if ($markup_percentage > 0 && !$this->retail_price && $this->wholesale_price) {
             $base_price = $base_price * (1 + ($markup_percentage / 100));
         }
 
