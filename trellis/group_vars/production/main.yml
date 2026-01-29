@@ -18,6 +18,11 @@ php_fpm_min_spare_servers: 4
 php_fpm_max_spare_servers: 12
 php_fpm_max_requests: 500
 
+# Netdata
+netdata_enabled: true
+netdata_web_log_enabled: true
+netdata_monk_5xx_alert_enabled: true
+
 # DB
 mysql_root_password: "{{ vault_mysql_root_password }}"
 

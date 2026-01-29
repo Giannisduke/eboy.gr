@@ -2,7 +2,7 @@
 netdata_enabled: true
 
 # Προτεινόμενο: “local-only” + πρόσβαση μόνο με reverse proxy ή allowlist στο firewall
-netdata_bind_to: "127.0.0.1"
+netdata_bind_ip: "127.0.0.1"
 netdata_port: 19999
 
 # Αν θες να ακούει δημόσια (ΔΕΝ το προτείνω), κάνε:

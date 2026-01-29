@@ -3,6 +3,14 @@
   ansible.builtin.meta: end_host
   when: not (netdata_enabled | default(false))
 
+# Backward compat: το defaults σου έχει netdata_bind_to, ενώ το template netdata.conf.j2 χρησιμοποιεί netdata_bind_ip
+- name: Netdata | Map netdata_bind_to -> netdata_bind_ip (backward compatibility)
+  ansible.builtin.set_fact:
+    netdata_bind_ip: "{{ netdata_bind_to }}"
+  when:
+    - netdata_bind_ip is not defined
+    - netdata_bind_to is defined
+
 - name: Netdata | Install dependencies
   ansible.builtin.apt:
     name:
@@ -15,6 +23,7 @@
 
 - name: Netdata | Install via official kickstart
   ansible.builtin.shell: |
+    set -euo pipefail
     curl -fsSL https://get.netdata.cloud/kickstart.sh | bash -s -- \
       --dont-wait \
       --{{ netdata_channel | default('stable') }}-channel
@@ -22,6 +31,75 @@
     executable: /bin/bash
     creates: /usr/sbin/netdata
   when: (netdata_install_method | default('official_script')) == "official_script"
+
+- name: Netdata | Ensure Netdata config dirs exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  loop:
+    - /etc/netdata
+    - /etc/netdata/go.d
+    - /etc/netdata/health.d
+
+- name: Netdata | Configure netdata.conf (bind/port)
+  ansible.builtin.template:
+    src: netdata.conf.j2
+    dest: /etc/netdata/netdata.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart netdata
+
+# -----------------------
+# WEB LOG PARSING (για να βλέπεις 500/5xx από nginx access logs)
+# -----------------------
+- name: Netdata | web_log | Allow netdata user to read nginx logs (adm group)
+  ansible.builtin.user:
+    name: netdata
+    groups: adm
+    append: yes
+  when: netdata_web_log_enabled | default(true)
+
+# Πρότεινε path: είτε per-vhost (π.χ. /var/log/nginx/monk.gr.access.log) είτε fallback στο γενικό access.log
+- name: Netdata | web_log | Resolve nginx access log path
+  ansible.builtin.set_fact:
+    netdata_web_log_path: "{{ netdata_nginx_monk_access_log | default('/var/log/nginx/access.log') }}"
+  when: netdata_web_log_enabled | default(true)
+
+- name: Netdata | web_log | Check nginx access log exists
+  ansible.builtin.stat:
+    path: "{{ netdata_web_log_path }}"
+  register: netdata_weblog_stat
+  when: netdata_web_log_enabled | default(true)
+
+- name: Netdata | web_log | Configure go.d (web_log.conf)
+  ansible.builtin.template:
+    src: go.d/web_log.conf.j2
+    dest: /etc/netdata/go.d/web_log.conf
+    owner: root
+    group: root
+    mode: "0644"
+  when:
+    - netdata_web_log_enabled | default(true)
+    - netdata_weblog_stat.stat.exists
+  notify: Restart netdata
+
+# Προαιρετικό: alert "αν εμφανιστεί έστω 1x 5xx στο τελευταίο 1 λεπτό"
+- name: Netdata | web_log | Any 5xx alert for monk (optional)
+  ansible.builtin.template:
+    src: health.d/monk_5xx.conf.j2
+    dest: /etc/netdata/health.d/monk_5xx.conf
+    owner: root
+    group: root
+    mode: "0644"
+  when:
+    - netdata_monk_5xx_alert_enabled | default(true)
+    - netdata_web_log_enabled | default(true)
+    - netdata_weblog_stat.stat.exists
+  notify: Restart netdata
 
 # -----------------------
 # NGINX stub_status (Trellis nginx.conf includes /etc/nginx/includes.d/http/*.conf)
@@ -35,7 +113,7 @@
     mode: "0755"
   when: netdata_nginx_stub_status_enabled | default(false)
 
-- name: Netdata | Nginx stub_status | Install vhost
+- name: Netdata | Nginx stub_status | Install vhost include
   ansible.builtin.template:
     src: netdata-stub-status.conf.j2
     dest: /etc/nginx/includes.d/http/netdata-stub-status.conf
@@ -70,6 +148,7 @@
       *.*:PROCESS,REPLICATION CLIENT/
       mysql.*:SELECT/
       performance_schema.*:SELECT
+  when: netdata_mysql_enabled | default(false)
 
 - name: Netdata | Netdata mysql collector | Configure go.d
   ansible.builtin.template:

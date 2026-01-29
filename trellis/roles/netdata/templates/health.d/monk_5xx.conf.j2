@@ -1,0 +1,9 @@
+template: any_5xx_last_1m
+      on: web_log.type_requests
+  lookup: sum -1m unaligned of error
+   units: requests
+   every: 10s
+    warn: $this > 0
+   delay: up 0 down 2m
+ summary: Nginx: detected 5xx in last minute
+    info: Triggers on any 5xx seen in nginx access logs in the last 1 minute.
