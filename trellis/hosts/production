@@ -2,10 +2,13 @@
 # List each machine only once per [group], even if it will host multiple sites.
 
 [production]
-64.225.96.143 ansible_user=root
+simple-city-prod ansible_user=root
 
 [web]
-64.225.96.143
+simple-city-prod
 
 [db]
-64.225.96.143
+simple-city-prod
+
+[local]
+localhost ansible_connection=local
