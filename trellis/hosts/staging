@@ -6,3 +6,6 @@ eboy.gr
 
 [web]
 eboy.gr
+
+[local]
+localhost ansible_connection=local
