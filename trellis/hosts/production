@@ -2,7 +2,7 @@
 # List each machine only once per [group], even if it will host multiple sites.
 
 [production]
-simple-city-prod ansible_host=monk.gr ansible_user=root
+simple-city-prod ansible_host=monk.gr ansible_user=admin
 
 [web]
 simple-city-prod
