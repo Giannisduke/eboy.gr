@@ -3,5 +3,16 @@
 !/plugins/*
 !/public/*
 .env
-
 npm-debug.log
+
+# XML Files - Ignore dynamic content
+/xml_files/*
+
+# Keep configuration files
+!/xml_files/xml_urls.txt
+!/xml_files/.gitkeep
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
