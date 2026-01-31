@@ -29,31 +29,31 @@
 - name: Verify dict format for package component variables
   fail:
     msg: "{{ lookup('template', 'package_vars_wrong_format_msg.j2') }}"
-  when: package_vars_wrong_format != '[]'
+  when: package_vars_wrong_format | length > 0
   vars:
     package_vars:
-      apt_packages_default: "{{ apt_packages_default }}"
+      apt_packages_default: "{{ apt_packages_default | default({}) }}"
       apt_packages_custom: "{{ apt_packages_custom | default({}) }}"
-      memcached_packages_default: "{{ memcached_packages_default }}"
+      memcached_packages_default: "{{ memcached_packages_default | default({}) }}"
       memcached_packages_custom: "{{ memcached_packages_custom | default({}) }}"
-      php_extensions_default: "{{ php_extensions_default }}"
-      php_extensions_custom: "{{ php_extensions_custom }}"
-      sshd_packages_default: "{{ sshd_packages_default }}"
+      php_extensions_default: "{{ php_extensions_default | default({}) }}"
+      php_extensions_custom: "{{ php_extensions_custom | default({}) }}"
+      sshd_packages_default: "{{ sshd_packages_default | default({}) }}"
       sshd_packages_custom: "{{ sshd_packages_custom | default({}) }}"
-    package_vars_wrong_format: "[{% for k,v in package_vars.items() | list if v | type_debug != 'dict' %}'{{ k }}',{% endfor %}]"
+    package_vars_wrong_format: "{{ package_vars | dict2items | rejectattr('value', 'mapping') | map(attribute='key') | list }}"
   tags: [memcached, php, sshd]
 
 - name: Verify dict format for package combined variables
   fail:
     msg: "{{ lookup('template', 'package_vars_wrong_format_msg.j2') }}"
-  when: package_vars_wrong_format != '[]'
+  when: package_vars_wrong_format | length > 0
   vars:
     package_vars:
-      apt_packages: "{{ apt_packages }}"
-      memcached_packages: "{{ memcached_packages }}"
-      php_extensions: "{{ php_extensions }}"
-      sshd_packages: "{{ sshd_packages }}"
-    package_vars_wrong_format: "[{% for k,v in package_vars.items() | list if v | type_debug != 'dict' %}'{{ k }}',{% endfor %}]"
+      apt_packages: "{{ apt_packages | default({}) }}"
+      memcached_packages: "{{ memcached_packages | default({}) }}"
+      php_extensions: "{{ php_extensions | default({}) }}"
+      sshd_packages: "{{ sshd_packages | default({}) }}"
+    package_vars_wrong_format: "{{ package_vars | dict2items | rejectattr('value', 'mapping') | map(attribute='key') | list }}"
   tags: [memcached, php, sshd]
 
 - name: Clean old APT sources
