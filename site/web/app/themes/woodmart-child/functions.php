@@ -77,7 +77,7 @@ function antzel_custom_style2($hook) {
 
 function eboy_gsap_home() {
   if ( is_page( 41450 )  ) {
-    wp_enqueue_style( 'autumn_25_11', get_stylesheet_directory_uri().'/css/autumn_25_11.css' ); 
+    wp_enqueue_style( 'winter_26', get_stylesheet_directory_uri().'/css/winter_26.css' ); 
     wp_enqueue_script( 'gsap_js', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js', array(), false, true );
     wp_enqueue_script( 'gsap_draggables', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/Draggable.min.js', array(), false, true );
      wp_enqueue_script('embla-carousel', 'https://unpkg.com/embla-carousel/embla-carousel.umd.js', [], null, true);
