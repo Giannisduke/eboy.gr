@@ -77,7 +77,7 @@ function antzel_custom_style2($hook) {
 
 function eboy_gsap_home() {
   if ( is_page( 41450 )  ) {
-    wp_enqueue_style( 'autumn_25_11', get_stylesheet_directory_uri().'/css/winter_26.css' ); 
+    wp_enqueue_style( 'autumn_25_11', get_stylesheet_directory_uri().'/css/autumn_25_11.css' ); 
     wp_enqueue_script( 'gsap_js', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js', array(), false, true );
     wp_enqueue_script( 'gsap_draggables', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/Draggable.min.js', array(), false, true );
      wp_enqueue_script('embla-carousel', 'https://unpkg.com/embla-carousel/embla-carousel.umd.js', [], null, true);
@@ -93,7 +93,7 @@ add_action('wp_enqueue_scripts', 'eboy_gsap_home', 99999999999999991);
 
 function eboy_gsap_test() {
   if ( is_page( 7075 ) || is_page( 51964 ) ) {
-    wp_enqueue_style( 'autumn_25_11', get_stylesheet_directory_uri().'/css/winter_26.css' ); 
+    wp_enqueue_style( 'autumn_25_11', get_stylesheet_directory_uri().'/css/autumn_25_11.css' ); 
     wp_enqueue_script( 'gsap_js', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js', array(), false, true );
     wp_enqueue_script( 'gsap_draggables', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/Draggable.min.js', array(), false, true );
      wp_enqueue_script('embla-carousel', 'https://unpkg.com/embla-carousel/embla-carousel.umd.js', [], null, true);
@@ -486,6 +486,42 @@ if (!function_exists('additional_font_styles')) {
 }
 
 
+/**
+ * Category-based dynamic -50% sale, ignoring any stored sale prices.
+ * Category slug: christoygenna-2
+ */
+
+add_action('init', function () {
+
+	$target_cat_slug      = 'christoygenna-2'; // ✅ χωρίς το leading "/"
+	$discount_multiplier  = 0.50;              // ✅ -50%
+
+	$in_target_cat = function ( $product ) use ( $target_cat_slug ) : bool {
+		if ( ! $product || ! is_a( $product, 'WC_Product' ) ) return false;
+
+		$product_id = $product->get_id();
+
+		// If variation, check parent product categories
+		if ( $product->is_type('variation') ) {
+			$parent_id = $product->get_parent_id();
+			if ( $parent_id ) $product_id = $parent_id;
+		}
+
+		return has_term( $target_cat_slug, 'product_cat', $product_id );
+	};
+
+	$get_discounted_from_regular = function ( WC_Product $product ) use ( $discount_multiplier ) : ?float {
+		$regular = $product->get_regular_price();
+
+		// If no regular price, fallback to current price
+		if ( $regular === '' || $regular === null ) {
+			$p = $product->get_price();
+			if ( $p === '' || $p === null ) return null;
+			return (float) $p * $discount_multiplier;
+		}
+
+		return (float) $regular * $discount_multiplier;
+	};
 
 	/**
 	 * SIMPLE PRODUCTS
