@@ -1,0 +1,50 @@
+.slogan_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-wrap: wrap;
+}
+
+.slogan {
+    display: flex;
+    padding: 0rem 0 2rem 0;
+}
+
+.slogan > svg {
+  height: 5rem;
+}
+
+.sale_summer25 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-wrap: wrap;
+}
+
+.sale_summer25 > svg{
+    width: 11rem;
+    position: absolute;
+    right: 1rem;
+}
+
+.watermellon {
+    display: flex;
+    justify-content: center
+}
+
+.watermellon > svg {
+    height: 19rem;
+}
+
+.embla {
+  overflow: hidden;
+}
+.embla__container {
+  display: flex;
+}
+.embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+}
