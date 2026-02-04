@@ -11,8 +11,8 @@ Group={{ ollama_group }}
 ExecStart=/usr/local/bin/ollama serve
 Environment="OLLAMA_HOST={{ ollama_bind_address }}:{{ ollama_port }}"
 Environment="OLLAMA_MODELS={{ ollama_data_dir }}"
-Environment="OLLAMA_MAX_LOADED_MODELS={{ ollama_max_loaded_models }}"
-Environment="OLLAMA_NUM_PARALLEL={{ ollama_num_parallel }}"
+Environment="OLLAMA_MAX_LOADED_MODELS={{ ollama_max_loaded_models | default(1) }}"
+Environment="OLLAMA_NUM_PARALLEL={{ ollama_num_parallel | default(1) }}"
 Environment="OLLAMA_DEBUG=false"
 Restart=always
 RestartSec=10
@@ -22,9 +22,10 @@ StandardError=append:{{ ollama_log_dir }}/ollama-error.log
 # Security hardening
 NoNewPrivileges=true
 PrivateTmp=true
-ProtectSystem=strict
+ProtectSystem=full
 ProtectHome=true
 ReadWritePaths={{ ollama_data_dir }} {{ ollama_log_dir }}
+ReadOnlyPaths=/usr/local/bin
 
 # Resource limits (important for 8GB VM)
 MemoryMax=2.5G

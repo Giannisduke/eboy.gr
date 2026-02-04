@@ -111,14 +111,40 @@
 
     - name: Wait for Ollama to be ready
       uri:
-        url: "http://{{ ollama_bind_address }}:{{ ollama_port }}/api/version"
+        url: "http://127.0.0.1:{{ ollama_port }}/api/version"
         method: GET
         status_code: 200
       register: ollama_health
       until: ollama_health.status == 200
       retries: 30
       delay: 2
-      ignore_errors: true
+      failed_when: false
+
+    - name: Check Ollama service status if health check failed
+      systemd:
+        name: ollama
+      register: ollama_service_status
+      when: ollama_health.status is not defined or ollama_health.status != 200
+
+    - name: Display Ollama service status
+      debug:
+        msg:
+          - "Ollama service state: {{ ollama_service_status.status.ActiveState | default('unknown') }}"
+          - "Health check: {{ 'PASSED' if ollama_health.status == 200 else 'FAILED - service may need manual restart' }}"
+      when: ollama_health.status is not defined or ollama_health.status != 200
+
+    - name: Get Ollama service logs if health check failed
+      command: journalctl -u ollama -n 50 --no-pager
+      register: ollama_logs
+      when: ollama_health.status is not defined or ollama_health.status != 200
+      changed_when: false
+
+    - name: Display Ollama logs
+      debug:
+        msg: "{{ ollama_logs.stdout_lines }}"
+      when:
+        - ollama_health.status is not defined or ollama_health.status != 200
+        - ollama_logs.stdout_lines is defined
 
     - name: Pull Ollama models
       command: "/usr/local/bin/ollama pull {{ item }}"
