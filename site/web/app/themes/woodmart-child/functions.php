@@ -486,42 +486,6 @@ if (!function_exists('additional_font_styles')) {
 }
 
 
-/**
- * Category-based dynamic -50% sale, ignoring any stored sale prices.
- * Category slug: christoygenna-2
- */
-
-add_action('init', function () {
-
-	$target_cat_slug      = 'christoygenna-2'; // ✅ χωρίς το leading "/"
-	$discount_multiplier  = 0.50;              // ✅ -50%
-
-	$in_target_cat = function ( $product ) use ( $target_cat_slug ) : bool {
-		if ( ! $product || ! is_a( $product, 'WC_Product' ) ) return false;
-
-		$product_id = $product->get_id();
-
-		// If variation, check parent product categories
-		if ( $product->is_type('variation') ) {
-			$parent_id = $product->get_parent_id();
-			if ( $parent_id ) $product_id = $parent_id;
-		}
-
-		return has_term( $target_cat_slug, 'product_cat', $product_id );
-	};
-
-	$get_discounted_from_regular = function ( WC_Product $product ) use ( $discount_multiplier ) : ?float {
-		$regular = $product->get_regular_price();
-
-		// If no regular price, fallback to current price
-		if ( $regular === '' || $regular === null ) {
-			$p = $product->get_price();
-			if ( $p === '' || $p === null ) return null;
-			return (float) $p * $discount_multiplier;
-		}
-
-		return (float) $regular * $discount_multiplier;
-	};
 
 	/**
 	 * SIMPLE PRODUCTS

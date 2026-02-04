@@ -68,13 +68,13 @@
 }
 
 .embla__slide img {
-  width: 50%;
+
   height: auto;
   transition: width 0.3s ease;
 }
 
 .embla__slide.is-snapped img {
-  width: 60%;
+ 
 }
 
 .monkbutton_eboy.monkbl2wh {
