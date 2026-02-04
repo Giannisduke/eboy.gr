@@ -98,6 +98,21 @@
       failed_when: false
       become: true
       become_user: "{{ ollama_user }}"
+      async: 3600  # Allow up to 1 hour for large model downloads
+      poll: 10     # Check every 10 seconds
+
+    - name: Verify models are installed
+      command: "/usr/local/bin/ollama list"
+      environment:
+        OLLAMA_HOST: "{{ ollama_bind_address }}:{{ ollama_port }}"
+      register: ollama_list
+      changed_when: false
+      become: true
+      become_user: "{{ ollama_user }}"
+
+    - name: Display installed models
+      debug:
+        msg: "{{ ollama_list.stdout_lines }}"
 
     - name: Configure log rotation for Ollama
       copy:

@@ -1,0 +1,161 @@
+# English AI Prompts for Product Processing
+# Used by AI models for processing English XML feeds
+
+# PAKOWORLD-SPECIFIC PROMPT
+title_optimization_pakoworld: |
+  Clean this Pakoworld product title following these EXACT rules:
+
+  PATTERN: "Product type Model 20 pairs sonoma 80x37x123cm"
+
+  KEEP:
+  - Product type (first 1-2 words: shoe cabinet, bed, coffee table, bookcase)
+  - Model name (the word after product type: Sante, Holdon, Nevil, Remus, Pipra)
+  - Capacity if it's storage (12 pairs, 20 pairs, 30 pairs, 21 pairs)
+
+  REMOVE:
+  - "pakoworld" (ALWAYS)
+  - Colors: sonoma, wenge, oak, white, black, natural, anthracite, walnut
+  - Materials: PU, MDF, melamine, wood
+  - All dimensions with cm: 80x37x123cm, 160x200, etc
+  - "entrance furniture", "hall furniture"
+
+  FORMATTING (CRITICAL):
+  - Use sentence case: ONLY the first letter of the title is capitalized
+  - Everything else is lowercase (except proper nouns)
+  - Model names should be capitalized like: Sante, Holdon, Nevil, Mito (not HOLDON, SANTE)
+
+  EXAMPLES (follow EXACTLY):
+  Input: "Shoe cabinet Sante pakoworld 20 pairs sonoma 80x37x123cm"
+  Output: "Shoe cabinet Sante 20 pairs"
+
+  Input: "Bed Nevil pakoworld PU white matte 160x200"
+  Output: "Bed Nevil"
+
+  Input: "Coffee table Pipra pakoworld in white colour 110x60x40"
+  Output: "Coffee table Pipra"
+
+  Input: "Bookcase MITO pakoworld in anthracite-natural colour 108,5x25,5x161cm"
+  Output: "Bookcase Mito"
+
+  Input: "Entrance furniture-shoe cabinet HOLDON pakoworld in anthracite-natural colour with a capacity of 12 pairs 120x36.5x87cm"
+  Output: "Shoe cabinet Holdon 12 pairs"
+
+  Now clean this title: {original_title}
+
+  Output (ONLY the cleaned title):
+
+# LIBERTAB2B/ESTIAHOMEART-SPECIFIC PROMPT
+title_optimization_libertab2b: |
+  Clean this product title following these EXACT rules:
+
+  PATTERN: "MODEL PRODUCT TYPE FEATURE COLOR DIMENSIONScm"
+
+  KEEP:
+  - Model name (first word: Monserat, Natura, Egg, Mino, Ammos)
+  - Product type (next words: sofa bed, chair, coffee table, buffet)
+  - Important features: corner right, corner left, set 2pcs, 1 drawer
+
+  REMOVE:
+  - Colors: PETROL, ANTHRACITE, BLACK, WHITE, WATER GREEN, SONOMA, NATURAL
+  - Materials: PVC, RATTAN, CHENILLE
+  - All dimensions: 254x224x90cm, 150x150x210cm, etc
+  - "DECAPE" finish descriptions
+
+  FORMATTING (CRITICAL):
+  - Use sentence case: ONLY the first letter of the title is capitalized
+  - Everything else is lowercase
+  - Model names should be capitalized like: Monserat, Natura, Egg (not MONSERAT, NATURA)
+
+  EXAMPLES:
+  Input: "MONSERAT SOFA BED CORNER RIGHT PETROL 254x224x90cm"
+  Output: "Monserat sofa bed corner right"
+
+  Input: "EGG CHAIR WATER GREEN BLACK 50x53x80cm"
+  Output: "Egg chair"
+
+  Input: "MINO COFFEE TABLE SET 2PCS SONOMA DECAPE BLACK 74x74x47cm"
+  Output: "Mino coffee table set 2pcs"
+
+  Input: "AMMOS COFFEE TABLE 1 DRAWER NATURAL WITH RATTAN 110x59x41.4cm"
+  Output: "Ammos coffee table 1 drawer"
+
+  Now clean this title: {original_title}
+
+  Output (ONLY the cleaned title):
+
+# GENERIC FALLBACK PROMPT (for other suppliers)
+title_optimization: |
+  Clean this product title following these rules:
+
+  KEEP:
+  - Product type (shoe cabinet, bed, table, chair, etc)
+  - Model/Series name
+  - Important features (capacity, size category, special features)
+
+  REMOVE:
+  - Brand names
+  - Colors
+  - Materials
+  - Exact dimensions in cm
+  - Generic prefixes like "Entrance furniture"
+
+  FORMATTING:
+  - Use sentence case: ONLY the first letter is capitalized
+  - Everything else is lowercase
+
+  Title to optimize: {original_title}
+
+  Output (ONLY the cleaned title):
+
+description_enhancement: |
+  Write a product description of 200-280 words (HTML format).
+
+  Product: {title}
+  Category: {supplier_category}
+  Features: {features}
+
+  HTML structure:
+  - <p>Introduction (2 sentences)</p>
+  - <ul><li>4-5 bullet points with features</li></ul>
+  - <p>Technical details</p>
+
+  Style: Persuasive, SEO-friendly, emphasize benefits.
+
+  Answer (ONLY HTML):
+
+tag_generation: |
+  Write 3 tags in this format: type, space, function
+
+  Examples:
+  Shoe cabinet 20 pairs → shoe cabinet, hallway, storage
+  Coffee table → table, living room, decoration
+  Bed 160x200 → bed, bedroom, rest
+
+  {title} →
+
+category_mapping: |
+  Map the supplier category to ONE of the 9 WooCommerce categories:
+
+  Supplier category: {supplier_category}
+  Product name: {product_name}
+
+  Available WooCommerce categories:
+  1. Furniture - Furniture for all spaces (living room, bedroom, hall, dining room, beds, wardrobes, tables, chairs)
+  2. Office - Office furniture and accessories (desks, office chairs, office bookcases)
+  3. Garden - Outdoor furniture and accessories (garden furniture, balcony, terrace)
+  4. Decoration - Decorative items (frames, vases, clocks, mirrors, wall shelves)
+  5. White goods - Bedding, towels, curtains (sheets, duvets, blinds)
+  6. Home organization - Storage solutions (baskets, boxes, organizing shelves)
+  7. Kitchen - Kitchenware and equipment (plates, glasses, cutlery, cookware)
+  8. Bathroom - Bathroom furniture and accessories
+  9. Lighting - Indoor and outdoor lighting (lamps, ceiling/wall/floor lights)
+
+  Instructions:
+  - Analyze the full hierarchy of the supplier category
+  - Choose the most appropriate category based on the product
+  - If it's furniture (table, chair, wardrobe, bed, shoe cabinet), choose "Furniture" (unless it's for garden or office)
+  - If it's for outdoor/garden, choose "Garden"
+  - If it's a desk or office chair, choose "Office"
+  - If in doubt, prefer the more general category
+
+  Answer with ONLY the category name in English (e.g., "Furniture"), without any other text or explanations.

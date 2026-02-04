@@ -32,13 +32,21 @@ def setup_logging(debug: bool = False):
     )
 
 
-def load_config() -> dict:
+def load_config(language: str = 'el') -> dict:
     """Load configuration from .env and YAML files"""
     # Load environment variables
     load_dotenv()
 
-    # Load prompts
-    prompts_path = Path(__file__).parent / 'config' / 'prompts.yaml'
+    # Load prompts based on language
+    if language == 'en':
+        prompts_path = Path(__file__).parent / 'config' / 'prompts_en.yaml'
+        prompts_translation_path = Path(__file__).parent / 'config' / 'prompts_translation.yaml'
+        with open(prompts_translation_path, 'r', encoding='utf-8') as f:
+            translation_prompts = yaml.safe_load(f)
+    else:
+        prompts_path = Path(__file__).parent / 'config' / 'prompts.yaml'
+        translation_prompts = None
+
     with open(prompts_path, 'r', encoding='utf-8') as f:
         prompts = yaml.safe_load(f)
 
@@ -52,29 +60,45 @@ def load_config() -> dict:
     with open(suppliers_path, 'r', encoding='utf-8') as f:
         suppliers = yaml.safe_load(f)
 
+    # Set models based on language
+    if language == 'en':
+        ai_model = os.getenv('AI_MODEL_EN', 'mistral:7b-instruct-q4_K_M')
+        translation_model = os.getenv('TRANSLATION_MODEL', 'llama-krikri')
+    else:
+        ai_model = os.getenv('OLLAMA_MODEL', 'llama-krikri')
+        translation_model = None
+
     config = {
+        'language': language,
         'ollama_host': os.getenv('OLLAMA_HOST', '127.0.0.1'),
         'ollama_port': int(os.getenv('OLLAMA_PORT', 11434)),
-        'ollama_model': os.getenv('OLLAMA_MODEL', 'mistral:7b-instruct-q4_K_M'),
+        'ai_model': ai_model,
+        'translation_model': translation_model,
         'xml_input_dir': Path(os.getenv('XML_INPUT_DIR', '../site/web/app/xml_files')),
         'xml_output_dir': Path(os.getenv('XML_OUTPUT_DIR', '../site/web/app/xml_files/enhanced')),
         'image_output_dir': Path(os.getenv('IMAGE_OUTPUT_DIR', '../site/web/app/uploads/ai-processed-images')),
         'max_concurrent_images': int(os.getenv('MAX_CONCURRENT_IMAGES', 5)),
         'prompts': prompts,
+        'translation_prompts': translation_prompts,
         'categories': categories,
         'suppliers': suppliers,
-        'debug': os.getenv('DEBUG', 'false').lower() == 'true'
+        'debug': os.getenv('DEBUG', 'false').lower() == 'true',
+        # WooCommerce Auto-Import
+        'woo_auto_import': os.getenv('WOO_AUTO_IMPORT', 'false').lower() == 'true',
+        'woo_url': os.getenv('WOO_URL', ''),
+        'woo_consumer_key': os.getenv('WOO_CONSUMER_KEY', ''),
+        'woo_consumer_secret': os.getenv('WOO_CONSUMER_SECRET', '')
     }
 
     return config
 
 
 def check_ollama_connection(config: dict) -> bool:
-    """Check if Ollama is running"""
+    """Check if Ollama is running and models are available"""
     client = OllamaClient(
         host=config['ollama_host'],
         port=config['ollama_port'],
-        model=config['ollama_model']
+        model=config['ai_model']
     )
 
     if not client.health_check():
@@ -85,15 +109,24 @@ def check_ollama_connection(config: dict) -> bool:
 
     print(f"✅ Connected to Ollama")
 
-    # Check if model is available
+    # Check if AI model is available
     models = client.list_models()
-    if config['ollama_model'] not in models:
-        print(f"⚠️  Model {config['ollama_model']} not found")
+    if config['ai_model'] not in models:
+        print(f"⚠️  AI Model {config['ai_model']} not found")
         print(f"   Available models: {', '.join(models) if models else 'none'}")
-        print(f"   Run: ollama pull {config['ollama_model']}")
+        print(f"   Run: ollama pull {config['ai_model']}")
         return False
 
-    print(f"✅ Model {config['ollama_model']} is available")
+    print(f"✅ AI Model {config['ai_model']} is available")
+
+    # Check translation model if in English mode
+    if config['language'] == 'en' and config['translation_model']:
+        if config['translation_model'] not in models:
+            print(f"⚠️  Translation Model {config['translation_model']} not found")
+            print(f"   Run: ollama pull {config['translation_model']}")
+            return False
+        print(f"✅ Translation Model {config['translation_model']} is available")
+
     return True
 
 
@@ -150,6 +183,13 @@ def main():
     )
 
     parser.add_argument(
+        '--language',
+        choices=['el', 'en'],
+        default='el',
+        help='Source language (el=Greek direct, en=English with translation)'
+    )
+
+    parser.add_argument(
         '--debug',
         action='store_true',
         help='Enable debug logging'
@@ -167,9 +207,14 @@ def main():
 
     # Load configuration
     try:
-        config = load_config()
+        config = load_config(language=args.language)
         if args.debug:
             config['debug'] = True
+
+        logger.info(f"Language mode: {config['language']}")
+        logger.info(f"AI Model: {config['ai_model']}")
+        if config['translation_model']:
+            logger.info(f"Translation Model: {config['translation_model']}")
     except Exception as e:
         logger.error(f"Failed to load configuration: {str(e)}")
         return 1

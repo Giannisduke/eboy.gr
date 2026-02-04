@@ -1,0 +1,16 @@
+# AI Processor - Development Environment Configuration
+
+# Ollama configuration for development
+# Override to use remote Lima VM Ollama server
+ollama_enabled: false  # Don't install Ollama on dev VM (use remote)
+
+ai_processor:
+  # Use remote Ollama server (Lima VM) in development
+  ollama_host: "192.168.5.2"
+  ollama_port: 11434
+
+  # WooCommerce Auto-Import (Development)
+  woo_auto_import: false  # Set to true to enable auto-import in dev
+  woo_url: "{{ vault_woo_dev_url }}"
+  woo_consumer_key: "{{ vault_woo_dev_consumer_key }}"
+  woo_consumer_secret: "{{ vault_woo_dev_consumer_secret }}"

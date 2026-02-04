@@ -1,0 +1,47 @@
+---
+# AI Product Processor Ansible Tasks
+
+- name: Create AI processor directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ web_user }}"
+    group: "{{ web_group }}"
+    mode: '0755'
+  loop:
+    - "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor/logs"
+    - "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor/output"
+    - "{{ www_root }}/web/app/themes/simple-city/xml_files/enhanced"
+  tags: [ai-processor]
+
+- name: Deploy .env file for AI processor
+  template:
+    src: env.j2
+    dest: "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor/.env"
+    owner: "{{ web_user }}"
+    group: "{{ web_group }}"
+    mode: '0640'
+  tags: [ai-processor, env]
+
+- name: Ensure Python venv exists
+  command: python3 -m venv venv
+  args:
+    chdir: "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor"
+    creates: "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor/venv"
+  become_user: "{{ web_user }}"
+  tags: [ai-processor, venv]
+
+- name: Install Python dependencies
+  pip:
+    requirements: "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor/requirements.txt"
+    virtualenv: "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor/venv"
+  become_user: "{{ web_user }}"
+  tags: [ai-processor, dependencies]
+
+- name: Set correct permissions for AI processor
+  file:
+    path: "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor"
+    owner: "{{ web_user }}"
+    group: "{{ web_group }}"
+    recurse: yes
+  tags: [ai-processor, permissions]

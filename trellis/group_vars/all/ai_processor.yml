@@ -1,0 +1,23 @@
+# AI Product Processor Configuration
+# These settings are deployed to the server via Ansible
+
+ai_processor:
+  # Ollama Configuration
+  # Use localhost since Ollama runs on the same server
+  ollama_host: "127.0.0.1"
+  ollama_port: 11434
+
+  # AI Models (must match ollama_models in ollama.yml)
+  ai_model_greek: "ilsp/llama-krikri-8b-instruct:latest"
+  ai_model_english: "llama3.1:8b"
+  translation_model: "ilsp/llama-krikri-8b-instruct:latest"
+
+  # Processing Configuration
+  batch_size: 50
+  max_concurrent_images: 5
+  image_quality: 85
+  image_max_width: 1200
+  image_max_height: 1200
+
+  # WooCommerce Auto-Import (per environment)
+  woo_auto_import: false  # Override in environment-specific files

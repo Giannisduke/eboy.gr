@@ -17,6 +17,8 @@ from .description_enhancer import DescriptionEnhancer
 from .tag_generator import TagGenerator
 from .category_mapper import CategoryMapper
 from .image_optimizer import ImageOptimizer
+from .translator import ProductTranslator
+from .woocommerce_api import WooCommerceAPI
 from .xml_processor_incremental import (
     calculate_product_hash,
     load_existing_enhanced_products,
@@ -34,12 +36,42 @@ class XMLProcessor:
         self.ai_client = OllamaClient(
             host=config.get('ollama_host', '127.0.0.1'),
             port=config.get('ollama_port', 11434),
-            model=config.get('ollama_model', 'mistral:7b-instruct-q4_K_M')
+            model=config.get('ai_model', 'mistral:7b-instruct-q4_K_M')
         )
 
         # Load configurations
         self.prompts_config = config['prompts']
         self.categories_config = config['categories']
+
+        # Check if we're in English mode (need translation)
+        self.language = config.get('language', 'el')
+        self.translator = None
+
+        if self.language == 'en' and config.get('translation_model'):
+            # Create separate client for translation
+            translation_client = OllamaClient(
+                host=config.get('ollama_host', '127.0.0.1'),
+                port=config.get('ollama_port', 11434),
+                model=config.get('translation_model')
+            )
+            self.translator = ProductTranslator(
+                translation_client,
+                prompts_file='config/prompts_translation.yaml'
+            )
+            logger.info(f"English mode enabled - will translate to Greek using {config.get('translation_model')}")
+
+        # Initialize WooCommerce API client (optional)
+        self.woo_api = None
+        if config.get('woo_auto_import', False):
+            woo_url = config.get('woo_url')
+            woo_key = config.get('woo_consumer_key')
+            woo_secret = config.get('woo_consumer_secret')
+
+            if woo_url and woo_key and woo_secret:
+                self.woo_api = WooCommerceAPI(woo_url, woo_key, woo_secret)
+                logger.info(f"✅ WooCommerce auto-import enabled: {woo_url}")
+            else:
+                logger.warning("⚠️  WooCommerce auto-import enabled but credentials missing")
 
         # Initialize processors
         self.title_optimizer = TitleOptimizer(self.ai_client, self.prompts_config)
@@ -256,6 +288,18 @@ class XMLProcessor:
                     # Update XML element
                     self._update_product_element(product_elem, enhanced_data)
 
+                    # Auto-import to WooCommerce if enabled
+                    if self.woo_api and enhanced_data:
+                        try:
+                            logger.info(f"🔄 Importing product {sku} to WooCommerce...")
+                            woo_result = self.woo_api.import_product(enhanced_data)
+                            if woo_result:
+                                logger.info(f"✅ Product {sku} imported to WooCommerce (ID: {woo_result.get('id')})")
+                            else:
+                                logger.error(f"❌ Failed to import product {sku} to WooCommerce")
+                        except Exception as e:
+                            logger.error(f"❌ WooCommerce import error for {sku}: {e}")
+
                 # Add to output tree
                 products_elem.append(product_elem)
                 if enhanced_data:
@@ -466,7 +510,12 @@ class XMLProcessor:
         # 1. Optimize title (with error handling)
         if product_data.get('name'):
             try:
-                optimized_title = self.title_optimizer.optimize(product_data['name'])
+                # Pass supplier to use supplier-specific prompt
+                supplier = product_data.get('supplier')
+                optimized_title = self.title_optimizer.optimize(
+                    product_data['name'],
+                    supplier=supplier
+                )
                 if optimized_title:
                     enhanced['optimized_title'] = optimized_title
             except Exception as e:
@@ -511,7 +560,43 @@ class XMLProcessor:
         # TODO: Re-enable description enhancement after optimization
         logger.debug(f"Skipping description enhancement for faster processing: {product_data.get('name', '')[:50]}")
 
-        # 5. Process images
+        # 5. Translate to Greek if in English mode
+        if self.translator and self.language == 'en':
+            try:
+                logger.info(f"Translating product to Greek: {enhanced.get('optimized_title', '')[:50]}")
+
+                # Translate optimized title
+                if enhanced.get('optimized_title'):
+                    greek_title = self.translator.translate_title(enhanced['optimized_title'])
+                    enhanced['optimized_title'] = greek_title
+
+                # Translate tags
+                if enhanced.get('tags'):
+                    # Tags are a list, convert to comma-separated string for translation
+                    english_tags = ', '.join(enhanced['tags'])
+                    greek_tags = self.translator.translate_tags(english_tags)
+                    enhanced['tags'] = [tag.strip() for tag in greek_tags.split(',')]
+
+                # Translate category (use direct mapping from translator)
+                if enhanced.get('woo_category'):
+                    # Category mapper may have output English category name
+                    # Keep it as-is if already Greek, otherwise translate
+                    if not any(greek_char in enhanced['woo_category'] for greek_char in 'αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ'):
+                        greek_category = self.translator.translate_category(enhanced['woo_category'])
+                        enhanced['woo_category'] = greek_category
+
+                # Translate description if we had enhanced it
+                if enhanced.get('ai_description'):
+                    greek_description = self.translator.translate_description(enhanced['ai_description'])
+                    enhanced['ai_description'] = greek_description
+
+                logger.info(f"Translation complete: {enhanced['optimized_title']}")
+
+            except Exception as e:
+                logger.error(f"Translation failed for {product_data.get('sku')}: {str(e)}")
+                # Keep English versions as fallback
+
+        # 6. Process images
         if not skip_images and (product_data.get('main_image') or product_data.get('images')):
             image_data = {
                 'sku': product_data.get('sku', 'unknown'),

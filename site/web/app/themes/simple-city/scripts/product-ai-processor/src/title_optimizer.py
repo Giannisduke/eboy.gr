@@ -16,14 +16,16 @@ class TitleOptimizer:
 
     def __init__(self, ai_client: OllamaClient, prompts_config: dict):
         self.ai_client = ai_client
+        self.prompts_config = prompts_config
         self.prompt_template = prompts_config.get('title_optimization', '')
 
-    def optimize(self, original_title: str) -> Optional[str]:
+    def optimize(self, original_title: str, supplier: str = None) -> Optional[str]:
         """
         Optimize a product title
 
         Args:
             original_title: The original product title
+            supplier: Supplier name to use supplier-specific prompt
 
         Returns:
             Optimized title or None if failed
@@ -32,12 +34,16 @@ class TitleOptimizer:
             logger.warning("Empty title provided")
             return None
 
-        # If title is already short enough, just clean it up
-        if len(original_title) <= 65:
-            return self._simple_cleanup(original_title)
+        # Select supplier-specific prompt if available
+        if supplier:
+            prompt_key = f'title_optimization_{supplier}'
+            prompt_template = self.prompts_config.get(prompt_key, self.prompt_template)
+            logger.debug(f"Using {prompt_key} prompt for supplier: {supplier}")
+        else:
+            prompt_template = self.prompt_template
 
-        # Use AI to optimize
-        prompt = self.prompt_template.format(original_title=original_title)
+        # Use AI to optimize (even for short titles, to apply supplier-specific rules)
+        prompt = prompt_template.format(original_title=original_title)
 
         try:
             optimized = self.ai_client.generate(

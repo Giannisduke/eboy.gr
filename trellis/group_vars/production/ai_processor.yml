@@ -1,0 +1,8 @@
+# AI Processor - Production Environment Configuration
+
+ai_processor:
+  # WooCommerce Auto-Import (Production)
+  woo_auto_import: true  # Auto-import enabled in production
+  woo_url: "{{ vault_woo_production_url }}"
+  woo_consumer_key: "{{ vault_woo_production_consumer_key }}"
+  woo_consumer_secret: "{{ vault_woo_production_consumer_secret }}"

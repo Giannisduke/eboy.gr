@@ -1,0 +1,61 @@
+# Translation Prompts (English → Greek)
+# Used by Llama-Krikri for translating AI-enhanced content
+
+title_translation: |
+  Μετάφρασε αυτόν τον τίτλο προϊόντος από αγγλικά σε ελληνικά.
+
+  ΚΑΝΟΝΕΣ:
+  - Κρατά την ίδια δομή
+  - ΜΟΝΟ το πρώτο γράμμα με κεφαλαίο (sentence case)
+  - Τα model names (π.χ. Holdon, Nevil, Sante) μένουν με το πρώτο γράμμα κεφαλαίο
+  - Οι αριθμοί μένουν ίδιοι
+  - Όλα τα άλλα με πεζά
+
+  Παραδείγματα:
+  "Shoe cabinet Holdon 12 pairs" → "Παπουτσοθήκη Holdon 12 ζεύγων"
+  "Bed Nevil" → "Κρεβάτι Nevil"
+  "Coffee table Remus" → "Τραπέζι σαλονιού Remus"
+  "Bookcase Mito" → "Βιβλιοθήκη Mito"
+
+  Αγγλικός τίτλος: {english_title}
+
+  Ελληνική μετάφραση (ΜΟΝΟ ο τίτλος):
+
+description_translation: |
+  Μετάφρασε αυτή την περιγραφή προϊόντος από αγγλικά σε ελληνικά.
+
+  ΚΑΝΟΝΕΣ:
+  - Κρατά την HTML δομή ακριβώς όπως είναι
+  - Μετάφρασε το περιεχόμενο φυσικά, όχι λέξη προς λέξη
+  - Διατήρησε το στυλ και τον τόνο
+  - Μην αλλάξεις αριθμούς, διαστάσεις, model names
+
+  Αγγλική περιγραφή:
+  {english_description}
+
+  Ελληνική μετάφραση (ΜΟΝΟ HTML):
+
+tag_translation: |
+  Translate these words to Greek. Output ONLY the Greek words separated by commas, nothing else.
+
+  Input: {english_tags}
+
+  Output (Greek words only):
+
+category_translation: |
+  Μετάφρασε το όνομα αυτής της κατηγορίας από αγγλικά σε ελληνικά.
+
+  Αντιστοιχίες κατηγοριών:
+  - Furniture → Έπιπλο
+  - Office → Γραφείο
+  - Garden → Κήπος
+  - Decoration → Διακόσμηση
+  - White goods → Λευκά είδη
+  - Home organization → Οργάνωση σπιτιού
+  - Kitchen → Κουζίνα
+  - Bathroom → Μπάνιο
+  - Lighting → Φωτισμός
+
+  Αγγλική κατηγορία: {english_category}
+
+  Ελληνική κατηγορία (ΜΟΝΟ το όνομα):

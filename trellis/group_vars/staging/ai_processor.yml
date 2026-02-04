@@ -1,0 +1,8 @@
+# AI Processor - Staging Environment Configuration
+
+ai_processor:
+  # WooCommerce Auto-Import (Staging)
+  woo_auto_import: false  # Set to true to enable auto-import in staging
+  woo_url: "{{ vault_woo_staging_url }}"
+  woo_consumer_key: "{{ vault_woo_staging_consumer_key }}"
+  woo_consumer_secret: "{{ vault_woo_staging_consumer_secret }}"
