@@ -1,50 +1,75 @@
-.slogan_wrapper {
+#monk_slider .embla {
+  width: 100%;
+}
+
+#monk_slider .embla__viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+#monk_slider .embla__container {
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  flex-wrap: wrap;
 }
 
-.slogan {
-    display: flex;
-    padding: 0rem 0 2rem 0;
-}
-
-.slogan > svg {
-  height: 5rem;
-}
-
-.sale_summer25 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    flex-wrap: wrap;
-}
-
-.sale_summer25 > svg{
-    width: 11rem;
-    position: absolute;
-    right: 1rem;
-}
-
-.watermellon {
-    display: flex;
-    justify-content: center
-}
-
-.watermellon > svg {
-    height: 19rem;
-}
-
-.embla {
-  overflow: hidden;
-}
-.embla__container {
+#monk_slider .embla__slide {
+  flex: 0 0 100%;            /* 1 slide τη φορά */
   display: flex;
+  justify-content: center;   /* κέντρο οριζόντια */
+  align-items: center;       /* κέντρο κάθετα */
 }
-.embla__slide {
-  flex: 0 0 100%;
-  min-width: 0;
+
+#monk_slider .embla__slide > a {
+  display: inline-flex;      /* για 2 εικόνες δίπλα-δίπλα */
+  justify-content: center;
+  align-items: center;
+  gap: 16px;                 /* απόσταση img-a / img-b */
+}
+
+#monk_slider .embla__slide img {
+  display: block;
+  height: auto;
+}
+
+/* 1) Κέντρο το overlay των arrows (ομάδα) */
+#monk_slider .embla__arrows{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(900px, 90vw);   /* πλάτος "ζώνης" των βελών */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* 2) Τα ίδια τα κουμπιά */
+#monk_slider .embla__prev,
+#monk_slider .embla__next{
+  pointer-events: auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 0;
+  cursor: pointer;
+}
+
+/* 3) Κέντρο το "Δείτε τα όλα" button */
+#monk_slider .monkbutton_eboy{
+  display: inline-flex;
+  margin: 18px auto 0;       /* auto => κεντράρισμα */
+  justify-content: center;
+}
+
+/* Αν το theme το κρατάει αριστερά επειδή είναι inline μέσα σε block,
+   εξασφάλισε ότι ο γονιός μπορεί να κεντράρει */
+#monk_slider{
+  text-align: center;
+}
+
+/* Προαιρετικά: κράτα το slider “ζώνη” κεντραρισμένη */
+#monk_slider .embla{
+  position: relative;        /* για να “πατάει” σωστά το absolute των arrows */
 }
