@@ -83,7 +83,7 @@ function eboy_gsap_home() {
      wp_enqueue_script('embla-carousel', 'https://unpkg.com/embla-carousel/embla-carousel.umd.js', [], null, true);
      wp_enqueue_script('embla-carousel-autoplay', 'https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js', ['embla-carousel'], null, true);
      wp_enqueue_script('embla-carousel-class-names', 'https://unpkg.com/embla-carousel-class-names/embla-carousel-class-names.umd.js', ['embla-carousel'], null, true);
-    wp_enqueue_script( 'autumn_51', get_stylesheet_directory_uri() . '/js/autumn_51.js', array(), false, true );
+    wp_enqueue_script( 'winter_26_js', get_stylesheet_directory_uri() . '/js/winter_26.js', array(), false, true );
   }
 } 
 
