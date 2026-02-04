@@ -208,14 +208,18 @@ class BatchImporter {
                     try {
                         $this->runAIEnhancement($supplier, $original_xml, $total_limit);
 
+                        // Start realtime import in parallel with AI enhancement
+                        $this->startRealtimeImport($supplier);
+
                         // Return status that AI enhancement has started
                         return [
                             'success' => false,
                             'ai_processing' => true,
                             'ai_started' => true,
+                            'realtime_import' => true,
                             'total' => $total_limit,
                             'offset' => 0,
-                            'message' => 'AI enhancement started. This will take several minutes...'
+                            'message' => 'AI enhancement started with real-time import. Products will be imported as they are processed...'
                         ];
                     } catch (\Exception $e) {
                         // Remove progress file on error
@@ -553,5 +557,33 @@ class BatchImporter {
      */
     public function setBatchSize($size) {
         $this->batch_size = (int)$size;
+    }
+
+    /**
+     * Start realtime import in background (monitors AI progress and imports products as they're ready)
+     */
+    private function startRealtimeImport($supplier) {
+        $theme_root = dirname(dirname(dirname(__FILE__)));
+        $script_path = $theme_root . '/scripts/realtime-import-cli.php';
+        $log_file = $theme_root . '/xml_files/realtime-import.log';
+
+        // Build command to run realtime import in background
+        $php_bin = '/usr/bin/php';
+        $command = escapeshellarg($php_bin) . ' ' . escapeshellarg($script_path) . ' ' . escapeshellarg($supplier) .
+                   ' > ' . escapeshellarg($log_file) . ' 2>&1 & echo $!';
+
+        error_log("BatchImporter: Starting realtime import in background");
+        error_log("BatchImporter: Command: {$command}");
+
+        // Execute in background
+        $pid = shell_exec($command);
+
+        if ($pid) {
+            error_log("BatchImporter: Realtime import process started with PID: " . trim($pid));
+        } else {
+            error_log("BatchImporter: Realtime import process started (no PID returned)");
+        }
+
+        return true;
     }
 }

@@ -78,8 +78,11 @@ class TagGenerator:
             cleaned_tags = [self._clean_tag(tag) for tag in all_tags]
             valid_tags = [tag for tag in cleaned_tags if self._is_valid_tag(tag)]
 
-            # Limit to 15 tags
-            final_tags = valid_tags[:15]
+            # Second AI pass: Filter to exactly 3 tags
+            if len(valid_tags) > 3:
+                final_tags = self._filter_tags_with_ai(valid_tags, title)
+            else:
+                final_tags = valid_tags[:3]
 
             logger.info(f"Generated {len(final_tags)} tags for: {title[:50]}...")
             return final_tags
@@ -196,3 +199,44 @@ class TagGenerator:
             return False
 
         return True
+
+    def _filter_tags_with_ai(self, tags: List[str], product_title: str) -> List[str]:
+        """Use AI to filter tags down to exactly 3 best ones"""
+        tags_str = ", ".join(tags)
+
+        filter_prompt = f"""Από τα παρακάτω tags, διάλεξε ΑΚΡΙΒΩΣ 3 που είναι πιο σημαντικά για το προϊόν.
+
+Προϊόν: {product_title}
+Διαθέσιμα tags: {tags_str}
+
+ΚΑΝΟΝΕΣ:
+- Διάλεξε ΑΚΡΙΒΩΣ 3 tags
+- ΜΗΝ διαλέξεις χρώματα (oak, wenge, sonoma, κλπ)
+- ΜΗΝ διαλέξεις υλικά (rack, MDF, κλπ)
+- ΜΗΝ διαλέξεις σύνθετα tags (έπιπλα χωλ)
+- ΜΗΝ διαλέξεις επαναλήψεις (αν έχεις "παπουτσοθήκη" ΜΗΝ πάρεις και "παπουτσοθήκες")
+- Προτίμησε: τύπος προϊόντος, χώρος χρήσης, λειτουργία
+
+Απάντηση (ΜΟΝΟ 3 tags, comma-separated):"""
+
+        try:
+            ai_response = self.ai_client.generate(
+                prompt=filter_prompt,
+                temperature=0.3,
+                max_tokens=50
+            )
+
+            if ai_response:
+                filtered = self._parse_tag_response(ai_response)
+                # Ensure exactly 3
+                if len(filtered) >= 3:
+                    return filtered[:3]
+                elif len(filtered) > 0:
+                    return filtered
+
+            # Fallback: return first 3
+            return tags[:3]
+
+        except Exception as e:
+            logger.warning(f"AI filtering failed: {str(e)}, using first 3 tags")
+            return tags[:3]
