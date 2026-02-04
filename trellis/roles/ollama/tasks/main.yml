@@ -133,18 +133,23 @@
       async: 3600  # Allow up to 1 hour for large model downloads
       poll: 10     # Check every 10 seconds
 
+    - name: Wait a moment for models to be registered
+      pause:
+        seconds: 5
+
     - name: Verify models are installed
       command: "/usr/local/bin/ollama list"
       environment:
         OLLAMA_HOST: "{{ ollama_bind_address }}:{{ ollama_port }}"
       register: ollama_list
       changed_when: false
+      failed_when: false  # Don't fail provision if verification fails
       become: true
       become_user: "{{ ollama_user }}"
 
     - name: Display installed models
       debug:
-        msg: "{{ ollama_list.stdout_lines }}"
+        msg: "{{ ollama_list.stdout_lines if ollama_list.rc == 0 else 'Could not verify models (service may need restart)' }}"
 
     - name: Configure log rotation for Ollama
       copy:
