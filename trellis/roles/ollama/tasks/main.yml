@@ -3,6 +3,38 @@
   debug:
     msg: "Ollama installation is {{ ollama_enabled | ternary('enabled', 'disabled') }}"
 
+- name: Stop existing Ollama service before provision
+  when: ollama_enabled | default(false)
+  block:
+    - name: Check if Ollama service exists
+      stat:
+        path: /etc/systemd/system/ollama.service
+      register: ollama_service_file
+
+    - name: Stop Ollama service if running
+      systemd:
+        name: ollama
+        state: stopped
+      when: ollama_service_file.stat.exists
+      failed_when: false
+
+    - name: Kill any remaining Ollama processes
+      shell: |
+        pkill -9 ollama || true
+        sleep 2
+      changed_when: false
+      failed_when: false
+
+    - name: Verify Ollama is not running
+      shell: pgrep -x ollama
+      register: ollama_check
+      changed_when: false
+      failed_when: false
+
+    - name: Display Ollama status
+      debug:
+        msg: "{{ 'Ollama was stopped successfully' if ollama_check.rc != 0 else 'WARNING: Ollama may still be running' }}"
+
 - name: Ollama installation tasks
   when: ollama_enabled | default(false)
   block:
