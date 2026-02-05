@@ -1,6 +1,23 @@
 ---
 # AI Product Processor Ansible Tasks
 
+- name: Install Python prerequisites
+  apt:
+    name:
+      - python3
+      - python3-pip
+      - python3-venv
+      - python3-dev
+      - build-essential
+      - libjpeg-dev
+      - zlib1g-dev
+      - libwebp-dev
+      - libpng-dev
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  tags: [ai-processor, packages]
+
 - name: Create AI processor directories
   file:
     path: "{{ item }}"
@@ -12,6 +29,7 @@
     - "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor/logs"
     - "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor/output"
     - "{{ www_root }}/web/app/themes/simple-city/xml_files/enhanced"
+    - "{{ www_root }}/web/app/uploads/ai-processed-images"
   tags: [ai-processor]
 
 - name: Deploy .env file for AI processor
@@ -35,6 +53,7 @@
   pip:
     requirements: "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor/requirements.txt"
     virtualenv: "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor/venv"
+    virtualenv_command: python3 -m venv
   become_user: "{{ web_user }}"
   tags: [ai-processor, dependencies]
 
