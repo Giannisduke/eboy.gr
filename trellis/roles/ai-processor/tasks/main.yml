@@ -41,12 +41,19 @@
     mode: '0640'
   tags: [ai-processor, env]
 
+- name: Check if AI processor code is deployed
+  stat:
+    path: "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor/requirements.txt"
+  register: ai_processor_code
+  tags: [ai-processor, venv, dependencies]
+
 - name: Ensure Python venv exists
   command: python3 -m venv venv
   args:
     chdir: "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor"
     creates: "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor/venv"
   become_user: "{{ web_user }}"
+  when: ai_processor_code.stat.exists
   tags: [ai-processor, venv]
 
 - name: Install Python dependencies
@@ -55,12 +62,10 @@
     virtualenv: "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor/venv"
     virtualenv_command: python3 -m venv
   become_user: "{{ web_user }}"
+  when: ai_processor_code.stat.exists
   tags: [ai-processor, dependencies]
 
-- name: Set correct permissions for AI processor
-  file:
-    path: "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor"
-    owner: "{{ web_user }}"
-    group: "{{ web_group }}"
-    recurse: yes
-  tags: [ai-processor, permissions]
+- name: Display AI processor deployment status
+  debug:
+    msg: "{{ 'AI processor Python dependencies installed successfully' if ai_processor_code.stat.exists else 'AI processor code not yet deployed - run deploy.yml to install Python dependencies' }}"
+  tags: [ai-processor]

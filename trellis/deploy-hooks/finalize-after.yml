@@ -1,0 +1,33 @@
+---
+# AI Processor - Install Python dependencies after deploy
+
+- name: Check if AI processor requirements.txt exists
+  stat:
+    path: "{{ deploy_helper.new_release_path }}/web/app/themes/simple-city/scripts/product-ai-processor/requirements.txt"
+  register: ai_requirements
+
+- name: Install AI processor Python dependencies
+  when: ai_requirements.stat.exists
+  block:
+    - name: Create Python virtual environment
+      command: python3 -m venv venv
+      args:
+        chdir: "{{ deploy_helper.new_release_path }}/web/app/themes/simple-city/scripts/product-ai-processor"
+        creates: "{{ deploy_helper.new_release_path }}/web/app/themes/simple-city/scripts/product-ai-processor/venv"
+
+    - name: Install Python dependencies
+      pip:
+        requirements: "{{ deploy_helper.new_release_path }}/web/app/themes/simple-city/scripts/product-ai-processor/requirements.txt"
+        virtualenv: "{{ deploy_helper.new_release_path }}/web/app/themes/simple-city/scripts/product-ai-processor/venv"
+        virtualenv_command: python3 -m venv
+
+    - name: Set ownership for AI processor files
+      file:
+        path: "{{ deploy_helper.new_release_path }}/web/app/themes/simple-city/scripts/product-ai-processor"
+        owner: "{{ web_user }}"
+        group: "{{ web_group }}"
+        recurse: yes
+
+    - name: Display success message
+      debug:
+        msg: "AI processor Python dependencies installed successfully"
