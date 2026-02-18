@@ -8,13 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const viewport = emblaRoot.querySelector('.embla__viewport') || emblaRoot;
 
-  // --- Embla plugins ---
-  const autoplay = EmblaCarouselAutoplay({
-    delay: 7000,
-    stopOnInteraction: false,
-    playOnInit: true,
-  });
-
+  // --- Plugins ---
   const classNames = EmblaCarouselClassNames({
     snapped: 'is-snapped',
     inView: 'is-in-view',
@@ -23,26 +17,28 @@ document.addEventListener('DOMContentLoaded', function () {
     draggable: 'is-draggable',
   });
 
-  // --- Embla init ---
+  const fade = (typeof EmblaCarouselFade === 'function') ? EmblaCarouselFade() : null;
+
   const embla = EmblaCarousel(
     viewport,
-    { loop: true, align: 'center', duration: 35 },
-    [autoplay, classNames]
+    {
+      loop: true,
+      draggable: false, // προαιρετικό για "καθαρό" fade
+    },
+    fade ? [classNames, fade] : [classNames]
   );
 
   // -----------------------
-  // GSAP: per-slide timelines
+  // GSAP timelines per slide
   // -----------------------
   const tls = new Map();
 
   function getAnimTargets(slideEl) {
     const a = slideEl.querySelector('.img-a');
     const b = slideEl.querySelector('.img-b');
-
     const imgs = slideEl.querySelectorAll('img');
     const first = a || imgs[0] || null;
     const second = b || imgs[1] || null;
-
     return { first, second };
   }
 
@@ -50,18 +46,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const { first, second } = getAnimTargets(slideEl);
     if (!first) return null;
 
-    gsap.killTweensOf([first, second].filter(Boolean));
-
-    // initial hidden/off
-    gsap.set(first, { opacity: 0, x: -140, willChange: 'transform, opacity' });
-    if (second) gsap.set(second, { opacity: 0, x: 140, willChange: 'transform, opacity' });
+    gsap.set(first, { opacity: 0, x: -80, willChange: 'transform, opacity' });
+    if (second) gsap.set(second, { opacity: 0, x: 80, willChange: 'transform, opacity' });
 
     const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
-    tl.to(first, { opacity: 1, x: 0, duration: 0.6 }, 0);
-
-    if (second) {
-      tl.to(second, { opacity: 1, x: 0, duration: 0.7 }, 0.12);
-    }
+    tl.to(first, { opacity: 1, x: 0, duration: 0.55 }, 0);
+    if (second) tl.to(second, { opacity: 1, x: 0, duration: 0.65 }, 0.1);
 
     return tl;
   }
@@ -82,11 +72,25 @@ document.addEventListener('DOMContentLoaded', function () {
     tl.timeScale(1).play(0);
   }
 
-  function playOut(index) {
+  function reverseOut(index) {
     const slideEl = embla.slideNodes()[index];
     const tl = tls.get(slideEl);
-    if (!tl) return;
-    tl.timeScale(1.2).reverse();
+    if (!tl) return Promise.resolve();
+
+    // Αν είναι ήδη στο 0 (π.χ. δεν έχει παιχτεί ακόμα), μην καθυστερείς άσκοπα
+    if (tl.progress() === 0) return Promise.resolve();
+
+    return new Promise((resolve) => {
+      // καθάρισε προηγούμενο callback για σιγουριά
+      tl.eventCallback('onReverseComplete', null);
+
+      tl.eventCallback('onReverseComplete', () => {
+        tl.eventCallback('onReverseComplete', null);
+        resolve();
+      });
+
+      tl.timeScale(1.2).reverse();
+    });
   }
 
   // -----------------------
@@ -96,21 +100,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const nextBtn = emblaRoot.querySelector('.embla__next');
   const dotsRoot = emblaRoot.querySelector('.embla__dots');
 
-  function setupArrows() {
-    if (prevBtn) {
-      prevBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        embla.scrollPrev();
-      });
-    }
-    if (nextBtn) {
-      nextBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        embla.scrollNext();
-      });
-    }
-  }
-
   function buildDots() {
     if (!dotsRoot) return [];
     dotsRoot.innerHTML = '';
@@ -119,7 +108,6 @@ document.addEventListener('DOMContentLoaded', function () {
       btn.type = 'button';
       btn.className = 'embla__dot';
       btn.setAttribute('aria-label', `Go to slide ${i + 1}`);
-      btn.addEventListener('click', () => embla.scrollTo(i));
       dotsRoot.appendChild(btn);
       return btn;
     });
@@ -131,52 +119,101 @@ document.addEventListener('DOMContentLoaded', function () {
     dots.forEach((dot, i) => dot.classList.toggle('is-active', i === selected));
   }
 
-  function updateArrows() {
-    if (!prevBtn || !nextBtn) return;
-    if (embla.options.loop) {
-      prevBtn.disabled = false;
-      nextBtn.disabled = false;
-    } else {
-      prevBtn.disabled = !embla.canScrollPrev();
-      nextBtn.disabled = !embla.canScrollNext();
-    }
-  }
-
   // -----------------------
-  // Orchestration: reverse old, play new
+  // Controlled transitions (reverse -> embla scroll -> playIn)
   // -----------------------
+  let isTransitioning = false;
   let prevIndex = embla.selectedScrollSnap();
   let dots = [];
 
-  function onSelect() {
-    const index = embla.selectedScrollSnap();
-    if (index !== prevIndex) {
-      playOut(prevIndex); // reverse πριν φύγει
-      playIn(index);      // play όταν μπει
-      prevIndex = index;
-    }
-    updateDots(dots);
-    updateArrows();
+  async function goTo(action) {
+    if (isTransitioning) return;
+    isTransitioning = true;
+
+    // 1) reverse current (και ΜΟΝΟ μετά scroll, άρα το fade ξεκινά μετά το reverse)
+    await reverseOut(prevIndex);
+
+    // 2) τώρα κάνε embla scroll (αυτό ξεκινά το fade)
+    action();
+
+    // 3) περιμένουμε το select (όταν “κλειδώσει” το νέο snap)
+    //    και εκεί θα κάνουμε playIn + unlock.
   }
 
-  // Init everything
-  ensureTimelines();
-  setupArrows();
-  dots = buildDots();
+  function onSelect() {
+    const index = embla.selectedScrollSnap();
+    prevIndex = index;
 
-  // First slide
+    playIn(index);
+    updateDots(dots);
+
+    isTransitioning = false;
+
+    // autoplay next schedule (δες πιο κάτω)
+    scheduleNext();
+  }
+
+  embla.on('select', onSelect);
+
+  // Arrows
+  if (prevBtn) prevBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    goTo(() => embla.scrollPrev());
+    stopAutoplay();
+  });
+
+  if (nextBtn) nextBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    goTo(() => embla.scrollNext());
+    stopAutoplay();
+  });
+
+  // Dots
+  dots = buildDots();
+  dots.forEach((btn, i) => {
+    btn.addEventListener('click', () => {
+      if (i === embla.selectedScrollSnap()) return;
+      goTo(() => embla.scrollTo(i));
+      stopAutoplay();
+    });
+  });
+
+  // -----------------------
+  // Autoplay (controlled)
+  // -----------------------
+  const AUTOPLAY_DELAY = 7000;
+  let autoplayTimer = null;
+  let autoplayEnabled = true;
+
+  function stopAutoplay() {
+    autoplayEnabled = false;           // αν θες να σταματά μόνιμα μετά από interaction
+    if (autoplayTimer) clearTimeout(autoplayTimer);
+    autoplayTimer = null;
+  }
+
+  function scheduleNext() {
+    if (!autoplayEnabled) return;
+    if (autoplayTimer) clearTimeout(autoplayTimer);
+
+    autoplayTimer = setTimeout(() => {
+      goTo(() => embla.scrollNext());
+    }, AUTOPLAY_DELAY);
+  }
+
+  // -----------------------
+  // Init changes + reInit handling
+  // -----------------------
+  ensureTimelines();
   playIn(prevIndex);
   updateDots(dots);
-  updateArrows();
+  scheduleNext();
 
-  // Bind events
-  embla.on('select', onSelect);
   embla.on('reInit', () => {
     ensureTimelines();
     dots = buildDots();
     prevIndex = embla.selectedScrollSnap();
     playIn(prevIndex);
     updateDots(dots);
-    updateArrows();
+    scheduleNext();
   });
 });
