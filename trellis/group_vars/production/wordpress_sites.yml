@@ -1,35 +1,12 @@
-# Created by trellis-cli v1.17.0
-# Documentation: https://roots.io/trellis/docs/wordpress-sites/
-
 wordpress_sites:
-  monk.gr:
+  simple-city.gr:
     site_hosts:
       - canonical: monk.gr
         redirects:
           - www.monk.gr
-
       - canonical: monk.simple-city.gr
         redirects:
           - www.monk.simple-city.gr
-
-    nginx_extra_directives: |
-      # Block direct access/execution of core PHP files (fixes /wp-includes/*.php -> 500)
-      location ~* ^/wp-includes/.*\.php$ {
-        deny all;
-      }
-
-      # Block direct access to wp-admin includes (should never be requested directly)
-      location ~* ^/wp-admin/includes/ {
-        deny all;
-      }
-
-      # Block PHP execution inside uploads (Bedrock + fallback)
-      location ~* ^/app/uploads/.*\.php$ {
-        deny all;
-      }
-      location ~* ^/wp-content/uploads/.*\.php$ {
-        deny all;
-      }
 
     local_path: ../site
     branch: local-new-setup
