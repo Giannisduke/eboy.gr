@@ -120,7 +120,6 @@ function eboy_gsap_home() {
     true
   );
 }
-add_action('wp_enqueue_scripts', 'eboy_gsap_home'); 
 
 add_action('wp_enqueue_scripts', 'eboy_gsap_home', 99999999999999991);
 
