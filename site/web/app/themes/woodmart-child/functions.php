@@ -74,18 +74,52 @@ function antzel_custom_style2($hook) {
 }
 
 
+add_filter('the_content', function($content){
+  if (is_page(41450)) {
+    remove_filter('the_content', 'wpautop');
+    remove_filter('the_content', 'wptexturize');
+  }
+  return $content;
+}, 0);
 
 function eboy_gsap_home() {
-  if ( is_page( 41450 )  ) {
-    wp_enqueue_style( 'winter_26', get_stylesheet_directory_uri().'/css/winter_26.css' ); 
-    wp_enqueue_script( 'gsap_js', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js', array(), false, true );
-    wp_enqueue_script( 'gsap_draggables', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/Draggable.min.js', array(), false, true );
-     wp_enqueue_script('embla-carousel', 'https://unpkg.com/embla-carousel/embla-carousel.umd.js', [], null, true);
-     wp_enqueue_script('embla-carousel-autoplay', 'https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js', ['embla-carousel'], null, true);
-     wp_enqueue_script('embla-carousel-class-names', 'https://unpkg.com/embla-carousel-class-names/embla-carousel-class-names.umd.js', ['embla-carousel'], null, true);
-    wp_enqueue_script( 'winter_26_js', get_stylesheet_directory_uri() . '/js/winter_26.js', array(), false, true );
+  if ( is_page(41450) ) {
+
+    $css_rel = '/css/winter_26.css';
+    $css_abs = get_stylesheet_directory() . $css_rel;
+    $css_ver = file_exists($css_abs) ? filemtime($css_abs) : null;
+
+    wp_enqueue_style(
+      'winter_26',
+      get_stylesheet_directory_uri() . $css_rel,
+      array(),
+      $css_ver
+    );
+
+    wp_enqueue_script( 'gsap_js', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js', array(), '3.6.1', true );
+    wp_enqueue_script( 'gsap_draggables', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/Draggable.min.js', array('gsap_js'), '3.2.6', true );
+
+    wp_enqueue_script('embla-carousel', 'https://unpkg.com/embla-carousel/embla-carousel.umd.js', array(), null, true);
+    wp_enqueue_script('embla-carousel-autoplay', 'https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js', array('embla-carousel'), null, true);
+    wp_enqueue_script('embla-carousel-class-names', 'https://unpkg.com/embla-carousel-class-names/embla-carousel-class-names.umd.js', array('embla-carousel'), null, true);
+
+    // ⚠️ Είχες handle με κενό στο τέλος: 'embla-carousel-fade '
+    wp_enqueue_script('embla-carousel-fade', 'https://cdn.jsdelivr.net/npm/embla-carousel-fade/embla-carousel-fade.umd.js', array('embla-carousel'), null, true);
+
+    $js_rel = '/js/winter_26.js';
+    $js_abs = get_stylesheet_directory() . $js_rel;
+    $js_ver = file_exists($js_abs) ? filemtime($js_abs) : null;
+
+    wp_enqueue_script(
+      'winter_26_js',
+      get_stylesheet_directory_uri() . $js_rel,
+      array(),
+      $js_ver,
+      true
+    );
   }
-} 
+}
+add_action('wp_enqueue_scripts', 'eboy_gsap_home'); 
 
 add_action('wp_enqueue_scripts', 'eboy_gsap_home', 99999999999999991);
 
@@ -93,7 +127,7 @@ add_action('wp_enqueue_scripts', 'eboy_gsap_home', 99999999999999991);
 
 function eboy_gsap_test() {
   if ( is_page( 7075 ) || is_page( 51964 ) ) {
-    wp_enqueue_style( 'autumn_25_11', get_stylesheet_directory_uri().'/css/autumn_25_11.css' ); 
+    wp_enqueue_style( 'autumn_25_11', get_stylesheet_directory_uri().'/css/winter_26.css' ); 
     wp_enqueue_script( 'gsap_js', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js', array(), false, true );
     wp_enqueue_script( 'gsap_draggables', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/Draggable.min.js', array(), false, true );
      wp_enqueue_script('embla-carousel', 'https://unpkg.com/embla-carousel/embla-carousel.umd.js', [], null, true);

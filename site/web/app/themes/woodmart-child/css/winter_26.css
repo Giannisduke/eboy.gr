@@ -1,51 +1,137 @@
-#monk_slider .embla {
+/* =========================
+   Monk Slider / Embla (winter_26.css)
+   - 2 εικόνες (img-a / img-b) στο κέντρο
+   - 2 SVG labels: ένα αριστερά από img-a, ένα δεξιά από img-b
+   - Arrows κεντραρισμένα και σωστά clickable
+   ========================= */
+
+#monk_slider{
+  position: relative;
+  width: 100%;
+  text-align: center; /* κεντράρει το CTA κάτω */
+}
+
+/* Embla base */
+#monk_slider .embla{
+  position: relative;
   width: 100%;
 }
 
-#monk_slider .embla__viewport {
+#monk_slider .embla__viewport{
   overflow: hidden;
   width: 100%;
 }
 
-#monk_slider .embla__container {
+#monk_slider .embla__container{
   display: flex;
   align-items: center;
 }
 
-#monk_slider .embla__slide {
-  flex: 0 0 100%;            /* 1 slide τη φορά */
+/* 1 slide */
+#monk_slider .embla__slide{
+  flex: 0 0 100%;
   display: flex;
-  justify-content: center;   /* κέντρο οριζόντια */
-  align-items: center;       /* κέντρο κάθετα */
-}
-
-#monk_slider .embla__slide > a {
-  display: inline-flex;      /* για 2 εικόνες δίπλα-δίπλα */
   justify-content: center;
   align-items: center;
-  gap: 16px;                 /* απόσταση img-a / img-b */
 }
 
-#monk_slider .embla__slide img {
+/* Το link είναι ο "καμβάς" (positioning context) */
+#monk_slider .embla__slide > a{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  line-height: 0;          /* κόβει κενά κάτω από εικόνες */
+  text-decoration: none;
+}
+
+/* Εικόνες */
+#monk_slider .embla__slide img{
   display: block;
   height: auto;
+  max-width: 100%;
 }
 
-/* 1) Κέντρο το overlay των arrows (ομάδα) */
+/* =========================
+   Texts overlay layer
+   (μέσα στο <a>: .texts > .texts__left + .texts__right)
+   ========================= */
+
+#monk_slider .embla__slide > a > .texts{
+  position: absolute;
+  inset: 0;                 /* top/right/bottom/left:0 */
+  pointer-events: none;
+  z-index: 6;               /* πάνω από τις εικόνες */
+}
+
+/* Αριστερό group: πριν από img-a
+   ΕΔΩ: κάνουμε column για να μπει το price κάτω από το title */
+#monk_slider .texts__left{
+  position: absolute;
+  top: 32%;
+  left: 0;
+  transform: translate(-81%, -50%);
+  display: flex;
+  flex-direction: column;     /* <-- ΚΑΤΑΚΟΡΥΦΑ */
+  align-items: flex-start;    /* <-- στοίχιση αριστερά */
+  justify-content: flex-start;
+  gap: 2px;                  /* <-- απόσταση μεταξύ των 2 svg */
+}
+
+/* Δεξί SVG: μετά από img-b */
+#monk_slider .texts__right{
+  position: absolute;
+  top: 76%;
+  right: 0;
+  transform: translate(71%, -50%);
+  display: flex;
+  flex-direction: column;     /* <-- ΚΑΤΑΚΟΡΥΦΑ */
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+/* κοινό sizing στα svg */
+#slide_1_a1 {
+  width: 147.56px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
+
+#slide_1_a2{
+  width: 168.296px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
+
+#slice_01_price_a{
+  width: 50.4292px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
+
+/* =========================
+   Arrows
+   ========================= */
+
+/* Ζώνη arrows στο κέντρο, αριστερά/δεξιά */
 #monk_slider .embla__arrows{
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: min(900px, 90vw);   /* πλάτος "ζώνης" των βελών */
+  width: min(900px, 90vw);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  pointer-events: none;
-  z-index: 5;
+  pointer-events: none; /* για να μην μπλοκάρει swipe/click του slider */
+  z-index: 7;           /* πάνω από texts */
 }
 
-/* 2) Τα ίδια τα κουμπιά */
 #monk_slider .embla__prev,
 #monk_slider .embla__next{
   pointer-events: auto;
@@ -54,22 +140,92 @@
   border-radius: 999px;
   border: 0;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* 3) Κέντρο το "Δείτε τα όλα" button */
+#monk_slider .embla__prev:disabled,
+#monk_slider .embla__next:disabled{
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* =========================
+   Dots
+   ========================= */
+
+#monk_slider .embla__dots{
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+#monk_slider .embla__dot{
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+#monk_slider .embla__dot.is-selected{
+  opacity: 1;
+}
+
+/* =========================
+   CTA Button κάτω από slider
+   ========================= */
+
 #monk_slider .monkbutton_eboy{
   display: inline-flex;
-  margin: 18px auto 0;       /* auto => κεντράρισμα */
+  margin: 18px auto 0;
   justify-content: center;
 }
 
-/* Αν το theme το κρατάει αριστερά επειδή είναι inline μέσα σε block,
-   εξασφάλισε ότι ο γονιός μπορεί να κεντράρει */
-#monk_slider{
-  text-align: center;
-}
+/* =========================
+   Responsive tweaks
+   ========================= */
 
-/* Προαιρετικά: κράτα το slider “ζώνη” κεντραρισμένη */
-#monk_slider .embla{
-  position: relative;        /* για να “πατάει” σωστά το absolute των arrows */
+@media (max-width: 640px){
+  #monk_slider .embla__slide > a{
+    gap: 10px;
+  }
+
+  /* Arrows λίγο πιο “μαζεμένα” */
+  #monk_slider .embla__arrows{
+    width: min(92vw, 520px);
+  }
+
+  #monk_slider .embla__prev,
+  #monk_slider .embla__next{
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Labels να μη βγαίνουν υπερβολικά έξω */
+  #monk_slider .texts__left{
+    transform: translate(0%, -50%);
+    gap: 8px; /* λίγο μικρότερο gap σε mobile */
+  }
+  #monk_slider .texts__right{
+    transform: translate(90%, -50%);
+  }
+
+  /* μικρότερο SVG */
+  #monk_slider .texts__left svg,
+  #monk_slider .texts__right svg{
+    width: 120px;
+  }
+
+  /* το price να μη “τεντώνει” σε mobile */
+  #slice_01_price_a{
+    width: 50px;
+  }
 }
