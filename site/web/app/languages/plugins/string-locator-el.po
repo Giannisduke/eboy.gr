@@ -1,0 +1,319 @@
+# Translation of Plugins - String locator - Stable (latest release) in Greek
+# This file is distributed under the same license as the Plugins - String locator - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2022-07-21 07:05:26+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/4.0.1\n"
+"Language: el_GR\n"
+"Project-Id-Version: Plugins - String locator - Stable (latest release)\n"
+
+#. translators: Title on the editor page.
+#: includes/Extension/SQL/views/editor/sql.php:50
+msgid "String Locator - SQL Editor"
+msgstr "String Locator - Επεξεργαστής SQL"
+
+#: includes/Tests/class-loopback.php:172
+msgid "A 500 server error was detected on your sites backend after updating your file. We have restored the previous version of the file for you."
+msgstr "Ένα σφάλμα διακομιστή 500 ανιχνεύθηκε στον ιστότοπο σας μετά την ενημέρωση του αρχείου σας. Επαναφέραμε την προηγούμενη έκδοση του αρχείου."
+
+#: includes/Tests/class-loopback.php:154
+msgid "Your changes were not saved, as a check of your sites backend could not be completed afterwards. This may be due to a <a href=\"https://wordpress.org/support/article/loopbacks/\">loopback</a> error."
+msgstr "Οι αλλαγές σας δεν αποθηκεύτηκαν, καθώς στην συνέχεια δεν μπόρεσε να ολοκληρωθεί ο έλεγχος του ιστότοπού σας. Αυτό μπορεί να οφείλεται σε κάποιο σφάλμα <a href=\"https://wordpress.org/support/article/loopbacks/\">βρόχου επιστροφής (loopback)</a>."
+
+#: includes/Extension/SQL/views/editor/sql.php:249
+#: views/editors/default.php:282
+msgid "Dismiss this notice."
+msgstr "Απόρριψη αυτής της ειδοποίησης."
+
+#. translators: File path.
+#: views/editors/default.php:197
+msgid "Full file path: %s"
+msgstr "Πλήρης διαδρομή αρχείου: %s"
+
+#: views/search.php:31
+msgid "No previous searches could be restored."
+msgstr "Δεν ήταν δυνατόν να γίνει επαναφορά προηγούμενων αναζητήσεων."
+
+#: views/editors/default.php:202
+msgid "File size:"
+msgstr "Μέγεθος αρχείου:"
+
+#: includes/Extension/SQL/views/editor/sql.php:114
+#: views/editors/default.php:164
+msgid "Details"
+msgstr "Λεπτομέρειες"
+
+#: views/editors/default.php:210
+msgid "Last modified:"
+msgstr "Τελευταία τροποποίηση:"
+
+#: includes/Extension/SQL/views/editor/sql.php:152
+#: views/editors/default.php:181
+msgid "Save checks"
+msgstr "Αποθήκευση ελέγχων"
+
+#. translators: %s: The name of the file being edited.
+#: views/editors/default.php:99
+msgid "You are currently editing <em>%s</em>"
+msgstr "Τροποποιείτε το <em>%s</em>"
+
+#. translators: %s: The file location that was sent.
+#: includes/class-save.php:106
+msgid "The file location provided, <strong>%s</strong>, is not valid."
+msgstr "Η τοποθεσία που παρείχατε, <strong>%s</strong>, δεν είναι έγκυρη."
+
+#: includes/class-string-locator.php:376
+msgid "Line position"
+msgstr "Θέση στη γραμμή"
+
+#: views/search.php:47
+msgid "String Locator is limited to search mode only."
+msgstr "Το String Locator έχει περιοριστεί σε κατάσταση μόνο αναζήτησης."
+
+#: includes/Tests/class-loopback.php:115
+msgid "Your changes were not saved, as a check of your site could not be completed afterwards. This may be due to a <a href=\"https://wordpress.org/support/article/loopbacks/\">loopback</a> error."
+msgstr "Οι αλλαγές σας δεν αποθηκεύτηκαν, καθώς στην συνέχεια δεν μπόρεσε να ολοκληρωθεί ο έλεγχος του ιστότοπού σας. Αυτό μπορεί να οφείλεται σε κάποιο σφάλμα <a href=\"https://wordpress.org/support/article/loopbacks/\">βρόχου επιστροφής (loopback)</a>."
+
+#: includes/Tests/class-loopback.php:65
+msgid "This feature is highly recommended, and is what WordPress does when using the plugin- or theme-editor."
+msgstr "Αυτή η λειτουργία συνιστάται ιδιαίτερα, και είναι αυτό που κάνει το WordPress κατά τη χρήση του επεξεργαστή πρόσθετου ή θέματος."
+
+#: includes/Tests/class-loopback.php:61
+msgid "Enable loopback tests after making a save."
+msgstr "Ενεργοποίηση δοκιμών βρόχου επιστροφής (loopback) μετά την αποθήκευση."
+
+#: views/search.php:51
+msgid "Because this site is configured to not allow direct file editing, the String Locator plugin has limited functionality and may noy allow you to directly edit files with your string in them."
+msgstr "Επειδή αυτός ο ιστότοπος έχει ρυθμιστεί ώστε να μην επιτρέπει την άμεση επεξεργασία αρχείων, το πρόσθετο String Locator έχει περιορισμένη λειτουργικότητα και ενδεχομένως να μην μπορείτε να επεξεργαστείτε απευθείας τα αρχεία που περιέχουν την συμβολοσειρά σας."
+
+#: views/search.php:101
+msgid "RegEx search"
+msgstr "Αναζήτηση RegEx"
+
+#: includes/class-string-locator.php:466
+msgid "Next file: "
+msgstr "Επόμενο αρχείο: "
+
+#: views/editors/default.php:135
+msgid "You appear to be editing a Core file."
+msgstr "Μοιάζει να επεξεργάζεστε ένα αρχείο Πυρήνα."
+
+#: includes/class-string-locator.php:96
+msgid "Must Use Plugins"
+msgstr "Πρόσθετα Must Use"
+
+#: includes/class-string-locator.php:244
+msgid "All must-use plugins"
+msgstr "Όλα τα πρόσθετα must-use"
+
+#: includes/Extension/SQL/views/editor/sql.php:85 views/editors/default.php:135
+msgid "Warning:"
+msgstr "Προειδοποίηση: "
+
+#. translators: The WordPress description, used when a core file is opened in
+#. the editor.
+#: views/editors/default.php:26
+msgid "WordPress is web software you can use to create a beautiful website or blog. We like to say that WordPress is both free and priceless at the same time."
+msgstr "Το WordPress είναι λογισμικό ιστού που μπορείτε να χρησιμοποιήσετε για την δημιουργία ενός όμορφου ιστότοπου ή ιστολογίου. Μας αρέσει να λέμε ότι το WordPress είναι ταυτόχρονα δωρεάν και πολύτιμο."
+
+#: views/editors/default.php:138
+msgid "Keep in mind that edits to core files will be lost when WordPress is updated. Please consider <a href=\"https://make.wordpress.org/core/handbook/\">contributing to WordPress core</a> instead."
+msgstr "Λάβετε υπόψιν σας ότι οι τροποποιήσεις στα βασικά αρχεία θα χαθούν όταν αναβαθμιστεί το WordPress. Παρακαλούμε αντ 'αυτού, εξετάστε το ενδεχόμενο να <a href=\"https://make.wordpress.org/core/handbook/\">συνεισφέρετε στον πυρήνα του WordPress</a>."
+
+#: includes/class-search.php:233
+msgid "Filename matches search"
+msgstr "Το όνομα αρχείου ταιριάζει στην αναζήτηση"
+
+#. translators: %s: The search string used.
+#: includes/class-search.php:103 includes/Extension/SQL/class-search.php:204
+msgid "Your search string, <strong>%s</strong>, is not a valid pattern, and the search has been aborted."
+msgstr "Η συμβολοσειρά αναζήτησης, <strong>%s </ strong>, δεν είναι έγκυρο pattern και η αναζήτηση έχει διακοπεί."
+
+#: views/editors/default.php:193
+msgid "File location:"
+msgstr "Τοποθεσία αρχείου:"
+
+#: views/editors/default.php:190
+msgid "File information"
+msgstr "Πληροφορίες αρχείου"
+
+#. translators: %1$d: The time a PHP file can run, as defined by the server
+#. configuration. %2$d: The amount of time used by the PHP file so far.
+#: includes/class-search.php:70
+msgid "The maximum time your server allows a script to run (%1$d) is too low for the plugin to run as intended, at startup %2$d seconds have passed"
+msgstr "Ο μέγιστος χρόνος που επιτρέπει ο διακομιστής σας για την εκτέλεση ενός script (%1$d) είναι πολύ χαμηλός για την εκτέλεση του πρόσθετου όπως προορίζεται, κατά την εκκίνηση %2$d δευτερόλεπτα έχουν περάσει"
+
+#: includes/class-string-locator.php:472
+msgid "Warning"
+msgstr "Προειδοποίηση"
+
+#. translators: %1$d: Current amount of used system memory resources. %2$d: The
+#. maximum available system memory.
+#: includes/class-search.php:83
+msgid "The memory limit is about to be exceeded before the search has started, this could be an early indicator that your site may soon struggle as well, unfortunately this means the plugin is unable to perform any searches. Current memory consumption: %1$d of %2$d bytes"
+msgstr "Το όριο μνήμης πρόκειται να ξεπεραστεί προτού ξεκινήσει η αναζήτηση, αυτό θα μπορούσε να είναι μια πρώιμη ένδειξη ότι ο ιστότοπός σας μπορεί σύντομα να δυσκολευτεί επίσης, δυστυχώς αυτό σημαίνει ότι το πρόσθετο δεν μπορεί να πραγματοποιήσει αναζητήσεις. Τρέχουσα κατανάλωση μνήμης: %1$d από %2$d bytes"
+
+#: includes/class-string-locator.php:471
+msgid "Your search was completed, but no results were found."
+msgstr "Η αναζήτηση σας ολοκληρώθηκε, αλλα δεν βρέθηκαν αποτελέσματα.."
+
+#: includes/class-string-locator.php:470
+msgid "The above error was returned by your server, for more details please consult your servers error logs."
+msgstr "Το παραπάνω σφάλμα επεστράφη από τον διακομιστή σας, για περισσότερες λεπτομέρειες παρακαλούμε συμβουλευτείτε τα αρχεία καταγραφής του διακομιστή σας."
+
+#: includes/class-string-locator.php:469
+msgid "Preparations completed, search started&hellip;"
+msgstr "Ολοκληρώθηκαν οι προετοιμασίες, ξεκίνησε η αναζήτηση&hellip;"
+
+#: includes/class-save.php:142
+msgid "We detected a PHP code tag ending, this has been automatically stripped out to help prevent errors in your code."
+msgstr "Ανιχνεύσαμε μια ετικέτα τερματισμού PHP, η οποία αφαιρέθηκε αυτόματα για την αποφθγή σφαλμάτων στον κώδικα σας."
+
+#: includes/class-string-locator.php:467
+msgid "Saving search results&hellip;"
+msgstr "Αποθήκευση αποτελεσμάτων αναζήτησης&hellip;"
+
+#. translators: %d: The numbered reference to a file being searched.
+#: includes/class-search.php:57
+msgid "The file-number, %d, that was sent could not be found."
+msgstr "Ο αριθμός αρχείου, %d, που στάλθηκε δεν βρέθηκε."
+
+#: includes/class-string-locator.php:468 views/search.php:122
+msgid "Preparing search&hellip;"
+msgstr "Προετοιμασία αναζήτησης&hellip;"
+
+#: includes/class-string-locator.php:90
+msgid "Everything under wp-content"
+msgstr "Τα πάντα στον κατάλογο wp-content"
+
+#: views/editors/default.php:123
+msgid "It seems you are making direct edits to a theme."
+msgstr "Μοιάζει να κάνετε απευθείας αλλαγές σε ένα θέμα."
+
+#. Description of the plugin
+#: string-locator.php
+msgid "Scan through theme and plugin files looking for text strings"
+msgstr "Σάρωση αρχείων θεμάτων και πρόσθετων σε αναζήτηση κειμένων"
+
+#. translators: The row-action edit link label.
+#: includes/class-string-locator.php:318
+#: includes/Extension/SearchReplace/REST/class-replace.php:164
+#: includes/Extension/SQL/class-search.php:71
+#: includes/Extension/SQL/views/template/search.php:17
+#: includes/Extension/SQL/views/template/search.php:18
+#: views/templates/search-default.php:17 views/templates/search-default.php:18
+msgid "Edit"
+msgstr "Επεξεργασία"
+
+#: includes/class-string-locator.php:373
+msgid "String"
+msgstr "Συμβολοσειρά"
+
+#. translators: 1: Filename.
+#: includes/class-search.php:311
+msgid "Could not read file: %s"
+msgstr "Αδυναμία ανάγνωσης του αρχείου: %s"
+
+#: includes/class-save.php:95
+msgid "The file has been saved"
+msgstr "Το αρχείο αποθηκεύτηκε"
+
+#: views/search.php:105
+msgid "Restore last search"
+msgstr "Επαναφορά τελευταίας αναζήτησης"
+
+#: includes/Tests/class-loopback.php:133
+msgid "A 500 server error was detected on your site after updating your file. We have restored the previous version of the file for you."
+msgstr "Ένα σφάλμα διακομιστή 500 ανιχνεύθηκε στον ιστότοπο σας μετά την ενημέρωση του αρχείου σας. Επαναφέραμε την προηγούμενη έκδοση του αρχείου."
+
+#. translators: 1: Line number with an error.
+#: includes/Tests/class-smart-scan.php:164
+msgid "There is an inconsistency in the opening and closing braces, ( and ), of your file on line %s"
+msgstr "Υπάρχει μια ασυνέπεια στο άνοιγμα και κλείσιμο παρενθέσεων, ( και ), στο αρχείο σας στη γραμμή %s"
+
+#. translators: 1: Line number with an error.
+#: includes/Tests/class-smart-scan.php:138
+msgid "There is an inconsistency in the opening and closing braces, [ and ], of your file on line %s"
+msgstr "Υπάρχει μια ασυνέπεια στο άνοιγμα και κλείσιμο αγκυλών, [ και ], στο αρχείο σας στη γραμμή %s"
+
+#. translators: 1: Line number with an error.
+#: includes/Tests/class-smart-scan.php:114
+msgid "There is an inconsistency in the opening and closing braces, { and }, of your file on line %s"
+msgstr "Υπάρχει μια ασυνέπεια στο άνοιγμα και κλείσιμο αγκυλών, { και }, στο αρχείου σας στη γραμμή %s"
+
+#: includes/class-save.php:42
+msgid "The file could not be written to, please check file permissions or edit it manually."
+msgstr "Το αρχείο δεν μπόρεσε να εγγραφεί, απρακαλούμε ελέγξτε τις άδειες συστήματος αρχείων ή επεξεργαστείτε το χειροκίνητα."
+
+#: views/search.php:104
+msgid "Search"
+msgstr "Αναζήτηση"
+
+#: includes/class-string-locator.php:213
+msgid "All plugins"
+msgstr "Όλα τα πρόσθετα"
+
+#: views/search.php:98
+msgid "Search string"
+msgstr "Κείμενο Αναζήτησης"
+
+#: includes/class-string-locator.php:100
+msgid "Plugins"
+msgstr "Plugins"
+
+#: includes/class-string-locator.php:141
+msgid "All themes"
+msgstr "Όλα τα θέματα"
+
+#: includes/class-string-locator.php:92
+msgid "Themes"
+msgstr "Θέματα Εμφάνισης"
+
+#: includes/class-string-locator.php:89
+msgid "The whole WordPress directory"
+msgstr "Ολόκληρο τον κατάλογο του WordPress"
+
+#: views/search.php:89
+msgid "Search through"
+msgstr "Αναζήτηση στο"
+
+#. Plugin Name of the plugin
+#: string-locator.php includes/class-string-locator.php:523
+#: includes/class-string-locator.php:524 includes/class-string-locator.php:539
+#: includes/class-string-locator.php:540 views/search.php:38
+msgid "String Locator"
+msgstr "String Locator"
+
+#: includes/class-string-locator.php:88
+msgid "Core"
+msgstr "Πυρήνας"
+
+#: includes/Extension/SQL/views/editor/sql.php:233
+#: views/editors/default.php:266
+msgid "WordPress functions"
+msgstr "Συναρτήσεις WordPress"
+
+#: includes/Extension/SQL/views/editor/sql.php:71 views/editors/default.php:108
+msgid "Save changes"
+msgstr "Αποθήκευση αλλαγών"
+
+#: includes/Tests/class-smart-scan.php:62
+msgid "Enable a smart-scan of your code to help detect bracket mismatches before saving."
+msgstr "Ενεργοποιήστε μια έξυπνη-σάρωση του κώδικα σας για να σας βοηθήσει στον εντοπισμό αναντιστοιχιών παρενθέσεων πριν την αποθήκευση."
+
+#: views/editors/default.php:170
+msgid "By"
+msgstr "Από"
+
+#: includes/Extension/SQL/views/editor/sql.php:70 views/editors/default.php:107
+msgid "Return to search results"
+msgstr "Επιστροφή στα αποτελέσματα αναζήτησης"
+
+#. translators: Title on the editor page.
+#: views/editors/default.php:87
+msgid "String Locator - Editor"
+msgstr "String Locator - Επεξεργαστής Κώδικα"

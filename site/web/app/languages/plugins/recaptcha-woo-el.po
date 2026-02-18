@@ -1,0 +1,171 @@
+# Translation of Plugins - reCAPTCHA for WooCommerce - Stable (latest release) in Greek
+# This file is distributed under the same license as the Plugins - reCAPTCHA for WooCommerce - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2024-11-22 12:42:37+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/4.0.3\n"
+"Language: el_GR\n"
+"Project-Id-Version: Plugins - reCAPTCHA for WooCommerce - Stable (latest release)\n"
+
+#: admin-options.php:282
+msgid "Skip:"
+msgstr "Παράλειψη:"
+
+#: admin-options.php:268
+msgid "If selected below, reCAPTCHA check will not be run for that specific payment method."
+msgstr "Εάν επιλεχθεί παρακάτω, δεν θα εμφανιστεί πρόκληση reCAPTCHA για τη συγκεκριμένη μέθοδο πληρωμής."
+
+#: admin-options.php:270
+msgid "Useful for 'Express Checkout' payment methods compatibility."
+msgstr "Χρήσιμο για τη συμβατότητα με μεθόδους πληρωμής «Express Checkout»."
+
+#: admin-options.php:253
+msgid "After Billing"
+msgstr "Μετά από τη χρέωση"
+
+#: admin-options.php:247
+msgid "After Payment"
+msgstr "Μετά από την πληρωμή"
+
+#: admin-options.php:250
+msgid "Before Billing"
+msgstr "Πριν από την χρέωση"
+
+#: admin-options.php:244
+msgid "Before Payment"
+msgstr "Πριν από την πληρωμή"
+
+#: admin-options.php:263
+msgid "Payment Methods to Skip"
+msgstr "Μέθοδοι πληρωμής προς παράλειψη"
+
+#: admin-options.php:96
+msgid "TEST RESPONSE"
+msgstr "ΕΛΕΓΧΟΣ ΑΠΟΚΡΙΣΗΣ"
+
+#: admin-options.php:241
+msgid "Widget Location on Checkout"
+msgstr "Θέση μικροεφαρμογής κατά το Checkout"
+
+#: admin-options.php:356
+msgid "View on GitHub"
+msgstr "Προβολή στο GitHub"
+
+#: admin-options.php:84
+msgid "Error Code:"
+msgstr "Κωδικός Σφάλματος:"
+
+#: admin-options.php:355
+msgid "Translate into your language"
+msgstr "Μεταφράστε το στη γλώσσα σας"
+
+#: recaptcha-woo.php:266
+msgid "ERROR"
+msgstr "ΣΦΑΛΜΑ"
+
+#: admin-options.php:204
+msgid "Reset Password"
+msgstr "Επαναφορά Συνθηματικού"
+
+#: admin-options.php:197
+msgid "WordPress Register"
+msgstr "Εγγραφή WordPress"
+
+#: admin-options.php:190
+msgid "WordPress Login"
+msgstr "Σύνδεση WordPress"
+
+#: admin-options.php:88
+msgid "Error Message:"
+msgstr "Μήνυμα Σφάλματος:"
+
+#: admin-options.php:84
+msgid "Failed! There is an error with your API settings. Please check & update them."
+msgstr "Απέτυχε! Υπάρχει ένα σφάλμα με τις ρυθμίσεις σας API. Παρακαλώ ελέγξτε και ενημερώστε τις."
+
+#: admin-options.php:82 admin-options.php:88
+msgid "Please verify that you are human."
+msgstr "Παρακαλώ επιβεβαιώστε ότι είστε άνθρωπος."
+
+#: admin-options.php:78 admin-options.php:133
+msgid "Success! reCAPTCHA seems to be working correctly with your API keys."
+msgstr "Επιτυχία! Το reCAPTCHA φαίνεται να λειτουργεί σωστά με τα κλειδιά API σας."
+
+#: admin-options.php:74
+msgid "reCAPTCHA will not be added to WP login until the test is successfully complete."
+msgstr "Το reCAPTCHA δεν θα προστεθεί στη σύνδεση WP μέχρι να ολοκληρωθεί επιτυχώς η δοκιμή."
+
+#: admin-options.php:72
+msgid "API keys have been updated. Please test the reCAPTCHA API response below."
+msgstr "Τα κλειδιά API έχουν ενημερωθεί. Παρακαλώ δοκιμάστε την παρακάτω απόκριση του reCAPTCHA API."
+
+#: admin-options.php:68
+msgid "Almost done..."
+msgstr "Σχεδόν ολοκληρώθηκε..."
+
+#: admin-options.php:346
+msgid "100% free plugin developed by"
+msgstr "100% δωρεάν πρόσθετο που αναπτύχθηκε από τον"
+
+#. Author of the plugin
+#: recaptcha-woo.php
+msgid "Elliot Sowersby, RelyWP"
+msgstr "Elliot Sowersby, RelyWP"
+
+#. Plugin Name of the plugin
+#: recaptcha-woo.php admin-options.php:112
+msgid "reCAPTCHA for WooCommerce"
+msgstr "reCAPTCHA για το WooCommerce"
+
+#: admin-options.php:232
+msgid "WooCommerce Checkout"
+msgstr "Σελίδα Ταμείου του WooCommerce"
+
+#: admin-options.php:218
+msgid "WooCommerce Login"
+msgstr "Φόρμα Σύνδεσης WooCommerce"
+
+#: admin-options.php:225
+msgid "WooCommerce Register"
+msgstr "Φόρμα Εγγραφής WooCommerce"
+
+#. Description of the plugin
+#: recaptcha-woo.php
+msgid "Add Google reCAPTCHA to your WooCommerce Checkout, Login, and Registration Forms."
+msgstr "Προσθέστε το Google reCAPTCHA στη σελίδα Ταμείου και στις Φόρμες Σύνδεσης και Εγγραφής στο WooCommerce."
+
+#: recaptcha-woo.php:49
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+#: recaptcha-woo.php:238 recaptcha-woo.php:266 recaptcha-woo.php:282
+#: recaptcha-woo.php:352 recaptcha-woo.php:399 recaptcha-woo.php:403
+#: recaptcha-woo.php:409 recaptcha-woo.php:437 recaptcha-woo.php:455
+#: recaptcha-woo.php:473
+msgid "Please complete the reCAPTCHA to verify that you are not a robot."
+msgstr "Παρακαλώ συμπληρώστε το reCAPTCHA για να επαληθεύσετε ότι δεν είστε ρομπότ."
+
+#: admin-options.php:175
+msgid "Dark"
+msgstr "Σκουρόχρωμο"
+
+#: admin-options.php:172
+msgid "Light"
+msgstr "Ανοιχτόχρωμο"
+
+#: admin-options.php:169
+msgid "reCAPTCHA Theme"
+msgstr "Θέμα εμφάνισης reCAPTCHA"
+
+#: admin-options.php:236
+msgid "Guest Checkout Only"
+msgstr "Σελίδα Ταμείου Επισκέπτη Μόνο"
+
+#. Author URI of the plugin
+#: recaptcha-woo.php
+msgid "https://www.relywp.com"
+msgstr "https://www.relywp.com"

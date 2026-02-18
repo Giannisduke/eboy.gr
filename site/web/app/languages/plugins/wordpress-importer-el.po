@@ -1,0 +1,325 @@
+# Translation of Plugins - WordPress Importer - Stable (latest release) in Greek
+# This file is distributed under the same license as the Plugins - WordPress Importer - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2025-11-14 09:30:09+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/4.0.3\n"
+"Language: el_GR\n"
+"Project-Id-Version: Plugins - WordPress Importer - Stable (latest release)\n"
+
+#: class-wp-import.php:338
+msgid "Change all imported URLs that currently link to the previous site so that they now link to this site"
+msgstr "Αλλαγή όλων των εισαγόμενων URL που συνδέονται με τον προηγούμενο ιστότοπο ώστε τώρα να συνδέονται με αυτόν τον ιστότοπο"
+
+#: class-wp-import.php:335
+msgid "Content Options"
+msgstr "Επιλογές Περιεχομένου"
+
+#: class-wp-import.php:122
+msgid "URL rewriting requires WordPress 6.7 or newer. The import will continue without rewriting URLs."
+msgstr "Η επανεγγραφή URL απαιτεί WordPress 6.7 ή νεότερο. Η εισαγωγή θα συνεχιστεί χωρίς επανεγγραφή των URL."
+
+#. translators: %1$s is the unexpected token type.
+#: php-toolkit/XML/class-xmlprocessor.php:3862
+msgid "Unexpected token type \"%1$s\" in element stage."
+msgstr "Απροσδόκητος τύπος token \"%1$s\" στο στάδιο του στοιχείου."
+
+#. Translators: 1: The closing tag name. 2: The opening tag name.
+#. translators: %1$s is the name of the closing HTML tag, %2$s is the name of
+#. the opening HTML tag.
+#: php-toolkit/XML/class-xmlprocessor.php:3830
+#: php-toolkit/XML/class-xmlprocessor.php:3842
+msgid "The closing tag \"%1$s\" did not match the opening tag \"%2$s\"."
+msgstr "Το tag κλεισίματος \"%1$s\" δεν ταιριάζει με το ανοιχτό tag \"%2$s\"."
+
+#. Translators: 1: The XML namespace.
+#: php-toolkit/XML/class-xmlprocessor.php:3467
+msgid "The namespace \"%1$s\" is not in the current element's scope."
+msgstr "Το namespace \"%1$s\" δεν βρίσκεται στο πεδίο εφαρμογής του τρέχοντος στοιχείου."
+
+#: php-toolkit/XML/class-xmlprocessor.php:3448
+msgid "Setting attributes in the xmlns namespace is not yet supported by set_attribute()."
+msgstr "Η ρύθμιση χαρακτηριστικών στο namespace xmlns δεν υποστηρίζεται ακόμη από τη set_attribute()."
+
+#: php-toolkit/XML/class-xmlprocessor.php:3440
+msgid "Non-string attribute values cannot be passed to set_attribute()."
+msgstr "Οι τιμές χαρακτηριστικών που δεν είναι συμβολοσειρές δεν μπορούν να περαστούν στη set_attribute()."
+
+#: php-toolkit/XML/class-xmlprocessor.php:3412
+msgid "Cannot set text content on a non-text node."
+msgstr "Δεν είναι δυνατή η ρύθμιση περιεχομένου κειμένου σε κόμβο που δεν είναι κειμένου."
+
+#: php-toolkit/XML/class-xmlprocessor.php:3363
+msgid "Invalid text content encountered."
+msgstr "Βρέθηκε μη έγκυρο περιεχόμενο κειμένου."
+
+#: php-toolkit/XML/class-xmlprocessor.php:2857
+#: php-toolkit/XML/class-xmlprocessor.php:2896
+msgid "Invalid attribute value encountered."
+msgstr "Βρέθηκε μη έγκυρη τιμή attribute."
+
+#: php-toolkit/XML/class-xmlprocessor.php:2680
+msgid "Too many calls to seek() - this can lead to performance issues."
+msgstr "Πάρα πολλές κλήσεις της seek() - αυτό μπορεί να οδηγήσει σε προβλήματα απόδοσης."
+
+#: php-toolkit/XML/class-xmlprocessor.php:2670
+msgid "Unknown bookmark name."
+msgstr "Άγνωστο όνομα σελιδοδείκτη."
+
+#: php-toolkit/XML/class-xmlprocessor.php:1614
+msgid "Breadcrumbs must be an array of strings or two-tuples of (namespace, local name)."
+msgstr "Τα Breadcrumbs πρέπει να είναι πίνακας από συμβολοσειρές ή διδύμες (namespace, τοπικό όνομα)."
+
+#: php-toolkit/XML/class-xmlprocessor.php:1598
+msgid "Cannot visit tag closers in XML Processor."
+msgstr "Δεν είναι δυνατή η επίσκεψη ετικετών κλεισίματος στον XML Processor."
+
+#: php-toolkit/XML/class-xmlprocessor.php:1570
+msgid "Please pass a query array to this function."
+msgstr "Παρακαλούμε περάστε ένα ερώτημα πίνακα σε αυτή την συνάρτηση."
+
+#: php-toolkit/XML/class-xmlprocessor.php:1463
+msgid "Too many bookmarks: cannot create any more."
+msgstr "Πάρα πολλοί σελιδοδείκτες: δεν είναι δυνατή η δημιουργία άλλων."
+
+#: php-toolkit/XML/class-xmlprocessor.php:911
+msgid "Cannot append bytes after the last input chunk was provided and input_finished() was called."
+msgstr "Δεν μπορούν να προστεθούν bytes αφού παρέχεται το τελευταίο τμήμα εισόδου και κλήθηκε η input_finished()."
+
+#. translators: %s: XMLProcessor::create_fragment().
+#: php-toolkit/XML/class-xmlprocessor.php:883
+msgid "Call %s to create an XML Processor instead of calling the constructor directly."
+msgstr "Καλέστε %s για να δημιουργήσετε έναν XML Processor αντί να καλέσετε απευθείας τον constructor."
+
+#: parsers/class-wxr-parser.php:27 parsers/class-wxr-parser.php:28
+msgid "Invalid parser specified: %s"
+msgstr "Ο parser που επιλέχθηκε δεν είναι έγκυρος: %s"
+
+#: class-wp-import.php:1475
+msgid "The uploaded file could not be moved"
+msgstr "Το μεταφορτωμένο αρχείο δεν ήταν δυνατό να μεταφερθεί"
+
+#: class-wp-import.php:1460
+msgid "Sorry, this file type is not permitted for security reasons."
+msgstr "Λυπούμαστε, αυτός ο τύπος αρχείου δεν επιτρέπεται για λόγους ασφαλείας."
+
+#: class-wp-import.php:1422
+msgid "Downloaded file has incorrect size"
+msgstr "Το ληφθέν αρχείο έχει λανθασμένο μέγεθος"
+
+#. translators: 1: The HTTP error message. 2: The HTTP error code.
+#: class-wp-import.php:1398
+msgid "Remote server returned the following unexpected result: %1$s (%2$s)"
+msgstr "Ο απομακρυσμένος διακομιστής επέστρεψε το ακόλουθο μη αναμενόμενο αποτέλεσμα: %1$s (%2$s)"
+
+#. translators: 1: The WordPress error message. 2: The WordPress error code.
+#: class-wp-import.php:1382
+msgid "Request failed due to an error: %1$s (%2$s)"
+msgstr "Το αίτημα απέτυχε λόγω σφάλματος: %1$s (%2$s)"
+
+#: class-wp-import.php:1360
+msgid "Could not create temporary file."
+msgstr "Δεν ήταν δυνατή η δημιουργία προσωρινού αρχείου"
+
+#: class-wp-import.php:316
+msgid "To make it simpler for you to edit and save the imported content, you may want to reassign the author of the imported item to an existing user of this site, such as your primary administrator account."
+msgstr "Για να είναι πιο εύκολο να επεξεργαστείτε και να αποθηκεύσετε το εισαγόμενο περιεχόμενο, καλό θα ήταν να ορίσετε ως συντάκτη του εισαγόμενου στοιχείου έναν υπάρχοντα χρήστη αυτού του ιστότοπου, π.χ. εσάς."
+
+#. Author URI of the plugin
+#: wordpress-importer.php
+msgid "https://wordpress.org/"
+msgstr "https://wordpress.org/"
+
+#. Author of the plugin
+#: wordpress-importer.php
+msgid "wordpressdotorg"
+msgstr "wordpressdotorg"
+
+#. Description of the plugin
+#: wordpress-importer.php
+msgid "Import posts, pages, comments, custom fields, categories, tags and more from a WordPress export file."
+msgstr "Εισάγωγή άρθρών, σχολίων, ειδικών πεδίων, κατηγορίες, ετικέτες και πολλά άλλα από ένα αρχείο εξαγωγής περιεχομένου WordPress τύπου WXR."
+
+#. Plugin URI of the plugin
+#: wordpress-importer.php
+msgid "https://wordpress.org/plugins/wordpress-importer/"
+msgstr "https://wordpress.org/plugins/wordpress-importer/"
+
+#. Plugin Name of the plugin
+#: wordpress-importer.php
+msgid "WordPress Importer"
+msgstr "WordPress Importer"
+
+#: wordpress-importer.php:76
+msgid "Import <strong>posts, pages, comments, custom fields, categories, and tags</strong> from a WordPress export file."
+msgstr "Εισάγετε <strong>άρθρα</strong>, <strong>σχόλια</strong>, <strong>προσαρμοσμένα πεδία</strong>, <strong>σελίδες</strong> και <strong>κατηγορίες</strong> από αρχείο εξαγωγής WordPress"
+
+#: class-wp-import.php:1678
+msgid "Choose a WXR (.xml) file to upload, then click Upload file and import."
+msgstr "Επιλέξτε ένα αρχείο WXR (xml) και πατήστε Φόρτωση αρχείου και εισαγωγή."
+
+#: class-wp-import.php:1677
+msgid "Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import the posts, pages, comments, custom fields, categories, and tags into this site."
+msgstr "Καλώς ήρθατε!  Μεταφορτώστε ένα αρχείο WXR (WordPress eXtended RSS) για να εισάγετε άρθρα, σελίδα, σχόλια, πεδία, κατηγορίες και κατηγορίες από έναν άλλο ιστότοπο."
+
+#: class-wp-import.php:1662
+msgid "A new version of this importer is available. Please update to version %s to ensure compatibility with newer export files."
+msgstr "Μια νέα έκδοση του εισαγωγέα αυτού είναι διαθέσιμη. Παρακαλούμε αναβαθμίστε στην έκδοση %s για να βεβαιωθείτε ότι είστε συμβατοί με τα νεότερα αρχεία εξαγωγής περιεχομένου."
+
+#: class-wp-import.php:1655
+msgid "Import WordPress"
+msgstr "Εισαγωγή WordPress"
+
+#: class-wp-import.php:1428
+msgid "Remote file is too large, limit is %s"
+msgstr "Το αρχείο είναι μεγάλο.  Το όριο είναι %s"
+
+#: class-wp-import.php:1417
+msgid "Zero size file downloaded"
+msgstr "Μεταφορτώθηκε αρχείο μηδενικού μεγέθους"
+
+#: class-wp-import.php:1410
+msgid "Remote server did not respond"
+msgstr "Ο διακομιστής δεν αποκρίθηκε"
+
+#: class-wp-import.php:1316
+msgid "Invalid file type"
+msgstr "Μη έγκυρος τύπος αρχείου"
+
+#: class-wp-import.php:1298
+msgid "Fetching attachments is not enabled"
+msgstr "Η μεταφορά αρχείων που έχουν επισυναφθεί σε άρθρα δεν είναι ενεργοποιημένη"
+
+#: class-wp-import.php:1231
+msgid "Menu item skipped due to invalid menu slug: %s"
+msgstr "Η εγγραφή μενού προσπεράστηκε εξαιτίας του άκυρου σύντομου ονόματος: %s"
+
+#: class-wp-import.php:1224
+msgid "Menu item skipped due to missing menu slug"
+msgstr "Το αντικείμενο του μενού παραλήφθηκε επειδή έλειπε η συντομογραφία του"
+
+#: class-wp-import.php:901
+msgid "Failed to import %1$s &#8220;%2$s&#8221;"
+msgstr "Αποτυχία εισαγωγής %1$s &#8220;%2$s&#8221;"
+
+#: class-wp-import.php:806
+msgid "%1$s &#8220;%2$s&#8221; already exists."
+msgstr "%1$s &#8220;%2$s&#8221; υπάρχει ήδη."
+
+#: class-wp-import.php:765
+msgid "Failed to import &#8220;%1$s&#8221;: Invalid post type %2$s"
+msgstr "Αποτυχία εισαγωγής του &#8220;%1$s&#8221;:  Εσφαλμένος τύπος άρθρου %2$s"
+
+#: class-wp-import.php:674 class-wp-import.php:1176
+msgid "Failed to import %1$s %2$s"
+msgstr "Αποτυχία εισαγωγής  %1$s %2$s"
+
+#: class-wp-import.php:595
+msgid "Failed to import post tag %s"
+msgstr "Αποτυχία εισαγωγής ετικέτας %s "
+
+#: class-wp-import.php:522
+msgid "Failed to import category %s"
+msgstr "Αποτυχία εισαγωγής κατηγορίας %s"
+
+#: class-wp-import.php:453
+msgid "Failed to create new user for %s. Their posts will be attributed to the current user."
+msgstr "Δεν ήταν δυνατό να δημιουργηθεί ένας νέος χρήστης %s. Τα άρθρα του θα μεταφερθούν στον τρέχοντα χρήστη."
+
+#: class-wp-import.php:394
+msgid "- Select -"
+msgstr "– Επιλέξτε –"
+
+#: class-wp-import.php:385
+msgid "or assign posts to an existing user:"
+msgstr "ή ορίστε τις δημοσιεύσεις σε έναν υπάρχοντα χρήστη:"
+
+#: class-wp-import.php:383
+msgid "assign posts to an existing user:"
+msgstr "αντιστοίχιση των άρθρων σε μέλος:"
+
+#: class-wp-import.php:373
+msgid "as a new user:"
+msgstr "Ως νέος χρήστης"
+
+#: class-wp-import.php:370
+msgid "or create new user with login name:"
+msgstr "ή δημιουργήστε νέο χρήστη με ψευδώνυμο:"
+
+#: class-wp-import.php:355
+msgid "Import author:"
+msgstr "Εισαγωγή συντάκτη"
+
+#: class-wp-import.php:341
+msgid "Submit"
+msgstr "Υποβολή"
+
+#: class-wp-import.php:331
+msgid "Download and import file attachments"
+msgstr "Μεταφόρτωση και εισαγωγή συνημμένων αρχείων"
+
+#: class-wp-import.php:328
+msgid "Import Attachments"
+msgstr "Εισαγωγή συνημμένων"
+
+#: class-wp-import.php:318
+msgid "If a new user is created by WordPress, a new password will be randomly generated and the new user&#8217;s role will be set as %s. Manually changing the new user&#8217;s details will be necessary."
+msgstr "Όταν ένας νέος χρήστης δημιουργείται από το WordPress, τότε ένας νέος τυχαίος κωδικός παράγεται αυτόματα για αυτόν και ο ρόλος του θα τεθεί ως %s. Πρέπει να επεξεργαστείτε τις λεπτομέρειες του χρήστη στη συνέχεια."
+
+#: class-wp-import.php:315
+msgid "Assign Authors"
+msgstr "Ορισμός συντακτών"
+
+#: class-wp-import.php:287
+msgid "Failed to import author %s. Their posts will be attributed to the current user."
+msgstr "Απέτυχε η εισαγωγή του συντάκτη %s. Τα άρθρα του θα αποδωθούν στον τρέχοντα χρήστη."
+
+#: class-wp-import.php:262
+msgid "This WXR file (version %s) may not be supported by this version of the importer. Please consider updating."
+msgstr "Αυτό το WXR (έκδοση %s) αρχείο είναι δυνατόν να μην είναι συμβατό με αυτή την έκδοση του Εισαγωγέα. Παρακαλούμε σκεφθείτε την πιθανότητα να κάνετε πρώτα μια αναβάθμιση."
+
+#: class-wp-import.php:244
+msgid "The export file could not be found at <code>%s</code>. It is likely that this was caused by a permissions problem."
+msgstr "Το αρχείο εξαγωγής δεν μπόρεσε να βρεθεί στο <code>%s</code>. Είναι πιθανό ότι αυτό προκλήθηκε από πρόβλημα με τα δικαιώματα."
+
+#: class-wp-import.php:224
+msgid "Remember to update the passwords and roles of imported users."
+msgstr "Μην ξεχάσετε να ανανεώσετε τους κωδικούς και τους ρόλους των εισαχθέντων χρηστών."
+
+#: class-wp-import.php:223
+msgid "Have fun!"
+msgstr "Καλή διασκέδαση!"
+
+#: class-wp-import.php:223
+msgid "All done."
+msgstr "Είστε έτοιμοι."
+
+#: class-wp-import.php:155
+msgid "The file does not exist, please try again."
+msgstr "Το αρχεί δεν υπάρχει, παρακαλώ προσπαθήστε ξανά."
+
+#: class-wp-import.php:154 class-wp-import.php:165 class-wp-import.php:239
+#: class-wp-import.php:243 class-wp-import.php:254
+msgid "Sorry, there has been an error."
+msgstr "Συγγνώμη, παρουσιάστηκε σφάλμα."
+
+#: parsers/class-wxr-parser-regex.php:104
+#: parsers/class-wxr-parser-simplexml.php:46
+#: parsers/class-wxr-parser-simplexml.php:52
+#: parsers/class-wxr-parser-xml-processor.php:190
+#: parsers/class-wxr-parser-xml.php:106
+msgid "This does not appear to be a WXR file, missing/invalid WXR version number"
+msgstr "Αυτό μοιάζει σαν ένα λάθος WXR αρχείο, λείπει ή είναι μη έγκυρη ο αριθμός έκδοσής του"
+
+#: parsers/class-wxr-parser.php:69
+msgid "Details are shown above. The importer will now try again with a different parser..."
+msgstr "Οι λεπτομέρειες φαίνονται από πάνω. Ο Εισαγωγέας θα προσπαθήσει ξανά αλλά με ένα διαφορετικό αναλυτή."
+
+#: parsers/class-wxr-parser-simplexml.php:33
+#: parsers/class-wxr-parser-simplexml.php:41 parsers/class-wxr-parser.php:68
+msgid "There was an error when reading this WXR file"
+msgstr "Ένα σφάλμα συνέβη κατά την ανάγνωση αυτού του αρχείου WXR"

@@ -11,11 +11,11 @@ class XMLDownloader {
     private $cache_dir;
 
     public function __construct() {
-        // Use xml_files directory inside theme
-        $xml_dir = get_template_directory() . '/xml_files/';
+        // Use scripts/xml_files directory inside theme
+        $xml_dir = get_template_directory() . '/scripts/xml_files/';
 
         $this->urls_file = $xml_dir . 'xml_urls.txt';
-        $this->cache_dir = $xml_dir;
+        $this->cache_dir = $xml_dir;  // Base directory, will use subdirectories for en/gr/enhanced
 
         // Ensure cache directory exists
         if (!file_exists($this->cache_dir)) {
@@ -68,7 +68,8 @@ class XMLDownloader {
             $supplier = $this->identifySupplier($url);
         }
 
-        $filename = $this->cache_dir . $supplier . '.xml';
+        // Store downloaded XMLs in gr/ subdirectory
+        $filename = $this->cache_dir . 'gr/' . $supplier . '.xml';
 
         // Use WordPress HTTP API
         $response = wp_remote_get($url, [
@@ -145,8 +146,8 @@ class XMLDownloader {
      * @return string|false File path or false if not found
      */
     public function getLocalFile($supplier, $enhanced_only = false) {
-        $enhanced_filename = $this->cache_dir . $supplier . '-enhanced.xml';
-        $original_filename = $this->cache_dir . $supplier . '.xml';
+        $enhanced_filename = $this->cache_dir . 'enhanced/' . $supplier . '-enhanced.xml';
+        $original_filename = $this->cache_dir . 'gr/' . $supplier . '.xml';
 
         // If enhanced_only is true, ONLY return enhanced XML
         if ($enhanced_only) {

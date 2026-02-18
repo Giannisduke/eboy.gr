@@ -19,8 +19,13 @@ $supplier = $argv[1];
 define('WP_USE_THEMES', false);
 
 // Find WordPress root (go up from theme/scripts to web/wp)
+// __DIR__ = simple-city/scripts
+// dirname(__DIR__) = simple-city (theme root)
+// dirname(dirname(__DIR__)) = themes
+// dirname(dirname(dirname(__DIR__))) = app
 $theme_root = dirname(__DIR__);
-$app_dir = dirname($theme_root); // app directory
+$themes_dir = dirname($theme_root); // themes directory
+$app_dir = dirname($themes_dir); // app directory
 $web_root = dirname($app_dir); // web directory
 $wp_load = $web_root . '/wp/wp-load.php';
 

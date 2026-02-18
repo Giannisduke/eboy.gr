@@ -52,9 +52,31 @@ class ProductTranslator:
 
             greek_title = self.client.generate(prompt).strip()
 
-            # Post-processing: Ensure first letter is capitalized
-            if greek_title and len(greek_title) > 0:
-                greek_title = greek_title[0].upper() + greek_title[1:]
+            # Post-processing: Remove extra text that model may add
+            # Keep only the first line if model added explanations
+            if '\n' in greek_title:
+                # Split by newline and take first non-empty line
+                lines = [line.strip() for line in greek_title.split('\n') if line.strip()]
+                greek_title = lines[0] if lines else greek_title.split('\n')[0]
+
+            # Remove common prefixes/explanations
+            prefixes_to_remove = [
+                'output:', 'μετάφραση:', 'translation:',
+                'ελληνικά:', 'greek:', 'τίτλος:', 'greek translation:',
+                'ελληνική μετάφραση:', 'αποτέλεσμα:'
+            ]
+            for prefix in prefixes_to_remove:
+                if greek_title.lower().startswith(prefix):
+                    greek_title = greek_title[len(prefix):].strip()
+
+            # Remove quotes and extra whitespace
+            greek_title = greek_title.strip('"\'').strip()
+
+            # Remove trailing dots or commas
+            greek_title = greek_title.rstrip('.,')
+
+            # Enforce sentence case: ONLY first letter uppercase
+            greek_title = self._enforce_sentence_case(greek_title)
 
             logger.info(f"Translated title: {english_title} → {greek_title}")
             return greek_title
@@ -62,6 +84,44 @@ class ProductTranslator:
         except Exception as e:
             logger.error(f"Title translation failed: {e}")
             return english_title  # Fallback to English
+
+    def _enforce_sentence_case(self, title: str) -> str:
+        """
+        Enforce sentence case for Greek titles:
+        - ONLY first letter uppercase
+        - Everything else lowercase
+        - Numbers remain unchanged
+
+        Args:
+            title: Greek title to process
+
+        Returns:
+            Title in sentence case
+        """
+        if not title or len(title) == 0:
+            return title
+
+        # Split into words
+        words = title.split()
+        if not words:
+            return title
+
+        result_words = []
+        for i, word in enumerate(words):
+            # First word: capitalize first letter only
+            if i == 0:
+                if len(word) > 0:
+                    result_words.append(word[0].upper() + word[1:].lower())
+                else:
+                    result_words.append(word)
+            # Numbers and words containing numbers: keep as-is
+            elif any(c.isdigit() for c in word):
+                result_words.append(word)
+            # Everything else: lowercase
+            else:
+                result_words.append(word.lower())
+
+        return ' '.join(result_words)
 
     def translate_description(self, english_description: str) -> str:
         """

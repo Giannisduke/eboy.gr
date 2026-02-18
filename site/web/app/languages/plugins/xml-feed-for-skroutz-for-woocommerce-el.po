@@ -1,0 +1,480 @@
+# Translation of Plugins - XML Feed for Skroutz &amp; BestPrice for WooCommerce - Stable (latest release) in Greek
+# This file is distributed under the same license as the Plugins - XML Feed for Skroutz &amp; BestPrice for WooCommerce - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2025-10-01 15:08:45+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/4.0.1\n"
+"Language: el_GR\n"
+"Project-Id-Version: Plugins - XML Feed for Skroutz &amp; BestPrice for WooCommerce - Stable (latest release)\n"
+
+#: admin/class-dc-skroutz-feed-admin.php:1712
+msgid "This price will be the variation price in the Skroutz feed."
+msgstr "Αυτή θα είναι η τιμή της παραλλαγής στο Skroutz XML."
+
+#: admin/class-dc-skroutz-feed-admin.php:1626
+msgid "This price will be the product price in the Skroutz feed."
+msgstr "Αυτή θα είναι η τιμή του προϊόντος στο Skroutz XML."
+
+#: admin/class-dc-skroutz-feed-admin.php:1624
+#: admin/class-dc-skroutz-feed-admin.php:1710
+msgid "Skroutz Price"
+msgstr "Τιμή Skroutz"
+
+#: admin/class-dc-skroutz-feed-admin.php:1264
+msgid "Available up to 12 days"
+msgstr "Διαθέσιμο από 7 έως 12 ημέρες"
+
+#: admin/class-dc-skroutz-feed-admin.php:1262
+msgid "Available from 4 to 6 days"
+msgstr "Διαθέσιμο από 4 έως 6 ημέρες"
+
+#: admin/class-dc-skroutz-feed-admin.php:1258
+msgid "Deprecated"
+msgstr "Παρωχημένο"
+
+#: admin/class-dc-skroutz-feed-admin.php:959
+msgid "Note: The products with an assigned \"Skroutz Price\" in their product data will not be affected by this increase."
+msgstr "Σημείωση: Τα προϊόντα στα οποία έχει οριστεί \"Τιμή Skroutz\" στην καρτέλα του προϊόντος τους δεν θα επηρεαστούν από αυτήν την αύξηση."
+
+#: admin/class-dc-skroutz-feed-admin.php:957
+msgid "The product prices in the XML feed will be increased by this percentage."
+msgstr "Οι τιμές των προϊόντων στο XML θα αυξηθούν κατά αυτό το ποσοστό."
+
+#: admin/class-dc-skroutz-feed-admin.php:236
+msgid "Global Price Increase (%)"
+msgstr "Καθολική Αύξηση Τιμών (%)"
+
+#: admin/class-dc-skroutz-feed-admin.php:831
+msgid "Show \"One Size\" for products that are missing size information."
+msgstr "Εμφάνιση \"One Size\" για προϊόντα που δεν έχουν πληροφορίες για το μέγεθός τους."
+
+#: admin/class-dc-skroutz-feed-admin.php:816
+msgid "Select only the size attributes that will create size variations, <u><strong>not</strong></u> all sizes. This depends on Skroutz <a href=\"https://partnersupport.skroutz.gr/hc/en-us/sections/34841019047057-Technical-Specifications-by-Category\" target=\"_blank\">Technical Specifications by Category</a>."
+msgstr "Επιλέξτε μόνο τις ιδιότητες μεγέθους με βάση τις οποίες θα δημιουργηθούν παραλλαγές μεγέθους, <u><strong>όχι</strong></u> όλα τα μεγέθη. Αυτό καθορίζεται από τις <a href=\"https://partnersupport.skroutz.gr/hc/el-gr/sections/34841019047057-%CE%A4%CE%B5%CF%87%CE%BD%CE%B9%CE%BA%CE%AD%CF%82-%CE%A0%CF%81%CE%BF%CE%B4%CE%B9%CE%B1%CE%B3%CF%81%CE%B1%CF%86%CE%AD%CF%82-%CE%B1%CE%BD%CE%AC-%CE%9A%CE%B1%CF%84%CE%B7%CE%B3%CE%BF%CF%81%CE%AF%CE%B1\" target=\"_blank\">Τεχνικές Προδιαγραφές ανά Κατηγορία</a> του Skroutz."
+
+#: admin/class-dc-skroutz-feed-admin.php:206
+msgid "Default size if missing"
+msgstr "Προκαθορισμένο μέγεθος εφόσον λείπει"
+
+#: admin/class-dc-skroutz-feed-admin.php:200
+msgid "Sizes for Variations"
+msgstr "Μεγέθη για παραλλαγές"
+
+#: admin/class-dc-skroutz-feed-admin.php:1526
+msgid "The Skroutz XML file generation was successful and is back on schedule. Last time generated: %s"
+msgstr "Η δημιουργία του Skroutz XML ήταν επιτυχής και έχει επανέλθει στο σωστό χρονοδιάγραμμα. Τελευταία φορά που δημιουργήθηκε: %s"
+
+#: admin/class-dc-skroutz-feed-admin.php:1523
+msgid "Possible error in Skroutz XML generation process. Last time generated: %s"
+msgstr "Πιθανό σφάλμα στη διαδικασία δημιουργίας του Skroutz XML. Τελευταία φορά που δημιουργήθηκε: %s"
+
+#: admin/class-dc-skroutz-feed-admin.php:1508
+msgid "Alert about Skroutz XML generation at %1$s (%2$s)"
+msgstr "Ειδοποίηση σχετικά με τη δημιουργία του Skroutz XML στο %1$s (%2$s)"
+
+#: admin/class-dc-skroutz-feed-admin.php:1137
+msgid "The email address that the alert will be sent to. Enter only one email address."
+msgstr "Η διεύθυνση email στην οποία θα αποστέλλεται η ειδοποίηση. Εισάγετε μόνο μία διεύθυνση email."
+
+#: admin/class-dc-skroutz-feed-admin.php:1121
+msgid "To change this limit, check out the documentation for developers."
+msgstr "Για να αλλάξετε αυτό το όριο, ανατρέξτε στην τεκμηρίωση για προγραμματιστές."
+
+#: admin/class-dc-skroutz-feed-admin.php:1120
+msgid "The alert is sent if the XML has not been updated for more than %s hours."
+msgstr "Η ειδοποίηση αποστέλλεται εάν το XML δεν έχει ενημερωθεί για περισσότερες από %s ώρες."
+
+#: admin/class-dc-skroutz-feed-admin.php:1117
+msgid "Enable a monitor to alert you if the XML generation fails. An email will be sent to the email address below."
+msgstr "Ενεργοποιήστε την παρακολούθηση για να ειδοποιηθείτε εάν η δημιουργία του XML αποτύχει. Θα σταλεί ένα email στην παρακάτω διεύθυνση ηλεκτρονικού ταχυδρομείου."
+
+#: admin/class-dc-skroutz-feed-admin.php:589
+msgid "Monitor the XML feed generation time and get notified in case of a problem."
+msgstr "Παρακολουθήστε το χρόνο δημιουργίας του XML και ειδοποιηθείτε σε περίπτωση προβλήματος."
+
+#: admin/class-dc-skroutz-feed-admin.php:399
+msgid "Documentation for Developers"
+msgstr "Τεκμηρίωση για προγραμματιστές"
+
+#: admin/class-dc-skroutz-feed-admin.php:395
+msgid "Setup Guide for Users/Shop managers"
+msgstr "Οδηγός ρύθμισης για χρήστες/διαχειριστές καταστημάτων"
+
+#: admin/class-dc-skroutz-feed-admin.php:392
+msgid "Setup Guide & Documentation"
+msgstr "Οδηγός ρύθμισης & τεκμηρίωση"
+
+#: admin/class-dc-skroutz-feed-admin.php:296
+msgid "Email Address to Notify"
+msgstr "Διεύθυνση email που θα ειδοποιηθεί"
+
+#: admin/class-dc-skroutz-feed-admin.php:290
+msgid "Enable Generation Monitor"
+msgstr "Ενεργοποίηση παρακολούθησης του XML"
+
+#: admin/class-dc-skroutz-feed-admin.php:174
+msgid "Feed generation monitor"
+msgstr "Παρακολούθηση δημιουργίας XML"
+
+#: admin/class-dc-skroutz-feed-admin.php:907
+msgid "Other taxonomies:"
+msgstr "Άλλες ταξινομίες:"
+
+#: admin/class-dc-skroutz-feed-admin.php:977
+msgid "We suggest keeping this unchecked. Use the new native WooCommerce field called \"GTIN, UPC, EAN, or ISBN\" which is located under the \"SKU\" field."
+msgstr "Προτείνουμε να το αφήσετε απενεργοποιημένο. Χρησιμοποιήστε το νέο πεδίο του WooCommerce με την ονομασία \"GTIN, UPC, EAN ή ISBN\", το οποίο βρίσκεται κάτω από το πεδίο \"Κωδικός προϊόντος (SKU)\"."
+
+#: admin/class-dc-skroutz-feed-admin.php:762
+msgid "Other brand taxonomies:"
+msgstr "Άλλες ταξινομίες brand:"
+
+#: admin/class-dc-skroutz-feed-admin.php:754
+#: admin/class-dc-skroutz-feed-admin.php:785
+#: admin/class-dc-skroutz-feed-admin.php:807
+#: admin/class-dc-skroutz-feed-admin.php:898
+msgid "Available product attributes:"
+msgstr "Διαθέσιμες ιδιότητες προϊόντων:"
+
+#. Author of the plugin
+#: xml-feed-for-skroutz-for-woocommerce.php
+msgid "Digital Challenge"
+msgstr "Digital Challenge"
+
+#. Plugin URI of the plugin
+#: xml-feed-for-skroutz-for-woocommerce.php
+msgid "https://github.com/Digital-Challenge/xml-feed-for-skroutz-for-woocommerce"
+msgstr "https://github.com/Digital-Challenge/xml-feed-for-skroutz-for-woocommerce"
+
+#: admin/class-dc-skroutz-feed-admin.php:2000
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+#: admin/class-dc-skroutz-feed-admin.php:1930
+msgid "— No Change —"
+msgstr "— Καμία αλλαγή —"
+
+#: admin/class-dc-skroutz-feed-admin.php:1844
+msgid "Filter by Skroutz Availability"
+msgstr "Φιλτράρισμα με διαθεσιμότητα Skroutz"
+
+#: admin/class-dc-skroutz-feed-admin.php:1843
+msgid "Skroutz availability filter"
+msgstr "Φίλτρο διαθεσιμότητας Skroutz"
+
+#: admin/class-dc-skroutz-feed-admin.php:1800
+#: admin/class-dc-skroutz-feed-admin.php:1902
+#: admin/class-dc-skroutz-feed-admin.php:1927
+msgid "Skroutz availability"
+msgstr "Διαθεσιμότητα Skroutz"
+
+#: admin/class-dc-skroutz-feed-admin.php:1724
+msgid "The variation's official EAN code or Barcode. A unique EAN/Barcode is allocated to each separate retail product."
+msgstr "Ο επίσημος κωδικός EAN ή Barcode της παραλλαγής. Σε κάθε ξεχωριστό προϊόν λιανικής πώλησης αντιστοιχεί ένας μοναδικός κωδικός EAN/Barcode."
+
+#: admin/class-dc-skroutz-feed-admin.php:1609
+msgid "The product's official EAN code or Barcode. A unique EAN/Barcode is allocated to each separate retail product."
+msgstr "Ο επίσημος κωδικός EAN ή Barcode του προϊόντος. Σε κάθε ξεχωριστό προϊόν λιανικής πώλησης αντιστοιχεί ένας μοναδικός κωδικός EAN/Barcode."
+
+#: admin/class-dc-skroutz-feed-admin.php:1606
+#: admin/class-dc-skroutz-feed-admin.php:1721
+msgid "EAN/Barcode"
+msgstr "EAN/Barcode"
+
+#: admin/class-dc-skroutz-feed-admin.php:1575
+#: admin/class-dc-skroutz-feed-admin.php:1699
+msgid "The availability to show in XML feed for Skroutz/BestPrice. If you select the \"Default availability\" option, the default availability from the plugin's settings will be used."
+msgstr "Η διαθεσιμότητα που θα εμφανίζεται στον XML κατάλογο για το Skroutz και το BestPrice. Εάν επιλέξετε την επιλογή \"Προεπιλεγμένη διαθεσιμότητα\", θα χρησιμοποιηθεί η προεπιλεγμένη διαθεσιμότητα από τις κεντρικές ρυθμίσεις του προσθέτου."
+
+#: admin/class-dc-skroutz-feed-admin.php:1572
+#: admin/class-dc-skroutz-feed-admin.php:1697
+msgid "Skroutz/BestPrice Availability"
+msgstr "Διαθεσιμότητα Skroutz/BestPrice"
+
+#: admin/class-dc-skroutz-feed-admin.php:1550
+msgid "Export Feeds"
+msgstr "Κατάλογοι εξαγωγής προϊόντων"
+
+#: admin/class-dc-skroutz-feed-admin.php:1270
+msgid "Default availability"
+msgstr "Προεπιλεγμένη διαθεσιμότητα"
+
+#: admin/class-dc-skroutz-feed-admin.php:1266
+msgid "Hide from XML"
+msgstr "Απόκρυψη από τo XML"
+
+#: admin/class-dc-skroutz-feed-admin.php:1265
+msgid "Available up to 30 days"
+msgstr "Διαθέσιμο από 10 έως 30 ημέρες"
+
+#: admin/class-dc-skroutz-feed-admin.php:1263
+msgid "Available from 4 to 10 days"
+msgstr "Διαθέσιμο από 4 έως 10 ημέρες"
+
+#: admin/class-dc-skroutz-feed-admin.php:1261
+msgid "Available from 1 to 3 days"
+msgstr "Διαθέσιμο από 1 έως 3 ημέρες"
+
+#: admin/class-dc-skroutz-feed-admin.php:1260
+msgid "Available"
+msgstr "Άμεσα διαθέσιμο"
+
+#: admin/class-dc-skroutz-feed-admin.php:1101
+msgid "Full logging also shows problematic products and the reasons for skipping them."
+msgstr "Η πλήρης καταγραφή δείχνει επίσης τα προβληματικά προϊόντα και τους λόγους για την παράλειψή τους από το XML."
+
+#: admin/class-dc-skroutz-feed-admin.php:1099
+msgid "Basic logging only shows info about feed generation."
+msgstr "Η βασική καταγραφή δείχνει μόνο πληροφορίες σχετικά με την παραγωγή του XML καταλόγου."
+
+#. translators: %s: Link to WooCommerce Logs page
+#: admin/class-dc-skroutz-feed-admin.php:1097
+msgid "You can find the logs in the <a href=\"%s\" target=\"_blank\">WooCommerce Logs</a> page."
+msgstr "Μπορείτε να βρείτε τα αρχεία καταγραφών στη σελίδα <a href=\"%s\" target=\"_blank\">Αρχείων Καταγραφής του WooCommerce</a>."
+
+#: admin/class-dc-skroutz-feed-admin.php:1083
+msgid "Full logging"
+msgstr "Πλήρης καταγραφή"
+
+#: admin/class-dc-skroutz-feed-admin.php:1082
+msgid "Basic logging"
+msgstr "Βασική καταγραφή"
+
+#: admin/class-dc-skroutz-feed-admin.php:1081
+msgid "No logging"
+msgstr "Καθόλου καταγραφή"
+
+#: admin/class-dc-skroutz-feed-admin.php:1001
+#: admin/class-dc-skroutz-feed-admin.php:1034
+msgid "Include"
+msgstr "Συμπερίληψη"
+
+#: admin/class-dc-skroutz-feed-admin.php:998
+#: admin/class-dc-skroutz-feed-admin.php:1031
+msgid "Exclude"
+msgstr "Εξαίρεση"
+
+#: admin/class-dc-skroutz-feed-admin.php:996
+#: admin/class-dc-skroutz-feed-admin.php:1029
+msgid "Include/Exclude mode"
+msgstr "Λειτουργία συμπερίληψης/εξαίρεσης"
+
+#: admin/class-dc-skroutz-feed-admin.php:975
+msgid "Add new field for inserting the EAN/Barcode info. The field will appear under WooCommerce SKU field."
+msgstr "Προσθήκη νέου πεδίου για την εισαγωγή του EAN/Barcode. Το πεδίο θα εμφανιστεί κάτω από το πεδίο του WooCommerce για τον κωδικό προϊόντος (SKU)."
+
+#: admin/class-dc-skroutz-feed-admin.php:940
+msgid "Description"
+msgstr "Περιγραφή"
+
+#: admin/class-dc-skroutz-feed-admin.php:934
+msgid "Short description"
+msgstr "Σύντομη περιγραφή"
+
+#: admin/class-dc-skroutz-feed-admin.php:917
+msgid "These attributes will be added to XML product name (if not included already)."
+msgstr "Αυτές οι ιδιότητες θα προστεθούν στον τίτλο του προϊόντος στο XML (εάν δεν περιλαμβάνονται ήδη)."
+
+#: admin/class-dc-skroutz-feed-admin.php:869
+msgid "Include products on backorder in XML."
+msgstr "Συμπερίληψη προϊόντων σε προπαραγγελία (on backorder)."
+
+#: admin/class-dc-skroutz-feed-admin.php:854
+msgid "If you are not sure what to choose, consult <a href=\"https://developer.skroutz.gr/el/feedspec/#availability\" target=\"_blank\">Skroutz instructions</a>."
+msgstr "Εάν δεν είστε σίγουροι τι να επιλέξετε, συμβουλευτείτε τις <a href=\"https://developer.skroutz.gr/el/feedspec/#availability\" target=\"_blank\">Οδηγίες του Skroutz</a>."
+
+#: admin/class-dc-skroutz-feed-admin.php:725
+msgid "Exact minute (0-59) of the hour to start the feed generation."
+msgstr "Το ακριβές λεπτό (0-59) της ώρας που θα ξεκινήσει η δημιουργία του XML καταλόγου."
+
+#. translators: %d: A number representing the hour interval.
+#: admin/class-dc-skroutz-feed-admin.php:699
+msgid "Every %d hour"
+msgid_plural "Every %d hours"
+msgstr[0] "Κάθε %d ώρα"
+msgstr[1] "Κάθε %d ώρες"
+
+#: admin/class-dc-skroutz-feed-admin.php:694
+msgid "No WP Cron"
+msgstr "Όχι μέσω WP Cron"
+
+#: admin/class-dc-skroutz-feed-admin.php:693
+msgid "Frequency of feed generation in hours."
+msgstr "Συχνότητα παραγωγής του XML σε ώρες."
+
+#: admin/class-dc-skroutz-feed-admin.php:641
+msgid "If \"No WP Cron\" is selected, then the XML generation will not run automatically using WP Cron, so you need to setup server cron jobs manually. This option is best for large eshops that need frequent updates on specific time, and need more server resources."
+msgstr "Αν επιλεγεί η επιλογή \"Όχι μέσω WP Cron\", τότε η δημιουργία του XML δεν θα εκτελεστεί αυτόματα με τη χρήση του WP Cron, οπότε θα πρέπει να ρυθμίσετε χειροκίνητα τα cron jobs του server. Αυτή η επιλογή είναι καλύτερη για μεγάλα eshops που χρειάζονται συχνές ενημερώσεις σε συγκεκριμένες ώρες και η δημιουργία του XML χρειάζεται περισσότερους πόρους."
+
+#: admin/class-dc-skroutz-feed-admin.php:640
+msgid "<strong>Fill the \"minute\" field with a number between 0-59.</strong> If you insert the value \"45\", then the import will start running at 00:45 at night (UTC time), and then every X hours, depending on the \"hour\" field. Suggested values: 45-55 so that the feed is ready when Skroutz fetches your XML."
+msgstr "<strong>Συμπληρώστε το πεδίο \"λεπτό\" με έναν αριθμό μεταξύ 0-59.</strong> Αν εισαγάγετε την τιμή \"45\", τότε η εισαγωγή θα αρχίσει να εκτελείται στις 00:45 τη νύχτα (ώρα UTC) και στη συνέχεια κάθε X ώρες, ανάλογα με το πεδίο της \"ώρας\". Προτεινόμενες τιμές: 45-55, ώστε ο κατάλογος να είναι έτοιμες όταν το Skroutz διαβάζει το XML σας."
+
+#: admin/class-dc-skroutz-feed-admin.php:639
+msgid "Select the frequency of the XML feed generation, or disable automatic generation using WP Cron scheduling."
+msgstr "Επιλέξτε τη συχνότητα δημιουργίας του XML ή απενεργοποιήστε την αυτόματη δημιουργία μέσω του WP Cron."
+
+#: admin/class-dc-skroutz-feed-admin.php:636
+msgid "Select how frequently the XML feed will be updated."
+msgstr "Επιλέξτε πόσο συχνά θα ενημερώνεται ο XML κατάλογος."
+
+#. translators: 1: A select input for cron schedule. 2: the CSS class for
+#. schedule description. 3: CSS styles. 4: Number representing the minute
+#: admin/class-dc-skroutz-feed-admin.php:627
+msgid "%1$s<span class=\"%2$s\" style=\"%3$s\">, starting at 00:XX, where XX is the %4$s minute.</span>"
+msgstr "%1$s<span class=\"%2$s\" style=\"%3$s\">, ξεκινώντας στις 00:XX, όπου XX είναι το %4$s λεπτό.</span>"
+
+#: admin/class-dc-skroutz-feed-admin.php:581
+msgid "Settings about logging during the feed generation."
+msgstr "Ρυθμίσεις σχετικά με τις καταγραφές κατά τη διάρκεια της δημιουργίας του XML."
+
+#: admin/class-dc-skroutz-feed-admin.php:573
+msgid "Do NOT use the same attribute in multiple fields, for example in both Color and Size."
+msgstr "ΜΗΝ χρησιμοποιείτε την ίδια ιδιότητα σε πολλαπλά πεδία, για παράδειγμα τόσο στο Χρώμα όσο και στο Μέγεθος."
+
+#: admin/class-dc-skroutz-feed-admin.php:571
+msgid "Settings to control the product data for the XML feed."
+msgstr "Ρυθμίσεις για τον έλεγχο των δεδομένων προϊόντων στον XML κατάλογο."
+
+#: admin/class-dc-skroutz-feed-admin.php:563
+msgid "Settings about the scheduling of Skroutz/BestPrice XML feed generation."
+msgstr "Ρυθμίσεις σχετικά με τον προγραμματισμό της δημιουργίας του XML."
+
+#: admin/class-dc-skroutz-feed-admin.php:544
+msgid "XML feed generation failed. Enable and then check plugin logs for more details."
+msgstr "Η δημιουργία του XML καταλόγου απέτυχε. Ενεργοποιήστε και στη συνέχεια ελέγξτε τα αρχεία καταγραφής του πρόσθετου για περισσότερες λεπτομέρειες."
+
+#: admin/class-dc-skroutz-feed-admin.php:539
+msgid "View XML"
+msgstr "Προβολή XML"
+
+#: admin/class-dc-skroutz-feed-admin.php:537
+msgid "XML feed was generated successfully!"
+msgstr "Ο XML κατάλογος δημιουργήθηκε με επιτυχία!"
+
+#: admin/class-dc-skroutz-feed-admin.php:531
+msgid "Changes have been saved."
+msgstr "Οι αλλαγές έχουν αποθηκευθεί."
+
+#: admin/class-dc-skroutz-feed-admin.php:387
+msgid "Create XML feed"
+msgstr "Δημιουργία XML"
+
+#: admin/class-dc-skroutz-feed-admin.php:387
+msgid "Update XML feed"
+msgstr "Ενημέρωση XML"
+
+#: admin/class-dc-skroutz-feed-admin.php:383
+msgid "View XML feed"
+msgstr "Προβολή XML"
+
+#: admin/class-dc-skroutz-feed-admin.php:376
+msgid "Submit the following URL to Skroutz or BestPrice:"
+msgstr "Υποβάλετε το ακόλουθο URL στο Skroutz ή στο BestPrice:"
+
+#: admin/class-dc-skroutz-feed-admin.php:374
+msgid "Never"
+msgstr "Ποτέ"
+
+#: admin/class-dc-skroutz-feed-admin.php:373
+msgid "Last XML feed generated at:"
+msgstr "Το τελευταίο XML δημιουργήθηκε:"
+
+#: admin/class-dc-skroutz-feed-admin.php:372
+msgid "XML Feed Tools"
+msgstr "Εργαλεία XML καταλόγου"
+
+#: admin/class-dc-skroutz-feed-admin.php:284
+msgid "Log level"
+msgstr "Επίπεδο καταγραφής"
+
+#: admin/class-dc-skroutz-feed-admin.php:278
+msgid "Free Shipping over"
+msgstr "Δωρεάν αποστολή πάνω από"
+
+#: admin/class-dc-skroutz-feed-admin.php:272
+msgid "Fixed Shipping Cost"
+msgstr "Σταθερό κόστος αποστολής"
+
+#: admin/class-dc-skroutz-feed-admin.php:266
+msgid "Product tags filter"
+msgstr "Φίλτρο ετικετών προϊόντος"
+
+#: admin/class-dc-skroutz-feed-admin.php:260
+msgid "Product categories filter"
+msgstr "Φίλτρο κατηγοριών προϊόντος"
+
+#: admin/class-dc-skroutz-feed-admin.php:242
+msgid "EAN/Barcode field"
+msgstr "Πεδίο EAN/Barcode"
+
+#: admin/class-dc-skroutz-feed-admin.php:230
+msgid "Description to display"
+msgstr "Περιγραφή προς εμφάνιση"
+
+#: admin/class-dc-skroutz-feed-admin.php:224
+msgid "Attributes in Product name"
+msgstr "Ιδιότητες στον τίτλο προϊόντος"
+
+#: admin/class-dc-skroutz-feed-admin.php:218
+msgid "Include products on backorder"
+msgstr "Συμπερίληψη προϊόντων σε προπαραγγελία (on backorder)"
+
+#: admin/class-dc-skroutz-feed-admin.php:212
+msgid "Default Availability"
+msgstr "Προεπιλεγμένη διαθεσιμότητα"
+
+#: admin/class-dc-skroutz-feed-admin.php:194
+msgid "Color"
+msgstr "Χρώμα"
+
+#: admin/class-dc-skroutz-feed-admin.php:188
+msgid "Manufacturer"
+msgstr "Κατασκευαστής"
+
+#: admin/class-dc-skroutz-feed-admin.php:182
+msgid "WP Cron Schedule"
+msgstr "Πρόγραμμα μέσω WP Cron"
+
+#: admin/class-dc-skroutz-feed-admin.php:167
+msgid "Log settings"
+msgstr "Ρυθμίσεις αρχείων καταγραφής"
+
+#: admin/class-dc-skroutz-feed-admin.php:160
+msgid "Settings for Plugin Skroutz/Best Price XML"
+msgstr "Ρυθμίσεις για το Skroutz/Best Price XML"
+
+#: admin/class-dc-skroutz-feed-admin.php:153
+msgid "Feed generation schedule"
+msgstr "Πρόγραμμα δημιουργίας XML καταλόγου"
+
+#: admin/class-dc-skroutz-feed-admin.php:140
+msgid "Δείτε όλα τα plugins της Digital Challenge"
+msgstr "Δείτε όλα τα plugins της Digital Challenge"
+
+#: admin/class-dc-skroutz-feed-admin.php:103
+#: admin/class-dc-skroutz-feed-admin.php:105
+msgid "Plugin's Homepage"
+msgstr "Αρχική σελίδα"
+
+#: admin/class-dc-skroutz-feed-admin.php:80
+msgid "Skroutz/BestPrice XML"
+msgstr "Skroutz/BestPrice XML"
+
+#. Author URI of the plugin
+#: xml-feed-for-skroutz-for-woocommerce.php
+msgid "https://www.dicha.gr"
+msgstr "https://www.dicha.gr"
+
+#. Description of the plugin
+#: xml-feed-for-skroutz-for-woocommerce.php
+msgid "This plugin helps you create an XML feed for Skroutz and BestPrice marketplaces."
+msgstr "Αυτό το πρόσθετο σας βοηθά να δημιουργήσετε έναν XML κατάλογο προϊόντων για τις πλατφόρμες του Skroutz και του BestPrice."
+
+#. Plugin Name of the plugin
+#: xml-feed-for-skroutz-for-woocommerce.php
+msgid "XML Feed for Skroutz & BestPrice for WooCommerce"
+msgstr "XML Feed for Skroutz & BestPrice for WooCommerce"

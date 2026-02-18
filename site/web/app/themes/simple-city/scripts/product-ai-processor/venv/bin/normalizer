@@ -1,4 +1,4 @@
-#!/srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/product-ai-processor/venv/bin/python3
+#!/Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/product-ai-processor/venv/bin/python3.14
 import sys
 from charset_normalizer.cli import cli_detect
 if __name__ == '__main__':

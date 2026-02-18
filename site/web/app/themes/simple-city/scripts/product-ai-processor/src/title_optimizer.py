@@ -62,6 +62,10 @@ class TitleOptimizer:
                 if optimized.startswith("'") and optimized.endswith("'"):
                     optimized = optimized[1:-1]
 
+                # Force sentence case: capitalize first letter, lowercase the rest
+                # but keep model names capitalized (words that were already Title Case)
+                optimized = self._enforce_sentence_case(optimized)
+
                 # Validate length
                 if len(optimized) > 70:
                     logger.warning(f"AI generated title too long ({len(optimized)} chars), falling back to simple cleanup")
@@ -80,6 +84,43 @@ class TitleOptimizer:
         except Exception as e:
             logger.error(f"Error optimizing title: {str(e)}")
             return self._simple_cleanup(original_title)
+
+    def _enforce_sentence_case(self, title: str) -> str:
+        """
+        Enforce sentence case: ONLY first letter capitalized, everything else lowercase.
+        Numbers remain unchanged.
+
+        Args:
+            title: Title to process
+
+        Returns:
+            Title in sentence case
+        """
+        if not title:
+            return title
+
+        # Split into words
+        words = title.split()
+        if not words:
+            return title
+
+        # Process each word
+        result_words = []
+        for i, word in enumerate(words):
+            # First word: capitalize first letter only
+            if i == 0:
+                if len(word) > 1:
+                    result_words.append(word[0].upper() + word[1:].lower())
+                else:
+                    result_words.append(word.upper())
+            # Numbers and words containing numbers: keep as-is
+            elif any(c.isdigit() for c in word):
+                result_words.append(word)
+            # Everything else: lowercase
+            else:
+                result_words.append(word.lower())
+
+        return ' '.join(result_words)
 
     def _simple_cleanup(self, title: str) -> str:
         """
@@ -101,8 +142,8 @@ class TitleOptimizer:
         # Normalize whitespace
         title = ' '.join(title.split())
 
-        # Capitalize first letter of each word
-        title = title.title()
+        # Apply sentence case
+        title = self._enforce_sentence_case(title)
 
         # Limit length
         if len(title) > 65:

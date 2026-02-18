@@ -28,7 +28,9 @@
   loop:
     - "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor/logs"
     - "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor/output"
-    - "{{ www_root }}/web/app/themes/simple-city/xml_files/enhanced"
+    - "{{ www_root }}/web/app/themes/simple-city/scripts/xml_files/en"
+    - "{{ www_root }}/web/app/themes/simple-city/scripts/xml_files/gr"
+    - "{{ www_root }}/web/app/themes/simple-city/scripts/xml_files/enhanced"
     - "{{ www_root }}/web/app/uploads/ai-processed-images"
   tags: [ai-processor]
 

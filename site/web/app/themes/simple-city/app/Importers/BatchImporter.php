@@ -88,9 +88,9 @@ class BatchImporter {
 
         // Use __FILE__ for reliable path resolution
         $theme_root = dirname(dirname(dirname(__FILE__)));
-        $xml_dir = $theme_root . '/xml_files/';
+        $xml_dir = $theme_root . '/scripts/xml_files/';
         $progress_file = $xml_dir . $supplier . '-progress.json';
-        $enhanced_xml_path = $xml_dir . $supplier . '-enhanced.xml';
+        $enhanced_xml_path = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml';
 
         // STEP 1: Check if enhanced XML exists and has correct number of products
         $xml_file = $this->downloader->getLocalFile($supplier, true); // enhanced_only = true
@@ -435,7 +435,7 @@ class BatchImporter {
         // Theme root = dirname(dirname(dirname(__FILE__)))
         $theme_root = dirname(dirname(dirname(__FILE__)));
         $script_dir = $theme_root . '/scripts/product-ai-processor';
-        $xml_dir = $theme_root . '/xml_files/';
+        $xml_dir = $theme_root . '/scripts/xml_files/';
 
         // Write debug info directly to log file BEFORE running command
         $debug_log = $xml_dir . 'debug-paths.log';
@@ -452,7 +452,7 @@ class BatchImporter {
         $debug_info .= "=== END DEBUG ===\n\n";
         file_put_contents($debug_log, $debug_info, FILE_APPEND);
 
-        $output_file = $xml_dir . $supplier . '-enhanced.xml';
+        $output_file = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml';
         $python_bin = '/usr/bin/python3'; // Use system Python with installed packages
         $log_file = $xml_dir . 'ai-enhancement.log';
         $progress_file = $xml_dir . $supplier . '-progress.json';
@@ -500,7 +500,7 @@ class BatchImporter {
         }
 
         // Check if backup file exists (means we're extending existing enhanced XML)
-        $backup_file = $xml_dir . $supplier . '-enhanced.xml.backup';
+        $backup_file = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml.backup';
         $extend_from_backup = file_exists($backup_file) ? '--extend-from-backup' : '';
 
         // Full command with background execution
@@ -531,7 +531,7 @@ class BatchImporter {
     private function getSupplierURL($supplier) {
         // Use __FILE__ for reliable path resolution
         $theme_root = dirname(dirname(dirname(__FILE__)));
-        $xml_dir = $theme_root . '/xml_files/';
+        $xml_dir = $theme_root . '/scripts/xml_files/';
         $urls_file = $xml_dir . 'xml_urls.txt';
 
         if (!file_exists($urls_file)) {
@@ -565,7 +565,7 @@ class BatchImporter {
     private function startRealtimeImport($supplier) {
         $theme_root = dirname(dirname(dirname(__FILE__)));
         $script_path = $theme_root . '/scripts/realtime-import-cli.php';
-        $log_file = $theme_root . '/xml_files/realtime-import.log';
+        $log_file = $theme_root . '/scripts/xml_files/realtime-import.log';
 
         // Build command to run realtime import in background
         $php_bin = '/usr/bin/php';

@@ -35,7 +35,18 @@ def setup_logging(debug: bool = False):
 def load_config(language: str = 'el') -> dict:
     """Load configuration from .env and YAML files"""
     # Load environment variables
-    load_dotenv()
+    # Try .env.local first (for local development), then .env
+    env_local = Path(__file__).parent / '.env.local'
+    env_file = Path(__file__).parent / '.env'
+
+    if env_local.exists():
+        load_dotenv(env_local, override=True)
+        print(f"✓ Loaded configuration from .env.local")
+    elif env_file.exists():
+        load_dotenv(env_file)
+        print(f"✓ Loaded configuration from .env")
+    else:
+        print(f"⚠ No .env or .env.local file found")
 
     # Load prompts based on language
     if language == 'en':
