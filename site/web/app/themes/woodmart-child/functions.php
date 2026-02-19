@@ -84,7 +84,7 @@ add_filter('the_content', function($content){
 
 add_action('wp_enqueue_scripts', 'eboy_gsap_home');
 function eboy_gsap_home() {
-  if ( ! is_page(41450) ) return;
+  if ( ! is_page(41450) || is_page(7075) ) return;
 
   // CSS
   $css_rel = '/css/winter_26.css';
