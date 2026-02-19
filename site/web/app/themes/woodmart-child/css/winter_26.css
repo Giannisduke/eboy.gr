@@ -144,6 +144,42 @@
   gap: 2px;
 }
 
+#monk_slider .texts__right.third{
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(48%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+#monk_slider .texts__right.forth{
+  position: absolute;
+  top: 32%;
+  right: 0;
+  transform: translate(64%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+#monk_slider .texts__right.fifth{
+  position: absolute;
+  top: 32%;
+  right: 0;
+  transform: translate(64%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
 /* κοινό sizing στα svg */
 #slide_1_a1 {
   width: 147.56px;
@@ -201,6 +237,33 @@
   max-width: none;
 }
 
+#slice_03_price{
+  width: 50.9629px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
+
+#slice_04_name{
+  width: 95.1109px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
+
+#slice_05_name{
+  width: 164.8886px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
+
+#slice_05_price{
+  width: 50.9629px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
 /* =========================
    Arrows
    ========================= */
