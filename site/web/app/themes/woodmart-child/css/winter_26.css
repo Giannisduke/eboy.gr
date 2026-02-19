@@ -1,53 +1,60 @@
 /* =========================
-   Monk Slider / Embla (winter_26.css)
-   - 2 εικόνες (img-a / img-b) στο κέντρο
-   - 2 SVG labels: ένα αριστερά από img-a, ένα δεξιά από img-b
-   - Arrows κεντραρισμένα και σωστά clickable
+   Monk Slider / Embla (winter_26.css) - TIGHT BASELINE VERSION
    ========================= */
 
 #monk_slider{
   position: relative;
   width: 100%;
-  text-align: center; /* κεντράρει το CTA κάτω */
+  text-align: center;
+}
+
+/* Ρύθμισε 1 φορά το ύψος "καμβά" των slides */
+#monk_slider .embla{
+  --slide-h: 360px;           /* ✅ πιο "σφιχτό" ύψος βάσης */
+  --slide-h-mobile: 300px;    /* ✅ mobile ύψος */
+  position: relative;
+  width: 100%;
 }
 
 /* Embla base */
-#monk_slider .embla{
-  position: relative;
-  width: 100%;
-
-}
-
 #monk_slider .embla__viewport{
   overflow: hidden;
   width: 100%;
-
 }
 
 #monk_slider .embla__container{
   display: flex;
   align-items: center;
-      padding: 4rem 0 1rem 0;
-background: #FFFFFF;
-background: linear-gradient(0deg, rgba(255, 255, 255, 1) 22%, rgba(241, 236, 237, 1) 22%, rgba(241, 236, 237, 1) 33%, rgba(255, 255, 255, 1) 100%);
+  padding: 4rem 0 1rem 0;
+  background: #FFFFFF;
+  background: linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 1) 22%,
+    rgba(241, 236, 237, 1) 22%,
+    rgba(241, 236, 237, 1) 33%,
+    rgba(255, 255, 255, 1) 100%
+  );
 }
 
-/* 1 slide */
+/* 1 slide: κλειδώνουμε ύψος, και πατάμε κάτω */
 #monk_slider .embla__slide{
   flex: 0 0 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;     /* ✅ το slide "πατάει" κάτω */
+  height: var(--slide-h);    /* ✅ σταθερό ύψος */
 }
 
-/* Το link είναι ο "καμβάς" (positioning context) */
-#monk_slider .embla__slide > a{
+/* Το link είναι ο "καμβάς" */
+#monk_slider .embla__slide > a.embla__link{
   position: relative;
   display: inline-flex;
-  align-items: center;
+  align-items: flex-end;     /* ✅ baseline στη βάση */
   justify-content: center;
   gap: 16px;
-  line-height: 0;          /* κόβει κενά κάτω από εικόνες */
+  height: 100%;              /* ✅ γεμίζει το ύψος του slide */
+  width: auto;
+  line-height: 0;
   text-decoration: none;
 }
 
@@ -56,42 +63,82 @@ background: linear-gradient(0deg, rgba(255, 255, 255, 1) 22%, rgba(241, 236, 237
   display: block;
   height: auto;
   max-width: 100%;
+  max-height: calc(var(--slide-h) - 20px); /* ✅ να μην ξεφεύγουν */
+  align-self: flex-end;                    /* ✅ σιγουριά ότι πατάνε κάτω */
+}
+
+/* Αν έχεις διαφορετικά “A/B” και θες να μην τεντώνουν */
+#monk_slider .embla__slide img.img-a,
+#monk_slider .embla__slide img.img-b{
+  object-fit: contain;
 }
 
 /* =========================
    Texts overlay layer
-   (μέσα στο <a>: .texts > .texts__left + .texts__right)
    ========================= */
 
 #monk_slider .embla__slide > a > .texts{
   position: absolute;
-  inset: 0;                 /* top/right/bottom/left:0 */
+  inset: 0;
   pointer-events: none;
-  z-index: 6;               /* πάνω από τις εικόνες */
+  z-index: 6;
 }
 
-/* Αριστερό group: πριν από img-a
-   ΕΔΩ: κάνουμε column για να μπει το price κάτω από το title */
 #monk_slider .texts__left{
   position: absolute;
   top: 32%;
   left: 0;
   transform: translate(-81%, -50%);
   display: flex;
-  flex-direction: column;     /* <-- ΚΑΤΑΚΟΡΥΦΑ */
-  align-items: flex-start;    /* <-- στοίχιση αριστερά */
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: flex-start;
-  gap: 2px;                  /* <-- απόσταση μεταξύ των 2 svg */
+  gap: 2px;
 }
 
-/* Δεξί SVG: μετά από img-b */
 #monk_slider .texts__right{
   position: absolute;
   top: 76%;
   right: 0;
   transform: translate(71%, -50%);
   display: flex;
-  flex-direction: column;     /* <-- ΚΑΤΑΚΟΡΥΦΑ */
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+#monk_slider .texts__left.second{
+  position: absolute;
+  top: 70%;
+  left: 0;
+  transform: translate(-38%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2px;
+}
+
+#monk_slider .texts__right.second{
+  position: absolute;
+  top: 52%;
+  right: 0;
+  transform: translate(57%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+#monk_slider .texts__right.second{
+  position: absolute;
+  top: 52%;
+  right: 0;
+  transform: translate(57%, -50%);
+  display: flex;
+  flex-direction: column;
   align-items: flex-end;
   justify-content: flex-end;
   gap: 2px;
@@ -119,11 +166,45 @@ background: linear-gradient(0deg, rgba(255, 255, 255, 1) 22%, rgba(241, 236, 237
   max-width: none;
 }
 
+#slice_02_name_a{
+  width: 111.6645px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
+
+#slice_02_price_a{
+  width: 50.4292px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
+
+#slice_02_name_b{
+  width: 119.5317px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
+
+#slice_02_price_b{
+  width: 50.4292px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
+
+#slice_03_name{
+  width: 168.296px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
+
 /* =========================
    Arrows
    ========================= */
 
-/* Ζώνη arrows στο κέντρο, αριστερά/δεξιά */
 #monk_slider .embla__arrows{
   position: absolute;
   left: 50%;
@@ -133,8 +214,8 @@ background: linear-gradient(0deg, rgba(255, 255, 255, 1) 22%, rgba(241, 236, 237
   display: flex;
   justify-content: space-between;
   align-items: center;
-  pointer-events: none; /* για να μην μπλοκάρει swipe/click του slider */
-  z-index: 7;           /* πάνω από texts */
+  pointer-events: none;
+  z-index: 7;
 }
 
 #monk_slider .embla__prev,
@@ -201,11 +282,14 @@ background: linear-gradient(0deg, rgba(255, 255, 255, 1) 22%, rgba(241, 236, 237
    ========================= */
 
 @media (max-width: 640px){
-  #monk_slider .embla__slide > a{
+  #monk_slider .embla{
+    --slide-h: var(--slide-h-mobile); /* ✅ mobile baseline */
+  }
+
+  #monk_slider .embla__slide > a.embla__link{
     gap: 10px;
   }
 
-  /* Arrows λίγο πιο “μαζεμένα” */
   #monk_slider .embla__arrows{
     width: min(92vw, 520px);
   }
@@ -216,22 +300,19 @@ background: linear-gradient(0deg, rgba(255, 255, 255, 1) 22%, rgba(241, 236, 237
     height: 40px;
   }
 
-  /* Labels να μη βγαίνουν υπερβολικά έξω */
   #monk_slider .texts__left{
     transform: translate(0%, -50%);
-    gap: 8px; /* λίγο μικρότερο gap σε mobile */
+    gap: 8px;
   }
   #monk_slider .texts__right{
     transform: translate(90%, -50%);
   }
 
-  /* μικρότερο SVG */
   #monk_slider .texts__left svg,
   #monk_slider .texts__right svg{
     width: 120px;
   }
 
-  /* το price να μη “τεντώνει” σε mobile */
   #slice_01_price_a{
     width: 50px;
   }
