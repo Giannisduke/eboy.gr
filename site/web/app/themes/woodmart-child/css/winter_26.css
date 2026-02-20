@@ -88,6 +88,11 @@
     height: auto;
 }
 
+#monk_slider .embla__slide.seven > a.embla__link img{
+    width: 311px;
+    height: auto;
+}
+
 /* =========================
    agili
    ========================= */
@@ -211,6 +216,18 @@
 }
 
 #monk_slider .texts__right.six{
+  position: absolute;
+  top: 77%;
+  right: 0;
+  transform: translate(64%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+#monk_slider .texts__right.seven{
   position: absolute;
   top: 77%;
   right: 0;
@@ -498,6 +515,16 @@
     height: auto;
 }
 
+#monk_slider .embla__slide.six > a.embla__link img{
+    width: 235px;
+    height: auto;
+}
+
+#monk_slider .embla__slide.seven > a.embla__link img{
+    width: 235px;
+    height: auto;
+}
+
   #monk_slider .texts__left {
   top: 49%;
   transform: translate(-32%, -50%);
@@ -521,5 +548,15 @@
 
 #monk_slider .texts__right.fifth{
   transform: translate(36%, -50%);
+}
+
+#monk_slider .texts__right.six{
+  top: 72%;
+  transform: translate(23%, -50%);
+}
+
+#monk_slider .texts__right.seven{
+  top: 77%;
+  transform: translate(27%, -50%);
 }
 }
