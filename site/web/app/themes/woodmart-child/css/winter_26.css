@@ -77,6 +77,11 @@
     width: 257px;
     height: auto;
 }
+
+#monk_slider .embla__slide.fifth > a.embla__link img{
+    width: 226px;
+    height: auto;
+}
 /* =========================
    Texts overlay layer
    ========================= */
@@ -392,6 +397,10 @@
 
 #monk_slider .embla__slide.forth > a.embla__link img{
     width: 209px;
+    height: auto;
+}
+#monk_slider .embla__slide.fifth > a.embla__link img{
+    width: 160px;
     height: auto;
 }
 
