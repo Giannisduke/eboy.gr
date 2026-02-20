@@ -82,6 +82,23 @@
     width: 226px;
     height: auto;
 }
+
+/* =========================
+   agili
+   ========================= */
+#monk_slider .sales{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+  #monk_slider .slice_off{
+  width: 135px;
+  height: auto;
+}
+#monk_slider .agili{
+  width: 50%;
+}
 /* =========================
    Texts overlay layer
    ========================= */
@@ -103,6 +120,17 @@
   align-items: flex-start;
   justify-content: flex-start;
   gap: 2px;
+}
+
+#monk_slider .texts-prices{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+#monk_slider .texts-prices svg{
+  margin: 0 .25rem 0 0;
 }
 
 #monk_slider .texts__right{
@@ -193,6 +221,13 @@
 }
 
 #slice_01_price_a{
+  width: 50.4292px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
+
+.slice_01_price_a_off{
   width: 50.4292px;
   height: auto;
   display: block;

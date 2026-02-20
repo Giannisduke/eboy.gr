@@ -36,22 +36,28 @@ document.addEventListener('DOMContentLoaded', function () {
   function getAnimTargets(slideEl) {
     const a = slideEl.querySelector('.img-a');
     const b = slideEl.querySelector('.img-b');
+    const agili = slideEl.querySelector('.agili');
+    const slice_off = slideEl.querySelector('.slice_off');
     const imgs = slideEl.querySelectorAll('img');
     const first = a || imgs[0] || null;
     const second = b || imgs[1] || null;
-    return { first, second };
+    return { first, second, agili, slice_off };
   }
 
   function createTimeline(slideEl) {
-    const { first, second } = getAnimTargets(slideEl);
+    const { first, second, agili, slice_off } = getAnimTargets(slideEl);
     if (!first) return null;
 
     gsap.set(first, { opacity: 0, x: -80, willChange: 'transform, opacity' });
     if (second) gsap.set(second, { opacity: 0, x: 80, willChange: 'transform, opacity' });
+    if (agili) gsap.set(agili, { opacity: 0, y: 40, willChange: 'transform, opacity' });
+    if (slice_off) gsap.set(slice_off, { opacity: 0, scale: 0, transformOrigin: '50% 50%', willChange: 'transform, opacity' });
 
     const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
     tl.to(first, { opacity: 1, x: 0, duration: 0.55 }, 0);
     if (second) tl.to(second, { opacity: 1, x: 0, duration: 0.65 }, 0.1);
+    if (agili) tl.to(agili, { opacity: 1, y: 0, duration: 0.55 }, 0.2);
+    if (slice_off) tl.to(slice_off, { opacity: 1, scale: 1, duration: 0.7, ease: 'elastic.out(1, 0.5)' }, 0.25);
 
     return tl;
   }
