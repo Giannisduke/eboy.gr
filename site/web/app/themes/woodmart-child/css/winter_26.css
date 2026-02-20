@@ -407,4 +407,10 @@
   top: 87%;
   transform: translate(47%, -50%);
 }
+
+#monk_slider .texts__right.third {
+  top: 82%;
+  transform: translate(-26%, -50%);
+
+}
 }
