@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // -----------------------
   // Autoplay (controlled)
   // -----------------------
-  const AUTOPLAY_DELAY = 7000;
+  const AUTOPLAY_DELAY = 2000;
   let autoplayTimer = null;
   let autoplayEnabled = true;
 
