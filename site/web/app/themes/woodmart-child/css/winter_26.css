@@ -334,6 +334,27 @@
   display: block;
   max-width: none;
 }
+
+#slice_07_name{
+  width: 140.0013px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
+
+#slice_07_price{
+  width: 50.9629px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
+
+#slice_07_price_off{
+  width: 50.9629px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
 /* =========================
    Arrows
    ========================= */
