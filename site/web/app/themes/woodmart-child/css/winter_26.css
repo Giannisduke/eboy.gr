@@ -195,7 +195,7 @@
 
 #monk_slider .texts__right.fifth{
   position: absolute;
-  top: 32%;
+  top: 77%;
   right: 0;
   transform: translate(64%, -50%);
   display: flex;
@@ -458,5 +458,9 @@
   top: 82%;
   transform: translate(-26%, -50%);
 
+}
+
+#monk_slider .texts__right.fifth{
+  transform: translate(36%, -50%);
 }
 }
