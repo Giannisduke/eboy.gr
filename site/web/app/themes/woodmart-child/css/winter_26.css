@@ -73,38 +73,6 @@
   object-fit: contain;
 }
 
-
-/* Mobile fixes: σωστό fit εικόνων σε μικρές οθόνες */
-@media (max-width: 768px){
-
-  #monk_slider .embla__container {
-  padding: 1rem 0 1rem 0;
-}
-
-  /* Το slide να δίνει σαφές κουτί (χωρίς να βασίζεται μόνο στο --slide-h) */
-  #monk_slider .embla__slide{
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    overflow: hidden;
-  }
-
-  /* Η εικόνα να μπορεί να "πιάσει" το διαθέσιμο ύψος/πλάτος */
-  #monk_slider .embla__slide img{
-    width: 70%;
-    height: 70%;
-
-    /* Πρακτικό responsive ύψος για hero σε mobile */
-    max-height: clamp(220px, 55vh, 420px);
-
-    /* Μην αφήνεις το παλιό max-height με --slide-h να σε περιορίζει στο mobile */
-    /* (το παραπάνω max-height θα υπερισχύσει επειδή έρχεται μετά) */
-
-    object-fit: contain;
-    object-position: bottom center;
-  }
-}
-
 /* Πολύ μικρές οθόνες: λίγο πιο "σφιχτό" ύψος */
 @media (max-width: 420px){
   #monk_slider .embla__slide img{
@@ -322,6 +290,7 @@
   line-height: 1;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  background: transparent !important;
 }
 
 #monk_slider .embla__prev:disabled,
@@ -390,17 +359,52 @@
     height: 40px;
   }
 
-  #monk_slider .texts__left{
-    transform: translate(0%, -50%);
-    gap: 8px;
-  }
-  #monk_slider .texts__right{
-    transform: translate(90%, -50%);
-  }
+
+}
 
 
+/* Mobile fixes: σωστό fit εικόνων σε μικρές οθόνες */
+@media (max-width: 768px){
 
-  #slice_01_price_a{
-    width: 50px;
+  #monk_slider .embla__container {
+  padding: 1rem 0 1rem 0;
+}
+
+  /* Το slide να δίνει σαφές κουτί (χωρίς να βασίζεται μόνο στο --slide-h) */
+  #monk_slider .embla__slide{
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
   }
+
+  /* Η εικόνα να μπορεί να "πιάσει" το διαθέσιμο ύψος/πλάτος */
+  #monk_slider .embla__slide img{
+    width: 70%;
+    height: 70%;
+
+    /* Πρακτικό responsive ύψος για hero σε mobile */
+    max-height: clamp(220px, 55vh, 420px);
+
+    /* Μην αφήνεις το παλιό max-height με --slide-h να σε περιορίζει στο mobile */
+    /* (το παραπάνω max-height θα υπερισχύσει επειδή έρχεται μετά) */
+
+    object-fit: contain;
+    object-position: bottom center;
+  }
+
+  #monk_slider .texts__left {
+  top: 49%;
+  transform: translate(-32%, -50%);
+}
+
+#monk_slider .texts__right {
+  top: 93%;
+  transform: translate(29%, -50%);
+}
+
+  #monk_slider .texts__right.second{
+  top: 87%;
+  transform: translate(47%, -50%);
+}
 }
