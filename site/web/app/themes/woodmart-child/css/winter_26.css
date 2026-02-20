@@ -58,28 +58,25 @@
   text-decoration: none;
 }
 
-/* Εικόνες */
-#monk_slider .embla__slide img{
-  display: block;
-  height: auto;
-  max-width: 100%;
-  max-height: calc(var(--slide-h) - 20px); /* ✅ να μην ξεφεύγουν */
-  align-self: flex-end;                    /* ✅ σιγουριά ότι πατάνε κάτω */
+#monk_slider .embla__slide.first > a.embla__link img{
+    width: 172px;
+    height: auto;
 }
 
-/* Αν έχεις διαφορετικά “A/B” και θες να μην τεντώνουν */
-#monk_slider .embla__slide img.img-a,
-#monk_slider .embla__slide img.img-b{
-  object-fit: contain;
+#monk_slider .embla__slide.second > a.embla__link img{
+    width: 172px;
+    height: auto;
 }
 
-/* Πολύ μικρές οθόνες: λίγο πιο "σφιχτό" ύψος */
-@media (max-width: 420px){
-  #monk_slider .embla__slide img{
-    max-height: clamp(200px, 58vh, 360px);
-  }
+#monk_slider .embla__slide.third > a.embla__link img{
+    width: 474px;
+    height: auto;
 }
 
+#monk_slider .embla__slide.forth > a.embla__link img{
+    width: 257px;
+    height: auto;
+}
 /* =========================
    Texts overlay layer
    ========================= */
@@ -378,20 +375,25 @@
     overflow: hidden;
   }
 
-  /* Η εικόνα να μπορεί να "πιάσει" το διαθέσιμο ύψος/πλάτος */
-  #monk_slider .embla__slide img{
-    width: 70%;
-    height: 70%;
+  #monk_slider .embla__slide.first > a.embla__link img{
+    width: 125px;
+    height: auto;
+}
 
-    /* Πρακτικό responsive ύψος για hero σε mobile */
-    max-height: clamp(220px, 55vh, 420px);
+  #monk_slider .embla__slide.second > a.embla__link img{
+    width: 120px;
+    height: auto;
+}
 
-    /* Μην αφήνεις το παλιό max-height με --slide-h να σε περιορίζει στο mobile */
-    /* (το παραπάνω max-height θα υπερισχύσει επειδή έρχεται μετά) */
+#monk_slider .embla__slide.third > a.embla__link img{
+    width: 275px;
+    height: auto;
+}
 
-    object-fit: contain;
-    object-position: bottom center;
-  }
+#monk_slider .embla__slide.forth > a.embla__link img{
+    width: 209px;
+    height: auto;
+}
 
   #monk_slider .texts__left {
   top: 49%;
