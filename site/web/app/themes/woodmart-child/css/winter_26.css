@@ -73,6 +73,45 @@
   object-fit: contain;
 }
 
+
+/* Mobile fixes: σωστό fit εικόνων σε μικρές οθόνες */
+@media (max-width: 768px){
+
+  #monk_slider .embla__container {
+  padding: 1rem 0 1rem 0;
+}
+
+  /* Το slide να δίνει σαφές κουτί (χωρίς να βασίζεται μόνο στο --slide-h) */
+  #monk_slider .embla__slide{
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Η εικόνα να μπορεί να "πιάσει" το διαθέσιμο ύψος/πλάτος */
+  #monk_slider .embla__slide img{
+    width: 70%;
+    height: 70%;
+
+    /* Πρακτικό responsive ύψος για hero σε mobile */
+    max-height: clamp(220px, 55vh, 420px);
+
+    /* Μην αφήνεις το παλιό max-height με --slide-h να σε περιορίζει στο mobile */
+    /* (το παραπάνω max-height θα υπερισχύσει επειδή έρχεται μετά) */
+
+    object-fit: contain;
+    object-position: bottom center;
+  }
+}
+
+/* Πολύ μικρές οθόνες: λίγο πιο "σφιχτό" ύψος */
+@media (max-width: 420px){
+  #monk_slider .embla__slide img{
+    max-height: clamp(200px, 58vh, 360px);
+  }
+}
+
 /* =========================
    Texts overlay layer
    ========================= */
@@ -117,18 +156,6 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 2px;
-}
-
-#monk_slider .texts__right.second{
-  position: absolute;
-  top: 52%;
-  right: 0;
-  transform: translate(57%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-end;
   gap: 2px;
 }
 
@@ -371,10 +398,7 @@
     transform: translate(90%, -50%);
   }
 
-  #monk_slider .texts__left svg,
-  #monk_slider .texts__right svg{
-    width: 120px;
-  }
+
 
   #slice_01_price_a{
     width: 50px;
