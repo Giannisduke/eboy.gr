@@ -83,6 +83,11 @@
     height: auto;
 }
 
+#monk_slider .embla__slide.six > a.embla__link img{
+    width: 311px;
+    height: auto;
+}
+
 /* =========================
    agili
    ========================= */
@@ -205,6 +210,18 @@
   gap: 2px;
 }
 
+#monk_slider .texts__right.six{
+  position: absolute;
+  top: 77%;
+  right: 0;
+  transform: translate(64%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
 /* κοινό sizing στα svg */
 #slide_1_a1 {
   width: 147.56px;
@@ -291,6 +308,27 @@
 }
 
 #slice_05_price{
+  width: 50.9629px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
+
+#slice_06_name{
+  width: 180.47px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
+
+#slice_06_price{
+  width: 50.9629px;
+  height: auto;
+  display: block;
+  max-width: none;
+}
+
+#slice_06_price_off{
   width: 50.9629px;
   height: auto;
   display: block;
