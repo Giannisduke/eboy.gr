@@ -2,38 +2,122 @@
    Monk Slider / Embla (winter_26.css) - TIGHT BASELINE VERSION
    ========================= */
 
+/* ✅ ΝΕΟ: Full-height wrapper + layout για CTA κάτω */
+html, body{
+  height: 100%;
+}
+
+/* ✅ ΝΕΟ: header offset (desktop/mobile) */
+:root{
+  --monk-header-h: 155px;
+  --monk-header-h-mobile: 136px;
+}
+
+.featured_wrapper{
+  /* ✅ ΑΛΛΑΓΗ: 100% οθόνη ΜΕΙΟΝ header */
+  min-height: calc(100vh - var(--monk-header-h));
+  height: calc(100vh - var(--monk-header-h));
+  display: flex;
+  flex-direction: column;
+}
+
+/* ✅ ΝΕΟ: προτίμησε dvh όπου υπάρχει (σωστότερο σε mobile browsers) */
+@supports (height: 100dvh){
+  .featured_wrapper{
+    min-height: calc(100dvh - var(--monk-header-h));
+    height: calc(100dvh - var(--monk-header-h));
+  }
+}
+
+@media (max-width: 768px){
+  .featured_wrapper{
+    min-height: calc(100vh - var(--monk-header-h-mobile));
+    height: calc(100vh - var(--monk-header-h-mobile));
+  }
+  @supports (height: 100dvh){
+    .featured_wrapper{
+      min-height: calc(100dvh - var(--monk-header-h-mobile));
+      height: calc(100dvh - var(--monk-header-h-mobile));
+    }
+  }
+}
+
 #monk_slider{
   position: relative;
   width: 100%;
   text-align: center;
+
+  /* ✅ ΝΕΟ: να γεμίζει το wrapper και να επιτρέπει το CTA να “κάτσει” κάτω */
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+#monk_slider .winter_sales_26{ 
+  height: auto;
+    flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#monk_slider .winter_sales_26 svg{ 
+width: 436px;
+height: auto;
 }
 
 /* Ρύθμισε 1 φορά το ύψος "καμβά" των slides */
 #monk_slider .embla{
-  --slide-h: 360px;           /* ✅ πιο "σφιχτό" ύψος βάσης */
-  --slide-h-mobile: 300px;    /* ✅ mobile ύψος */
+  /* ✅ ΑΛΛΑΓΗ: ο “καμβάς” να γεμίζει Ο,ΤΙ μένει πάνω από το CTA (όχι 100vh + κουμπί) */
+  --slide-h: auto;
+  --slide-h-mobile: auto;
+
   position: relative;
   width: 100%;
+
+  /* ✅ ΝΕΟ: να γεμίζει το διαθέσιμο ύψος μέσα στο #monk_slider */
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+}
+
+/* Αν υποστηρίζεται dynamic viewport height, προτίμησέ το */
+/* (κρατάμε το block, αλλά το ύψος είναι πλέον 100% του διαθέσιμου χώρου) */
+@supports (height: 100dvh){
+  #monk_slider .embla{
+   --slide-h: auto;
+  }
+  @media (max-width: 640px){
+    #monk_slider .embla{
+      --slide-h-mobile: auto;
+    }
+  }
 }
 
 /* Embla base */
 #monk_slider .embla__viewport{
   overflow: hidden;
   width: 100%;
+
+  /* ✅ ΝΕΟ: να “κληρονομεί” το ύψος */
+  height: 100%;
 }
 
 #monk_slider .embla__container{
   display: flex;
-  align-items: center;
-  padding: 4rem 0 1rem 0;
+  align-items: flex-end;
+  padding: 0rem 0 5rem 0;
   background: #FFFFFF;
   background: linear-gradient(
     0deg,
-    rgba(255, 255, 255, 1) 22%,
-    rgba(241, 236, 237, 1) 22%,
-    rgba(241, 236, 237, 1) 33%,
+    rgba(255, 255, 255, 1) 32%,
+    rgba(241, 236, 237, 1) 32%,
+    rgba(241, 236, 237, 1) 43%,
     rgba(255, 255, 255, 1) 100%
   );
+
+
 }
 
 /* 1 slide: κλειδώνουμε ύψος, και πατάμε κάτω */
@@ -42,7 +126,7 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;     /* ✅ το slide "πατάει" κάτω */
-  height: var(--slide-h);    /* ✅ σταθερό ύψος */
+  height: var(--slide-h);    /* ✅ πλέον 100% του διαθέσιμου χώρου της embla */
 }
 
 /* Το link είναι ο "καμβάς" */
@@ -97,10 +181,12 @@
    agili
    ========================= */
 #monk_slider .sales{
-  display: flex;
+display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  position: relative;
+  top: -350px;
 }
   #monk_slider .slice_off{
   width: 135px;
@@ -114,10 +200,13 @@
    ========================= */
 
 #monk_slider .embla__slide > a > .texts{
-  position: absolute;
+position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 6;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 
 #monk_slider .texts__left{
@@ -442,11 +531,17 @@
    ========================= */
 #monk_slider .monkbutton_eboy{
   display: inline-flex;
-  margin: 18px auto 0;
+
+  /* ✅ ΑΛΛΑΓΗ: “κολλάει” πάντα κάτω */
+  margin: auto auto 0; /* top auto -> σπρώχνει κάτω, left/right auto -> κέντρο */
   justify-content: center;
+
   background: #000000;
   color: #ffffff;
   border-radius: 2rem;
+
+  /* ✅ ΝΕΟ: λίγο “αέρας” + safe-area για κινητά */
+  margin-bottom: max(16px, env(safe-area-inset-bottom));
 }
 
 /* =========================
@@ -455,7 +550,7 @@
 
 @media (max-width: 640px){
   #monk_slider .embla{
-    --slide-h: var(--slide-h-mobile); /* ✅ mobile baseline */
+    --slide-h: var(--slide-h-mobile); /* ✅ mobile baseline: 100% του διαθέσιμου ύψους */
   }
 
   #monk_slider .embla__slide > a.embla__link{
@@ -471,8 +566,6 @@
     width: 40px;
     height: 40px;
   }
-
-
 }
 
 
@@ -488,8 +581,12 @@
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    overflow: hidden;
+    overflow: visible;
   }
+
+  #monk_slider .sales {
+  top: -300px;
+}
 
   #monk_slider .embla__slide.first > a.embla__link img{
     width: 125px;
@@ -560,3 +657,5 @@
   transform: translate(27%, -50%);
 }
 }
+
+
