@@ -572,8 +572,15 @@ position: absolute;
 /* Mobile fixes: σωστό fit εικόνων σε μικρές οθόνες */
 @media (max-width: 768px){
 
+  #monk_slider .winter_sales_26 svg {
+    width: 296px;
+    height: auto;
+}
   #monk_slider .embla__container {
   padding: 1rem 0 1rem 0;
+  background: linear-gradient(0deg, rgba(255, 255, 255, 1) 12%, rgba(241, 236, 237, 1) 12%, rgba(241, 236, 237, 1) 23%, rgba(255, 255, 255, 1) 100%);
+  padding: 2rem 0 0rem 0;
+}
 }
 
   /* Το slide να δίνει σαφές κουτί (χωρίς να βασίζεται μόνο στο --slide-h) */
@@ -585,7 +592,7 @@ position: absolute;
   }
 
   #monk_slider .sales {
-  top: -300px;
+    top: -236px;
 }
 
   #monk_slider .embla__slide.first > a.embla__link img{
