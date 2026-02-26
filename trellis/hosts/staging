@@ -2,10 +2,10 @@
 # List each machine only once per [group], even if it will host multiple sites.
 
 [staging]
-eboy.gr
+eboy.gr ansible_user=admin
 
 [web]
-eboy.gr
+eboy.gr ansible_user=admin
 
 [local]
 localhost ansible_connection=local
