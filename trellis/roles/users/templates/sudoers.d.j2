@@ -1,4 +1,5 @@
 # {{ ansible_managed }}
+Defaults:{{ web_user }} !use_pty
 
 {% for service in web_sudoers %}
 {{ web_user }} ALL=(root) NOPASSWD: {{ service }}

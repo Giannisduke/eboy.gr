@@ -1,0 +1,6 @@
+# {{ ansible_managed }}
+Defaults:{{ item.name }} !use_pty
+
+{% for rule in item.sudoers %}
+{{ item.name }} {{ rule }}
+{% endfor %}

@@ -154,8 +154,6 @@
       register: ollama_pull
       changed_when: "'pulling' in ollama_pull.stdout"
       failed_when: false
-      become: true
-      become_user: "{{ ollama_user }}"
       async: 3600  # Allow up to 1 hour for large model downloads
       poll: 10     # Check every 10 seconds
 
@@ -170,8 +168,6 @@
       register: ollama_list
       changed_when: false
       failed_when: false  # Don't fail provision if verification fails
-      become: true
-      become_user: "{{ ollama_user }}"
 
     - name: Display installed models
       debug:

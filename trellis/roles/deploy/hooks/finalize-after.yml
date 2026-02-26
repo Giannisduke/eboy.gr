@@ -45,4 +45,8 @@
   when: wp_installed.rc == 0
 
 - name: Reload php-fpm
-  shell: sudo service php{{ php_version }}-fpm reload
+  service:
+    name: "php{{ php_version }}-fpm"
+    state: reloaded
+  become: true
+  become_user: root

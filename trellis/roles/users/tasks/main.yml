@@ -54,6 +54,19 @@
   loop_control:
     label: "{{ item.name }}"
 
+- name: Add user sudoers items
+  template:
+    src: user-sudoers.d.j2
+    dest: "/etc/sudoers.d/{{ item.name }}"
+    mode: '0440'
+    owner: root
+    group: root
+    validate: "/usr/sbin/visudo -cf %s"
+  loop: "{{ users }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: item.sudoers is defined
+
 - name: Add web user sudoers items for services
   template:
     src: sudoers.d.j2
