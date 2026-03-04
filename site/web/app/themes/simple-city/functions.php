@@ -2170,3 +2170,32 @@ function get_price_range($request) {
 
     return new WP_REST_Response($response_data);
 }
+
+/**
+ * Φόρτωση JS/CSS για υποσελίδες της σελίδας "banners"
+ */
+add_action('wp_enqueue_scripts', function () {
+    if (!is_page()) {
+        return;
+    }
+
+    $banners_page = get_page_by_title('banners');
+    if (!$banners_page || wp_get_post_parent_id(get_the_ID()) !== $banners_page->ID) {
+        return;
+    }
+
+    wp_enqueue_style(
+        'banners-contract26',
+        get_theme_file_uri('resources/css/banners/styles_contract26.css'),
+        [],
+        filemtime(get_theme_file_path('resources/css/banners/styles_contract26.css'))
+    );
+
+    wp_enqueue_script(
+        'banners-contract26',
+        get_theme_file_uri('resources/js/banners/simplecity_contract26_300x600.js'),
+        [],
+        filemtime(get_theme_file_path('resources/js/banners/simplecity_contract26_300x600.js')),
+        true
+    );
+});
