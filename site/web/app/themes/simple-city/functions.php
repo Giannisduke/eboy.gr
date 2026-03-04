@@ -2173,6 +2173,7 @@ function get_price_range($request) {
 
 /**
  * Φόρτωση JS/CSS για υποσελίδες της σελίδας "banners"
+ * Φορτώνει δυναμικά όλα τα αρχεία από resources/js/banners και resources/css/banners
  */
 add_action('wp_enqueue_scripts', function () {
     if (!is_page()) {
@@ -2185,38 +2186,28 @@ add_action('wp_enqueue_scripts', function () {
         return;
     }
 
-    // Εξωτερικές εξαρτήσεις για όλες τις υποσελίδες banners
+    // Εξωτερικές εξαρτήσεις
     wp_enqueue_script('gsap', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js', [], null, true);
     wp_enqueue_script('adman', 'https://static.adman.gr/adman.js', ['gsap'], null, true);
 
-    // contract_26 — 300x600
-    if (is_page('contract-26-300x600')) {
+    // Όλα τα CSS από resources/css/banners/
+    foreach (glob(get_theme_file_path('resources/css/banners') . '/*.css') as $file) {
         wp_enqueue_style(
-            'banner-contract26-300x600',
-            get_theme_file_uri('resources/css/banners/styles_contract26.css'),
+            'banner-' . basename($file, '.css'),
+            get_theme_file_uri('resources/css/banners/' . basename($file)),
             [],
-            filemtime(get_theme_file_path('resources/css/banners/styles_contract26.css'))
+            filemtime($file)
         );
+    }
 
+    // Όλα τα JS από resources/js/banners/
+    foreach (glob(get_theme_file_path('resources/js/banners') . '/*.js') as $file) {
         wp_enqueue_script(
-            'banner-contract26-300x600',
-            get_theme_file_uri('resources/js/banners/simplecity_contract26_300x600.js'),
+            'banner-' . basename($file, '.js'),
+            get_theme_file_uri('resources/js/banners/' . basename($file)),
             ['adman'],
-            filemtime(get_theme_file_path('resources/js/banners/simplecity_contract26_300x600.js')),
+            filemtime($file),
             true
         );
-
-        wp_add_inline_script('banner-contract26-300x600', "
-            document.body.onload = function () {
-                Adman.addEvent(Adman.\$('banner_simplecity_contract26_300x600'), 'click', function () {
-                    window.open(Adman.html5API.get('click'));
-                });
-                Adman.addEvent(Adman.\$('interaction-button'), 'click', function (event) {
-                    event.stopPropagation();
-                    Adman.track(Adman.html5API.get('interaction_name'));
-                    window.open('https://simple-city.gr/');
-                });
-            };
-        ");
     }
 });
