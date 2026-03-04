@@ -6,7 +6,10 @@
     @php(do_action('get_header'))
     @php(wp_head())
 
-    @vite(['resources/css/app.scss', 'resources/js/app.js'])
+    @php($banners_page = get_pages(['title' => 'banners', 'number' => 1])[0] ?? null)
+    @if(!$banners_page || !is_page() || wp_get_post_parent_id(get_the_ID()) !== $banners_page->ID)
+      @vite(['resources/css/app.scss', 'resources/js/app.js'])
+    @endif
   </head>
 
   <body @php(body_class())>
