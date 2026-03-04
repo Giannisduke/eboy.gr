@@ -2186,13 +2186,6 @@ add_action('wp_enqueue_scripts', function () {
         return;
     }
 
-    // Αφαίρεση όλων των WordPress/WooCommerce styles που παρεμβαίνουν
-    wp_dequeue_style('wc-blocks-style');
-    wp_dequeue_style('wp-block-library');
-    wp_dequeue_style('wp-block-library-theme');
-    wp_dequeue_style('global-styles');
-    wp_dequeue_style('classic-theme-styles');
-
     // Εξωτερικές εξαρτήσεις
     wp_enqueue_script('gsap', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js', [], null, true);
     wp_enqueue_script('adman', 'https://static.adman.gr/adman.js', ['gsap'], null, true);
@@ -2207,16 +2200,6 @@ add_action('wp_enqueue_scripts', function () {
         );
     }
 
-    // Προστατευτικό CSS: αποτρέπει παρεμβολή WordPress styles στο banner
-    wp_add_inline_style('banner-styles_contract26', '
-        #banner_simplecity_contract26_300x600 img {
-            max-width: none !important;
-            width: auto !important;
-            height: auto !important;
-            display: inline !important;
-        }
-
-    ');
 
     // Όλα τα JS από resources/js/banners/
     foreach (glob(get_theme_file_path('resources/js/banners') . '/*.js') as $file) {
