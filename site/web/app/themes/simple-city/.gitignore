@@ -6,11 +6,10 @@
 npm-debug.log
 
 # XML Files - Ignore dynamic content
-/xml_files/*
+/scripts/xml_files/*
 
 # Keep configuration files
-!/xml_files/xml_urls.txt
-!/xml_files/.gitkeep
+!/scripts/xml_files/xml_urls.txt
 
 # Python cache
 __pycache__/
