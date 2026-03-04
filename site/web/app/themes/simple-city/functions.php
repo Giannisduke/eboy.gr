@@ -2186,6 +2186,9 @@ add_action('wp_enqueue_scripts', function () {
         return;
     }
 
+    // Αφαίρεση ανεπιθύμητων styles
+    wp_dequeue_style('wc-blocks-style');
+
     // Εξωτερικές εξαρτήσεις
     wp_enqueue_script('gsap', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js', [], null, true);
     wp_enqueue_script('adman', 'https://static.adman.gr/adman.js', ['gsap'], null, true);
