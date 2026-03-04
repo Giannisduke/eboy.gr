@@ -2215,12 +2215,7 @@ add_action('wp_enqueue_scripts', function () {
             height: auto !important;
             display: inline !important;
         }
-        #banner_simplecity_contract26_300x600 .row {
-            display: block !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            flex-wrap: unset !important;
-        }
+
     ');
 
     // Όλα τα JS από resources/js/banners/
