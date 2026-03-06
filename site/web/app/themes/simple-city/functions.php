@@ -2212,3 +2212,30 @@ add_action('wp_enqueue_scripts', function () {
         );
     }
 });
+
+// Remove <br> tags auto-added by wpautop inside .sc_row elements
+add_filter('the_content', function ($content) {
+    if (empty($content) || strpos($content, 'sc_row') === false) {
+        return $content;
+    }
+
+    $dom = new DOMDocument();
+    libxml_use_internal_errors(true);
+    $dom->loadHTML('<?xml encoding="UTF-8">' . $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    libxml_clear_errors();
+
+    $xpath = new DOMXPath($dom);
+    $sc_rows = $xpath->query('//*[contains(concat(" ", normalize-space(@class), " "), " sc_row ")]');
+
+    foreach ($sc_rows as $sc_row) {
+        $brs = iterator_to_array($sc_row->getElementsByTagName('br'));
+        foreach ($brs as $br) {
+            $br->parentNode->removeChild($br);
+        }
+    }
+
+    $result = $dom->saveHTML();
+    $result = preg_replace('~<(?:!DOCTYPE|/?(?:html|body))[^>]*>\s*~i', '', $result);
+
+    return trim($result);
+}, 20);
