@@ -108,12 +108,12 @@ function eboy_gsap_home() {
   //wp_enqueue_script('embla-carousel-fade', 'https://cdn.jsdelivr.net/npm/embla-carousel-fade/embla-carousel-fade.umd.js', array('embla-carousel'), null, true);
 
   // JS (με deps ώστε να φορτώσει αφού υπάρχουν τα embla/gsap)
-  $js_rel = '/js/easter_26_02.js';
+  $js_rel = '/js/easter_26_03.js';
   $js_abs = get_stylesheet_directory() . $js_rel;
   $js_ver = file_exists($js_abs) ? filemtime($js_abs) : time(); // fallback
 
   wp_enqueue_script(
-    'easter_26_02_js',
+    'easter_26_03_js',
     get_stylesheet_directory_uri() . $js_rel,
     array('embla-carousel', 'embla-carousel-fade', 'gsap_js'),
     $js_ver,
