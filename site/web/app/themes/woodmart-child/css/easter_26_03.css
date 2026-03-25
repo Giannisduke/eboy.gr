@@ -368,10 +368,15 @@ body {
    ========================= */
 
 #monk_slider .embla__dots {
+  position: absolute;
+  left: 50%;
+  bottom: 84px;
+  transform: translateX(-50%);
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin-top: 12px;
+  margin-top: 0;
+  z-index: 8;
 }
 
 #monk_slider .embla__dot {
@@ -394,6 +399,8 @@ body {
    ========================= */
 
 #monk_slider .monkbutton_eboy {
+  position: relative;
+  z-index: 7;
   display: inline-flex;
   margin: auto auto 0;
   justify-content: center;
