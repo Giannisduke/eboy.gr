@@ -142,7 +142,7 @@ body {
   width: min(1100px, 100%);
   line-height: 0;
   text-decoration: none;
-  padding: 0 10% 0 0;
+  padding: 0 4% 0 0;
 }
 
 #monk_slider .embla__slide > a.embla__link img {
