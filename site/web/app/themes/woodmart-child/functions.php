@@ -115,7 +115,7 @@ function eboy_gsap_home() {
   wp_enqueue_script(
     'easter_26_03_js',
     get_stylesheet_directory_uri() . $js_rel,
-    array('embla-carousel', 'embla-carousel-fade', 'gsap_js'),
+    array('embla-carousel', 'embla-carousel-class-names', 'gsap_js'),
     $js_ver,
     true
   );
