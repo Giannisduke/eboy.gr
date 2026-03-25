@@ -87,12 +87,12 @@ function eboy_gsap_home() {
   if ( ! is_page( array(41450, 7075) ) ) return;
 
   // CSS
-  $css_rel = '/css/easter_26_02.css';
+  $css_rel = '/css/easter_26_03.css';
   $css_abs = get_stylesheet_directory() . $css_rel;
   $css_ver = file_exists($css_abs) ? filemtime($css_abs) : time(); // fallback
 
   wp_enqueue_style(
-    'easter_26_02',
+    'easter_26_03',
     get_stylesheet_directory_uri() . $css_rel,
     array(),
     $css_ver
