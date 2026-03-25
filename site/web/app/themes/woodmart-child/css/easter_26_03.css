@@ -370,7 +370,7 @@ body {
 #monk_slider .embla__dots {
   position: absolute;
   left: 50%;
-  bottom: 84px;
+  bottom: 6px;
   transform: translateX(-50%);
   display: flex;
   justify-content: center;
@@ -387,6 +387,9 @@ body {
   padding: 0;
   cursor: pointer;
   opacity: 0.5;
+  background-color: #000 !important;
+  border-color: #000 !important;
+  color: #000 !important;
 }
 
 #monk_slider .embla__dot.is-selected,
