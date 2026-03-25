@@ -19,8 +19,8 @@ body {
   flex-direction: column;
   background: linear-gradient(
     0deg,
-    rgb(255, 255, 255) 42%,
-    rgb(241, 236, 237) 42%,
+    rgb(255, 255, 255) 38%,
+    rgb(241, 236, 237) 38%,
     rgb(241, 236, 237) 43%,
     rgb(255, 255, 255) 100%
   );
@@ -119,6 +119,7 @@ body {
   padding: 5.5rem 0 0 0;
 }
 
+/* σύμφωνα με Embla docs: όχι 100% width slide */
 #monk_slider .embla__slide {
   position: relative;
   flex: 0 0 100%;
@@ -129,58 +130,26 @@ body {
   overflow: visible;
 }
 
+/* χωρίς horizontal alignment hacks */
 #monk_slider .embla__slide > a.embla__link {
   position: relative;
   z-index: 3;
   display: flex;
   align-items: flex-end;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 16px;
   height: 100%;
-  width: auto;
+  width: min(1100px, 100%);
   line-height: 0;
   text-decoration: none;
-  padding: 0;
+  padding: 0 4% 0 0;
 }
 
 #monk_slider .embla__slide > a.embla__link img {
   position: relative;
   z-index: 3;
   display: block;
-}
-
-#monk_slider .embla__slide.first > a.embla__link img {
   width: 341px;
-  height: auto;
-}
-
-#monk_slider .embla__slide.second > a.embla__link img {
-  width: 341px;
-  height: auto;
-}
-
-#monk_slider .embla__slide.third > a.embla__link img {
-  width: 474px;
-  height: auto;
-}
-
-#monk_slider .embla__slide.forth > a.embla__link img {
-  width: 257px;
-  height: auto;
-}
-
-#monk_slider .embla__slide.fifth > a.embla__link img {
-  width: 226px;
-  height: auto;
-}
-
-#monk_slider .embla__slide.six > a.embla__link img {
-  width: 311px;
-  height: auto;
-}
-
-#monk_slider .embla__slide.seven > a.embla__link img {
-  width: 311px;
   height: auto;
 }
 
@@ -199,14 +168,10 @@ body {
 }
 
 #monk_slider .texts__left {
-  position: absolute;
-  top: 32%;
-  left: 0;
-  transform: translate(-81%, -50%);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
+  align-items: flex-end;
+  justify-content: flex-end;
   gap: 2px;
 }
 
@@ -219,102 +184,6 @@ body {
 
 #monk_slider .texts-prices svg {
   margin: 0 0.25rem 0 0;
-}
-
-#monk_slider .texts__right {
-  position: absolute;
-  top: 76%;
-  right: 0;
-  transform: translate(71%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-end;
-  gap: 2px;
-}
-
-#monk_slider .texts__left.second {
-  position: absolute;
-  top: 70%;
-  left: 0;
-  transform: translate(-38%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 2px;
-}
-
-#monk_slider .texts__right.second {
-  position: absolute;
-  top: 52%;
-  right: 0;
-  transform: translate(57%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-end;
-  gap: 2px;
-}
-
-#monk_slider .texts__right.third {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translate(48%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-end;
-  gap: 2px;
-}
-
-#monk_slider .texts__right.forth {
-  position: absolute;
-  top: 32%;
-  right: 0;
-  transform: translate(64%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-end;
-  gap: 2px;
-}
-
-#monk_slider .texts__right.fifth {
-  position: absolute;
-  top: 77%;
-  right: 0;
-  transform: translate(64%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-end;
-  gap: 2px;
-}
-
-#monk_slider .texts__right.six {
-  position: absolute;
-  top: 77%;
-  right: 0;
-  transform: translate(64%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-end;
-  gap: 2px;
-}
-
-#monk_slider .texts__right.seven {
-  position: absolute;
-  top: 77%;
-  right: 0;
-  transform: translate(64%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-end;
-  gap: 2px;
 }
 
 /* =========================
@@ -501,50 +370,31 @@ body {
 #monk_slider .embla__dots {
   position: absolute;
   left: 50%;
-  bottom: 78px;
+  bottom: 6px;
   transform: translateX(-50%);
   display: flex;
   justify-content: center;
   gap: 8px;
   margin-top: 0;
-  z-index: 20;
-  pointer-events: auto;
+  z-index: 8;
 }
 
-#monk_slider .embla__dot,
-#monk_slider button.embla__dot {
-  appearance: none !important;
-  -webkit-appearance: none !important;
-  display: block !important;
-  width: 8px !important;
-  min-width: 8px !important;
-  max-width: 8px !important;
-  height: 8px !important;
-  min-height: 8px !important;
-  max-height: 8px !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border: 0 !important;
-  border-radius: 999px !important;
-  background: #000 !important;
-  border-color: #000 !important;
-  box-shadow: none !important;
-  line-height: 0 !important;
-  font-size: 0 !important;
-  color: transparent !important;
-  cursor: pointer !important;
-  pointer-events: auto !important;
+#monk_slider .embla__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
   opacity: 0.5;
+  background-color: #000 !important;
+  border-color: #000 !important;
+  color: #000 !important;
 }
 
 #monk_slider .embla__dot.is-selected,
 #monk_slider .embla__dot.is-active {
   opacity: 1;
-}
-
-#monk_slider .embla__dots,
-#monk_slider .embla__dots * {
-  pointer-events: auto !important;
 }
 
 /* =========================
@@ -553,7 +403,7 @@ body {
 
 #monk_slider .monkbutton_eboy {
   position: relative;
-  z-index: 10;
+  z-index: 7;
   display: inline-flex;
   margin: auto auto 0;
   justify-content: center;
@@ -606,10 +456,6 @@ body {
 
   #monk_slider .embla__container {
     padding: 4.5rem 0 0 0;
-  }
-
-  #monk_slider .embla__dots {
-    bottom: 70px;
   }
 
   #monk_slider .embla__slide.first > a.embla__link img {
