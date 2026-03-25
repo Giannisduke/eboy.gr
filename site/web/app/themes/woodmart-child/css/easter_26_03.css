@@ -19,8 +19,8 @@ body {
   flex-direction: column;
   background: linear-gradient(
     0deg,
-    rgb(255, 255, 255) 48%,
-    rgb(241, 236, 237) 48%,
+    rgb(255, 255, 255) 38%,
+    rgb(241, 236, 237) 38%,
     rgb(241, 236, 237) 43%,
     rgb(255, 255, 255) 100%
   );
