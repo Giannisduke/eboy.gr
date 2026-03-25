@@ -87,12 +87,12 @@ function eboy_gsap_home() {
   if ( ! is_page( array(41450, 7075) ) ) return;
 
   // CSS
-  $css_rel = '/css/easter_26.css';
+  $css_rel = '/css/easter_26_02.css';
   $css_abs = get_stylesheet_directory() . $css_rel;
   $css_ver = file_exists($css_abs) ? filemtime($css_abs) : time(); // fallback
 
   wp_enqueue_style(
-    'easter_26',
+    'easter_26_02',
     get_stylesheet_directory_uri() . $css_rel,
     array(),
     $css_ver
@@ -105,15 +105,15 @@ function eboy_gsap_home() {
   wp_enqueue_script('embla-carousel', 'https://unpkg.com/embla-carousel/embla-carousel.umd.js', array(), null, true);
   wp_enqueue_script('embla-carousel-autoplay', 'https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js', array('embla-carousel'), null, true);
   wp_enqueue_script('embla-carousel-class-names', 'https://unpkg.com/embla-carousel-class-names/embla-carousel-class-names.umd.js', array('embla-carousel'), null, true);
-  wp_enqueue_script('embla-carousel-fade', 'https://cdn.jsdelivr.net/npm/embla-carousel-fade/embla-carousel-fade.umd.js', array('embla-carousel'), null, true);
+  //wp_enqueue_script('embla-carousel-fade', 'https://cdn.jsdelivr.net/npm/embla-carousel-fade/embla-carousel-fade.umd.js', array('embla-carousel'), null, true);
 
   // JS (με deps ώστε να φορτώσει αφού υπάρχουν τα embla/gsap)
-  $js_rel = '/js/easter_26.js';
+  $js_rel = '/js/easter_26_02.js';
   $js_abs = get_stylesheet_directory() . $js_rel;
   $js_ver = file_exists($js_abs) ? filemtime($js_abs) : time(); // fallback
 
   wp_enqueue_script(
-    'easter_26_js',
+    'easter_26_02_js',
     get_stylesheet_directory_uri() . $js_rel,
     array('embla-carousel', 'embla-carousel-fade', 'gsap_js'),
     $js_ver,
