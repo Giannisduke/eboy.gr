@@ -149,42 +149,7 @@ body {
   position: relative;
   z-index: 3;
   display: block;
-}
-
-
-
-#monk_slider .embla__slide.first > a.embla__link img {
   width: 341px;
-  height: auto;
-}
-
-#monk_slider .embla__slide.second > a.embla__link img {
-  width: 341px;
-  height: auto;
-}
-
-#monk_slider .embla__slide.third > a.embla__link img {
-  width: 474px;
-  height: auto;
-}
-
-#monk_slider .embla__slide.forth > a.embla__link img {
-  width: 257px;
-  height: auto;
-}
-
-#monk_slider .embla__slide.fifth > a.embla__link img {
-  width: 226px;
-  height: auto;
-}
-
-#monk_slider .embla__slide.six > a.embla__link img {
-  width: 311px;
-  height: auto;
-}
-
-#monk_slider .embla__slide.seven > a.embla__link img {
-  width: 311px;
   height: auto;
 }
 
