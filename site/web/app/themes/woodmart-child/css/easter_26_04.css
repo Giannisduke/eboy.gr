@@ -164,7 +164,9 @@ body {
   z-index: 4;
   display: flex;
   align-items: flex-end;
-  justify-content: center;
+  justify-content: end;
+  right: 341px;
+  bottom: 1rem;
 }
 
 #monk_slider .texts__left {
@@ -182,64 +184,57 @@ body {
   justify-content: flex-start;
 }
 
-#monk_slider .texts-prices svg {
-  margin: 0 0.25rem 0 0;
-}
-
 /* =========================
    Common SVG sizing
    ========================= */
 
 #text_product_01 {
-    width: 193.8399px;
+    width: 233.535px;
     height: auto;
     display: block;
    }
 
-#slide_1_a1 {
-  width: 147.56px;
+#text_product_01_b {
+  width: 42.6666px;
   height: auto;
   display: block;
   max-width: none;
 }
 
-#slide_1_a2 {
-  width: 168.296px;
+#text_product_02 {
+    width: 181.8327px;
+    height: auto;
+    display: block;
+   }
+
+#text_product_02_b {
+  width: 42.6666px;
   height: auto;
   display: block;
   max-width: none;
 }
 
-#slice_01_price_a {
-  width: 50.4292px;
+#text_product_03 {
+    width: 292.9624px;
+    height: auto;
+    display: block;
+   }
+
+#text_product_03_b {
+  width: 42.6666px;
   height: auto;
   display: block;
   max-width: none;
 }
 
-.slice_01_price_a_off {
-  width: 50.4292px;
-  height: auto;
-  display: block;
-  max-width: none;
-}
+#text_product_04 {
+    width: 297.7031px;
+    height: auto;
+    display: block;
+   }
 
-#slice_02_name_a {
-  width: 111.6645px;
-  height: auto;
-  display: block;
-  max-width: none;
-}
-
-#slice_02_price_a {
-  width: 50.4292px;
-  height: auto;
-  display: block;
-  max-width: none;
-}
-
-#slice_02_name_b {
-  width: 119.5317px;
+#text_product_04_b {
+  width: 42.6666px;
   height: auto;
   display: block;
   max-width: none;
