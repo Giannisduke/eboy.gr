@@ -439,6 +439,11 @@ body {
 }
 
 @media (max-width: 768px) {
+
+  #monk_slider .embla__slide > a > .texts {
+  right: 0px;
+  bottom: 0rem;
+}
   #monk_slider .winter_sales_26 {
     top: 3%;
     width: 330px;
