@@ -1,7 +1,7 @@
 https://libertab2b.gr/erp/xml/products?id=774&token=e18311949d8dbc7187ff6002b35bf0aa
 
-https://www.b2bmarkt.gr/feeds?key=72200vDMOc5Dr5Kb3wzCeKadLwR7UJlFWXIzF2lvs&act=1001&lang=2
+https://www.b2bmarkt.gr/feeds?key=72200vDMOc5Dr5Kb3wzCeKadLwR7UJlFWXIzF2lvs&act=1001&lang=1
 
 https://estiahomeart.com/productfeed/web?apikey=afc9e34cca8448d7a7927df495e71565
 
-https://www.pakoworld.com/?route=extension/feed/csxml_feed&token=MTQ0OThMUDE5OA==&lang=en-gb
+https://www.pakoworld.com/?route=extension/feed/csxml_feed&token=MTQ0OThMUDE5OA==&lang=el-gr

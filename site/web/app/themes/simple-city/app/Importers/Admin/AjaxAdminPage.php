@@ -55,11 +55,12 @@ class AjaxAdminPage {
             return;
         }
 
+        $js_path = get_template_directory() . '/app/Importers/Admin/assets/admin.js';
         wp_enqueue_script(
             'xml-importer-admin',
             get_template_directory_uri() . '/app/Importers/Admin/assets/admin.js',
             ['jquery'],
-            '1.0.0',
+            file_exists($js_path) ? filemtime($js_path) : '1.0.0',
             true
         );
 
@@ -444,7 +445,7 @@ class AjaxAdminPage {
             // Theme root = __DIR__ . '/../../..'
             $theme_root = dirname(dirname(dirname(__DIR__)));
             $script_dir = $theme_root . '/scripts/product-ai-processor';
-            $xml_dir = $theme_root . '/xml_files/';
+            $xml_dir = $theme_root . '/scripts/xml_files/';
 
             if (!file_exists($script_dir)) {
                 wp_send_json_error(['message' => "AI Enhancement script directory not found at: {$script_dir}. Theme root: {$theme_root}"]);
@@ -469,8 +470,8 @@ class AjaxAdminPage {
             $results = [];
 
             foreach ($suppliers as $sup) {
-                $input_xml = $xml_dir . $sup . '.xml';
-                $output_xml = $xml_dir . $sup . '-enhanced.xml';
+                $input_xml = $xml_dir . 'gr/' . $sup . '.xml';
+                $output_xml = $xml_dir . 'enhanced/' . $sup . '-enhanced.xml';
 
                 // Skip if original XML doesn't exist
                 if (!file_exists($input_xml)) {
@@ -526,9 +527,9 @@ class AjaxAdminPage {
             wp_send_json_error(['message' => 'Supplier is required']);
         }
 
-        $xml_dir = get_template_directory() . '/xml_files/';
+        $xml_dir = get_template_directory() . '/scripts/xml_files/';
         $progress_file = $xml_dir . $supplier . '-progress.json';
-        $enhanced_xml = $xml_dir . $supplier . '-enhanced.xml';
+        $enhanced_xml = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml';
 
         // Check if progress file exists
         if (!file_exists($progress_file)) {
@@ -703,10 +704,10 @@ class AjaxAdminPage {
             $script_dir = get_template_directory() . '/../../../../../scripts/product-ai-processor';
                 $python_script = $script_dir . '/main.py';
                 $venv_python = $script_dir . '/venv/bin/python3';
-                $xml_dir = get_template_directory() . '/xml_files/';
+                $xml_dir = get_template_directory() . '/scripts/xml_files/';
 
-                $input_xml = $xml_dir . $supplier . '.xml';
-                $output_xml = $xml_dir . $supplier . '-enhanced.xml';
+                $input_xml = $xml_dir . 'gr/' . $supplier . '.xml';
+                $output_xml = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml';
 
                 // Create SKU list (comma-separated)
                 $sku_list = implode(',', $diff['new']);
@@ -754,7 +755,7 @@ class AjaxAdminPage {
      * Get supplier URL from xml_urls.txt
      */
     private function getSupplierURL($supplier) {
-        $xml_dir = get_template_directory() . '/xml_files/';
+        $xml_dir = get_template_directory() . '/scripts/xml_files/';
         $urls_file = $xml_dir . 'xml_urls.txt';
 
         if (!file_exists($urls_file)) {
@@ -785,6 +786,7 @@ class AjaxAdminPage {
         $supplier = isset($_POST['supplier']) ? sanitize_text_field($_POST['supplier']) : '';
         $offset = isset($_POST['offset']) ? intval($_POST['offset']) : 0;
         $limit = isset($_POST['limit']) ? intval($_POST['limit']) : 0;
+        $fresh_import = isset($_POST['fresh_import']) ? intval($_POST['fresh_import']) : 0;
 
         if (empty($supplier)) {
             wp_send_json_error(['message' => 'Supplier is required']);
@@ -792,10 +794,10 @@ class AjaxAdminPage {
 
         try {
             $limit_msg = $limit > 0 ? " limit={$limit}" : "";
-            error_log("AJAX Batch: Processing {$supplier} offset={$offset}{$limit_msg}");
+            error_log("AJAX Batch: Processing {$supplier} offset={$offset}{$limit_msg} fresh={$fresh_import}");
 
-            // processBatch($supplier, $offset, $total_limit, $batch_size)
-            $result = $this->batch_importer->processBatch($supplier, $offset, $limit);
+            // processBatch($supplier, $offset, $total_limit, $batch_size, $fresh_import)
+            $result = $this->batch_importer->processBatch($supplier, $offset, $limit, null, $fresh_import);
 
             error_log("AJAX Batch: Success for {$supplier} offset={$offset}");
 
@@ -915,7 +917,7 @@ class AjaxAdminPage {
 
         // Use __FILE__ for reliable path resolution
         $theme_root = dirname(dirname(dirname(dirname(__FILE__))));
-        $xml_dir = $theme_root . '/xml_files/';
+        $xml_dir = $theme_root . '/scripts/xml_files/';
 
         // Kill Python AI processes
         $kill_command = "pkill -9 -f 'product-ai-processor'";

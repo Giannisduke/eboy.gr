@@ -42,7 +42,7 @@ class PakoworldParser extends AbstractParser {
         $product->barcode = $this->getNodeValue($node->ean);
         $product->name = $this->getNodeValue($node->name);
         $product->description = $this->cleanDescription($this->getNodeValue($node->description));
-        $product->manufacturer = $this->getNodeValue($node->manufacturer);
+        $product->manufacturer = 'Pakoworld';
 
         // Prices
         $product->retail_price = $this->parsePrice($this->getNodeValue($node->retail_price_with_vat));
@@ -51,6 +51,16 @@ class PakoworldParser extends AbstractParser {
 
         // Images
         $product->main_image_url = $this->getNodeValue($node->main_image);
+
+        // Gallery images
+        if (isset($node->images->image)) {
+            foreach ($node->images->image as $image) {
+                $url = $this->getNodeValue($image);
+                if (!empty($url)) {
+                    $product->gallery_image_urls[] = $url;
+                }
+            }
+        }
 
         // Categories
         if (isset($node->categories->category)) {
@@ -74,15 +84,23 @@ class PakoworldParser extends AbstractParser {
             }
         }
 
-        // Attributes
+        // Attributes - parse "Name: Value" format
         if (isset($node->attributes->attribute)) {
             foreach ($node->attributes->attribute as $attr) {
-                $attrValue = $this->getNodeValue($attr);
-                if (!empty($attrValue)) {
-                    $product->attributes[] = [
-                        'id' => $this->getNodeAttribute($attr, 'id'),
-                        'value' => $attrValue
-                    ];
+                $attrText = $this->getNodeValue($attr);
+                if (empty($attrText)) continue;
+
+                if (strpos($attrText, ':') !== false) {
+                    [$name, $value] = explode(':', $attrText, 2);
+                    $name  = trim($name);
+                    $value = trim($value);
+                } else {
+                    $name  = 'Attribute ' . $this->getNodeAttribute($attr, 'id');
+                    $value = trim($attrText);
+                }
+
+                if (!empty($name) && !empty($value)) {
+                    $product->attributes[] = ['name' => $name, 'value' => $value];
                 }
             }
         }

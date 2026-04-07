@@ -75,6 +75,8 @@ web/.htaccess
 !web/app/plugins/cookiebot/vendor
 !web/app/plugins/superfly-menu/includes/vendor
 
+!web/app/plugins/sitepress-multilingual-cms/vendor/*
+
 auth.json
 
 # WP-CLI

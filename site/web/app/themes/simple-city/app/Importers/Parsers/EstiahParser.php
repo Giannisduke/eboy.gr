@@ -112,6 +112,9 @@ class EstiahParser extends AbstractParser {
         $product->weight = $this->parsePrice($this->getNodeValue($node->NetWeight));
         $product->material = $this->getNodeValue($node->PieceMaterial);
 
+        // Brand
+        $product->manufacturer = 'Estia';
+
         return $product;
     }
 }

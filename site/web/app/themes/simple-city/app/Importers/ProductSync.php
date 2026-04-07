@@ -163,6 +163,9 @@ class ProductSync {
         // Set categories
         $this->setProductCategories($product_id, $product);
 
+        // Set brand taxonomy
+        $this->setProductBrand($product_id, $product);
+
         // Set attributes
         $this->setProductAttributes($product_id, $product);
 
@@ -195,6 +198,9 @@ class ProductSync {
 
         // Update categories
         $this->setProductCategories($product_id, $product);
+
+        // Update brand taxonomy
+        $this->setProductBrand($product_id, $product);
 
         // Update attributes
         $this->setProductAttributes($product_id, $product);
@@ -266,16 +272,52 @@ class ProductSync {
             return;
         }
 
-        // Download and attach main image
-        $main_image_id = $this->downloadAndAttachImage($product->main_image_url, $product_id);
-        if ($main_image_id) {
-            set_post_thumbnail($product_id, $main_image_id);
+        $gallery_urls    = $product->gallery_image_urls ?? [];
+        $featured_url    = $product->main_image_url;
+        $final_gallery   = $gallery_urls;
+
+        $has_image_lib = function_exists('imagecreatefromjpeg') || class_exists('Imagick');
+        error_log("setProductImages: product={$product_id} gallery_count=" . count($gallery_urls) . " gd=" . (function_exists('imagecreatefromjpeg') ? 'yes' : 'no') . " imagick=" . (class_exists('Imagick') ? 'yes' : 'no'));
+
+        // Check white background using temp files BEFORE attaching to WordPress
+        if (!empty($gallery_urls) && $has_image_lib) {
+            require_once(ABSPATH . 'wp-admin/includes/file.php');
+            $main_tmp = download_url($product->main_image_url);
+            if (!is_wp_error($main_tmp)) {
+                $main_is_white = $this->hasWhiteBackground($main_tmp);
+                @unlink($main_tmp);
+
+                if (!$main_is_white) {
+                    $gallery0_tmp = download_url($gallery_urls[0]);
+                    if (!is_wp_error($gallery0_tmp)) {
+                        $gallery0_is_white = $this->hasWhiteBackground($gallery0_tmp);
+                        @unlink($gallery0_tmp);
+
+                        if ($gallery0_is_white) {
+                            // Swap: gallery[0] → featured, main → first in gallery
+                            $featured_url  = $gallery_urls[0];
+                            $final_gallery = array_slice($gallery_urls, 1);
+                            array_unshift($final_gallery, $product->main_image_url);
+                            error_log("ProductSync: Swapped images for product {$product_id}: gallery[0] is white bg, main is room photo");
+                        } else {
+                            error_log("ProductSync: No swap for product {$product_id}: main=NOT white, gallery[0]=NOT white");
+                        }
+                    }
+                } else {
+                    error_log("ProductSync: No swap for product {$product_id}: main IS white background");
+                }
+            }
         }
 
-        // Download and attach gallery images
-        if (!empty($product->gallery_image_urls)) {
+        // Now attach images with correct order
+        $featured_id = $this->downloadAndAttachImage($featured_url, $product_id);
+        if ($featured_id) {
+            set_post_thumbnail($product_id, $featured_id);
+        }
+
+        if (!empty($final_gallery)) {
             $gallery_ids = [];
-            foreach ($product->gallery_image_urls as $image_url) {
+            foreach ($final_gallery as $image_url) {
                 $image_id = $this->downloadAndAttachImage($image_url, $product_id);
                 if ($image_id) {
                     $gallery_ids[] = $image_id;
@@ -285,6 +327,123 @@ class ProductSync {
                 update_post_meta($product_id, '_product_image_gallery', implode(',', $gallery_ids));
             }
         }
+    }
+
+    /**
+     * Check if an image has a white background by sampling corner pixels.
+     * Returns true if >80% of sampled corner pixels are near-white (R,G,B > 235).
+     */
+    private function hasWhiteBackground($file_path) {
+        if (!file_exists($file_path)) {
+            return false;
+        }
+
+        // Try Imagick first (more widely available in this environment)
+        if (class_exists('Imagick')) {
+            return $this->hasWhiteBackgroundImagick($file_path);
+        }
+
+        // Fallback to GD
+        if (function_exists('imagecreatefromjpeg')) {
+            return $this->hasWhiteBackgroundGD($file_path);
+        }
+
+        return false;
+    }
+
+    private function hasWhiteBackgroundImagick($file_path) {
+        try {
+            $imagick = new \Imagick($file_path);
+            $width   = $imagick->getImageWidth();
+            $height  = $imagick->getImageHeight();
+            $inset   = 5;
+
+            $sample_points = [
+                [$inset,          $inset],
+                [$width - $inset, $inset],
+                [$inset,          $height - $inset],
+                [$width - $inset, $height - $inset],
+                [(int)($width / 2), $inset],
+                [(int)($width / 2), $height - $inset],
+                [$inset,            (int)($height / 2)],
+                [$width - $inset,   (int)($height / 2)],
+            ];
+
+            $white_count = 0;
+            $threshold   = 235;
+            $pixel_log   = [];
+
+            foreach ($sample_points as [$x, $y]) {
+                $pixel     = $imagick->getImagePixelColor($x, $y);
+                $color     = $pixel->getColor();
+                $r = $color['r'];
+                $g = $color['g'];
+                $b = $color['b'];
+                $is_white  = $r >= $threshold && $g >= $threshold && $b >= $threshold;
+                if ($is_white) $white_count++;
+                $pixel_log[] = "({$x},{$y})=rgb({$r},{$g},{$b})" . ($is_white ? '✓' : '✗');
+            }
+
+            $imagick->destroy();
+
+            $result = $white_count >= 6;
+            error_log("hasWhiteBackground(imagick) [{$file_path}]: {$white_count}/8 → " . ($result ? 'WHITE' : 'NOT WHITE') . " | " . implode(' ', $pixel_log));
+            return $result;
+
+        } catch (\Exception $e) {
+            error_log("hasWhiteBackgroundImagick error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    private function hasWhiteBackgroundGD($file_path) {
+        $mime  = mime_content_type($file_path);
+        $image = null;
+
+        if ($mime === 'image/jpeg' || $mime === 'image/jpg') {
+            $image = @imagecreatefromjpeg($file_path);
+        } elseif ($mime === 'image/png') {
+            $image = @imagecreatefrompng($file_path);
+        } elseif ($mime === 'image/webp' && function_exists('imagecreatefromwebp')) {
+            $image = @imagecreatefromwebp($file_path);
+        }
+
+        if (!$image) return false;
+
+        $width  = imagesx($image);
+        $height = imagesy($image);
+        $inset  = 5;
+
+        $sample_points = [
+            [$inset,          $inset],
+            [$width - $inset, $inset],
+            [$inset,          $height - $inset],
+            [$width - $inset, $height - $inset],
+            [(int)($width / 2), $inset],
+            [(int)($width / 2), $height - $inset],
+            [$inset,            (int)($height / 2)],
+            [$width - $inset,   (int)($height / 2)],
+        ];
+
+        $white_count = 0;
+        $threshold   = 235;
+        $pixel_log   = [];
+
+        foreach ($sample_points as [$x, $y]) {
+            $rgb      = imagecolorat($image, $x, $y);
+            $r        = ($rgb >> 16) & 0xFF;
+            $g        = ($rgb >>  8) & 0xFF;
+            $b        = ($rgb      ) & 0xFF;
+            $is_white = $r >= $threshold && $g >= $threshold && $b >= $threshold;
+            if ($is_white) $white_count++;
+            $pixel_log[] = "({$x},{$y})=rgb({$r},{$g},{$b})" . ($is_white ? '✓' : '✗');
+        }
+
+        imagedestroy($image);
+
+        $result = $white_count >= 6;
+        error_log("hasWhiteBackground(gd) [{$file_path}]: {$white_count}/8 → " . ($result ? 'WHITE' : 'NOT WHITE') . " | " . implode(' ', $pixel_log));
+        return $result;
     }
 
     /**
@@ -392,15 +551,41 @@ class ProductSync {
     /**
      * Set product attributes
      */
+    /**
+     * Set product brand via product_brand taxonomy
+     */
+    private function setProductBrand($product_id, NormalizedProduct $product) {
+        if (empty($product->manufacturer)) {
+            return;
+        }
+
+        if (!taxonomy_exists('product_brand')) {
+            return;
+        }
+
+        // Get or create the brand term
+        $term = term_exists($product->manufacturer, 'product_brand');
+        if (!$term) {
+            $term = wp_insert_term($product->manufacturer, 'product_brand');
+        }
+
+        if (!is_wp_error($term)) {
+            $term_id = is_array($term) ? $term['term_id'] : $term;
+            wp_set_object_terms($product_id, (int) $term_id, 'product_brand');
+        }
+    }
+
     private function setProductAttributes($product_id, NormalizedProduct $product) {
-        if (empty($product->attributes)) {
+        $attrs_to_set = $product->attributes ?? [];
+
+        if (empty($attrs_to_set)) {
             return;
         }
 
         $wc_product = wc_get_product($product_id);
         $attributes = [];
 
-        foreach ($product->attributes as $attr) {
+        foreach ($attrs_to_set as $attr) {
             $attr_name = isset($attr['name']) ? $attr['name'] : (isset($attr['id']) ? 'Attribute ' . $attr['id'] : 'Attribute');
             $attr_value = $attr['value'];
 

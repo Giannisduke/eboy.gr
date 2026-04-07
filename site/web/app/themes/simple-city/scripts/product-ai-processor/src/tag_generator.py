@@ -68,21 +68,18 @@ class TagGenerator:
             else:
                 ai_tags = []
 
-            # Also extract rule-based tags as backup
-            rule_tags = self._extract_rule_based_tags(product_data)
+            # Use only AI tag (1 tag: product type)
+            cleaned_ai = [self._clean_tag(t) for t in ai_tags]
+            valid_ai = [t for t in cleaned_ai if self._is_valid_tag(t)]
 
-            # Combine and deduplicate
-            all_tags = list(set(ai_tags + rule_tags))
-
-            # Clean and validate
-            cleaned_tags = [self._clean_tag(tag) for tag in all_tags]
-            valid_tags = [tag for tag in cleaned_tags if self._is_valid_tag(tag)]
-
-            # Second AI pass: Filter to exactly 3 tags
-            if len(valid_tags) > 3:
-                final_tags = self._filter_tags_with_ai(valid_tags, title)
+            if valid_ai:
+                final_tags = valid_ai[:1]
             else:
-                final_tags = valid_tags[:3]
+                # Fallback: first rule-based tag
+                rule_tags = self._extract_rule_based_tags(product_data)
+                cleaned_rule = [self._clean_tag(t) for t in rule_tags]
+                valid_rule = [t for t in cleaned_rule if self._is_valid_tag(t)]
+                final_tags = valid_rule[:1]
 
             logger.info(f"Generated {len(final_tags)} tags for: {title[:50]}...")
             return final_tags

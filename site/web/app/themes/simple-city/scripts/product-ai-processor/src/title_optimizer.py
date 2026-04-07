@@ -4,6 +4,7 @@ Shortens and optimizes product titles for better SEO and user experience.
 """
 
 import logging
+import re
 import yaml
 from typing import Optional
 from .ai_client import OllamaClient
@@ -61,6 +62,12 @@ class TitleOptimizer:
                     optimized = optimized[1:-1]
                 if optimized.startswith("'") and optimized.endswith("'"):
                     optimized = optimized[1:-1]
+
+                # Strip dimensions that AI may have left (e.g. 96X25.5X168.5ΕΚ, 150x200cm)
+                optimized = re.sub(
+                    r'\s+\d+[\.,]?\d*\s*[xX×]\s*\d+[\.,]?\d*(?:\s*[xX×]\s*\d+[\.,]?\d*)?\s*(?:cm|εκ|ΕΚ|εκ\.)?',
+                    '', optimized
+                ).strip()
 
                 # Force sentence case: capitalize first letter, lowercase the rest
                 # but keep model names capitalized (words that were already Title Case)

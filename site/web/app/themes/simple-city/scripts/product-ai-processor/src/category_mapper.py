@@ -5,6 +5,7 @@ Maps supplier categories to WooCommerce categories using AI and keyword matching
 
 import logging
 import json
+import re
 import yaml
 from typing import Optional, Dict, List, Tuple
 from pathlib import Path
@@ -86,13 +87,33 @@ class CategoryMapper:
         response = self.ai_client.generate(
             prompt=prompt,
             temperature=0.2,  # Low temperature for consistent results
-            max_tokens=200
+            max_tokens=600
         )
 
         if response:
             try:
-                # Parse JSON response
-                data = json.loads(response)
+                # Strip markdown code blocks if present
+                clean = response.strip()
+                if clean.startswith('```'):
+                    clean = re.sub(r'^```[a-z]*\n?', '', clean)
+                    clean = re.sub(r'```$', '', clean).strip()
+
+                # Try full JSON parse first
+                try:
+                    data = json.loads(clean)
+                except json.JSONDecodeError:
+                    # Fallback: extract category and confidence with regex
+                    cat_match = re.search(r'"category"\s*:\s*"([^"]+)"', clean)
+                    conf_match = re.search(r'"confidence"\s*:\s*([\d.]+)', clean)
+                    if cat_match:
+                        data = {
+                            'category': cat_match.group(1),
+                            'confidence': float(conf_match.group(1)) if conf_match else 0.7,
+                            'subcategories': []
+                        }
+                    else:
+                        raise
+
                 category = data.get('category', 'Έπιπλο')
                 confidence = float(data.get('confidence', 0.5))
                 subcategories = data.get('subcategories', [])
@@ -105,7 +126,7 @@ class CategoryMapper:
                 logger.info(f"Mapped '{supplier_category}' -> '{category}' (confidence: {confidence:.2f})")
                 return (category, confidence, subcategories)
 
-            except json.JSONDecodeError:
+            except (json.JSONDecodeError, AttributeError):
                 logger.warning(f"Failed to parse AI JSON response: {response[:100]}")
                 return None
 

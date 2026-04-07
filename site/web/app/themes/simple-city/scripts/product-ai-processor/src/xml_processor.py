@@ -10,6 +10,7 @@ from lxml import etree
 import time
 import json
 import hashlib
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from .ai_client import OllamaClient
 from .title_optimizer import TitleOptimizer
@@ -160,9 +161,9 @@ class XMLProcessor:
                 existing_enhanced = load_existing_enhanced_products(output_path, supplier)
             logger.info(f"Loaded {len(existing_enhanced)} existing enhanced products")
 
-        # Progress tracking files
-        progress_file = output_path.parent / f"{supplier}-progress.json"
-        ready_file = output_path.parent / f"{supplier}-ready.json"
+        # Progress tracking files go in xml_files/ (parent of enhanced/)
+        progress_file = output_path.parent.parent / f"{supplier}-progress.json"
+        ready_file = output_path.parent.parent / f"{supplier}-ready.json"
 
         # Create output XML structure immediately
         output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -230,124 +231,104 @@ class XMLProcessor:
         new_tree.write(str(output_path), encoding='utf-8', xml_declaration=True, pretty_print=True)
         logger.info(f"Created initial XML file: {output_path}")
 
-        # Process each product
+        # Process each product (concurrent: 2 at a time matching OLLAMA_NUM_PARALLEL)
         enhanced_products = []
         skipped_count = 0
+        total = len(products)
 
-        for idx, product_elem in enumerate(products, 1):
-            try:
-                # Extract product data
-                product_data = self._extract_product_data(product_elem, supplier)
-                sku = product_data.get('sku', 'unknown')
-                enhanced_data = None
+        def process_one(args):
+            """Process a single product with AI — runs in thread pool."""
+            idx, product_elem = args
+            product_data = self._extract_product_data(product_elem, supplier)
+            sku = product_data.get('sku', 'unknown')
 
-                # Check if we're in extend mode and product exists in backup
-                if extend_from_backup and sku in existing_enhanced:
-                    # Extend mode: Copy existing enhanced product as-is (no AI processing)
-                    logger.info(f"Copying product {idx}/{len(products)}: {sku} (from backup)")
-                    skipped_count += 1
+            # Extend mode: copy from backup, no AI needed
+            if extend_from_backup and sku in existing_enhanced:
+                return idx, product_data, existing_enhanced[sku]['element'], None, 'copied'
 
-                    # Use existing enhanced element
-                    existing_elem = existing_enhanced[sku]['element']
-                    product_elem = existing_elem
+            # Incremental mode: skip if unchanged
+            if not extend_from_backup and not should_process_product(product_data, existing_enhanced):
+                return idx, product_data, existing_enhanced[sku]['element'], None, 'skipped'
 
-                    self.stats['skipped'] += 1
-                else:
-                    # Either new product or normal incremental mode with hash comparison
-                    if not extend_from_backup:
-                        # Normal incremental mode: Calculate hash and check if processing needed
-                        current_hash = calculate_product_hash(product_data)
+            # AI enhancement
+            enhanced_data = self._enhance_product(product_data, skip_images)
+            if not extend_from_backup:
+                enhanced_data['original_hash'] = calculate_product_hash(product_data)
+            self._update_product_element(product_elem, enhanced_data)
+            return idx, product_data, product_elem, enhanced_data, 'processed'
 
-                        if not should_process_product(product_data, existing_enhanced):
-                            # Product unchanged - reuse existing enhanced element
-                            logger.info(f"Skipping product {idx}/{len(products)}: {sku} (unchanged)")
-                            skipped_count += 1
+        # Build ordered results using thread pool (2 concurrent workers)
+        results = [None] * total
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            futures = {executor.submit(process_one, (idx, elem)): idx - 1
+                       for idx, elem in enumerate(products, 1)}
+            for future in as_completed(futures):
+                pos = futures[future]
+                try:
+                    results[pos] = future.result()
+                except Exception as e:
+                    logger.error(f"Failed to process product at position {pos + 1}: {e}")
+                    results[pos] = (pos + 1, {}, None, None, 'failed')
 
-                            # Use existing enhanced element
-                            existing_elem = existing_enhanced[sku]['element']
-                            product_elem = existing_elem
+        # Write results to XML in order, update progress sequentially
+        for pos, result in enumerate(results):
+            if result is None:
+                self.stats['failed'] += 1
+                continue
 
-                            self.stats['skipped'] += 1
-                            # Add to output tree and continue
-                            products_elem.append(product_elem)
-                            continue
+            idx, product_data, product_elem, enhanced_data, status = result
 
-                    # Process product with AI (either new product or changed product)
-                    if extend_from_backup:
-                        logger.info(f"Processing product {idx}/{len(products)}: {sku} (new)")
-                    else:
-                        logger.info(f"Processing product {idx}/{len(products)}: {sku} (changed/new)")
-
-                    # Enhance product data with AI
-                    enhanced_data = self._enhance_product(product_data, skip_images)
-
-                    # Add hash to enhanced data (for future incremental processing)
-                    if not extend_from_backup:
-                        enhanced_data['original_hash'] = calculate_product_hash(product_data)
-
-                    # Update XML element
-                    self._update_product_element(product_elem, enhanced_data)
-
-                    # Auto-import to WooCommerce if enabled
-                    if self.woo_api and enhanced_data:
-                        try:
-                            logger.info(f"🔄 Importing product {sku} to WooCommerce...")
-                            woo_result = self.woo_api.import_product(enhanced_data)
-                            if woo_result:
-                                logger.info(f"✅ Product {sku} imported to WooCommerce (ID: {woo_result.get('id')})")
-                            else:
-                                logger.error(f"❌ Failed to import product {sku} to WooCommerce")
-                        except Exception as e:
-                            logger.error(f"❌ WooCommerce import error for {sku}: {e}")
-
-                # Add to output tree
+            if status == 'failed' or product_elem is None:
+                self.stats['failed'] += 1
+            elif status in ('copied', 'skipped'):
+                skipped_count += 1
+                self.stats['skipped'] += 1
+                products_elem.append(product_elem)
+                self.stats['processed'] += 1
+            else:
                 products_elem.append(product_elem)
                 if enhanced_data:
                     enhanced_products.append(enhanced_data)
+
+                    if self.woo_api:
+                        try:
+                            woo_result = self.woo_api.import_product(enhanced_data)
+                            if woo_result:
+                                logger.info(f"✅ Product {product_data.get('sku')} imported (ID: {woo_result.get('id')})")
+                        except Exception as e:
+                            logger.error(f"❌ WooCommerce import error: {e}")
+
                 self.stats['processed'] += 1
 
-                # Write updated XML after each product
-                new_tree.write(str(output_path), encoding='utf-8', xml_declaration=True, pretty_print=True)
-                logger.info(f"Updated XML with product {idx}/{len(products)}")
+            # Write XML after each product (for realtime import)
+            new_tree.write(str(output_path), encoding='utf-8', xml_declaration=True, pretty_print=True)
 
-                # Mark this product as ready for import
-                try:
-                    with open(ready_file, 'r') as f:
-                        ready_data = json.load(f)
-
-                    if product_data.get('sku'):
-                        ready_data['ready_skus'].append(product_data['sku'])
-                        ready_data['total_ready'] = len(ready_data['ready_skus'])
-
-                    with open(ready_file, 'w') as f:
-                        json.dump(ready_data, f)
-                    logger.info(f"Marked {product_data.get('sku')} as ready for import")
-                except Exception as e:
-                    logger.warning(f"Failed to update ready file: {str(e)}")
-
+            # Mark SKU as ready
+            try:
+                with open(ready_file, 'r') as f:
+                    ready_data = json.load(f)
+                if product_data.get('sku'):
+                    ready_data['ready_skus'].append(product_data['sku'])
+                    ready_data['total_ready'] = len(ready_data['ready_skus'])
+                with open(ready_file, 'w') as f:
+                    json.dump(ready_data, f)
             except Exception as e:
-                logger.error(f"Failed to process product {idx}: {str(e)}")
-                self.stats['failed'] += 1
+                logger.warning(f"Failed to update ready file: {e}")
 
-            self.stats['total'] = len(products)
-
-            # Update progress file
-            progress_data = {
-                'current': idx,
-                'total': len(products),
-                'percent': round((idx / len(products)) * 100, 1),
-                'processed': self.stats['processed'],
-                'failed': self.stats['failed'],
-                'status': 'processing'
-            }
+            # Update progress
+            self.stats['total'] = total
             try:
                 with open(progress_file, 'w') as f:
-                    json.dump(progress_data, f)
+                    json.dump({
+                        'current': pos + 1,
+                        'total': total,
+                        'percent': round(((pos + 1) / total) * 100, 1),
+                        'processed': self.stats['processed'],
+                        'failed': self.stats['failed'],
+                        'status': 'processing'
+                    }, f)
             except Exception as e:
-                logger.warning(f"Failed to write progress file: {str(e)}")
-
-            # Small delay to avoid overwhelming Ollama
-            time.sleep(0.5)
+                logger.warning(f"Failed to write progress file: {e}")
 
         logger.info(f"Enhanced XML completed: {output_path}")
         logger.info(f"Incremental processing stats: {skipped_count} products unchanged (skipped AI), "
@@ -420,10 +401,10 @@ class XMLProcessor:
         filename = xml_path.stem.lower()
         if 'pakoworld' in filename:
             return 'pakoworld'
-        elif 'b2bmarkt' in filename or 'b2b' in filename:
-            return 'b2bmarkt'
         elif 'liberta' in filename:
             return 'libertab2b'
+        elif 'b2bmarkt' in filename or 'b2b' in filename:
+            return 'b2bmarkt'
         elif 'estiah' in filename or 'estia' in filename:
             return 'estiahomeart'
         else:

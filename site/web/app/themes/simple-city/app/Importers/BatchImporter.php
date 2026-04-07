@@ -78,7 +78,7 @@ class BatchImporter {
      * @param int $total_limit Total product limit (0 = all products)
      * @param int|null $batch_size Batch size (null = use default)
      */
-    public function processBatch($supplier, $offset = 0, $total_limit = 0, $batch_size = null) {
+    public function processBatch($supplier, $offset = 0, $total_limit = 0, $batch_size = null, $fresh_import = 0) {
         if ($batch_size === null) {
             $batch_size = $this->batch_size;
         }
@@ -92,44 +92,18 @@ class BatchImporter {
         $progress_file = $xml_dir . $supplier . '-progress.json';
         $enhanced_xml_path = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml';
 
-        // STEP 1: Check if enhanced XML exists and has correct number of products
-        $xml_file = $this->downloader->getLocalFile($supplier, true); // enhanced_only = true
-        $needs_processing = false;
-
-        if ($xml_file && $total_limit > 0) {
-            // Count products in existing enhanced XML
-            $existing_count = 0;
-            if (file_exists($enhanced_xml_path)) {
-                $content = file_get_contents($enhanced_xml_path);
-                // Match both <product and <Product (case-insensitive)
-                preg_match_all('/<Product[\s>]/i', $content, $matches);
-                $existing_count = count($matches[0]);
+        // On fresh user-initiated import, always clear previous run so AI processes fresh
+        if ($fresh_import) {
+            if (file_exists($progress_file)) {
+                unlink($progress_file);
+                error_log("BatchImporter: Cleared previous progress file for {$supplier} (fresh import)");
             }
-
-            // If enhanced XML has fewer products than limit, re-run AI enhancement
-            // (Python will use extend-from-backup mode to copy existing + add new products)
-            if ($existing_count < $total_limit) {
-                error_log("BatchImporter: Enhanced XML has {$existing_count} products but limit is {$total_limit}, running AI enhancement...");
-                $needs_processing = true;
-                $xml_file = false; // Force re-processing
-
-                // Delete progress file to allow re-processing
-                if (file_exists($progress_file)) {
-                    unlink($progress_file);
-                }
-
-                // Rename enhanced XML to backup (Python will copy from it)
-                if (file_exists($enhanced_xml_path)) {
-                    $backup_path = $enhanced_xml_path . '.backup';
-                    rename($enhanced_xml_path, $backup_path);
-                    error_log("BatchImporter: Renamed enhanced XML to backup for extend mode");
-                }
-            } elseif ($existing_count > $total_limit) {
-                error_log("BatchImporter: Enhanced XML has {$existing_count} products, limit is {$total_limit}, using existing");
-            } else {
-                error_log("BatchImporter: Enhanced XML has {$existing_count} products, matches limit {$total_limit}");
+            if (file_exists($enhanced_xml_path)) {
+                unlink($enhanced_xml_path);
+                error_log("BatchImporter: Cleared previous enhanced XML for {$supplier} (fresh import)");
             }
         }
+        $xml_file = false;
 
         if (!$xml_file) {
             // STEP 2: Check if original XML exists, if not download it
@@ -195,6 +169,12 @@ class BatchImporter {
                 // Create initial progress file to prevent duplicate starts
                 if (!file_exists($progress_file)) {
                     error_log("BatchImporter: Starting AI enhancement for {$supplier}...");
+
+                    // Delete any existing enhanced XML so AI always processes fresh
+                    if (file_exists($enhanced_xml_path)) {
+                        unlink($enhanced_xml_path);
+                        error_log("BatchImporter: Deleted old enhanced XML for {$supplier} before AI processing");
+                    }
 
                     // Create initial progress file immediately
                     $initial_progress = [
@@ -360,7 +340,7 @@ class BatchImporter {
             $new_offset = $offset + $batch_count;
             $is_complete = $new_offset >= $total;
 
-            // When complete, trash missing products
+            // When complete, trash missing products and clean up files
             if ($is_complete) {
                 error_log("BatchImporter: Import complete for {$supplier}, checking for missing products");
 
@@ -453,7 +433,8 @@ class BatchImporter {
         file_put_contents($debug_log, $debug_info, FILE_APPEND);
 
         $output_file = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml';
-        $python_bin = '/usr/bin/python3'; // Use system Python with installed packages
+        $venv_python = $script_dir . '/venv/bin/python3';
+        $python_bin = file_exists($venv_python) ? $venv_python : '/usr/bin/python3';
         $log_file = $xml_dir . 'ai-enhancement.log';
         $progress_file = $xml_dir . $supplier . '-progress.json';
 
@@ -484,20 +465,9 @@ class BatchImporter {
         // IMAGE_OUTPUT_DIR: Absolute path to uploads directory (always needed)
         $env_vars = 'IMAGE_OUTPUT_DIR=' . escapeshellarg($uploads_dir);
 
-        // OLLAMA_HOST: Auto-detect based on environment
-        // - Lima VM (Mac development): Use host.lima.internal to reach Mac host
-        // - Native Linux/Mac: Use 127.0.0.1 (localhost)
-        // - Production: Use 127.0.0.1 (Ollama installed locally)
-        // Check if we're in Lima VM by testing if host.lima.internal resolves
-        if (gethostbyname('host.lima.internal') !== 'host.lima.internal') {
-            // host.lima.internal exists (Lima VM)
-            $env_vars .= ' OLLAMA_HOST=host.lima.internal';
-            error_log("BatchImporter: Detected Lima VM, using host.lima.internal for Ollama");
-        } else {
-            // Native environment (Linux, Mac, or production)
-            $env_vars .= ' OLLAMA_HOST=127.0.0.1';
-            error_log("BatchImporter: Using localhost for Ollama");
-        }
+        // OLLAMA_HOST: Ubuntu AI PC via Tailscale (used everywhere - local dev and production)
+        $env_vars .= ' OLLAMA_HOST=100.86.192.95';
+        error_log("BatchImporter: Using Ubuntu AI PC (Tailscale) for Ollama");
 
         // Check if backup file exists (means we're extending existing enhanced XML)
         $backup_file = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml.backup';

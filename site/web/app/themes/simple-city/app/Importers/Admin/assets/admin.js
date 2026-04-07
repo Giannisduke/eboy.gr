@@ -6,6 +6,7 @@ jQuery(document).ready(function($) {
     var allResults = {};
     var suppliersToProcess = [];
     var supplierLimits = {}; // Store limits for each supplier
+    var freshImport = false; // True only on first batch call per supplier (user-initiated)
 
     // Fast Stock & Price Sync button (Daily Stock Sync)
     $('#fast-stock-sync').on('click', function() {
@@ -547,6 +548,7 @@ jQuery(document).ready(function($) {
 
         var supplier = suppliersToProcess[currentSupplierIndex];
         currentOffset = 0;
+        freshImport = true;
 
         addLog('Processing ' + supplier + '...');
         processBatch(supplier);
@@ -558,7 +560,9 @@ jQuery(document).ready(function($) {
         }
 
         var limit = supplierLimits[supplier] || 0;
-        console.log('Processing batch:', supplier, 'offset:', currentOffset, 'limit:', limit);
+        var isFresh = freshImport ? 1 : 0;
+        freshImport = false; // Only first call is fresh
+        console.log('Processing batch:', supplier, 'offset:', currentOffset, 'limit:', limit, 'fresh:', isFresh);
 
         $.ajax({
             url: xmlImporter.ajaxUrl,
@@ -569,7 +573,8 @@ jQuery(document).ready(function($) {
                 nonce: xmlImporter.nonce,
                 supplier: supplier,
                 offset: currentOffset,
-                limit: limit
+                limit: limit,
+                fresh_import: isFresh
             },
             success: function(response) {
                 console.log('Batch response:', response);

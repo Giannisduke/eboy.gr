@@ -40,10 +40,10 @@ def load_config(language: str = 'el') -> dict:
     env_file = Path(__file__).parent / '.env'
 
     if env_local.exists():
-        load_dotenv(env_local, override=True)
+        load_dotenv(env_local, override=False)
         print(f"✓ Loaded configuration from .env.local")
     elif env_file.exists():
-        load_dotenv(env_file)
+        load_dotenv(env_file, override=False)
         print(f"✓ Loaded configuration from .env")
     else:
         print(f"⚠ No .env or .env.local file found")

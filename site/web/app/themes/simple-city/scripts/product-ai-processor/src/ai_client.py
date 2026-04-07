@@ -99,7 +99,7 @@ class OllamaClient:
 
     def generate(self, prompt: str, system_prompt: Optional[str] = None, **kwargs) -> Optional[str]:
         """
-        Generate text using Ollama
+        Generate text using Ollama chat API.
 
         Args:
             prompt: The user prompt
@@ -109,30 +109,13 @@ class OllamaClient:
         Returns:
             Generated text or None if failed
         """
-        data = {
-            "model": self.model,
-            "prompt": prompt,
-            "stream": False,
-            "options": {
-                "temperature": kwargs.get('temperature', 0.7),
-                "top_p": kwargs.get('top_p', 0.9),
-                "num_predict": kwargs.get('max_tokens', 1000),
-            }
-        }
-
+        messages = []
         if system_prompt:
-            data['system'] = system_prompt
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": prompt})
 
         logger.debug(f"Sending prompt to Ollama: {prompt[:100]}...")
-
-        response = self._make_request("api/generate", data)
-
-        if response and 'response' in response:
-            result = response['response'].strip()
-            logger.debug(f"Received response: {result[:100]}...")
-            return result
-
-        return None
+        return self.chat(messages, **kwargs)
 
     def chat(self, messages: list, **kwargs) -> Optional[str]:
         """
@@ -152,6 +135,8 @@ class OllamaClient:
             "options": {
                 "temperature": kwargs.get('temperature', 0.7),
                 "top_p": kwargs.get('top_p', 0.9),
+                "num_ctx": kwargs.get('num_ctx', 4096),
+                "num_predict": kwargs.get('max_tokens', 512),
             }
         }
 

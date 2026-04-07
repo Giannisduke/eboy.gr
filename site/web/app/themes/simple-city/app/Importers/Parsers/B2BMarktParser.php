@@ -93,6 +93,11 @@ class B2BMarktParser extends AbstractParser {
         // Weight
         $product->weight = $this->parsePrice($this->getNodeValue($node->Weight));
 
+        // Brand: extract from filters if available, otherwise use supplier name
+        if (empty($product->manufacturer)) {
+            $product->manufacturer = 'B2BMarkt';
+        }
+
         return $product;
     }
 }

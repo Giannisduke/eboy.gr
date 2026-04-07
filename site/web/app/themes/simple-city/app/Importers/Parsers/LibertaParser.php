@@ -114,6 +114,9 @@ class LibertaParser extends AbstractParser {
             $product->specifications[] = $comments;
         }
 
+        // Brand
+        $product->manufacturer = 'Liberta';
+
         return $product;
     }
 }
