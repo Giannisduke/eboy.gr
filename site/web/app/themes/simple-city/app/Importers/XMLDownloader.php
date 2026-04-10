@@ -75,7 +75,23 @@ class XMLDownloader {
         }
 
         // Store downloaded XMLs in gr/ subdirectory
-        $filename = $this->cache_dir . 'gr/' . $supplier . '.xml';
+        $gr_dir   = $this->cache_dir . 'gr/';
+        $filename = $gr_dir . $supplier . '.xml';
+
+        // Ensure gr/ directory exists before writing
+        if (!file_exists($gr_dir)) {
+            if (!wp_mkdir_p($gr_dir)) {
+                throw new \Exception(
+                    "Cannot create directory {$gr_dir}. Check filesystem permissions for: {$this->cache_dir}"
+                );
+            }
+        }
+
+        if (!is_writable($gr_dir)) {
+            throw new \Exception(
+                "Directory {$gr_dir} is not writable. Run: chmod -R 775 {$this->cache_dir}"
+            );
+        }
 
         // Use WordPress HTTP API
         $response = wp_remote_get($url, [

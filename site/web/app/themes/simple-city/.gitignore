@@ -16,5 +16,8 @@ __pycache__/
 *.pyc
 *.pyo
 
+# Orphan xml_files directory (unused - scripts/xml_files/ is the real one)
+/xml_files/
+
 # claude
 *.claude/
