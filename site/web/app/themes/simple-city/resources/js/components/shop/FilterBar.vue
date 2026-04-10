@@ -1,5 +1,5 @@
 <template>
-  <div class="filter-bar">
+  <div class="filter-bar" :class="{ 'is-stuck': isStuck }" ref="filterBarEl">
     <!-- Category Menu with Icons -->
     <div class="category-menu">
       <button
@@ -32,7 +32,7 @@
     </div>
 
     <!-- Filters Container (Two Columns) -->
-    <div class="filters-container">
+    <div class="filters-container" :class="{ 'filters-open': filtersOpen }">
       <!-- Tag Cloud (Left Column) -->
       <div v-if="shopStore.tags.length > 0" class="tag-cloud">
         <button
@@ -173,7 +173,11 @@
 
 			<!-- Results Count -->
 			<div class="results-count">
-				Εμφάνιση {{ shopStore.products.length }} από {{ shopStore.pagination.total }} προϊόντα
+				<span class="results-text">Εμφάνιση {{ shopStore.products.length }} από {{ shopStore.pagination.total }} προϊόντα</span>
+				<button class="filters-toggle-btn" @click="filtersOpen = !filtersOpen">
+					<span>Φίλτρα Αναζήτησης</span>
+					<span class="filters-toggle-icon">{{ filtersOpen ? '✕' : '⊞' }}</span>
+				</button>
 			</div>
 
 			<div class="right">
@@ -189,12 +193,26 @@
 			</div>
 			</div>
 		</div>
-    
+
   </div>
+
+  <!-- Scroll to top — εμφανίζεται μόνο όταν το filter-bar είναι stuck -->
+  <Teleport to="body">
+    <button
+      v-show="isStuck"
+      class="scroll-to-top-btn"
+      @click="scrollToTop"
+      aria-label="Πάνω"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
+  </Teleport>
 </template>
 
 <script setup>
-import { ref, watch, onMounted, computed } from 'vue';
+import { ref, watch, onMounted, onUnmounted, computed } from 'vue';
 import { useShopStore } from '../../stores/shop';
 
 // Import SVG icons
@@ -219,6 +237,28 @@ const localMaxPrice = ref(1000);
 const priceRange = ref([0, 1000]);
 const sortValue = ref('date-desc');
 let priceUpdateTimeout = null;
+let headerResizeObserver = null;
+
+const filterBarEl = ref(null);
+const isStuck = ref(false);
+const filtersOpen = ref(false);
+
+const checkStuck = () => {
+  if (!filterBarEl.value) return;
+  const headerHeight = parseFloat(
+    getComputedStyle(document.documentElement).getPropertyValue('--header-height')
+  ) || 80;
+  const stuck = filterBarEl.value.getBoundingClientRect().top <= headerHeight;
+  if (!stuck) filtersOpen.value = false; // reset when unstuck
+  isStuck.value = stuck;
+};
+
+const syncHeaderHeight = () => {
+  const header = document.querySelector('.head02');
+  if (header) {
+    document.documentElement.style.setProperty('--header-height', `${header.offsetHeight}px`);
+  }
+};
 
 // Sync local state with store on mount (for URL initialization)
 onMounted(() => {
@@ -233,6 +273,23 @@ onMounted(() => {
   localMinPrice.value = shopStore.filters.minPrice || shopStore.priceRange.filteredMin;
   localMaxPrice.value = shopStore.filters.maxPrice || shopStore.priceRange.filteredMax;
   priceRange.value = [localMinPrice.value, localMaxPrice.value];
+
+  // Sticky category menu: track header height
+  syncHeaderHeight();
+  const header = document.querySelector('.head02');
+  if (header) {
+    headerResizeObserver = new ResizeObserver(syncHeaderHeight);
+    headerResizeObserver.observe(header);
+  }
+
+  // Detect sticky state
+  window.addEventListener('scroll', checkStuck, { passive: true });
+  checkStuck();
+});
+
+onUnmounted(() => {
+  if (headerResizeObserver) headerResizeObserver.disconnect();
+  window.removeEventListener('scroll', checkStuck);
 });
 
 // Watch store changes to keep local state in sync
@@ -309,7 +366,7 @@ const depthItems = computed(() => {
 const sortItems = computed(() => {
   return [
     { title: 'Προεπιλεγμένη ταξινόμηση', value: 'menu_order-asc' },
-    { title: 'Δημοφιλά', value: 'popularity-desc' },
+    { title: 'Δημοφιλή', value: 'popularity-desc' },
     { title: 'Πιο πρόσφατα', value: 'date-desc' },
     { title: 'Τιμή: Χαμηλή προς Υψηλή', value: 'price-asc' },
     { title: 'Τιμή: Υψηλή προς Χαμηλή', value: 'price-desc' }
@@ -413,6 +470,10 @@ const getTagSize = (count) => {
   return `${size.toFixed(2)}rem`;
 };
 
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
 const getMaterialSize = (count) => {
   // Calculate font size based on product count (material cloud effect)
   const minSize = 0.65;
@@ -442,6 +503,11 @@ const getMaterialSize = (count) => {
 
 .filter-bar {
   @include make-row();
+
+  position: sticky;
+  top: var(--header-height, 80px);
+  z-index: 200;
+  background: white;
 }
 
 /* Category Menu */
@@ -450,11 +516,76 @@ const getMaterialSize = (count) => {
       @include media-breakpoint-up(lg) {
       @include make-col(12);
     }
-    @extend .py-5;
- // overflow-x: auto;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    transition: padding 0.25s ease;
   @extend .d-flex;
   @extend .justify-content-between;
+}
 
+.filter-bar.is-stuck .category-menu {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Results count: toggle between text and button */
+.results-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.results-text {
+  display: block;
+}
+
+.filters-toggle-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  background: $primary;
+  color: $secondary;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-family: 'PFBagueSansPro-Bold';
+  letter-spacing: 0.04rem;
+
+  .filters-toggle-icon {
+    font-size: 1rem;
+  }
+}
+
+.filter-bar.is-stuck .results-text {
+  display: none;
+}
+
+.filter-bar.is-stuck .filters-toggle-btn {
+  display: flex;
+}
+
+/* Filters container collapse */
+.filters-container {
+  max-height: 2000px;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.25s ease;
+  opacity: 1;
+}
+
+.filter-bar.is-stuck .filters-container {
+  max-height: 0;
+  opacity: 0;
+}
+
+.filter-bar.is-stuck .filters-container.filters-open {
+  max-height: 2000px;
+  opacity: 1;
+}
+
+.filter-bar.is-stuck .views {
+  margin-top: 0 !important;
 }
 
 .category-btn {
@@ -861,6 +992,39 @@ const getMaterialSize = (count) => {
   .tag-btn {
     padding: 0.4rem 0.75rem;
     font-size: 0.9rem;
+  }
+}
+</style>
+
+<style lang="scss">
+@import '../../../css/custom/shared-variables';
+
+.scroll-to-top-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: $primary;
+  color: $secondary;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
   }
 }
 </style>

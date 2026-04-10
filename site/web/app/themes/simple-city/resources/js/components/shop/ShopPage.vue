@@ -92,6 +92,17 @@ function setupHeaderSearch() {
 
     let searchTimeout = null;
 
+    // Scroll to filter-bar sticky point on click
+    searchInput.addEventListener('click', () => {
+      const filterBar = document.querySelector('.filter-bar');
+      if (!filterBar) return;
+      const headerHeight = parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue('--header-height')
+      ) || 80;
+      const targetY = filterBar.getBoundingClientRect().top + window.scrollY - headerHeight;
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    });
+
     // Listen for input changes
     searchInput.addEventListener('input', (e) => {
       clearTimeout(searchTimeout);

@@ -333,13 +333,15 @@ section {
         max-width: 1440px;
     }
     &.shop {
-        max-width: 1440px;
+      //  max-width: 1440px;
 
         & .views {
             @include make-container();
             @extend .mt-5;
             & .left {
                 @include make-col-ready();
+                @extend .d-flex;
+                @extend .align-items-center;
 
                 @include media-breakpoint-up(sm) {
                     @include make-col(4);
@@ -425,5 +427,119 @@ section {
 
     &.related {
         @extend .py-5;
+    }
+}
+
+// ─── Footer ───────────────────────────────────────────────────────────────────
+
+.content-info {
+    background: $secondary;
+    color: rgba($white, 0.8);
+    margin-top: 3rem;
+
+    .footer-container {
+        @include make-container();
+        max-width: 1440px;
+    }
+
+    // Top strip: logo + tagline
+    .footer-top {
+        padding: 2.5rem 0 1.5rem;
+        border-bottom: 1px solid rgba($white, 0.1);
+
+        .footer-container {
+            @extend .d-flex;
+            @extend .align-items-center;
+            @extend .justify-content-between;
+            @extend .flex-wrap;
+            gap: 1rem;
+        }
+
+        .footer-brand {
+            .custom-logo {
+                filter: brightness(0) invert(1);
+                max-height: 38px;
+                width: auto;
+            }
+        }
+
+        .footer-tagline {
+            margin: 0;
+            color: rgba($primary, 0.45);
+            font-family: 'PFBagueSansPro-Light';
+            letter-spacing: 0.04rem;
+            font-size: 0.9rem;
+        }
+    }
+
+    // Widget columns
+    .footer-widgets-area {
+        padding: 3rem 0 2rem;
+
+        .footer-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2.5rem;
+        }
+
+        .widget {
+            flex: 1 1 180px;
+            min-width: 160px;
+
+            h3 {
+                font-size: 0.7rem;
+                letter-spacing: 0.12rem;
+                text-transform: uppercase;
+                color: $primary;
+                margin-bottom: 1rem;
+                font-family: 'PFBagueSansPro-Bold';
+            }
+
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+
+                li {
+                    margin-bottom: 0.45rem;
+
+                    a {
+                        color: rgba($white, 0.65);
+                        text-decoration: none;
+                        font-size: 0.88rem;
+                        transition: color 0.2s ease;
+
+                        &:hover {
+                            color: $secondary;
+                        }
+                    }
+                }
+            }
+
+            p {
+                color: rgba($white, 0.65);
+                font-size: 0.88rem;
+                line-height: 1.65;
+                margin-bottom: 0.5rem;
+            }
+        }
+    }
+
+    // Bottom bar
+    .footer-bottom {
+        border-top: 1px solid rgba($white, 0.1);
+        padding: 1.25rem 0;
+
+        .footer-container {
+            @extend .d-flex;
+            @extend .justify-content-center;
+        }
+
+        .footer-copy {
+            margin: 0;
+            font-size: 0.78rem;
+            color: rgba($primary, 0.35);
+            letter-spacing: 0.02rem;
+        }
     }
 }

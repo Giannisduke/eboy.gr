@@ -165,9 +165,16 @@ class BatchImporter {
             }
 
             if (!$xml_file) {
-                // STEP 4: Start AI enhancement in background (only if not already running)
-                // Create initial progress file to prevent duplicate starts
-                if (!file_exists($progress_file)) {
+                // STEP 4: AI enhancement or fallback to original XML
+
+                // Skip AI if OLLAMA_HOST is not configured (e.g. staging without Tailscale)
+                $ollama_available = !empty(getenv('OLLAMA_HOST'));
+
+                if (!$ollama_available) {
+                    error_log("BatchImporter: OLLAMA_HOST not set — skipping AI enhancement, using original XML for {$supplier}");
+                    $xml_file = $original_xml;
+                } elseif (!file_exists($progress_file)) {
+                    // OLLAMA available: start AI enhancement in background
                     error_log("BatchImporter: Starting AI enhancement for {$supplier}...");
 
                     // Delete any existing enhanced XML so AI always processes fresh
@@ -465,9 +472,14 @@ class BatchImporter {
         // IMAGE_OUTPUT_DIR: Absolute path to uploads directory (always needed)
         $env_vars = 'IMAGE_OUTPUT_DIR=' . escapeshellarg($uploads_dir);
 
-        // OLLAMA_HOST: Ubuntu AI PC via Tailscale (used everywhere - local dev and production)
-        $env_vars .= ' OLLAMA_HOST=100.86.192.95';
-        error_log("BatchImporter: Using Ubuntu AI PC (Tailscale) for Ollama");
+        // OLLAMA_HOST: read from environment variable (set in .env)
+        $ollama_host = getenv('OLLAMA_HOST');
+        if (!$ollama_host) {
+            error_log("BatchImporter: WARNING - OLLAMA_HOST not set in environment");
+        } else {
+            $env_vars .= ' OLLAMA_HOST=' . escapeshellarg($ollama_host);
+            error_log("BatchImporter: Using Ollama host: " . $ollama_host);
+        }
 
         // Check if backup file exists (means we're extending existing enhanced XML)
         $backup_file = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml.backup';

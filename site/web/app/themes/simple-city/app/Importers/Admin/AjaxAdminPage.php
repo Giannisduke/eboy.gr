@@ -464,8 +464,11 @@ class AjaxAdminPage {
             }
 
             // Get requested supplier or process all
-            $supplier = isset($_POST['supplier']) ? sanitize_text_field($_POST['supplier']) : null;
-            $suppliers = $supplier ? [$supplier] : ['pakoworld', 'b2bmarkt', 'libertab2b', 'estiahomeart'];
+            $supplier = $this->validateSupplier($_POST['supplier'] ?? null);
+            if (isset($_POST['supplier']) && $supplier === null) {
+                wp_send_json_error(['message' => 'Invalid supplier']);
+            }
+            $suppliers = $supplier ? [$supplier] : $this->allowedSuppliers();
 
             $results = [];
 
@@ -521,10 +524,10 @@ class AjaxAdminPage {
             wp_send_json_error(['message' => 'Unauthorized']);
         }
 
-        $supplier = isset($_POST['supplier']) ? sanitize_text_field($_POST['supplier']) : '';
+        $supplier = $this->validateSupplier($_POST['supplier'] ?? null);
 
-        if (empty($supplier)) {
-            wp_send_json_error(['message' => 'Supplier is required']);
+        if ($supplier === null) {
+            wp_send_json_error(['message' => 'Invalid or missing supplier']);
         }
 
         $xml_dir = get_template_directory() . '/scripts/xml_files/';
@@ -576,7 +579,7 @@ class AjaxAdminPage {
             require_once(__DIR__ . '/../FastStockSync.php');
             $fast_sync = new \App\Importers\FastStockSync();
 
-            $supplier = isset($_POST['supplier']) ? sanitize_text_field($_POST['supplier']) : null;
+            $supplier = $this->validateSupplier($_POST['supplier'] ?? null);
 
             if ($supplier) {
                 $results = $fast_sync->syncSupplier($supplier);
@@ -614,7 +617,7 @@ class AjaxAdminPage {
 
             $incremental = new \App\Importers\IncrementalImporter();
 
-            $supplier = isset($_POST['supplier']) ? sanitize_text_field($_POST['supplier']) : null;
+            $supplier = $this->validateSupplier($_POST['supplier'] ?? null);
 
             if ($supplier) {
                 $diff = $incremental->detectNewProducts($supplier);
@@ -670,10 +673,10 @@ class AjaxAdminPage {
             require_once(__DIR__ . '/../IncrementalImporter.php');
             require_once(__DIR__ . '/../FastStockSync.php');
 
-            $supplier = isset($_POST['supplier']) ? sanitize_text_field($_POST['supplier']) : null;
+            $supplier = $this->validateSupplier($_POST['supplier'] ?? null);
 
             if (!$supplier) {
-                wp_send_json_error(['message' => 'Supplier is required']);
+                wp_send_json_error(['message' => 'Invalid or missing supplier']);
             }
 
             // Step 1: Download XML
@@ -752,6 +755,25 @@ class AjaxAdminPage {
     }
 
     /**
+     * Whitelist of allowed supplier slugs.
+     */
+    private function allowedSuppliers(): array {
+        return ['pakoworld', 'b2bmarkt', 'libertab2b', 'estiahomeart'];
+    }
+
+    /**
+     * Validate a supplier value against the whitelist.
+     * Returns the sanitized slug or null if invalid.
+     */
+    private function validateSupplier(?string $value): ?string {
+        if (empty($value)) {
+            return null;
+        }
+        $slug = sanitize_key($value);
+        return in_array($slug, $this->allowedSuppliers(), true) ? $slug : null;
+    }
+
+    /**
      * Get supplier URL from xml_urls.txt
      */
     private function getSupplierURL($supplier) {
@@ -783,7 +805,7 @@ class AjaxAdminPage {
             wp_send_json_error(['message' => 'Unauthorized']);
         }
 
-        $supplier = isset($_POST['supplier']) ? sanitize_text_field($_POST['supplier']) : '';
+        $supplier = $this->validateSupplier($_POST['supplier'] ?? null);
         $offset = isset($_POST['offset']) ? intval($_POST['offset']) : 0;
         $limit = isset($_POST['limit']) ? intval($_POST['limit']) : 0;
         $fresh_import = isset($_POST['fresh_import']) ? intval($_POST['fresh_import']) : 0;
@@ -824,8 +846,15 @@ class AjaxAdminPage {
         }
 
         // Save markup settings
-        if (isset($_POST['markup'])) {
-            update_option('xml_importer_markup', $_POST['markup']);
+        if (isset($_POST['markup']) && is_array($_POST['markup'])) {
+            $clean_markup = [];
+            foreach ($_POST['markup'] as $key => $value) {
+                $clean_key = sanitize_key($key);
+                if ($clean_key !== '') {
+                    $clean_markup[$clean_key] = (float) $value;
+                }
+            }
+            update_option('xml_importer_markup', $clean_markup);
         }
 
         // Save batch size
@@ -860,11 +889,27 @@ class AjaxAdminPage {
             wp_send_json_error(['message' => 'Unauthorized']);
         }
 
-        if (isset($_POST['results'])) {
+        if (isset($_POST['results']) && is_array($_POST['results'])) {
+            $int_fields = ['total_products', 'created', 'updated', 'trashed', 'errors'];
+            $clean_results = [];
+            foreach ($_POST['results'] as $supplier => $stats) {
+                if (!is_array($stats)) {
+                    continue;
+                }
+                $clean_supplier = sanitize_key($supplier);
+                if ($clean_supplier === '') {
+                    continue;
+                }
+                $clean_stats = [];
+                foreach ($int_fields as $field) {
+                    $clean_stats[$field] = isset($stats[$field]) ? absint($stats[$field]) : 0;
+                }
+                $clean_results[$clean_supplier] = $clean_stats;
+            }
             update_option('xml_importer_last_run', [
-                'date' => current_time('mysql'),
-                'results' => $_POST['results'],
-                'type' => 'manual'
+                'date'    => current_time('mysql'),
+                'results' => $clean_results,
+                'type'    => 'manual',
             ]);
 
             wp_send_json_success(['message' => 'Results saved']);

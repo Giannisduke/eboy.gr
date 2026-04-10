@@ -17,9 +17,12 @@ class XMLDownloader {
         $this->urls_file = $xml_dir . 'xml_urls.txt';
         $this->cache_dir = $xml_dir;  // Base directory, will use subdirectories for en/gr/enhanced
 
-        // Ensure cache directory exists
-        if (!file_exists($this->cache_dir)) {
-            wp_mkdir_p($this->cache_dir);
+        // Ensure required directories exist
+        foreach (['', 'gr', 'enhanced', 'en'] as $subdir) {
+            $dir = $this->cache_dir . ($subdir ? $subdir . '/' : '');
+            if (!file_exists($dir)) {
+                wp_mkdir_p($dir);
+            }
         }
     }
 
@@ -28,7 +31,10 @@ class XMLDownloader {
      */
     public function getURLs() {
         if (!file_exists($this->urls_file)) {
-            throw new \Exception("URLs file not found: {$this->urls_file}");
+            throw new \Exception(
+                "Το αρχείο xml_urls.txt δεν βρέθηκε ({$this->urls_file}). " .
+                "Δημιουργήστε το αρχείο με τα URLs των suppliers (ένα URL ανά γραμμή)."
+            );
         }
 
         $content = file_get_contents($this->urls_file);
