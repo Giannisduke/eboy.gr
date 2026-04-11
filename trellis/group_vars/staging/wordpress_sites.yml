@@ -42,3 +42,4 @@ wordpress_sites:
       BLOG_ID_CURRENT_SITE: 1
       WP_MEMORY_LIMIT: "512M"
       WP_MAX_MEMORY_LIMIT: "1024M"
+      OLLAMA_HOST: "100.86.192.95"
