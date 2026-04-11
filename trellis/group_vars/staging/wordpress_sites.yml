@@ -32,6 +32,7 @@ wordpress_sites:
     shared_paths:
       - web/app/uploads
       - web/app/themes/simple-city/scripts/xml_files
+      - web/app/themes/simple-city/scripts/product-ai-processor/logs
     env:
       WP_ENV: staging
       MULTISITE: true

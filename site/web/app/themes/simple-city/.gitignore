@@ -5,11 +5,8 @@
 .env
 npm-debug.log
 
-# XML Files - Ignore dynamic content
+# XML Files - Ignore dynamic content (xml_urls.txt lives in shared/ on server, locally only)
 /scripts/xml_files/*
-
-# Keep configuration files
-!/scripts/xml_files/xml_urls.txt
 
 # Python cache
 __pycache__/
