@@ -454,10 +454,10 @@ class BatchImporter {
         $limit_arg = $limit > 0 ? '--limit ' . intval($limit) : '';
         $main_script = $script_dir . '/main.py';
 
-        // Calculate uploads directory (theme_root -> app -> uploads)
-        // $theme_root = /path/to/themes/simple-city
-        // We need: /path/to/app/uploads
-        $app_dir = dirname($theme_root); // /path/to/app
+        // Calculate uploads directory (theme_root -> themes -> app -> uploads)
+        // $theme_root = /path/to/web/app/themes/simple-city
+        // We need: /path/to/web/app/uploads
+        $app_dir = dirname(dirname($theme_root)); // simple-city → themes → app
         $uploads_dir = $app_dir . '/uploads/ai-processed-images';
 
         // Build command parts with proper escaping
