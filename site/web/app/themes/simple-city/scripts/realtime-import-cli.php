@@ -8,34 +8,17 @@
  */
 
 // Get supplier from command line
-if ($argc < 2) {
-    echo "Usage: php realtime-import-cli.php <supplier>\n";
+// When run via WP-CLI eval-file, arguments are in $args (not $argv)
+if (!empty($args)) {
+    $supplier = $args[0];
+} elseif (!empty($argv[1])) {
+    $supplier = $argv[1];
+} else {
+    echo "Usage: wp eval-file realtime-import-cli.php <supplier>\n";
     exit(1);
 }
 
-$supplier = $argv[1];
-
-// Bootstrap WordPress
-define('WP_USE_THEMES', false);
-
-// Find WordPress root (go up from theme/scripts to web/wp)
-// __DIR__ = simple-city/scripts
-// dirname(__DIR__) = simple-city (theme root)
-// dirname(dirname(__DIR__)) = themes
-// dirname(dirname(dirname(__DIR__))) = app
-$theme_root = dirname(__DIR__);
-$themes_dir = dirname($theme_root); // themes directory
-$app_dir = dirname($themes_dir); // app directory
-$web_root = dirname($app_dir); // web directory
-$wp_load = $web_root . '/wp/wp-load.php';
-
-if (!file_exists($wp_load)) {
-    error_log("RealtimeImport CLI: WordPress not found at {$wp_load}");
-    exit(1);
-}
-
-require_once $wp_load;
-
+// WordPress is bootstrapped by WP-CLI (eval-file context)
 // Load importer classes
 require_once $theme_root . '/app/Importers/XMLDownloader.php';
 require_once $theme_root . '/app/Importers/ProductSync.php';

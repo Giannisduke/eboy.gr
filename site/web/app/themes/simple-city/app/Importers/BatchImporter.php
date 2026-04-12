@@ -549,9 +549,16 @@ class BatchImporter {
         $script_path = $theme_root . '/scripts/realtime-import-cli.php';
         $log_file = $theme_root . '/scripts/xml_files/realtime-import.log';
 
-        // Build command to run realtime import in background
-        $php_bin = '/usr/bin/php';
-        $command = escapeshellarg($php_bin) . ' ' . escapeshellarg($script_path) . ' ' . escapeshellarg($supplier) .
+        // Build command to run realtime import in background via WP-CLI
+        // WP-CLI properly bootstraps WordPress in CLI context (Bedrock/Acorn compatible)
+        $web_root   = dirname(dirname(dirname(dirname(dirname($theme_root))))); // …/web
+        $project_root = dirname($web_root); // Bedrock project root (where .env lives)
+        $wp_cli_bin = trim(shell_exec('which wp') ?: '') ?: '/usr/local/bin/wp';
+        $command = 'cd ' . escapeshellarg($project_root) .
+                   ' && ' . escapeshellarg($wp_cli_bin) .
+                   ' eval-file ' . escapeshellarg($script_path) .
+                   ' ' . escapeshellarg($supplier) .
+                   ' --path=' . escapeshellarg($web_root . '/wp') .
                    ' > ' . escapeshellarg($log_file) . ' 2>&1 & echo $!';
 
         error_log("BatchImporter: Starting realtime import in background");
