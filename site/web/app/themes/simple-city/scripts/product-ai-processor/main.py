@@ -74,9 +74,9 @@ def load_config(language: str = 'el') -> dict:
     # Set models based on language
     if language == 'en':
         ai_model = os.getenv('AI_MODEL_EN', 'mistral:7b-instruct-q4_K_M')
-        translation_model = os.getenv('TRANSLATION_MODEL', 'llama-krikri')
+        translation_model = os.getenv('TRANSLATION_MODEL', 'ilsp/Llama-Krikri-8B-Instruct:latest')
     else:
-        ai_model = os.getenv('OLLAMA_MODEL', 'llama-krikri')
+        ai_model = os.getenv('OLLAMA_MODEL', 'ilsp/Llama-Krikri-8B-Instruct:latest')
         translation_model = None
 
     config = {
