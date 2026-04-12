@@ -79,7 +79,8 @@ class XMLProcessor:
         self.description_enhancer = DescriptionEnhancer(self.ai_client, self.prompts_config)
         self.tag_generator = TagGenerator(self.ai_client, self.prompts_config)
         self.category_mapper = CategoryMapper(self.ai_client, self.prompts_config, self.categories_config)
-        self.image_optimizer = ImageOptimizer(
+        skip_images = config.get('skip_images', False)
+        self.image_optimizer = None if skip_images else ImageOptimizer(
             output_dir=Path(config.get('image_output_dir', './output/images')),
             max_concurrent=config.get('max_concurrent_images', 5)
         )

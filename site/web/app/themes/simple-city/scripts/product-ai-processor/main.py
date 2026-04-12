@@ -236,6 +236,7 @@ def main():
         return 1
 
     # Initialize processor
+    config['skip_images'] = args.skip_images
     processor = XMLProcessor(config)
 
     # Load reviewed mappings if requested
