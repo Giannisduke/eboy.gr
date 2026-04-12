@@ -551,8 +551,9 @@ class BatchImporter {
 
         // Build command to run realtime import in background via WP-CLI
         // WP-CLI properly bootstraps WordPress in CLI context (Bedrock/Acorn compatible)
-        $web_root   = dirname(dirname(dirname(dirname(dirname($theme_root))))); // …/web
-        $project_root = dirname($web_root); // Bedrock project root (where .env lives)
+        // $theme_root = …/web/app/themes/simple-city
+        $web_root     = dirname(dirname(dirname($theme_root))); // simple-city → themes → app → web
+        $project_root = dirname($web_root); // web → release dir (where .env lives)
         $wp_cli_bin = trim(shell_exec('which wp') ?: '') ?: '/usr/local/bin/wp';
         $command = 'cd ' . escapeshellarg($project_root) .
                    ' && ' . escapeshellarg($wp_cli_bin) .
