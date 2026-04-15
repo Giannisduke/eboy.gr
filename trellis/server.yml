@@ -28,11 +28,10 @@
     - { role: netdata, tags: [netdata] }
     - { role: memcached, tags: [memcached], when: sites_using_memcached | count > 0 }
     - { role: redis, tags: [redis], when: sites_using_redis | count > 0 }
-    - { role: ollama, tags: [ollama], when: ollama_enabled | default(false) }
     - { role: nginx, tags: [nginx] }
     - { role: logrotate, tags: [logrotate] }
     - { role: composer, tags: [composer] }
     - { role: wp-cli, tags: [wp-cli] }
     - { role: letsencrypt, tags: [letsencrypt], when: sites_using_letsencrypt | count > 0 }
     - { role: wordpress-setup, tags: [wordpress, wordpress-setup, letsencrypt] }
-    - { role: ai-processor, tags: [ai-processor], when: ollama_enabled | default(false) }
+    - { role: ai-processor, tags: [ai-processor] }

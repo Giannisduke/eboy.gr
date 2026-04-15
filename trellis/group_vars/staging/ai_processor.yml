@@ -1,8 +1,8 @@
 # AI Processor - Staging Environment Configuration
 
 ai_processor:
-  # Ollama Configuration (use localhost since Ollama runs on same server)
-  ollama_host: "127.0.0.1"
+  # Ollama Configuration (Ubuntu GPU PC via Tailscale)
+  ollama_host: "100.86.192.95"
   ollama_port: 11434
 
   # AI Models (same as all/ai_processor.yml)

@@ -1,12 +1,8 @@
 # AI Processor - Development Environment Configuration
 
-# Ollama configuration for development
-# Override to use remote Lima VM Ollama server
-ollama_enabled: false  # Don't install Ollama on dev VM (use remote)
-
 ai_processor:
-  # Use remote Ollama server (Lima VM) in development
-  ollama_host: "192.168.5.2"
+  # Ollama Configuration (Ubuntu GPU PC via Tailscale)
+  ollama_host: "100.86.192.95"
   ollama_port: 11434
 
   # WooCommerce Auto-Import (Development)

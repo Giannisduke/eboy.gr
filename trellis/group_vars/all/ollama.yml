@@ -1,7 +1,7 @@
 # Ollama AI Model Server Configuration
-# Installed on all environments when ollama_enabled is true
+# Ollama runs on the Ubuntu GPU PC (100.86.192.95) — not installed on the server.
 
-ollama_enabled: true
+ollama_enabled: false
 ollama_version: "latest"
 
 # Service configuration

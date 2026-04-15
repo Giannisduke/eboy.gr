@@ -33,9 +33,4 @@ mysql_users:
     password: "{{ vault_mysql_simple_city_password }}"
     priv: "eboy_gr_staging.*:ALL"
 
-# Ollama AI Configuration
-ollama_enabled: true
-ollama_models:
-  - "ilsp/llama-krikri-8b-instruct"  # ~6GB RAM, ILSP Greek language model
-
 
