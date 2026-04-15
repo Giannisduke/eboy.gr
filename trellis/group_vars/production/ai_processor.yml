@@ -6,9 +6,9 @@ ai_processor:
   ollama_port: 11434
 
   # AI Models (same as all/ai_processor.yml)
-  ai_model_greek: "ilsp/llama-krikri-8b-instruct:latest"
+  ai_model_greek: "ilsp/Llama-Krikri-8B-Instruct:latest"
   ai_model_english: "llama3.1:8b"
-  translation_model: "ilsp/llama-krikri-8b-instruct:latest"
+  translation_model: "ilsp/Llama-Krikri-8B-Instruct:latest"
 
   # Processing Configuration
   batch_size: 50
