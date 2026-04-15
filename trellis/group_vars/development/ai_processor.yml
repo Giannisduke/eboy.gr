@@ -10,3 +10,10 @@ ai_processor:
   woo_url: "{{ vault_woo_dev_url }}"
   woo_consumer_key: "{{ vault_woo_dev_consumer_key }}"
   woo_consumer_secret: "{{ vault_woo_dev_consumer_secret }}"
+
+  # Image Background Removal (rembg via Ubuntu GPU PC)
+  remove_bg: true
+  bg_threshold: 230
+  rembg_host: "100.86.192.95"
+  rembg_port: 7000
+  rembg_model: "birefnet-general"
