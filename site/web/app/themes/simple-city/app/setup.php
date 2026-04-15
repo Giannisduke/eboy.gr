@@ -6,6 +6,12 @@
 
 namespace App;
 
+// Allow WebP uploads (used by product image background removal).
+add_filter('upload_mimes', function ($mimes) {
+    $mimes['webp'] = 'image/webp';
+    return $mimes;
+});
+
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Vite;
 

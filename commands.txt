@@ -17,7 +17,7 @@ RELEASE=$(readlink /srv/www/eboy.gr/current) && \
 
   cat /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/ai-enhancement.log
 
-  tail -50 /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/ai-enhancement.log
+  tail -50 /srv/www/eboy.test/shared/web/app/themes/simple-city/scripts/xml_files/ai-enhancement.log
 
   sudo tail -30 /var/log/php8.3-fpm.log 2>/dev/null || sudo tail -30 /var/log/php8.2-fpm.log 2>/dev/null || ls /var/log/php*
 
@@ -25,4 +25,21 @@ RELEASE=$(readlink /srv/www/eboy.gr/current) && \
 
  cat /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/realtime-import.log
 
- tail -50 /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/ai-enhancement.log
+ tail -50 /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/
+
+
+ ~/.venvs/product-ai-processor/bin/python3 -c "from dotenv import load_dotenv; from pathlib import Path; import os; load_dotenv(Path('.env.local')); print('REMOVE_BG:', os.getenv('REMOVE_BG')); print('remove_bg bool:', os.getenv('REMOVE_BG','false').lower()=='true')"
+
+sudo tee /etc/systemd/system/rembg.service > /dev/null << 'EOF'                                                                      
+[Unit]                                                                                                                               
+Description=rembg background removal server                                                                                          
+After=network.target
+[Service]  
+User=giannisduke                                                                                                                     
+ExecStart=/home/giannisduke/.venvs/rembg/bin/rembg s --host 0.0.0.0 --port 7000
+Restart=on-failure                                                                                                                   
+StandardOutput=journal
+StandardError=journal                  
+[Install]
+WantedBy=multi-user.target
+EOF

@@ -13,6 +13,7 @@
       - zlib1g-dev
       - libwebp-dev
       - libpng-dev
+      - libgomp1
     state: present
     update_cache: yes
     cache_valid_time: 3600

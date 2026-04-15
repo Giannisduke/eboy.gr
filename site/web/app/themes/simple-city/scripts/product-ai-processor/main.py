@@ -193,7 +193,7 @@ def main():
     parser.add_argument(
         '--bg-threshold',
         type=int,
-        default=240,
+        default=230,
         help='RGB threshold (0-255) for white background detection (default: 240)'
     )
 

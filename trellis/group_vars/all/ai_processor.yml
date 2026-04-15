@@ -21,3 +21,10 @@ ai_processor:
 
   # WooCommerce Auto-Import (per environment)
   woo_auto_import: false  # Override in environment-specific files
+
+  # Image Background Removal (rembg)
+  remove_bg: true
+  bg_threshold: 230
+  rembg_host: "100.86.192.95"  # Ubuntu GPU PC via Tailscale
+  rembg_port: 7000
+  rembg_model: "birefnet-general"

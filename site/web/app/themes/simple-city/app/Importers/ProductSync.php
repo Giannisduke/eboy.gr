@@ -265,23 +265,26 @@ class ProductSync {
     }
 
     /**
-     * Set product images
+     * Set product images.
+     * Downloads all images, batch-removes backgrounds via rembg, then sideloads.
      */
     private function setProductImages($product_id, NormalizedProduct $product) {
         if (empty($product->main_image_url)) {
             return;
         }
 
-        $gallery_urls    = $product->gallery_image_urls ?? [];
-        $featured_url    = $product->main_image_url;
-        $final_gallery   = $gallery_urls;
+        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once(ABSPATH . 'wp-admin/includes/media.php');
+        require_once(ABSPATH . 'wp-admin/includes/image.php');
 
+        $gallery_urls  = $product->gallery_image_urls ?? [];
+        $featured_url  = $product->main_image_url;
+        $final_gallery = $gallery_urls;
+
+        // Swap featured ↔ gallery[0] if main is a room/lifestyle photo and gallery[0]
+        // is the clean white-background product shot.
         $has_image_lib = function_exists('imagecreatefromjpeg') || class_exists('Imagick');
-        error_log("setProductImages: product={$product_id} gallery_count=" . count($gallery_urls) . " gd=" . (function_exists('imagecreatefromjpeg') ? 'yes' : 'no') . " imagick=" . (class_exists('Imagick') ? 'yes' : 'no'));
-
-        // Check white background using temp files BEFORE attaching to WordPress
         if (!empty($gallery_urls) && $has_image_lib) {
-            require_once(ABSPATH . 'wp-admin/includes/file.php');
             $main_tmp = download_url($product->main_image_url);
             if (!is_wp_error($main_tmp)) {
                 $main_is_white = $this->hasWhiteBackground($main_tmp);
@@ -294,39 +297,164 @@ class ProductSync {
                         @unlink($gallery0_tmp);
 
                         if ($gallery0_is_white) {
-                            // Swap: gallery[0] → featured, main → first in gallery
                             $featured_url  = $gallery_urls[0];
                             $final_gallery = array_slice($gallery_urls, 1);
                             array_unshift($final_gallery, $product->main_image_url);
-                            error_log("ProductSync: Swapped images for product {$product_id}: gallery[0] is white bg, main is room photo");
-                        } else {
-                            error_log("ProductSync: No swap for product {$product_id}: main=NOT white, gallery[0]=NOT white");
+                            error_log("ProductSync: Swapped images for product {$product_id}: gallery[0] → featured");
                         }
                     }
-                } else {
-                    error_log("ProductSync: No swap for product {$product_id}: main IS white background");
                 }
             }
         }
 
-        // Now attach images with correct order
-        $featured_id = $this->downloadAndAttachImage($featured_url, $product_id);
+        // Download all new images (skip already-imported ones)
+        $all_urls    = array_unique(array_merge([$featured_url], $final_gallery));
+        $url_to_temp = []; // url => temp_path
+
+        foreach ($all_urls as $url) {
+            if ($this->findImageByURL($url)) {
+                continue;
+            }
+            $tmp = download_url($url);
+            if (!is_wp_error($tmp)) {
+                $url_to_temp[$url] = $tmp;
+            } else {
+                error_log("ProductSync: Failed to download {$url}: " . $tmp->get_error_message());
+            }
+        }
+
+        // Batch AI background removal (rembg — model loads once per product)
+        $url_to_processed = $this->batchRemoveBackgrounds($url_to_temp);
+
+        // Sideload featured image
+        $featured_id = $this->sideloadProductImage($featured_url, $url_to_processed, $url_to_temp, $product_id);
         if ($featured_id) {
             set_post_thumbnail($product_id, $featured_id);
         }
 
+        // Sideload gallery images
         if (!empty($final_gallery)) {
             $gallery_ids = [];
-            foreach ($final_gallery as $image_url) {
-                $image_id = $this->downloadAndAttachImage($image_url, $product_id);
-                if ($image_id) {
-                    $gallery_ids[] = $image_id;
+            foreach ($final_gallery as $url) {
+                $id = $this->sideloadProductImage($url, $url_to_processed, $url_to_temp, $product_id);
+                if ($id) {
+                    $gallery_ids[] = $id;
                 }
             }
             if (!empty($gallery_ids)) {
                 update_post_meta($product_id, '_product_image_gallery', implode(',', $gallery_ids));
             }
         }
+
+        // Cleanup: original temp files (media_handle_sideload moves them, so @unlink is a no-op on success)
+        foreach ($url_to_temp as $tmp) {
+            @unlink($tmp);
+        }
+        // Cleanup any rembg outputs not consumed (e.g. sideload failed)
+        foreach ($url_to_processed as $out) {
+            @unlink($out);
+        }
+    }
+
+    /**
+     * Batch remove backgrounds using rembg (Python, U2Net model).
+     * Calls remove_bg_batch.py once for all images; model loads a single time.
+     *
+     * @param  array $url_to_temp  url => temp_file_path
+     * @return array               url => rembg_webp_path (only for successful results)
+     */
+    private function batchRemoveBackgrounds(array $url_to_temp): array
+    {
+        $dbg = '/tmp/rembg_php.log';
+        $log = function(string $msg) use ($dbg) {
+            file_put_contents($dbg, date('H:i:s') . " {$msg}\n", FILE_APPEND);
+        };
+
+        if (empty($url_to_temp)) {
+            return [];
+        }
+
+        $script_dir = get_template_directory() . '/scripts/product-ai-processor';
+        $wrapper    = $script_dir . '/rembg_run.sh';
+
+        // rembg_run.sh is inside the virtiofs mount so file_exists() works even
+        // with PHP-FPM open_basedir. The wrapper itself locates the correct Python
+        // at runtime (exec() is not subject to open_basedir).
+        $log("wrapper=" . (file_exists($wrapper) ? 'OK' : 'MISSING') . " script_dir={$script_dir}");
+
+        if (!file_exists($wrapper)) {
+            error_log("ProductSync: rembg_run.sh not found at {$wrapper}");
+            return [];
+        }
+
+        // Build input/output pairs
+        $output_map = []; // url => output_webp_path
+        $all_args   = [];
+        foreach ($url_to_temp as $url => $temp_path) {
+            $out = sys_get_temp_dir() . '/rembg_' . uniqid() . '.webp';
+            $output_map[$url] = $out;
+            $all_args[] = escapeshellarg($temp_path);
+            $all_args[] = escapeshellarg($out);
+        }
+
+        $command = sprintf(
+            'sh %s %s',
+            escapeshellarg($wrapper),
+            implode(' ', $all_args)
+        );
+
+        $log("CMD: {$command}");
+        exec($command, $output_lines, $return_code);
+        $log("exit={$return_code} output=" . implode(' | ', $output_lines));
+
+        if ($return_code !== 0) {
+            error_log("ProductSync: batchRemoveBackgrounds failed (exit {$return_code}): " . implode(' ', $output_lines));
+            return [];
+        }
+
+        // Return only URLs where a non-empty WebP was produced
+        $result = [];
+        foreach ($output_map as $url => $out) {
+            if (file_exists($out) && filesize($out) > 0) {
+                $result[$url] = $out;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Sideload a single product image (rembg WebP if available, else original).
+     * Returns the attachment ID or false on failure.
+     */
+    private function sideloadProductImage(string $url, array $url_to_processed, array $url_to_temp, int $product_id)
+    {
+        $existing_id = $this->findImageByURL($url);
+        if ($existing_id) {
+            return $existing_id;
+        }
+
+        // Prefer rembg-processed WebP; fall back to original temp
+        if (isset($url_to_processed[$url]) && file_exists($url_to_processed[$url])) {
+            $file_path = $url_to_processed[$url];
+            $filename  = preg_replace('/\.[^.]+$/', '.webp', basename($url));
+        } elseif (isset($url_to_temp[$url]) && file_exists($url_to_temp[$url])) {
+            $file_path = $url_to_temp[$url];
+            $filename  = basename($url);
+        } else {
+            return false;
+        }
+
+        $file     = ['name' => $filename, 'tmp_name' => $file_path];
+        $image_id = media_handle_sideload($file, $product_id);
+
+        if (is_wp_error($image_id)) {
+            error_log("ProductSync: Failed to sideload {$url}: " . $image_id->get_error_message());
+            return false;
+        }
+
+        update_post_meta($image_id, '_source_url', $url);
+        return $image_id;
     }
 
     /**
@@ -444,46 +572,6 @@ class ProductSync {
         $result = $white_count >= 6;
         error_log("hasWhiteBackground(gd) [{$file_path}]: {$white_count}/8 → " . ($result ? 'WHITE' : 'NOT WHITE') . " | " . implode(' ', $pixel_log));
         return $result;
-    }
-
-    /**
-     * Download and attach image
-     */
-    private function downloadAndAttachImage($image_url, $product_id) {
-        // Check if image already exists
-        $existing_id = $this->findImageByURL($image_url);
-        if ($existing_id) {
-            return $existing_id;
-        }
-
-        require_once(ABSPATH . 'wp-admin/includes/file.php');
-        require_once(ABSPATH . 'wp-admin/includes/media.php');
-        require_once(ABSPATH . 'wp-admin/includes/image.php');
-
-        $temp_file = download_url($image_url);
-
-        if (is_wp_error($temp_file)) {
-            error_log("Failed to download image {$image_url}: " . $temp_file->get_error_message());
-            return false;
-        }
-
-        $file = [
-            'name' => basename($image_url),
-            'tmp_name' => $temp_file
-        ];
-
-        $image_id = media_handle_sideload($file, $product_id);
-
-        if (is_wp_error($image_id)) {
-            @unlink($temp_file);
-            error_log("Failed to sideload image {$image_url}: " . $image_id->get_error_message());
-            return false;
-        }
-
-        // Store URL for future reference
-        update_post_meta($image_id, '_source_url', $image_url);
-
-        return $image_id;
     }
 
     /**

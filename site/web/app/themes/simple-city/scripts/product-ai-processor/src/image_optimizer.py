@@ -10,8 +10,6 @@ from pathlib import Path
 from typing import Optional, List, Dict
 from PIL import Image
 import io
-import numpy as np
-from collections import deque
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 logger = logging.getLogger(__name__)
@@ -25,7 +23,7 @@ class ImageOptimizer:
         output_dir: Path,
         max_concurrent: int = 5,
         remove_bg: bool = False,
-        bg_threshold: int = 240,
+        bg_threshold: int = 230,
     ):
         self.output_dir = Path(output_dir)
         self.max_concurrent = max_concurrent
@@ -110,6 +108,7 @@ class ImageOptimizer:
         Returns:
             True if the image likely has a white background
         """
+        import numpy as np
         rgba = img.convert('RGBA')
         data = np.array(rgba, dtype=np.uint8)
         h, w = data.shape[:2]
@@ -141,6 +140,8 @@ class ImageOptimizer:
         Returns:
             RGBA PIL Image with background set to transparent.
         """
+        import numpy as np
+        from collections import deque
         rgba = img.convert('RGBA')
         data = np.array(rgba, dtype=np.uint8)
         h, w = data.shape[:2]
@@ -228,16 +229,18 @@ class ImageOptimizer:
             bg_removed = False
 
             if self.remove_bg:
-                # Ensure we have RGBA for detection
+                import numpy as np
                 img_rgba = img.convert('RGBA')
-
-                if self._detect_white_background(img_rgba):
-                    img = self._remove_white_background(img_rgba)
+                processed = self._remove_white_background(img_rgba)
+                # BFS is self-limiting: if no white edges exist nothing changes.
+                # Check if any pixels were actually made transparent.
+                if np.any(np.array(processed)[:, :, 3] == 0):
+                    img = processed
                     bg_removed = True
-                    logger.info(f"White background removed: {url}")
+                    logger.info(f"Background removed: {url}")
                 else:
-                    logger.debug(f"No white background detected, skipping removal: {url}")
-                    img = img_rgba  # Still RGBA, will be composited later if needed
+                    logger.info(f"No white background found: {url}")
+                    img = img_rgba  # Keep RGBA, composited to RGB below
 
             # ── Convert to RGB when NOT removing background ───────────────────
             if not bg_removed:
