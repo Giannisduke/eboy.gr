@@ -79,6 +79,13 @@
   when: ai_processor_code.stat.exists
   tags: [ai-processor, venv]
 
+- name: Remove existing venv directory from current release (if not already a symlink)
+  file:
+    path: "{{ ai_site_root }}/current/web/app/themes/simple-city/scripts/product-ai-processor/venv"
+    state: absent
+  when: ai_processor_code.stat.exists
+  tags: [ai-processor, venv]
+
 - name: Symlink venv into current release
   file:
     src: "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/venv"
