@@ -2,8 +2,14 @@
 # AI Product Processor Ansible Tasks
 #
 # Path conventions (Trellis):
-#   {{ www_root }}/current/...  — current release (symlink); code lives here
-#   {{ www_root }}/shared/...   — persistent across deploys; .env, logs, xml live here
+#   site_root = {{ www_root }}/{{ site_key }}  (e.g. /srv/www/eboy.gr)
+#   site_root/current/...  — current release (symlink); code lives here
+#   site_root/shared/...   — persistent across deploys; .env, logs, xml live here
+
+- name: Set site root from wordpress_sites
+  set_fact:
+    ai_site_root: "{{ www_root }}/{{ wordpress_sites.keys() | first }}"
+  tags: [ai-processor, env, venv, dependencies, packages]
 
 - name: Install Python prerequisites
   apt:
@@ -31,19 +37,19 @@
     group: "{{ web_group }}"
     mode: '0755'
   loop:
-    - "{{ www_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor"
-    - "{{ www_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/logs"
-    - "{{ www_root }}/shared/web/app/themes/simple-city/scripts/xml_files"
-    - "{{ www_root }}/shared/web/app/themes/simple-city/scripts/xml_files/en"
-    - "{{ www_root }}/shared/web/app/themes/simple-city/scripts/xml_files/gr"
-    - "{{ www_root }}/shared/web/app/themes/simple-city/scripts/xml_files/enhanced"
-    - "{{ www_root }}/shared/web/app/uploads/ai-processed-images"
+    - "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor"
+    - "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/logs"
+    - "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/xml_files"
+    - "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/xml_files/en"
+    - "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/xml_files/gr"
+    - "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/xml_files/enhanced"
+    - "{{ ai_site_root }}/shared/web/app/uploads/ai-processed-images"
   tags: [ai-processor]
 
 - name: Deploy .env file for AI processor (shared — survives deploys)
   template:
     src: env.j2
-    dest: "{{ www_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/.env"
+    dest: "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/.env"
     owner: "{{ web_user }}"
     group: "{{ web_group }}"
     mode: '0640'
@@ -51,8 +57,8 @@
 
 - name: Symlink .env into current release
   file:
-    src: "{{ www_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/.env"
-    dest: "{{ www_root }}/current/web/app/themes/simple-city/scripts/product-ai-processor/.env"
+    src: "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/.env"
+    dest: "{{ ai_site_root }}/current/web/app/themes/simple-city/scripts/product-ai-processor/.env"
     state: link
     owner: "{{ web_user }}"
     group: "{{ web_group }}"
@@ -61,22 +67,22 @@
 
 - name: Check if AI processor code is deployed
   stat:
-    path: "{{ www_root }}/current/web/app/themes/simple-city/scripts/product-ai-processor/requirements.txt"
+    path: "{{ ai_site_root }}/current/web/app/themes/simple-city/scripts/product-ai-processor/requirements.txt"
   register: ai_processor_code
   tags: [ai-processor, venv, dependencies]
 
 - name: Ensure Python venv exists (in shared — persists across deploys)
-  command: python3 -m venv "{{ www_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/venv"
+  command: python3 -m venv "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/venv"
   args:
-    creates: "{{ www_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/venv/bin/python3"
+    creates: "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/venv/bin/python3"
   become_user: "{{ web_user }}"
   when: ai_processor_code.stat.exists
   tags: [ai-processor, venv]
 
 - name: Symlink venv into current release
   file:
-    src: "{{ www_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/venv"
-    dest: "{{ www_root }}/current/web/app/themes/simple-city/scripts/product-ai-processor/venv"
+    src: "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/venv"
+    dest: "{{ ai_site_root }}/current/web/app/themes/simple-city/scripts/product-ai-processor/venv"
     state: link
     owner: "{{ web_user }}"
     group: "{{ web_group }}"
@@ -86,8 +92,8 @@
 
 - name: Install Python dependencies
   pip:
-    requirements: "{{ www_root }}/current/web/app/themes/simple-city/scripts/product-ai-processor/requirements.txt"
-    virtualenv: "{{ www_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/venv"
+    requirements: "{{ ai_site_root }}/current/web/app/themes/simple-city/scripts/product-ai-processor/requirements.txt"
+    virtualenv: "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/venv"
     virtualenv_command: python3 -m venv
   become_user: "{{ web_user }}"
   when: ai_processor_code.stat.exists
