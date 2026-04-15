@@ -78,16 +78,20 @@ const placeholderImage = computed(() => {
 
 .product-image {
   width: 100%;
-  aspect-ratio: 1;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .product-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform 0.3s ease;
+  padding: 0.5rem;
 }
 
 .product-card:hover .product-image img {

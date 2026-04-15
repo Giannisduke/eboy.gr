@@ -98,7 +98,10 @@ def load_config(language: str = 'el') -> dict:
         'woo_auto_import': os.getenv('WOO_AUTO_IMPORT', 'false').lower() == 'true',
         'woo_url': os.getenv('WOO_URL', ''),
         'woo_consumer_key': os.getenv('WOO_CONSUMER_KEY', ''),
-        'woo_consumer_secret': os.getenv('WOO_CONSUMER_SECRET', '')
+        'woo_consumer_secret': os.getenv('WOO_CONSUMER_SECRET', ''),
+        # Image background removal
+        'remove_bg': os.getenv('REMOVE_BG', 'false').lower() == 'true',
+        'bg_threshold': int(os.getenv('BG_THRESHOLD', 240))
     }
 
     return config
@@ -182,6 +185,19 @@ def main():
     )
 
     parser.add_argument(
+        '--remove-bg',
+        action='store_true',
+        help='Remove white backgrounds from product images and save as transparent WebP'
+    )
+
+    parser.add_argument(
+        '--bg-threshold',
+        type=int,
+        default=240,
+        help='RGB threshold (0-255) for white background detection (default: 240)'
+    )
+
+    parser.add_argument(
         '--extend-from-backup',
         action='store_true',
         help='Extend from backup file (copy existing products as-is, add new ones)'
@@ -237,6 +253,9 @@ def main():
 
     # Initialize processor
     config['skip_images'] = args.skip_images
+    if args.remove_bg:
+        config['remove_bg'] = True
+    config['bg_threshold'] = args.bg_threshold
     processor = XMLProcessor(config)
 
     # Load reviewed mappings if requested

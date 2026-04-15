@@ -82,7 +82,9 @@ class XMLProcessor:
         skip_images = config.get('skip_images', False)
         self.image_optimizer = None if skip_images else ImageOptimizer(
             output_dir=Path(config.get('image_output_dir', './output/images')),
-            max_concurrent=config.get('max_concurrent_images', 5)
+            max_concurrent=config.get('max_concurrent_images', 5),
+            remove_bg=config.get('remove_bg', False),
+            bg_threshold=config.get('bg_threshold', 240),
         )
 
         # Processing stats

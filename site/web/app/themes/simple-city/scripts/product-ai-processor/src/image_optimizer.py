@@ -1,6 +1,7 @@
 """
 Image Optimizer
 Downloads and optimizes product images (resize, compress, WebP conversion).
+Supports white background removal with transparent WebP output.
 """
 
 import logging
@@ -9,6 +10,8 @@ from pathlib import Path
 from typing import Optional, List, Dict
 from PIL import Image
 import io
+import numpy as np
+from collections import deque
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 logger = logging.getLogger(__name__)
@@ -17,9 +20,17 @@ logger = logging.getLogger(__name__)
 class ImageOptimizer:
     """Handles image download and optimization"""
 
-    def __init__(self, output_dir: Path, max_concurrent: int = 5):
+    def __init__(
+        self,
+        output_dir: Path,
+        max_concurrent: int = 5,
+        remove_bg: bool = False,
+        bg_threshold: int = 240,
+    ):
         self.output_dir = Path(output_dir)
         self.max_concurrent = max_concurrent
+        self.remove_bg = remove_bg
+        self.bg_threshold = bg_threshold
 
         # Image sizes to generate
         self.sizes = {
@@ -31,17 +42,14 @@ class ImageOptimizer:
 
         # Quality settings
         self.jpeg_quality = 85
-        self.webp_quality = 85
+        self.webp_quality = 90  # Slightly higher for transparent WebP
 
         # Ensure output directory exists
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
     def process_product_images(self, product_data: Dict) -> Dict[str, List[str]]:
         """
-        Process all images for a product
-
-        Args:
-            product_data: Dict with 'sku', 'main_image', and 'images' (list of URLs)
+        Process all images for a product.
 
         Returns:
             Dict with processed image paths: {'main': path, 'gallery': [paths]}
@@ -90,67 +98,215 @@ class ImageOptimizer:
         logger.info(f"Processed {len(result['gallery']) + (1 if result['main'] else 0)} images for SKU {sku}")
         return result
 
-    def _process_single_image(self, url: str, output_dir: Path, name_prefix: str) -> Optional[Path]:
+    def _detect_white_background(self, img: Image.Image) -> bool:
         """
-        Download and process a single image
+        Detect if an image has a predominantly white border/background.
+
+        Samples all border pixels and checks if >= 80% of them are near-white.
+
+        Args:
+            img: PIL Image (any mode — will be read as RGBA internally)
 
         Returns:
-            Path to the main processed image (large size) or None if failed
+            True if the image likely has a white background
+        """
+        rgba = img.convert('RGBA')
+        data = np.array(rgba, dtype=np.uint8)
+        h, w = data.shape[:2]
+
+        # Collect border pixel RGB values
+        top    = data[0, :, :3]
+        bottom = data[h - 1, :, :3]
+        left   = data[1:h - 1, 0, :3]
+        right  = data[1:h - 1, w - 1, :3]
+
+        border = np.concatenate([top, bottom, left, right], axis=0)
+
+        # A pixel is "white" when all RGB channels are >= threshold
+        white_count = np.sum(np.all(border >= self.bg_threshold, axis=1))
+        white_fraction = white_count / max(len(border), 1)
+
+        logger.debug(f"White background detection: {white_fraction:.2%} of border pixels are white")
+        return white_fraction >= 0.80
+
+    def _remove_white_background(self, img: Image.Image) -> Image.Image:
+        """
+        Remove white background using BFS flood-fill from all border pixels.
+
+        Only pixels that are:
+        - near-white (all RGB >= bg_threshold), AND
+        - reachable from the image border through a path of near-white pixels
+        are made transparent.
+
+        Returns:
+            RGBA PIL Image with background set to transparent.
+        """
+        rgba = img.convert('RGBA')
+        data = np.array(rgba, dtype=np.uint8)
+        h, w = data.shape[:2]
+
+        # Pre-compute white mask (vectorized — no Python loop)
+        white_mask = np.all(data[:, :, :3] >= self.bg_threshold, axis=2)
+
+        visited = np.zeros((h, w), dtype=bool)
+        bg_mask = np.zeros((h, w), dtype=bool)
+        queue = deque()
+
+        # Seed queue with ALL border pixels and mark as visited
+        for x in range(w):
+            if not visited[0, x]:
+                visited[0, x] = True
+                queue.append((0, x))
+            if not visited[h - 1, x]:
+                visited[h - 1, x] = True
+                queue.append((h - 1, x))
+        for y in range(1, h - 1):
+            if not visited[y, 0]:
+                visited[y, 0] = True
+                queue.append((y, 0))
+            if not visited[y, w - 1]:
+                visited[y, w - 1] = True
+                queue.append((y, w - 1))
+
+        # BFS: expand only through near-white pixels
+        while queue:
+            y, x = queue.popleft()
+            if not white_mask[y, x]:
+                continue  # Not white — stop expansion here
+
+            bg_mask[y, x] = True
+
+            for dy, dx in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+                ny, nx = y + dy, x + dx
+                if 0 <= ny < h and 0 <= nx < w and not visited[ny, nx]:
+                    visited[ny, nx] = True
+                    queue.append((ny, nx))
+
+        # Apply transparency to detected background
+        result_data = data.copy()
+        result_data[bg_mask, 3] = 0
+
+        transparent_pixels = int(np.sum(bg_mask))
+        logger.debug(f"Background removal: {transparent_pixels} pixels made transparent")
+
+        return Image.fromarray(result_data, 'RGBA')
+
+    def _process_single_image(
+        self, url: str, output_dir: Path, name_prefix: str
+    ) -> Optional[Path]:
+        """
+        Download and process a single image.
+
+        When remove_bg is enabled:
+        - Detects white backgrounds and removes them
+        - WebP output: saved as RGBA (transparent background)
+        - JPEG output: composited on white (JPEG has no alpha support)
+        - Returns the large WebP path (preserves transparency)
+
+        When remove_bg is disabled (default):
+        - Converts all formats to RGB (white fill for any existing transparency)
+        - Returns the large JPEG path
+
+        Returns:
+            Path to the primary processed image (large size) or None if failed.
         """
         try:
-            # Download image
+            # ── Download ──────────────────────────────────────────────────────
             logger.debug(f"Downloading image: {url}")
             response = requests.get(url, timeout=30, stream=True)
             response.raise_for_status()
 
-            # Load image
             image_data = io.BytesIO(response.content)
             img = Image.open(image_data)
+            img.load()  # Ensure data is fully read before BytesIO goes out of scope
 
-            # Convert RGBA to RGB if necessary
-            if img.mode in ('RGBA', 'LA', 'P'):
-                background = Image.new('RGB', img.size, (255, 255, 255))
-                if img.mode == 'P':
-                    img = img.convert('RGBA')
-                background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
-                img = background
-            elif img.mode != 'RGB':
-                img = img.convert('RGB')
+            # Normalize palette images early
+            if img.mode == 'P':
+                img = img.convert('RGBA')
 
-            # Validate minimum dimensions
+            # ── Background removal ────────────────────────────────────────────
+            bg_removed = False
+
+            if self.remove_bg:
+                # Ensure we have RGBA for detection
+                img_rgba = img.convert('RGBA')
+
+                if self._detect_white_background(img_rgba):
+                    img = self._remove_white_background(img_rgba)
+                    bg_removed = True
+                    logger.info(f"White background removed: {url}")
+                else:
+                    logger.debug(f"No white background detected, skipping removal: {url}")
+                    img = img_rgba  # Still RGBA, will be composited later if needed
+
+            # ── Convert to RGB when NOT removing background ───────────────────
+            if not bg_removed:
+                if img.mode in ('RGBA', 'LA'):
+                    background = Image.new('RGB', img.size, (255, 255, 255))
+                    alpha = img.split()[-1] if img.mode == 'RGBA' else None
+                    background.paste(img, mask=alpha)
+                    img = background
+                elif img.mode != 'RGB':
+                    img = img.convert('RGB')
+
+            # ── Validate minimum dimensions ───────────────────────────────────
             if img.width < 200 or img.height < 200:
-                logger.warning(f"Image too small: {img.width}x{img.height}")
+                logger.warning(f"Image too small: {img.width}x{img.height} — skipping")
                 return None
 
-            # Generate different sizes
-            saved_paths = []
+            # ── Generate sizes ────────────────────────────────────────────────
             for size_name, max_size in self.sizes.items():
                 resized_img = self._resize_image(img, max_size)
 
-                # Save JPEG
-                jpeg_path = output_dir / f"{name_prefix}_{size_name}.jpg"
-                resized_img.save(
-                    jpeg_path,
-                    'JPEG',
-                    quality=self.jpeg_quality,
-                    optimize=True,
-                    progressive=True
-                )
-                saved_paths.append(jpeg_path)
-
-                # Save WebP
                 webp_path = output_dir / f"{name_prefix}_{size_name}.webp"
-                resized_img.save(
-                    webp_path,
-                    'WEBP',
-                    quality=self.webp_quality,
-                    method=6  # Best compression
-                )
+                jpeg_path = output_dir / f"{name_prefix}_{size_name}.jpg"
 
-            # Return the large size JPEG path
-            large_path = output_dir / f"{name_prefix}_large.jpg"
-            logger.debug(f"Saved image: {large_path}")
-            return large_path
+                if bg_removed:
+                    # WebP: preserve RGBA transparency
+                    resized_img.save(
+                        webp_path,
+                        'WEBP',
+                        quality=self.webp_quality,
+                        method=6,
+                    )
+
+                    # JPEG: composite transparent pixels on white
+                    jpeg_base = Image.new('RGB', resized_img.size, (255, 255, 255))
+                    jpeg_base.paste(resized_img, mask=resized_img.split()[3])
+                    jpeg_base.save(
+                        jpeg_path,
+                        'JPEG',
+                        quality=self.jpeg_quality,
+                        optimize=True,
+                        progressive=True,
+                    )
+                else:
+                    # JPEG (RGB, no transparency)
+                    resized_img.save(
+                        jpeg_path,
+                        'JPEG',
+                        quality=self.jpeg_quality,
+                        optimize=True,
+                        progressive=True,
+                    )
+
+                    # WebP (RGB)
+                    resized_img.save(
+                        webp_path,
+                        'WEBP',
+                        quality=self.webp_quality,
+                        method=6,
+                    )
+
+            # ── Return primary path ───────────────────────────────────────────
+            # When bg was removed, prefer the transparent WebP as the canonical path
+            if bg_removed:
+                primary_path = output_dir / f"{name_prefix}_large.webp"
+            else:
+                primary_path = output_dir / f"{name_prefix}_large.jpg"
+
+            logger.debug(f"Saved image: {primary_path}")
+            return primary_path
 
         except requests.RequestException as e:
             logger.error(f"Failed to download image {url}: {str(e)}")
@@ -161,29 +317,15 @@ class ImageOptimizer:
 
     def _resize_image(self, img: Image.Image, max_size: tuple) -> Image.Image:
         """
-        Resize image while maintaining aspect ratio
-
-        Args:
-            img: PIL Image object
-            max_size: (max_width, max_height)
-
-        Returns:
-            Resized PIL Image
+        Resize image while maintaining aspect ratio.
+        Uses thumbnail (in-place shrink) — never enlarges.
         """
-        # Calculate new size maintaining aspect ratio
         img.thumbnail(max_size, Image.Resampling.LANCZOS)
         return img
 
     def download_single_image(self, url: str, output_path: Path) -> bool:
         """
-        Simple download for a single image (used for testing)
-
-        Args:
-            url: Image URL
-            output_path: Where to save
-
-        Returns:
-            True if successful
+        Simple download for a single image (used for testing).
         """
         try:
             response = requests.get(url, timeout=30)
@@ -191,7 +333,6 @@ class ImageOptimizer:
 
             img = Image.open(io.BytesIO(response.content))
 
-            # Convert to RGB if needed
             if img.mode != 'RGB':
                 if img.mode in ('RGBA', 'LA'):
                     background = Image.new('RGB', img.size, (255, 255, 255))
@@ -200,11 +341,9 @@ class ImageOptimizer:
                 else:
                     img = img.convert('RGB')
 
-            # Resize if too large
             if img.width > 1200 or img.height > 1200:
                 img.thumbnail((1200, 1200), Image.Resampling.LANCZOS)
 
-            # Save
             output_path.parent.mkdir(parents=True, exist_ok=True)
             img.save(output_path, 'JPEG', quality=self.jpeg_quality, optimize=True)
 
