@@ -18,6 +18,10 @@ if (!empty($args)) {
     exit(1);
 }
 
+// Resolve theme root from this file's location:
+// realtime-import-cli.php lives in scripts/ → parent is theme root
+$theme_root = dirname(dirname(__FILE__));
+
 // WordPress is bootstrapped by WP-CLI (eval-file context)
 // Load importer classes
 require_once $theme_root . '/app/Importers/XMLDownloader.php';

@@ -318,6 +318,7 @@ class BatchImporter {
             // Initialize active SKUs list on first batch
             if ($offset === 0) {
                 delete_transient($active_skus_key);
+                delete_transient($cache_key); // Clear any stale parsed products from a previous run
                 error_log("BatchImporter: Starting new import session for {$supplier}");
             }
 

@@ -43,3 +43,24 @@ StandardError=journal
 [Install]
 WantedBy=multi-user.target
 EOF
+
+
+curl -o /tmp/test_product.jpg https://libertab2b.gr/media/catalog/product/0/3/035239-QhK7E-first-_1.jpg && \
+  REMBG_HOST=100.86.192.95 REMBG_PORT=7000 \
+    bash /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/product-ai-processor/rembg_run.sh \
+    /tmp/test_product.jpg /tmp/test_output.webp && \
+  ls -lh /tmp/test_output.webp && file /tmp/test_output.webp
+
+
+  grep -A 20 "<model>056-000003</model>" /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/enhanced/pakoworld-enhanced.xml | head -25
+
+  grep -A 5 "<model>056-000002</model>" /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/enhanced/pakoworld-enhanced.xml | head -10
+
+
+for sku in 056-000003 123-000008 049-000002 142-000001; do                                                                                                         
+  echo "=== $sku ===";                                                                                                                                             
+  grep -A 15 "<model>$sku</model>" /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/enhanced/pakoworld-enhanced.xml | grep -E "model|retail_price|net_price|name|stock";                                                                                                           
+done
+
+
+grep "<model>" /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/enhanced/pakoworld-enhanced.xml | sed 's/.*<model>\(.*\)<\/model>.*/\1/' | cat -n | tail -40

@@ -33,10 +33,10 @@ class RealtimeImporter {
      */
     public function watchAndImport($supplier, $poll_interval = 5, $max_wait = 3600) {
         $theme_root = dirname(dirname(dirname(__FILE__)));
-        $xml_dir = $theme_root . '/xml_files/';
+        $xml_dir = $theme_root . '/scripts/xml_files/';
         $ready_file = $xml_dir . $supplier . '-ready.json';
         $progress_file = $xml_dir . $supplier . '-progress.json';
-        $enhanced_xml = $xml_dir . $supplier . '-enhanced.xml';
+        $enhanced_xml = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml';
 
         error_log("RealtimeImporter: Starting watch for {$supplier}");
         error_log("RealtimeImporter: Ready file: {$ready_file}");
