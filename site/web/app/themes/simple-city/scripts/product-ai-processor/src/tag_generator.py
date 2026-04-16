@@ -163,6 +163,26 @@ class TagGenerator:
         else:
             return str(attributes)[:200]
 
+    # Maps derivative/compound Greek forms to their canonical product type
+    _CANONICAL_TAGS = {
+        'τραπεζάκι': 'τραπέζι',
+        'τραπεζακι': 'τραπέζι',
+        'τραπεζαρία': 'τραπέζι',
+        'τραπεζαρια': 'τραπέζι',
+        'κρεβατοκάμαρα': 'κρεβάτι',
+        'κρεβατοκαμαρα': 'κρεβάτι',
+        'ντουλάπι': 'ντουλάπα',
+        'ντουλαπι': 'ντουλάπα',
+        'ντουλαπάκι': 'ντουλάπα',
+        'ντουλαπακι': 'ντουλάπα',
+        'καναπεδάκι': 'καναπές',
+        'καναπεδακι': 'καναπές',
+        'καρεκλάκι': 'καρέκλα',
+        'καρεκλακι': 'καρέκλα',
+        'συρταριέρα': 'συρταριέρα',
+        'συρταριερα': 'συρταριέρα',
+    }
+
     def _clean_tag(self, tag: str) -> str:
         """Clean and normalize a tag"""
         # Convert to lowercase
@@ -176,6 +196,9 @@ class TagGenerator:
 
         # Remove leading/trailing hyphens
         tag = tag.strip('- ')
+
+        # Map to canonical form if a derivative/compound was generated
+        tag = self._CANONICAL_TAGS.get(tag, tag)
 
         return tag
 
@@ -196,44 +219,3 @@ class TagGenerator:
             return False
 
         return True
-
-    def _filter_tags_with_ai(self, tags: List[str], product_title: str) -> List[str]:
-        """Use AI to filter tags down to exactly 3 best ones"""
-        tags_str = ", ".join(tags)
-
-        filter_prompt = f"""Από τα παρακάτω tags, διάλεξε ΑΚΡΙΒΩΣ 3 που είναι πιο σημαντικά για το προϊόν.
-
-Προϊόν: {product_title}
-Διαθέσιμα tags: {tags_str}
-
-ΚΑΝΟΝΕΣ:
-- Διάλεξε ΑΚΡΙΒΩΣ 3 tags
-- ΜΗΝ διαλέξεις χρώματα (oak, wenge, sonoma, κλπ)
-- ΜΗΝ διαλέξεις υλικά (rack, MDF, κλπ)
-- ΜΗΝ διαλέξεις σύνθετα tags (έπιπλα χωλ)
-- ΜΗΝ διαλέξεις επαναλήψεις (αν έχεις "παπουτσοθήκη" ΜΗΝ πάρεις και "παπουτσοθήκες")
-- Προτίμησε: τύπος προϊόντος, χώρος χρήσης, λειτουργία
-
-Απάντηση (ΜΟΝΟ 3 tags, comma-separated):"""
-
-        try:
-            ai_response = self.ai_client.generate(
-                prompt=filter_prompt,
-                temperature=0.3,
-                max_tokens=50
-            )
-
-            if ai_response:
-                filtered = self._parse_tag_response(ai_response)
-                # Ensure exactly 3
-                if len(filtered) >= 3:
-                    return filtered[:3]
-                elif len(filtered) > 0:
-                    return filtered
-
-            # Fallback: return first 3
-            return tags[:3]
-
-        except Exception as e:
-            logger.warning(f"AI filtering failed: {str(e)}, using first 3 tags")
-            return tags[:3]
