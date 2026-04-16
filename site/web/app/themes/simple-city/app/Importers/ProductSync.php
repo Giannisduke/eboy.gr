@@ -15,6 +15,13 @@ class ProductSync {
     private $sku_tracker = null;
     private $auto_track_enhancements = false;
 
+    // Attributes that should be global WooCommerce taxonomies (filterable via layered nav).
+    // Key = label as it appears in the XML, value = taxonomy slug (Latin, max 28 chars).
+    private $global_attribute_names = [
+        'χρώμα' => 'xroma',
+        'υλικό' => 'yliko',
+    ];
+
     public function __construct($auto_track_enhancements = false) {
         $this->markup_settings = get_option('xml_importer_markup', []);
         $this->auto_track_enhancements = $auto_track_enhancements;
@@ -674,20 +681,89 @@ class ProductSync {
         $attributes = [];
 
         foreach ($attrs_to_set as $attr) {
-            $attr_name = isset($attr['name']) ? $attr['name'] : (isset($attr['id']) ? 'Attribute ' . $attr['id'] : 'Attribute');
+            $attr_name  = isset($attr['name']) ? $attr['name'] : (isset($attr['id']) ? 'Attribute ' . $attr['id'] : 'Attribute');
             $attr_value = $attr['value'];
 
+            if (isset($this->global_attribute_names[$attr_name])) {
+                $wc_attr = $this->getOrCreateGlobalAttribute($attr_name, $this->global_attribute_names[$attr_name]);
+
+                if ($wc_attr) {
+                    [$attribute_id, $taxonomy] = $wc_attr;
+
+                    if (!taxonomy_exists($taxonomy)) {
+                        // Taxonomy not yet registered in this request — re-register
+                        register_taxonomy($taxonomy, ['product']);
+                    }
+
+                    $term = term_exists($attr_value, $taxonomy);
+                    if (!$term) {
+                        $term = wp_insert_term($attr_value, $taxonomy);
+                    }
+
+                    if (!is_wp_error($term)) {
+                        $term_id = is_array($term) ? (int) $term['term_id'] : (int) $term;
+                        wp_set_object_terms($product_id, [$term_id], $taxonomy, false);
+
+                        $attribute = new \WC_Product_Attribute();
+                        $attribute->set_id($attribute_id);
+                        $attribute->set_name($taxonomy);
+                        $attribute->set_options([$term_id]);
+                        $attribute->set_visible(true);
+                        $attribute->set_variation(false);
+                        $attributes[] = $attribute;
+                    } else {
+                        error_log("ProductSync: Failed to insert term '{$attr_value}' into {$taxonomy}: " . $term->get_error_message());
+                    }
+
+                    continue;
+                }
+                // Fall through to local attribute if global creation failed
+            }
+
+            // Local (non-filterable) attribute
             $attribute = new \WC_Product_Attribute();
             $attribute->set_name($attr_name);
             $attribute->set_options([$attr_value]);
             $attribute->set_visible(true);
             $attribute->set_variation(false);
-
             $attributes[] = $attribute;
         }
 
         $wc_product->set_attributes($attributes);
         $wc_product->save();
+    }
+
+    /**
+     * Get or create a global WooCommerce attribute taxonomy.
+     *
+     * @param string $label Human-readable label (e.g. "χρώμα")
+     * @param string $slug  Latin taxonomy slug (e.g. "xroma") — used only on creation
+     * @return array|null   [attribute_id, taxonomy_name] or null on failure
+     */
+    private function getOrCreateGlobalAttribute(string $label, string $slug): ?array {
+        foreach (wc_get_attribute_taxonomies() as $tax) {
+            if ($tax->attribute_label === $label) {
+                return [(int) $tax->attribute_id, wc_attribute_taxonomy_name($tax->attribute_name)];
+            }
+        }
+
+        $result = wc_create_attribute([
+            'name'         => $label,
+            'slug'         => $slug,
+            'type'         => 'select',
+            'order_by'     => 'menu_order',
+            'has_archives' => false,
+        ]);
+
+        if (is_wp_error($result)) {
+            error_log("ProductSync: Failed to create global attribute '{$label}': " . $result->get_error_message());
+            return null;
+        }
+
+        // Re-register taxonomies so the new one is available within this request
+        do_action('woocommerce_after_register_taxonomy');
+
+        return [(int) $result, wc_attribute_taxonomy_name($slug)];
     }
 
     /**

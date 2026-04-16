@@ -34,7 +34,14 @@ def process_remote(pairs: list, host: str, port: str):
 
     model = os.environ.get('REMBG_MODEL', 'birefnet-general')
     url = f"http://{host}:{port}/api/remove"
-    params = {'model': model, 'ppm': '1'}
+    params = {
+        'model': model,
+        'ppm': '1',   # post-process mask: smooths jagged edges
+        'am':  '1',   # alpha matting: refines foreground/background boundary
+        'af':  '240', # foreground threshold — high = only very bright areas are BG
+        'ab':  '10',  # background threshold — low = only very dark areas are definite BG
+        'ae':  '15',  # erode size for trimap generation
+    }
 
     for input_path, output_path in pairs:
         try:
@@ -65,7 +72,14 @@ def process_local(pairs: list, model: str):
             with open(input_path, 'rb') as f:
                 input_data = f.read()
 
-            output_data = remove(input_data, session=session)
+            output_data = remove(
+                input_data,
+                session=session,
+                alpha_matting=True,
+                alpha_matting_foreground_threshold=240,
+                alpha_matting_background_threshold=10,
+                alpha_matting_erode_size=15,
+            )
             img = Image.open(io.BytesIO(output_data))
             img.save(output_path, 'webp', quality=92)
             print(f"OK:{output_path}", flush=True)
