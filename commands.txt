@@ -19,6 +19,9 @@ RELEASE=$(readlink /srv/www/eboy.gr/current) && \
   ln -sfn /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/product-ai-processor/logs $RELEASE/web/app/themes/simple-city/scripts/product-ai-processor/logs && \
   ls -la $RELEASE/web/app/themes/simple-city/scripts/
 
+  καθάρισε τον stale transient:
+wp --url="https://sc-staging.eboy.gr/" eval 'delete_transient("xml_import_parsed_pakoworld"); echo "Cleared\n";'
+
 grep -c "<model>" /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/enhanced/pakoworld-enhanced.xml 2>/dev/null || echo "No enhanced XML"
 
  ~/.venvs/product-ai-processor/bin/python3 -c "from dotenv import load_dotenv; from pathlib import Path; import os; load_dotenv(Path('.env.local')); print('REMOVE_BG:', os.getenv('REMOVE_BG')); print('remove_bg bool:', os.getenv('REMOVE_BG','false').lower()=='true')"

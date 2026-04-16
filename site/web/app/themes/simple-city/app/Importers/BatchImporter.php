@@ -235,6 +235,12 @@ class BatchImporter {
         // Disable caching for low-memory environments (development)
         $use_cache = wp_get_environment_type() !== 'development';
         $cache_key = 'xml_import_parsed_' . $supplier;
+
+        // On first batch, always evict stale cache so we re-parse the (possibly new) XML
+        if ($offset === 0 && $use_cache) {
+            delete_transient($cache_key);
+        }
+
         $all_products = $use_cache ? get_transient($cache_key) : false;
 
         if ($all_products === false) {
@@ -318,7 +324,6 @@ class BatchImporter {
             // Initialize active SKUs list on first batch
             if ($offset === 0) {
                 delete_transient($active_skus_key);
-                delete_transient($cache_key); // Clear any stale parsed products from a previous run
                 error_log("BatchImporter: Starting new import session for {$supplier}");
             }
 
