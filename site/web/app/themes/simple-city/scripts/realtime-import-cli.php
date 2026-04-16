@@ -24,10 +24,12 @@ $theme_root = dirname(dirname(__FILE__));
 
 // WordPress is bootstrapped by WP-CLI (eval-file context)
 // Load importer classes
+require_once $theme_root . '/app/Importers/Models/NormalizedProduct.php';
 require_once $theme_root . '/app/Importers/XMLDownloader.php';
 require_once $theme_root . '/app/Importers/ProductSync.php';
 require_once $theme_root . '/app/Importers/SKUTracker.php';
 require_once $theme_root . '/app/Importers/RealtimeImporter.php';
+require_once $theme_root . '/app/Importers/Parsers/AbstractParser.php';
 require_once $theme_root . '/app/Importers/Parsers/PakoworldParser.php';
 require_once $theme_root . '/app/Importers/Parsers/B2BMarktParser.php';
 require_once $theme_root . '/app/Importers/Parsers/LibertaParser.php';

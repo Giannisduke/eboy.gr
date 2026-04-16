@@ -12,22 +12,6 @@ curl -s -X POST http://localhost:7000/api/remove -F "file=@/tmp/test_product.jpg
 
 scp giannisduke@100.86.192.95:/tmp/test_rmbg2.webp ~/Desktop/test_rmbg3.webp
 
-
-sudo tee /etc/systemd/system/rmbg2.service > /dev/null <<EOF                                                                                                                     
-[Unit]                                                                                                                                                                           
-Description=RMBG-2.0 Background Removal Server                                                                                                                                   
-After=network.target                          
-                                                                                                                                                                                   
-[Service]
-User=giannisduke                                                                                                                                                                 
-ExecStart=/home/giannisduke/.venvs/rmbg2/bin/python /mnt/KOINOS/import/tool/rmbg2_server.py
-Restart=on-failure                                                                         
-RestartSec=5                                                                                                                                                                     
-              
-[Install]                                                                                                                                                                        
-WantedBy=multi-user.target
-EOF
-
 RELEASE=$(readlink /srv/www/eboy.gr/current) && \
   rm -rf $RELEASE/web/app/themes/simple-city/scripts/xml_files && \
   ln -sfn /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files $RELEASE/web/app/themes/simple-city/scripts/xml_files && \
@@ -35,18 +19,7 @@ RELEASE=$(readlink /srv/www/eboy.gr/current) && \
   ln -sfn /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/product-ai-processor/logs $RELEASE/web/app/themes/simple-city/scripts/product-ai-processor/logs && \
   ls -la $RELEASE/web/app/themes/simple-city/scripts/
 
-  cat /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/ai-enhancement.log
-
-  tail -50 /srv/www/eboy.test/shared/web/app/themes/simple-city/scripts/xml_files/ai-enhancement.log
-
-  sudo tail -30 /var/log/php8.3-fpm.log 2>/dev/null || sudo tail -30 /var/log/php8.2-fpm.log 2>/dev/null || ls /var/log/php*
-
-  grep -c '<net_price>0</net_price>\|<net_price>0\.00</net_price>' /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/gr/pakoworld.xml
-
- cat /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/realtime-import.log
-
- tail -50 /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/
-
+grep -c "<model>" /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/enhanced/pakoworld-enhanced.xml 2>/dev/null || echo "No enhanced XML"
 
  ~/.venvs/product-ai-processor/bin/python3 -c "from dotenv import load_dotenv; from pathlib import Path; import os; load_dotenv(Path('.env.local')); print('REMOVE_BG:', os.getenv('REMOVE_BG')); print('remove_bg bool:', os.getenv('REMOVE_BG','false').lower()=='true')"
 
