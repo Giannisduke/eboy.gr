@@ -14,6 +14,7 @@
   become: yes
   roles:
     - { role: common, tags: [common] }
+    - { role: tailscale, tags: [tailscale], when: tailscale_enabled | default(false) }
     - { role: swapfile, swapfile_size: 1GB, swapfile_file: /swapfile, tags: [swapfile] }
     - { role: fail2ban, tags: [fail2ban] }
     - { role: ferm, tags: [ferm, letsencrypt] }

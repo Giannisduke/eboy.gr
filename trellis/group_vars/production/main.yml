@@ -4,6 +4,7 @@ timezone: Europe/Athens
 # PHP limits
 php_memory_limit: "768M"
 php_max_execution_time: 300
+nginx_fastcgi_read_timeout: 300
 php_upload_max_filesize: "64M"
 php_post_max_size: "64M"
 
