@@ -38,7 +38,7 @@ def process_remote(pairs: list, host: str, port: str):
         'model': model,
         'ppm': '1',   # post-process mask: smooths jagged edges
         'am':  '1',   # alpha matting: refines foreground/background boundary
-        'af':  '240', # foreground threshold — high = only very bright areas are BG
+        'af':  '230', # foreground threshold — high = only very bright areas are BG
         'ab':  '10',  # background threshold — low = only very dark areas are definite BG
         'ae':  '15',  # erode size for trimap generation
     }
