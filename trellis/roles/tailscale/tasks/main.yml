@@ -1,22 +1,22 @@
 ---
-- name: Remove legacy Tailscale apt repository entry
-  apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/tailscale-keyring.gpg] https://pkgs.tailscale.com/stable/ubuntu {{ ansible_distribution_release }} main"
-    state: absent
-    filename: tailscale
-
 - name: Download Tailscale GPG keyring
-  get_url:
-    url: "https://pkgs.tailscale.com/stable/ubuntu/{{ ansible_distribution_release }}.gpg"
-    dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
-    mode: '0644'
-    force: yes
+  shell: >
+    curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/{{ ansible_distribution_release }}.gpg
+    | tee /usr/share/keyrings/tailscale-archive-keyring.gpg > /dev/null
+  changed_when: false
 
-- name: Add Tailscale apt repository
-  apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/ubuntu {{ ansible_distribution_release }} main"
-    state: present
-    filename: tailscale
+- name: Remove legacy Tailscale sources file
+  file:
+    path: /etc/apt/sources.list.d/tailscale.list
+    state: absent
+
+- name: Write Tailscale apt sources file
+  copy:
+    dest: /etc/apt/sources.list.d/tailscale.list
+    content: |
+      # Tailscale packages for ubuntu {{ ansible_distribution_release }}
+      deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/ubuntu {{ ansible_distribution_release }} main
+    mode: '0644'
 
 - name: Install Tailscale
   apt:
