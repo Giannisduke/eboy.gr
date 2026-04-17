@@ -1163,11 +1163,12 @@ function get_shop_colors($request) {
         }
 
         $formatted_colors[] = [
-            'id' => $color->term_id,
-            'name' => $color->name,
-            'slug' => $color->slug,
-            'count' => $color->count,
+            'id'        => $color->term_id,
+            'name'      => $color->name,
+            'slug'      => $color->slug,
+            'count'     => $color->count,
             'available' => $is_available,
+            'hex'       => get_term_meta($color->term_id, 'color_hex', true) ?: '',
         ];
     }
 

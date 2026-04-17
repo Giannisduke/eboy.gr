@@ -108,7 +108,7 @@
                     disabled: color.available === false && !shopStore.filters.colors.includes(color.id)
                   }
                 ]"
-                :style="{ backgroundColor: color.slug }"
+                :style="{ backgroundColor: color.hex || color.slug }"
                 :title="color.name"
                 :disabled="color.available === false && !shopStore.filters.colors.includes(color.id)"
                 @click="toggleColor(color.id)"

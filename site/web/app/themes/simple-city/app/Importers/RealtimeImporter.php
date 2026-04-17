@@ -163,7 +163,7 @@ class RealtimeImporter {
         // Filter products by SKU
         $products_to_import = [];
         foreach ($all_products as $product) {
-            if (in_array($product['sku'], $skus)) {
+            if (in_array($product->sku, $skus)) {
                 $products_to_import[] = $product;
             }
         }

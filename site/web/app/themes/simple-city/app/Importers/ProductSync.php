@@ -718,7 +718,14 @@ class ProductSync {
                             $term = wp_insert_term($value, $taxonomy, $opts);
                         }
                         if (!is_wp_error($term)) {
-                            $term_ids[] = is_array($term) ? (int) $term['term_id'] : (int) $term;
+                            $term_id = is_array($term) ? (int) $term['term_id'] : (int) $term;
+                            $term_ids[] = $term_id;
+                            if ($slug === 'xroma') {
+                                $hex = $this->getColorHex($value);
+                                if ($hex !== '') {
+                                    update_term_meta($term_id, 'color_hex', $hex);
+                                }
+                            }
                         } else {
                             error_log("ProductSync: Failed to insert term '{$value}' into {$taxonomy}: " . $term->get_error_message());
                         }
@@ -870,6 +877,36 @@ class ProductSync {
         ];
 
         return $css[$canonical] ?? sanitize_title($canonical);
+    }
+
+    private function getColorHex(string $canonical): string {
+        static $hex = [
+            'Μαύρο'      => '#1a1a1a',
+            'Λευκό'      => '#f5f5f5',
+            'Γκρι'       => '#9e9e9e',
+            'Ανθρακί'    => '#424242',
+            'Μπεζ'       => '#e8d5b7',
+            'Καφέ'       => '#6d4c41',
+            'Χρυσό'      => '#d4af37',
+            'Ασημί'      => '#b0bec5',
+            'Κόκκινο'    => '#c62828',
+            'Μπλε'       => '#1565c0',
+            'Πράσινο'    => '#2e7d32',
+            'Ροζ'        => '#ec407a',
+            'Πορτοκαλί'  => '#ef6c00',
+            'Κίτρινο'    => '#f9a825',
+            'Μωβ'        => '#6a1b9a',
+            'Τυρκουάζ'   => '#00695c',
+            'Σονόμα'     => '#c8a97e',
+            'Καρυδί'     => '#5d4037',
+            'Βέγκε'      => '#3e2723',
+            'Φυσικό'     => '#a1887f',
+            'Σφενδάμι'   => '#d7ccc8',
+            'Μαρμάρινο'  => '#e0e0e0',
+            'Τσιμέντο'   => '#78909c',
+        ];
+
+        return $hex[$canonical] ?? '';
     }
 
     /**
