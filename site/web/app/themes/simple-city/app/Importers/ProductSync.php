@@ -294,13 +294,13 @@ class ProductSync {
         // is the clean white-background product shot.
         $has_image_lib = function_exists('imagecreatefromjpeg') || class_exists('Imagick');
         if (!empty($gallery_urls) && $has_image_lib) {
-            $main_tmp = download_url($product->main_image_url);
+            $main_tmp = download_url($product->main_image_url, 15);
             if (!is_wp_error($main_tmp)) {
                 $main_is_white = $this->hasWhiteBackground($main_tmp);
                 @unlink($main_tmp);
 
                 if (!$main_is_white) {
-                    $gallery0_tmp = download_url($gallery_urls[0]);
+                    $gallery0_tmp = download_url($gallery_urls[0], 15);
                     if (!is_wp_error($gallery0_tmp)) {
                         $gallery0_is_white = $this->hasWhiteBackground($gallery0_tmp);
                         @unlink($gallery0_tmp);
@@ -324,7 +324,7 @@ class ProductSync {
             if ($this->findImageByURL($url)) {
                 continue;
             }
-            $tmp = download_url($url);
+            $tmp = download_url($url, 15);
             if (!is_wp_error($tmp)) {
                 $url_to_temp[$url] = $tmp;
             } else {
@@ -383,7 +383,7 @@ class ProductSync {
             return [];
         }
 
-        $script_dir = get_template_directory() . '/scripts/product-ai-processor';
+        $script_dir = get_stylesheet_directory() . '/scripts/product-ai-processor';
         $wrapper    = $script_dir . '/rembg_run.sh';
 
         // rembg_run.sh is inside the virtiofs mount so file_exists() works even

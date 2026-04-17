@@ -1,4 +1,4 @@
-#!/bin/sh
+ps aux | grep wp | grep -v grep#!/bin/sh
 # Wrapper called by PHP to invoke remove_bg_batch.py.
 # PHP file_exists() is blocked by open_basedir outside /srv/www/, but exec() is not.
 # This script (inside the virtiofs mount) locates the correct Python at runtime.
