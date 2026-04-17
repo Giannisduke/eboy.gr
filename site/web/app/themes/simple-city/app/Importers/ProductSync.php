@@ -191,10 +191,11 @@ class ProductSync {
             throw new \Exception("Product not found: {$product_id}");
         }
 
-        // If product is trashed, restore it (untrash)
+        // If product is trashed, restore and reload to avoid saving stale trash status
         $post_status = get_post_status($product_id);
         if ($post_status === 'trash') {
             wp_untrash_post($product_id);
+            $wc_product = wc_get_product($product_id); // reload after untrash
             error_log("ProductSync: Restored trashed product {$product->sku} (ID: {$product_id})");
         }
 
