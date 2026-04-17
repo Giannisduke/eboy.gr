@@ -65,3 +65,9 @@ scp admin@simple-city-production:../../srv/www/eboy.gr/current/product_tags.csv 
 wp --url=https://simple-city.eboy.test --user=admin wc product_attribute list
 
 wp --url=https://simple-city.eboy.test --user=admin term list pa_color --fields=term_id,name,slug,count,description --format=csv > pa_color.csv
+
+
+
+sudo python3 -c "open('/etc/apt/sources.list.d/tailscale.list','w').write('# Tailscale packages for ubuntu noble\ndeb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/ubuntu noble main\n')"
+
+sudo cat /etc/apt/sources.list.d/tailscale.list
