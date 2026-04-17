@@ -15,47 +15,11 @@ RELEASE=$(readlink /srv/www/eboy.gr/current) && \
   καθάρισε τον stale transient:
 wp --url="https://sc-staging.eboy.gr/" eval 'delete_transient("xml_import_parsed_pakoworld"); echo "Cleared\n";'
 
-grep -c "<model>" /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/enhanced/pakoworld-enhanced.xml 2>/dev/null || echo "No enhanced XML"
-
- ~/.venvs/product-ai-processor/bin/python3 -c "from dotenv import load_dotenv; from pathlib import Path; import os; load_dotenv(Path('.env.local')); print('REMOVE_BG:', os.getenv('REMOVE_BG')); print('remove_bg bool:', os.getenv('REMOVE_BG','false').lower()=='true')"
-
-sudo tee /etc/systemd/system/rembg.service > /dev/null << 'EOF'                                                                      
-[Unit]                                                                                                                               
-Description=rembg background removal server                                                                                          
-After=network.target
-[Service]  
-User=giannisduke                                                                                                                     
-ExecStart=/home/giannisduke/.venvs/rembg/bin/rembg s --host 0.0.0.0 --port 7000
-Restart=on-failure                                                                                                                   
-StandardOutput=journal
-StandardError=journal                  
-[Install]
-WantedBy=multi-user.target
-EOF
-
-
 curl -o /tmp/test_product.jpg https://libertab2b.gr/media/catalog/product/0/3/035239-QhK7E-first-_1.jpg && \
   REMBG_HOST=100.86.192.95 REMBG_PORT=7000 \
     bash /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/product-ai-processor/rembg_run.sh \
     /tmp/test_product.jpg /tmp/test_output.webp && \
   ls -lh /tmp/test_output.webp && file /tmp/test_output.webp
-
-
-  grep -A 20 "<model>056-000003</model>" /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/enhanced/pakoworld-enhanced.xml | head -25
-
-  grep -A 5 "<model>056-000002</model>" /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/enhanced/pakoworld-enhanced.xml | head -10
-
-
-for sku in 056-000003 123-000008 049-000002 142-000001; do                                                                                                         
-  echo "=== $sku ===";                                                                                                                                             
-  grep -A 15 "<model>$sku</model>" /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/enhanced/pakoworld-enhanced.xml | grep -E "model|retail_price|net_price|name|stock";                                                                                                           
-done
-
-
-grep "<model>" /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/enhanced/pakoworld-enhanced.xml | sed 's/.*<model>\(.*\)<\/model>.*/\1/' | cat -n | tail -40
-
-
-
 
 wp --url=https://sc-staging.eboy.gr term list product_tag --fields=term_id,name,slug,count,description --format=csv > `/Users/eboy/sites/eboy.gr`/product_tags.csv
 
@@ -67,7 +31,4 @@ wp --url=https://simple-city.eboy.test --user=admin wc product_attribute list
 wp --url=https://simple-city.eboy.test --user=admin term list pa_color --fields=term_id,name,slug,count,description --format=csv > pa_color.csv
 
 
-
-sudo python3 -c "open('/etc/apt/sources.list.d/tailscale.list','w').write('# Tailscale packages for ubuntu noble\ndeb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/ubuntu noble main\n')"
-
-sudo cat /etc/apt/sources.list.d/tailscale.list
+ps aux | grep -i "wp\|realtime\|xml" | grep -v grep
