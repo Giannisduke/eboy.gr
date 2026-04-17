@@ -13,3 +13,6 @@ site/web/app/themes/simple-city/xml_files/.DS_Store
 
 # Keep the xml_urls.txt configuration file
 !site/web/app/themes/simple-city/xml_files/xml_urls.txt
+site/*.csv
+*.csv
+.*

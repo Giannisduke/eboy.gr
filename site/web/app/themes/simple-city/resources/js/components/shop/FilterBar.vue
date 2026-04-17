@@ -36,7 +36,7 @@
       <!-- Tag Cloud (Left Column) -->
       <div v-if="shopStore.tags.length > 0" class="tag-cloud">
         <button
-          v-for="tag in shopStore.tags"
+          v-for="tag in sortedTags"
           :key="tag.id"
           class="tag-btn"
           :class="{
@@ -55,7 +55,7 @@
       <div v-if="shopStore.materials.length > 0" class="material">
 
         <button
-          v-for="material in shopStore.materials"
+          v-for="material in sortedMaterials"
           :key="material.id"
           class="material-btn"
           :class="{
@@ -456,6 +456,14 @@ const debouncedPriceUpdate = () => {
 const updatePriceRange = () => {
   shopStore.setPriceRange(localMinPrice.value, localMaxPrice.value);
 };
+
+const sortedTags = computed(() =>
+  [...shopStore.tags].sort((a, b) => b.count - a.count)
+);
+
+const sortedMaterials = computed(() =>
+  [...shopStore.materials].sort((a, b) => b.count - a.count)
+);
 
 const getTagSize = (count) => {
   // Calculate font size based on product count (tag cloud effect)
@@ -867,7 +875,8 @@ const getMaterialSize = (count) => {
     & .tag-btn {
       @extend .btn;
       @extend .btn-primary;
-      @extend .m-1;
+     // @extend .m-1;
+     margin: 0.05rem;
     }
 
     & .tag-btn:hover {
@@ -913,7 +922,8 @@ const getMaterialSize = (count) => {
     & .material-btn {
       @extend .btn;
       @extend .btn-primary;
-      @extend .m-1;
+      //@extend .m-1;
+      margin: 0.05rem;
     }
 
     & .material-btn:hover {

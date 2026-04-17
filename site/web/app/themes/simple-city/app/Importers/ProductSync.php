@@ -16,10 +16,12 @@ class ProductSync {
     private $auto_track_enhancements = false;
 
     // Attributes that should be global WooCommerce taxonomies (filterable via layered nav).
-    // Key = label as it appears in the XML, value = taxonomy slug (Latin, max 28 chars).
+    // Key = mb_strtolower'd input name, value = [canonical Greek label, taxonomy slug].
     private $global_attribute_names = [
-        'χρώμα' => 'xroma',
-        'υλικό' => 'yliko',
+        'χρώμα'    => ['χρώμα', 'xroma'],
+        'color'    => ['χρώμα', 'xroma'],
+        'υλικό'    => ['υλικό', 'yliko'],
+        'material' => ['υλικό', 'yliko'],
     ];
 
     public function __construct($auto_track_enhancements = false) {
@@ -684,8 +686,10 @@ class ProductSync {
             $attr_name  = isset($attr['name']) ? $attr['name'] : (isset($attr['id']) ? 'Attribute ' . $attr['id'] : 'Attribute');
             $attr_value = $attr['value'];
 
-            if (isset($this->global_attribute_names[$attr_name])) {
-                $wc_attr = $this->getOrCreateGlobalAttribute($attr_name, $this->global_attribute_names[$attr_name]);
+            $attr_name_key = mb_strtolower($attr_name, 'UTF-8');
+            if (isset($this->global_attribute_names[$attr_name_key])) {
+                [$canonical_label, $slug] = $this->global_attribute_names[$attr_name_key];
+                $wc_attr = $this->getOrCreateGlobalAttribute($canonical_label, $slug);
 
                 if ($wc_attr) {
                     [$attribute_id, $taxonomy] = $wc_attr;
@@ -695,24 +699,41 @@ class ProductSync {
                         register_taxonomy($taxonomy, ['product']);
                     }
 
-                    $term = term_exists($attr_value, $taxonomy);
-                    if (!$term) {
-                        $term = wp_insert_term($attr_value, $taxonomy);
+                    // Normalize raw supplier strings to canonical terms
+                    $values = match($slug) {
+                        'yliko' => $this->normalizeMaterials($attr_value),
+                        'xroma' => $this->normalizeColors($attr_value),
+                        default => [$attr_value],
+                    };
+
+                    if (empty($values)) {
+                        continue;
                     }
 
-                    if (!is_wp_error($term)) {
-                        $term_id = is_array($term) ? (int) $term['term_id'] : (int) $term;
-                        wp_set_object_terms($product_id, [$term_id], $taxonomy, false);
+                    $term_ids = [];
+                    foreach ($values as $value) {
+                        $term = term_exists($value, $taxonomy);
+                        if (!$term) {
+                            $opts = ($slug === 'xroma') ? ['slug' => $this->getColorCssSlug($value)] : [];
+                            $term = wp_insert_term($value, $taxonomy, $opts);
+                        }
+                        if (!is_wp_error($term)) {
+                            $term_ids[] = is_array($term) ? (int) $term['term_id'] : (int) $term;
+                        } else {
+                            error_log("ProductSync: Failed to insert term '{$value}' into {$taxonomy}: " . $term->get_error_message());
+                        }
+                    }
+
+                    if (!empty($term_ids)) {
+                        wp_set_object_terms($product_id, $term_ids, $taxonomy, false);
 
                         $attribute = new \WC_Product_Attribute();
                         $attribute->set_id($attribute_id);
                         $attribute->set_name($taxonomy);
-                        $attribute->set_options([$term_id]);
+                        $attribute->set_options($term_ids);
                         $attribute->set_visible(true);
                         $attribute->set_variation(false);
                         $attributes[] = $attribute;
-                    } else {
-                        error_log("ProductSync: Failed to insert term '{$attr_value}' into {$taxonomy}: " . $term->get_error_message());
                     }
 
                     continue;
@@ -731,6 +752,124 @@ class ProductSync {
 
         $wc_product->set_attributes($attributes);
         $wc_product->save();
+    }
+
+    /**
+     * Maps raw supplier material strings to canonical Greek terms.
+     * Splits combinations (e.g. "MDF - METAL") into multiple terms.
+     */
+    private function normalizeMaterials(string $raw): array {
+        // Keywords that identify each canonical material (checked on uppercased string)
+        $map = [
+            'Βελούδο'       => ['VELVET'],
+            'MDF'           => ['MDF', 'CLIPBOARD', 'CHIPBOARD', 'MELAMINE', 'ΜΕΛΑΜΙΝ', 'ΜΟΡΙΟΣΑΝΙΔ', 'PAPER WOOD', '3D PAPER', 'PAPER MELAMINE', 'LPL'],
+            'Κόντρα πλακέ'  => ['PLYWOOD'],
+            'Ξύλο'          => ['SOLID WOOD', 'PINE WOOD', 'RUBBERWOOD', 'BEECHWOOD', 'BEECH WOOD', 'HARDWOOD', 'MANGO', 'FINGER JOINTED', 'ΞΥΛΟ', 'ΑΚΑΚΙΑ', 'ΠΑΥΛΩΝΙΑ'],
+            'Μέταλλο'       => ['METAL', 'ΜΕΤΑΛΛΟ', 'STEEL', 'IRON'],
+            'Inox'          => ['INOX'],
+            'Αλουμίνιο'     => ['ALUMIN'],
+            'Μπαμπού'       => ['BAMBOO', 'BAMBOU', 'ΜΠΑΜΠΟΥ'],
+            'Ύφασμα'        => ['FABRIC', 'CANVAS', 'ΥΦΑΣΜΑ', 'TEXTILENE', 'TEXTILE', 'ROPE', 'MESH', 'OXFORD'],
+            'Δερματίνη'     => ['PU LEATHER', ' PU ', ' PU-', '-PU ', '.PU', 'PU.'],
+            'Γυαλί'         => ['GLASS', 'ΓΥΑΛ', 'TEMPERED'],
+            'Ρατάν'         => ['RATTAN'],
+            'Πολυπροπυλένιο'=> ['HDPE', ' PP ', ' PP-', '-PP '],
+            'PVC'           => ['PVC'],
+            'Πολυεστέρας'   => ['POLYESTER', '420D', '600D', '100D'],
+            'Σφουγγάρι'     => ['FOAM', 'EPS BEADS', ' EPS ', 'SPRING MATTRESS', 'POCKET SPRING', 'MEMORY FOAM', 'LATEX'],
+        ];
+
+        $upper = mb_strtoupper(' ' . $raw . ' ', 'UTF-8');
+        $found = [];
+
+        foreach ($map as $canonical => $keywords) {
+            foreach ($keywords as $kw) {
+                if (mb_strpos($upper, $kw, 0, 'UTF-8') !== false) {
+                    $found[] = $canonical;
+                    break;
+                }
+            }
+        }
+
+        // Fallback: keep the raw value trimmed if nothing matched
+        return $found ?: [trim($raw)];
+    }
+
+    private function normalizeColors(string $raw): array {
+        $map = [
+            'Μαύρο'      => ['BLACK', 'ΜΑΥΡΟ', ' BACK '],
+            'Λευκό'      => ['WHITE', 'ΛΕΥΚΟ', 'IVORY', 'CREAM'],
+            'Γκρι'       => ['GREY', 'GRAY', 'ΓΚΡΙ', 'ELEPHANT', 'RUSTIC GREY'],
+            'Ανθρακί'    => ['ANTHRACITE', 'ΑΝΘΡΑΚΙ', 'CHARCOAL'],
+            'Μπεζ'       => ['BEIGE', 'ECRU'],
+            'Καφέ'       => ['BROWN', 'ΚΑΦΕ', 'TABAC', 'MOCHA'],
+            'Χρυσό'      => ['GOLD', 'ΧΡΥΣΟ', 'COPPER', 'BRONZE'],
+            'Ασημί'      => ['SILVER', 'CHROME', 'ΑΣΗΜΙ', 'INOX', 'PIPE'],
+            'Κόκκινο'    => ['RED', 'ROTTEN APPLE', 'CASTILLO-TORO'],
+            'Μπλε'       => ['BLUE', 'CIEL'],
+            'Πράσινο'    => ['GREEN'],
+            'Ροζ'        => ['PINK'],
+            'Πορτοκαλί'  => ['ORANGE'],
+            'Κίτρινο'    => ['YELLOW'],
+            'Μωβ'        => ['PURPLE', 'VIOLET'],
+            'Τυρκουάζ'   => ['WATER GREEN', 'TURQUOISE'],
+            'Πολύχρωμο'  => ['MULTICOLOR'],
+            'Διάφανο'    => ['TRANSPARENT'],
+            'Σονόμα'     => ['SONOMA'],
+            'Καρυδί'     => ['WALNUT', 'ΚΑΡΥΔΙ'],
+            'Βέγκε'      => ['WENGE'],
+            'Φυσικό'     => ['NATURAL', 'ΦΥΣΙΚΟ', 'OAK'],
+            'Σφενδάμι'   => ['MAPLE'],
+            'Μαρμάρινο'  => ['MARBLE'],
+            'Τσιμέντο'   => ['CEMENT'],
+        ];
+
+        $upper = mb_strtoupper(' ' . $raw . ' ', 'UTF-8');
+        $found = [];
+
+        foreach ($map as $canonical => $keywords) {
+            foreach ($keywords as $kw) {
+                if (mb_strpos($upper, $kw, 0, 'UTF-8') !== false) {
+                    $found[] = $canonical;
+                    break;
+                }
+            }
+        }
+
+        return $found ?: [trim($raw)];
+    }
+
+    private function getColorCssSlug(string $canonical): string {
+        static $css = [
+            'Μαύρο'     => 'black',
+            'Λευκό'     => 'white',
+            'Γκρι'      => 'grey',
+            'Ανθρακί'   => 'anthracite',
+            'Μπεζ'      => 'beige',
+            'Καφέ'      => 'brown',
+            'Χρυσό'     => 'gold',
+            'Ασημί'     => 'silver',
+            'Κόκκινο'   => 'red',
+            'Μπλε'      => 'blue',
+            'Πράσινο'   => 'green',
+            'Ροζ'       => 'pink',
+            'Πορτοκαλί' => 'orange',
+            'Κίτρινο'   => 'yellow',
+            'Μωβ'       => 'purple',
+            'Τυρκουάζ'  => 'teal',
+            'Πολύχρωμο' => 'multicolor',
+            'Διάφανο'   => 'transparent',
+            'Σονόμα'    => 'sonoma',
+            'Καρυδί'    => 'walnut',
+            'Βέγκε'     => 'wenge',
+            'Οκ'        => 'oak',
+            'Φυσικό'    => 'natural',
+            'Σφενδάμι'  => 'maple',
+            'Μαρμάρινο' => 'marble',
+            'Τσιμέντο'  => 'cement',
+        ];
+
+        return $css[$canonical] ?? sanitize_title($canonical);
     }
 
     /**

@@ -77,7 +77,7 @@ class LibertaParser extends AbstractParser {
         if (!empty($material)) {
             $product->material = $material;
             $product->attributes[] = [
-                'name' => 'Material',
+                'name' => 'υλικό',
                 'value' => $material
             ];
         }
@@ -85,7 +85,7 @@ class LibertaParser extends AbstractParser {
         if (!empty($color)) {
             $product->color = $color;
             $product->attributes[] = [
-                'name' => 'Color',
+                'name' => 'χρώμα',
                 'value' => $color
             ];
         }

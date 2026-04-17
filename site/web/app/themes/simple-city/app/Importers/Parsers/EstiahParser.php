@@ -110,7 +110,11 @@ class EstiahParser extends AbstractParser {
         $product->width = $this->parsePrice($this->getNodeValue($node->PieceWidth));
         $product->height = $this->parsePrice($this->getNodeValue($node->PieceHeight));
         $product->weight = $this->parsePrice($this->getNodeValue($node->NetWeight));
-        $product->material = $this->getNodeValue($node->PieceMaterial);
+        $material = $this->getNodeValue($node->PieceMaterial);
+        if (!empty($material)) {
+            $product->material = $material;
+            $product->attributes[] = ['name' => 'υλικό', 'value' => $material];
+        }
 
         // Brand
         $product->manufacturer = 'Estia';

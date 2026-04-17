@@ -14,6 +14,15 @@ logger = logging.getLogger(__name__)
 class TagGenerator:
     """Generates product tags using AI"""
 
+    WHITELIST = {
+        'καναπές', 'πολυθρόνα', 'τραπέζι', 'καρέκλα', 'σκαμπό', 'πουφ', 'κρεβάτι',
+        'ντουλάπα', 'βιβλιοθήκη', 'γραφείο', 'συρταριέρα', 'κομοδίνο',
+        'κονσόλα', 'μπουφές', 'βιτρίνα', 'ραφιέρα', 'παπουτσοθήκη',
+        'κρεμάστρα', 'καλόγερος', 'σομιέ', 'στρώμα', 'μαξιλάρι',
+        'φωτιστικό', 'καθρέφτης', 'διακοσμητικό', 'βάζο', 'ξαπλώστρα',
+        'σεζλόνγκ', 'ομπρέλα', 'αιώρα', 'καλάθι', 'έπιπλο τηλεόρασης',
+    }
+
     def __init__(self, ai_client: OllamaClient, prompts_config: dict):
         self.ai_client = ai_client
         self.prompt_template = prompts_config.get('tag_generation', '')
@@ -68,18 +77,22 @@ class TagGenerator:
             else:
                 ai_tags = []
 
-            # Use only AI tag (1 tag: product type)
-            cleaned_ai = [self._clean_tag(t) for t in ai_tags]
-            valid_ai = [t for t in cleaned_ai if self._is_valid_tag(t)]
+            # Enforce whitelist: find first AI tag that maps to a valid canonical
+            final_tags = []
+            for raw in ai_tags:
+                canonical = self._enforce_whitelist(self._clean_tag(raw))
+                if canonical:
+                    final_tags = [canonical]
+                    break
 
-            if valid_ai:
-                final_tags = valid_ai[:1]
-            else:
-                # Fallback: first rule-based tag
+            if not final_tags:
+                # Fallback: rule-based tags checked against whitelist
                 rule_tags = self._extract_rule_based_tags(product_data)
-                cleaned_rule = [self._clean_tag(t) for t in rule_tags]
-                valid_rule = [t for t in cleaned_rule if self._is_valid_tag(t)]
-                final_tags = valid_rule[:1]
+                for raw in rule_tags:
+                    canonical = self._enforce_whitelist(self._clean_tag(raw))
+                    if canonical:
+                        final_tags = [canonical]
+                        break
 
             logger.info(f"Generated {len(final_tags)} tags for: {title[:50]}...")
             return final_tags
@@ -163,25 +176,81 @@ class TagGenerator:
         else:
             return str(attributes)[:200]
 
-    # Maps derivative/compound Greek forms to their canonical product type
+    # Maps derivative/compound Greek forms to their canonical whitelist tag
     _CANONICAL_TAGS = {
-        'τραπεζάκι': 'τραπέζι',
-        'τραπεζακι': 'τραπέζι',
-        'τραπεζαρία': 'τραπέζι',
-        'τραπεζαρια': 'τραπέζι',
-        'κρεβατοκάμαρα': 'κρεβάτι',
-        'κρεβατοκαμαρα': 'κρεβάτι',
-        'ντουλάπι': 'ντουλάπα',
-        'ντουλαπι': 'ντουλάπα',
-        'ντουλαπάκι': 'ντουλάπα',
-        'ντουλαπακι': 'ντουλάπα',
-        'καναπεδάκι': 'καναπές',
-        'καναπεδακι': 'καναπές',
-        'καρεκλάκι': 'καρέκλα',
-        'καρεκλακι': 'καρέκλα',
-        'συρταριέρα': 'συρταριέρα',
+        # τραπέζι variants
+        'τραπεζάκι': 'τραπέζι', 'τραπεζακι': 'τραπέζι',
+        'τραπεζαρία': 'τραπέζι', 'τραπεζαρια': 'τραπέζι',
+        'τραπέζια': 'τραπέζι', 'τραπεζια': 'τραπέζι',
+        'βοηθητικό τραπέζι': 'τραπέζι', 'βοηθητικο τραπεζι': 'τραπέζι',
+        'επιφάνεια τραπεζιού': 'τραπέζι',
+        # καναπές variants
+        'καναπεδάκι': 'καναπές', 'καναπεδακι': 'καναπές',
+        'γωνιακός καναπές': 'καναπές', 'γωνιακο καναπε': 'καναπές',
+        'γωνιακό καναπέ': 'καναπές',
+        # καρέκλα variants
+        'καρεκλάκι': 'καρέκλα', 'καρεκλακι': 'καρέκλα',
+        'καρέκλα γραφείου': 'καρέκλα',
+        # κρεβάτι variants
+        'κρεβατοκάμαρα': 'κρεβάτι', 'κρεβατοκαμαρα': 'κρεβάτι',
+        'κρεβατάκι': 'κρεβάτι', 'κρεβατακι': 'κρεβάτι',
+        'κρεβατιού': 'κρεβάτι',
+        # ντουλάπα variants
+        'ντουλάπι': 'ντουλάπα', 'ντουλαπι': 'ντουλάπα',
+        'ντουλαπάκι': 'ντουλάπα', 'ντουλαπακι': 'ντουλάπα',
+        # συρταριέρα
         'συρταριερα': 'συρταριέρα',
+        # κομόδιο → κομοδίνο (κομόδιο δεν είναι στη whitelist)
+        'κομόδιο': 'κομοδίνο', 'κομοδιο': 'κομοδίνο',
+        # σκαμπό variants
+        'σκαμνός': 'σκαμπό', 'σκαμνος': 'σκαμπό',
+        'σκαμνάκι': 'σκαμπό', 'σκαμνακι': 'σκαμπό',
+        'σκαμπώ': 'σκαμπό',
+        'σκαμπό-παπουτσοθήκη': 'παπουτσοθήκη',
+        # παπουτσοθήκη typo (latin o)
+        'παπουτσoθήκη': 'παπουτσοθήκη',
+        # καθρέφτης
+        'καθρέπτης': 'καθρέφτης', 'καθρεπτης': 'καθρέφτης',
+        # ραφιέρα / ράφι → ραφιέρα
+        'ραφι': 'ραφιέρα', 'ράφι': 'ραφιέρα',
+        # φωτιστικό
+        'φως': 'φωτιστικό',
+        'παιδικά φωτιστικά οροφής': 'φωτιστικό',
+        # βάζο
+        'βαζάκι': 'βάζο', 'βαζακι': 'βάζο',
+        'βάζο': 'βάζο', 'βαζο': 'βάζο', 'βαζ': 'βάζο',
+        # γραφείο
+        'επιπλα γραφείου': 'γραφείο', 'γραφείου': 'γραφείο',
+        # κονσόλα / επιπλα εισόδων
+        'επιπλα εισόδων': 'κονσόλα',
+        # σεζλόνγκ
+        'ξαπλώστρα': 'ξαπλώστρα', 'σεζλογκ': 'σεζλόνγκ',
+        # τηλεόραση → έπιπλο τηλεόρασης
+        'τηλεόραση': 'έπιπλο τηλεόρασης', 'τηλεορασης': 'έπιπλο τηλεόρασης',
+        'έπιπλο τηλεορασης': 'έπιπλο τηλεόρασης',
+        # αιώρα / κούνια
+        'κουνια': 'αιώρα', 'κούνια': 'αιώρα',
     }
+
+    def _enforce_whitelist(self, tag: str) -> Optional[str]:
+        """Return the canonical whitelist tag for the input, or None."""
+        if not tag:
+            return None
+        # 1. Direct whitelist match
+        if tag in self.WHITELIST:
+            return tag
+        # 2. Canonical map (full phrase or single-word variant)
+        mapped = self._CANONICAL_TAGS.get(tag)
+        if mapped and mapped in self.WHITELIST:
+            return mapped
+        # 3. Token scan: find the first token that is in the whitelist
+        for token in tag.split():
+            if token in self.WHITELIST:
+                return token
+            mapped = self._CANONICAL_TAGS.get(token)
+            if mapped and mapped in self.WHITELIST:
+                return mapped
+        return None
 
     def _clean_tag(self, tag: str) -> str:
         """Clean and normalize a tag"""
