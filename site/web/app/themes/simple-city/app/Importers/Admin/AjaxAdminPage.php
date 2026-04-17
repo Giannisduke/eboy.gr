@@ -969,17 +969,28 @@ class AjaxAdminPage {
         shell_exec($kill_command);
         error_log("AjaxAdminPage: Killed AI processes");
 
-        // Clean up progress files for all suppliers
+        // Clean up progress/ready files only if AI has NOT completed yet
+        // (if complete, the RealtimeImporter may still be importing in background)
         $suppliers = ['pakoworld', 'b2bmarkt', 'libertab2b', 'estiahomeart'];
         foreach ($suppliers as $supplier) {
             $progress_file = $xml_dir . $supplier . '-progress.json';
             $ready_file = $xml_dir . $supplier . '-ready.json';
 
+            $already_complete = false;
             if (file_exists($progress_file)) {
-                unlink($progress_file);
+                $progress_data = json_decode(file_get_contents($progress_file), true);
+                if (!empty($progress_data['status']) && $progress_data['status'] === 'complete') {
+                    $already_complete = true;
+                }
             }
-            if (file_exists($ready_file)) {
-                unlink($ready_file);
+
+            if (!$already_complete) {
+                if (file_exists($progress_file)) {
+                    unlink($progress_file);
+                }
+                if (file_exists($ready_file)) {
+                    unlink($ready_file);
+                }
             }
         }
 
