@@ -63,15 +63,8 @@ onMounted(async () => {
   // Initialize grid columns from localStorage
   shopStore.initGridColumns();
 
-  // Fetch categories, tags, colors, materials, heights, price range, and products
-  await shopStore.fetchCategories();
-  await shopStore.fetchTags();
-  await shopStore.fetchColors();
-  await shopStore.fetchMaterials();
-  await shopStore.fetchHeights();
-  await shopStore.fetchWidths();
-  await shopStore.fetchDepths();
-  await shopStore.fetchPriceRange();
+  // Fetch all filter data in one request, then load products
+  await shopStore.fetchInit();
   await shopStore.fetchProducts();
 
   await nextTick();

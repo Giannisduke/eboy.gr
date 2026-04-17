@@ -32,3 +32,8 @@ wp --url=https://simple-city.eboy.test --user=admin term list pa_color --fields=
 
 
 ps aux | grep -i "wp\|realtime\|xml" | grep -v grep
+
+find /tmp /var/log /srv/www/eboy.gr/shared -name "*realtime*" -o -name            
+  "*import*.log" 2>/dev/null | head -10
+
+sudo tail -30 /var/log/php8.3-fpm.log

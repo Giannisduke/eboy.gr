@@ -403,6 +403,13 @@ add_action('rest_api_init', function () {
         'callback' => 'get_price_range',
         'permission_callback' => '__return_true',
     ]);
+
+    // Init endpoint — all filter data in one request
+    register_rest_route('theme/v1', '/init', [
+        'methods' => 'GET',
+        'callback' => 'get_shop_init_data',
+        'permission_callback' => '__return_true',
+    ]);
 });
 
 /**
@@ -627,6 +634,55 @@ function get_shop_products($request) {
     $response->header('X-WP-TotalPages', $query->max_num_pages);
 
     return $response;
+}
+
+/**
+ * Return all filter data (categories, tags, attributes, price range) in a single request.
+ * Called once on page load; individual filter endpoints remain available for filter updates.
+ */
+function get_shop_init_data($request) {
+    $cache_key = 'shop_init_data';
+
+    $cached = get_transient($cache_key);
+    if ($cached !== false) {
+        return new WP_REST_Response($cached);
+    }
+
+    $cat_request = new WP_REST_Request('GET');
+    $cat_request->set_param('hide_empty', true);
+    $cat_request->set_param('per_page', 100);
+    $cat_request->set_param('parent', 0);
+
+    $base_request = new WP_REST_Request('GET');
+    $base_request->set_param('hide_empty', true);
+    $base_request->set_param('per_page', 100);
+
+    $categories_res  = get_shop_categories($cat_request);
+    $tags_res        = get_shop_tags($base_request);
+    $colors_res      = get_shop_colors($base_request);
+    $materials_res   = get_shop_materials($base_request);
+    $heights_res     = get_shop_heights($base_request);
+    $widths_res      = get_shop_widths($base_request);
+    $depths_res      = get_shop_depths($base_request);
+    $price_range_res = get_price_range($base_request);
+
+    $data = [
+        'categories' => $categories_res instanceof WP_Error ? [] : $categories_res->get_data(),
+        'tags'       => $tags_res instanceof WP_Error ? [] : $tags_res->get_data(),
+        'colors'     => $colors_res instanceof WP_Error ? [] : $colors_res->get_data(),
+        'materials'  => $materials_res instanceof WP_Error ? [] : $materials_res->get_data(),
+        'heights'    => $heights_res instanceof WP_Error ? [] : $heights_res->get_data(),
+        'widths'     => $widths_res instanceof WP_Error ? [] : $widths_res->get_data(),
+        'depths'     => $depths_res instanceof WP_Error ? [] : $depths_res->get_data(),
+        'priceRange' => $price_range_res instanceof WP_Error
+            ? ['min' => 0, 'max' => 0, 'filteredMin' => 0, 'filteredMax' => 0]
+            : $price_range_res->get_data(),
+    ];
+
+    // 30-minute cache — cleared automatically by clear_shop_cache on product/term changes
+    set_transient($cache_key, $data, 1800);
+
+    return new WP_REST_Response($data);
 }
 
 /**

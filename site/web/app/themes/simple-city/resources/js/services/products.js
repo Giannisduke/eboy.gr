@@ -83,6 +83,19 @@ export const productsApi = {
     },
 
     /**
+     * Fetch all filter data in a single request (used on initial page load)
+     */
+    async getInit() {
+        try {
+            const response = await axios.get('/wp-json/theme/v1/init');
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching init data:', error);
+            throw new Error('Failed to load shop data. Please try again.');
+        }
+    },
+
+    /**
      * Get product categories
      */
     async getCategories() {

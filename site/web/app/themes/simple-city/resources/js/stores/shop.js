@@ -159,6 +159,30 @@ export const useShopStore = defineStore('shop', {
             window.history.pushState({}, '', newURL);
         },
 
+        async fetchInit() {
+            try {
+                const data = await productsApi.getInit();
+                this.categories = data.categories || [];
+                this.tags       = data.tags       || [];
+                this.colors     = data.colors     || [];
+                this.materials  = data.materials  || [];
+                this.heights    = data.heights    || [];
+                this.widths     = data.widths     || [];
+                this.depths     = data.depths     || [];
+
+                const range = data.priceRange || { min: 0, max: 0, filteredMin: 0, filteredMax: 0 };
+                this.priceRange.min         = range.min;
+                this.priceRange.max         = range.max;
+                this.priceRange.filteredMin = range.filteredMin;
+                this.priceRange.filteredMax = range.filteredMax;
+
+                if (this.filters.minPrice === null) this.filters.minPrice = range.min;
+                if (this.filters.maxPrice === null) this.filters.maxPrice = range.max;
+            } catch (error) {
+                console.error('Error fetching init data:', error);
+            }
+        },
+
         async fetchProducts(append = false) {
             if (append) {
                 this.loadingMore = true;
