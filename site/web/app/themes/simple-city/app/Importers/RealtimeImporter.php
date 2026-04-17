@@ -177,8 +177,17 @@ class RealtimeImporter {
             ];
         }
 
-        // Sync products
-        $stats = $this->sync->syncProducts($products_to_import, $supplier);
+        // Sync in chunks to avoid memory/timeout issues
+        $batch_size = 25;
+        $chunks = array_chunk($products_to_import, $batch_size);
+        $stats = ['created' => 0, 'updated' => 0, 'errors' => 0];
+
+        foreach ($chunks as $chunk) {
+            $chunk_stats = $this->sync->syncProducts($chunk, $supplier);
+            $stats['created'] += $chunk_stats['created'] ?? 0;
+            $stats['updated'] += $chunk_stats['updated'] ?? 0;
+            $stats['errors']  += $chunk_stats['errors'] ?? 0;
+        }
 
         return $stats;
     }

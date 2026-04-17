@@ -83,7 +83,8 @@ class BatchImporter {
             $batch_size = $this->batch_size;
         }
 
-        set_time_limit(120); // 2 minutes per batch
+        // First batch needs extra time to parse and cache the XML
+        set_time_limit($offset === 0 ? 600 : 120);
         ini_set('memory_limit', '1024M'); // Increase memory for this request
 
         // Use __FILE__ for reliable path resolution

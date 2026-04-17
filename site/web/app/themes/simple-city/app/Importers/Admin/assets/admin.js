@@ -567,7 +567,7 @@ jQuery(document).ready(function($) {
         $.ajax({
             url: xmlImporter.ajaxUrl,
             type: 'POST',
-            timeout: 180000, // 3 minutes timeout
+            timeout: 600000, // 10 minutes timeout
             data: {
                 action: 'xml_import_batch',
                 nonce: xmlImporter.nonce,
