@@ -2,6 +2,7 @@
 - name: Download Tailscale GPG keyring
   shell: >
     curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/{{ ansible_distribution_release }}.gpg
+    | gpg --dearmor
     | tee /usr/share/keyrings/tailscale-archive-keyring.gpg > /dev/null
   changed_when: false
 
