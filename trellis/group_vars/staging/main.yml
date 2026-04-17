@@ -3,7 +3,7 @@ tailscale_enabled: true
 timezone: Europe/Athens
 
 # PHP limits
-php_memory_limit: "1024M"
+php_memory_limit: "256M"
 php_max_execution_time: 300
 nginx_fastcgi_read_timeout: 300
 php_upload_max_filesize: "128M"
@@ -15,13 +15,13 @@ wordpress_memory_limit: 384M
 wordpress_max_memory_limit: 1024M
 
 # PHP-FPM tuning
-# (κρίσιμο: μειώνουμε max_children για να μην πνίγει το 8GB VM)
+# (2GB RAM server — keep pool small to avoid OOM)
 php_fpm_pm: dynamic
-php_fpm_max_children: 10
-php_fpm_start_servers: 4
-php_fpm_min_spare_servers: 2
-php_fpm_max_spare_servers: 6
-php_fpm_max_requests: 500
+php_fpm_pm_max_children: 8
+php_fpm_pm_start_servers: 2
+php_fpm_pm_min_spare_servers: 1
+php_fpm_pm_max_spare_servers: 4
+php_fpm_pm_max_requests: 500
 
 # DB
 mysql_root_password: "{{ vault_mysql_root_password }}"

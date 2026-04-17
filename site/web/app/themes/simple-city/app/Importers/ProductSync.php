@@ -293,7 +293,9 @@ class ProductSync {
 
         // Swap featured ↔ gallery[0] if main is a room/lifestyle photo and gallery[0]
         // is the clean white-background product shot.
-        $has_image_lib = function_exists('imagecreatefromjpeg') || class_exists('Imagick');
+        // Skip on staging/low-memory environments — image lib analysis is expensive.
+        $has_image_lib = wp_get_environment_type() !== 'staging'
+            && (function_exists('imagecreatefromjpeg') || class_exists('Imagick'));
         if (!empty($gallery_urls) && $has_image_lib) {
             $main_tmp = download_url($product->main_image_url, 15);
             if (!is_wp_error($main_tmp)) {

@@ -85,7 +85,7 @@ class BatchImporter {
 
         // First batch needs extra time to parse and cache the XML
         set_time_limit($offset === 0 ? 600 : 120);
-        ini_set('memory_limit', '1024M'); // Increase memory for this request
+        ini_set('memory_limit', wp_get_environment_type() === 'development' ? '1024M' : '512M');
 
         // Use __FILE__ for reliable path resolution
         $theme_root = dirname(dirname(dirname(__FILE__)));
