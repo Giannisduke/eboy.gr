@@ -45,4 +45,4 @@ wordpress_sites:
       WP_MAX_MEMORY_LIMIT: "1024M"
       OLLAMA_HOST: "100.86.192.95"
       REMBG_HOST: "100.86.192.95"
-      REMBG_PORT: "7000"
+      BRIA_PORT: "7001"

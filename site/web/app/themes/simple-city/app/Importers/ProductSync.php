@@ -408,7 +408,7 @@ class ProductSync {
         }
 
         $command = sprintf(
-            'sh %s %s',
+            'sh %s %s 2>&1',
             escapeshellarg($wrapper),
             implode(' ', $all_args)
         );
