@@ -40,3 +40,6 @@ wordpress_sites:
       WP_DEBUG_LOG: true
       WP_DEBUG_DISPLAY: false
       SCRIPT_DEBUG: false
+      OLLAMA_HOST: "100.86.192.95"
+      REMBG_HOST: "100.86.192.95"
+      REMBG_PORT: "7000"

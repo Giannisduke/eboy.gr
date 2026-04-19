@@ -37,3 +37,6 @@ find /tmp /var/log /srv/www/eboy.gr/shared -name "*realtime*" -o -name
   "*import*.log" 2>/dev/null | head -10
 
 sudo tail -30 /var/log/php8.3-fpm.log
+
+
+! sed -i '/REMBG_HOST\|REMBG_PORT/d' /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/product-ai-processor/.env.local
