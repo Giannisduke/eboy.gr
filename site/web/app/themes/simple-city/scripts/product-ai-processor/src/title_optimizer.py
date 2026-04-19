@@ -123,13 +123,15 @@ class TitleOptimizer:
             # Numbers and words containing numbers: keep as-is
             elif any(c.isdigit() for c in word):
                 result_words.append(word)
-            # ALL CAPS word (e.g. HOLDON, REMUS) → convert to Title Case (model name)
-            elif word.isupper() and len(word) > 1:
+            # ALL CAPS Latin word (e.g. HOLDON, REMUS) → Title Case model name
+            elif word.isupper() and len(word) > 1 and any(c.isascii() and c.isalpha() for c in word):
                 result_words.append(word.capitalize())
-            # Already Title Case (e.g. Essential, Josuane) → model name, keep as-is
-            elif len(word) > 1 and word[0].isupper() and word[1:].islower():
+            # Title Case with Latin chars (e.g. Essential, Josuane, Paris) → model name, keep
+            elif (len(word) > 1 and word[0].isupper()
+                  and word[1:].replace('-', '').islower()
+                  and any(c.isascii() and c.isalpha() for c in word)):
                 result_words.append(word)
-            # Everything else: lowercase
+            # Everything else (Greek Title Case, mixed, etc.): lowercase
             else:
                 result_words.append(word.lower())
 

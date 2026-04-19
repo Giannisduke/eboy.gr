@@ -40,3 +40,6 @@ sudo tail -30 /var/log/php8.3-fpm.log
 
 
 ! sed -i '/REMBG_HOST\|REMBG_PORT/d' /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/product-ai-processor/.env.local
+
+
+! tail -50 /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/product-ai-processor/logs/realtime-import.log | grep -i "rembg\|remote\|OK\|ERROR" 

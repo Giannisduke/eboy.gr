@@ -12,7 +12,7 @@ title_optimization: |
   ΤΙ ΝΑ ΚΡΑΤΗΣΕΙΣ:
   - Τύπος προϊόντος (π.χ. Παπουτσοθήκη, Κρεβάτι, Τραπέζι σαλονιού, Σκαμπό μπαρ)
   - Model name (π.χ. Holdon, Nevil, Remus, Essential, Josuane) - με κεφαλαίο αρχικό
-  - "υποπόδιο" = ξεχωριστό έπιπλο (ottoman) → κράτα ως "με υποπόδιο"
+  - "υποπόδιο" = ξεχωριστό έπιπλο (ottoman) → κράτα ως "με υποπόδιο" ΜΟΝΟ αν υπάρχει στον αρχικό τίτλο
   - Χωρητικότητα αποθήκευσης αν υπάρχει (π.χ. 12 ζεύγων)
 
   ΤΙ ΝΑ ΑΦΑΙΡΕΣΕΙΣ (υποχρεωτικά):
@@ -54,6 +54,21 @@ title_optimization: |
 
   Input: "Κρεβάτι Nevil Pakoworld PU χρώμα μαύρο ματ"
   Output: "Κρεβάτι Nevil"
+
+  Input: "Καρέκλα Tania pakoworld ύφασμα μπεζ antique-μαύρο πόδι"
+  Output: "Καρέκλα Tania"
+
+  Input: "Καναπές-κρεβάτι Carmelo pakoworld ανθρακί ύφασμα 2 θέσεων"
+  Output: "Καναπές - κρεβάτι Carmelo"
+
+  Input: "Τραπέζι σαλονιού Paris pakoworld γυαλί 8mm σχέδιο μαρμάρου-χρυσό"
+  Output: "Τραπέζι σαλονιού Paris"
+
+  Input: "Γραφείο εργασίας Amazon pakoworld αριστερά λευκό"
+  Output: "Γραφείο εργασίας Amazon"
+
+  Input: "Βιβλιοθήκη FIRENZE pakoworld χρώμα sonoma 107x28,6x161cm"
+  Output: "Βιβλιοθήκη Firenze"
 
   Τίτλος για βελτιστοποίηση: {original_title}
 
