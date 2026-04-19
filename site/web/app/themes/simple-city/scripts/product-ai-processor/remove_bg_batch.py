@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Batch background removal — local rembg model or remote rembg server.
+Batch background removal — BRIA RMBG 2.0 (remote) or rembg (local fallback).
 Called by PHP ProductSync.php via rembg_run.sh.
 
 Usage:
     python remove_bg_batch.py input1 output1.webp [input2 output2.webp ...]
 
 Remote mode (set REMBG_HOST in .env.local):
-    Sends each image to the rembg HTTP server running on the Ubuntu GPU PC.
+    Sends each image to the BRIA RMBG 2.0 server on the Ubuntu GPU PC.
     Only requires requests + Pillow — no local model needed.
 
 Local mode (default):
@@ -15,16 +15,16 @@ Local mode (default):
     Requires rembg[cpu] installed in the venv.
 
 Env vars:
-    REMBG_HOST   — hostname/IP of remote rembg server (enables remote mode)
-    REMBG_PORT   — port of remote rembg server (default: 7000)
-    REMBG_MODEL  — model name for local mode (default: birefnet-general)
+    REMBG_HOST   — hostname/IP of Ubuntu GPU PC (enables remote mode)
+    BRIA_PORT    — port of BRIA server (default: 7001)
+    REMBG_MODEL  — model name for local fallback (default: birefnet-general)
 """
 import sys
 import io
 import os
 
 
-def process_remote(pairs: list, host: str, port: str):
+def process_remote(pairs: list, host: str):
     try:
         import requests
         from PIL import Image
@@ -32,25 +32,25 @@ def process_remote(pairs: list, host: str, port: str):
         print(f"IMPORT_ERROR: {e}", file=sys.stderr)
         sys.exit(2)
 
-    model = os.environ.get('REMBG_MODEL', 'birefnet-general')
-    url = f"http://{host}:{port}/api/remove"
-    params = {
-        'model': model,
-        'ppm': '1',   # post-process mask: smooths jagged edges
-        'am':  '1',   # alpha matting: refines foreground/background boundary
-        'af':  '230', # foreground threshold — high = only very bright areas are BG
-        'ab':  '10',  # background threshold — low = only very dark areas are definite BG
-        'ae':  '15',  # erode size for trimap generation
-    }
+    bria_port = os.environ.get('BRIA_PORT', '7001')
+    url = f"http://{host}:{bria_port}/api/remove"
 
     for input_path, output_path in pairs:
         try:
-            with open(input_path, 'rb') as f:
-                response = requests.post(url, files={'file': f}, params=params, timeout=120)
+            original = Image.open(input_path).convert('RGBA')
+
+            buf = io.BytesIO()
+            original.convert('RGB').save(buf, 'JPEG', quality=95)
+            buf.seek(0)
+
+            response = requests.post(url, files={'file': buf}, timeout=120)
             response.raise_for_status()
 
-            img = Image.open(io.BytesIO(response.content))
-            img.save(output_path, 'webp', quality=92)
+            # Use mask from BRIA, colors from original
+            alpha = Image.open(io.BytesIO(response.content)).convert('RGBA').split()[3]
+            original.putalpha(alpha)
+
+            original.save(output_path, 'webp', quality=92)
             print(f"OK:{output_path}", flush=True)
 
         except Exception as e:
@@ -98,10 +98,9 @@ def main():
     pairs = [(args[i], args[i + 1]) for i in range(0, len(args), 2)]
 
     rembg_host = os.environ.get('REMBG_HOST', '').strip()
-    rembg_port = os.environ.get('REMBG_PORT', '7000').strip()
 
     if rembg_host:
-        process_remote(pairs, rembg_host, rembg_port)
+        process_remote(pairs, rembg_host)
     else:
         model = os.environ.get('REMBG_MODEL', 'birefnet-general')
         process_local(pairs, model)

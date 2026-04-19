@@ -32,3 +32,6 @@ wordpress_sites:
       SITE_ID_CURRENT_SITE: 1
       BLOG_ID_CURRENT_SITE: 1
       WP_DEBUG_DISPLAY: false
+      OLLAMA_HOST: "100.86.192.95"
+      REMBG_HOST: "100.86.192.95"
+      BRIA_PORT: "7001"
