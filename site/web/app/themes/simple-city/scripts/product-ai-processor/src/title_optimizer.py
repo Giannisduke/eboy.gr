@@ -114,7 +114,7 @@ class TitleOptimizer:
         # Process each word
         result_words = []
         for i, word in enumerate(words):
-            # First word: capitalize first letter only
+            # First word: capitalize first letter, lowercase the rest
             if i == 0:
                 if len(word) > 1:
                     result_words.append(word[0].upper() + word[1:].lower())
@@ -122,6 +122,12 @@ class TitleOptimizer:
                     result_words.append(word.upper())
             # Numbers and words containing numbers: keep as-is
             elif any(c.isdigit() for c in word):
+                result_words.append(word)
+            # ALL CAPS word (e.g. HOLDON, REMUS) → convert to Title Case (model name)
+            elif word.isupper() and len(word) > 1:
+                result_words.append(word.capitalize())
+            # Already Title Case (e.g. Essential, Josuane) → model name, keep as-is
+            elif len(word) > 1 and word[0].isupper() and word[1:].islower():
                 result_words.append(word)
             # Everything else: lowercase
             else:
