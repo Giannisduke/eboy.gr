@@ -4,7 +4,7 @@
     "src": "editor.deps.json"
   },
   "resources/css/app.scss": {
-    "file": "assets/app-CoV24jh2.css",
+    "file": "assets/app-Dx8rnFuw.css",
     "src": "resources/css/app.scss",
     "isEntry": true
   },
@@ -214,12 +214,12 @@
     "src": "resources/images/view_small_s.svg"
   },
   "resources/js/app.js": {
-    "file": "assets/app-dazw3Ezd.js",
+    "file": "assets/app-1yc2elSa.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-GA0CxzNH.css"
+      "assets/app-DKvHI_-3.css"
     ],
     "assets": [
       "assets/bathroom-H5gpXJb4.svg",

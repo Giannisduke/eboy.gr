@@ -57,14 +57,32 @@ import ProductCard from './ProductCard.vue';
 const shopStore = useShopStore();
 
 onMounted(async () => {
-  // Initialize filters from URL parameters
   shopStore.initFromURL();
-
-  // Initialize grid columns from localStorage
   shopStore.initGridColumns();
 
-  // Fetch all filter data in one request, then load products
-  await shopStore.fetchInit();
+  const f = shopStore.filters;
+  const hasActiveFilters =
+    f.category ||
+    f.tags.length > 0 ||
+    f.colors.length > 0 ||
+    f.materials.length > 0 ||
+    f.height || f.width || f.depth;
+
+  if (hasActiveFilters) {
+    await Promise.all([
+      shopStore.fetchCategories(),
+      shopStore.fetchTags(),
+      shopStore.fetchColors(),
+      shopStore.fetchMaterials(),
+      shopStore.fetchHeights(),
+      shopStore.fetchWidths(),
+      shopStore.fetchDepths(),
+      shopStore.fetchPriceRange(),
+    ]);
+  } else {
+    await shopStore.fetchInit();
+  }
+
   await shopStore.fetchProducts();
 
   await nextTick();

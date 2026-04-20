@@ -149,7 +149,10 @@ remove_action('woocommerce_sidebar', 'woocommerce_get_sidebar', 10);
  remove_action('woocommerce_after_single_product_summary', 'woocommerce_output_product_data_tabs', 10);
  add_action('woocommerce_single_product_summary', 'woocommerce_output_product_data_tabs', 35);
 // remove_action('woocommerce_after_single_product_summary', 'woocommerce_upsell_display', 15);
-// remove_action('woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20);
+
+// Move related products outside the .product div
+ remove_action('woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20);
+ add_action('woocommerce_after_single_product', 'woocommerce_output_related_products', 5);
 
 /**
  * Product Summary Box.
