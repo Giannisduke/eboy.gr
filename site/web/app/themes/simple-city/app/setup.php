@@ -160,7 +160,13 @@ add_action('after_setup_theme', function () {
      * @link https://developer.wordpress.org/themes/functionality/featured-images-post-thumbnails/
      */
     add_theme_support('post-thumbnails');
-    add_image_size('featured_carousel', 1000, 9999, true);
+
+    // Only generate the 3 WooCommerce sizes — skip all WP defaults (thumbnail, medium, large etc.)
+    // woocommerce_single (product page), woocommerce_thumbnail (catalog), woocommerce_gallery_thumbnail (gallery)
+    add_filter('intermediate_image_sizes_advanced', function (array $sizes): array {
+        $keep = ['woocommerce_thumbnail', 'woocommerce_single', 'woocommerce_gallery_thumbnail'];
+        return array_intersect_key($sizes, array_flip($keep));
+    });
     /**
      * Enable responsive embed support.
      *
