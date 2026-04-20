@@ -4,20 +4,19 @@ timezone: Europe/Athens
 
 # PHP limits
 php_memory_limit: "256M"
-php_max_execution_time: 300
-nginx_fastcgi_read_timeout: 300
+php_max_execution_time: 600
+nginx_fastcgi_read_timeout: 600
 php_upload_max_filesize: "128M"
 php_post_max_size: "128M"
 
 # WordPress memory
-# (frontend πιο χαμηλά, admin/cron/WP-CLI μπορεί να πάει έως 1G)
 wordpress_memory_limit: 384M
 wordpress_max_memory_limit: 1024M
 
 # PHP-FPM tuning
-# (2GB RAM server — keep pool small to avoid OOM)
+# 1 vCPU / 2GB RAM — modest increase for import workload (each batch holds slot ~20s)
 php_fpm_pm: dynamic
-php_fpm_pm_max_children: 8
+php_fpm_pm_max_children: 12
 php_fpm_pm_start_servers: 2
 php_fpm_pm_min_spare_servers: 1
 php_fpm_pm_max_spare_servers: 4
@@ -35,5 +34,3 @@ mysql_users:
   - name: simple_city
     password: "{{ vault_mysql_simple_city_password }}"
     priv: "eboy_gr_staging.*:ALL"
-
-
