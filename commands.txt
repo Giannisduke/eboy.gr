@@ -56,3 +56,15 @@ sudo tail -30 /var/log/php8.3-fpm.log
 curl -s "https://www.pakoworld.com/image/catalog/products/142-000007.jpg" -o /tmp/142-000007.jpg -L --max-time 30 && echo "downloaded" && file /tmp/142-000007.jpg
 
 /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/product-ai-processor/.venv/bin/python3 /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/product-ai-processor/test_rembg_models.py /tmp/142-000007.jpg
+
+
+wp --url="https://sc-staging.eboy.gr/" post list --post_type=product --post_status=trash --meta_key=_supplier --meta_value=pakoworld --format=count 
+
+wp --url="https://sc-staging.eboy.gr/" post list --post_type=product --post_status=publish --meta_key=_supplier --meta_value=pakoworld --format=count
+
+wp --url="https://sc-staging.eboy.gr/" eval '$logs = get_option("xml_importer_logs", []); foreach(array_slice($logs, -50) as $log) echo $log . "\n";'
+
+
+wp --url="https://sc-staging.eboy.gr/" eval '$ids = get_posts(["post_type" => "product","post_status" => ["publish", "trash", "draft"],"posts_per_page" => -1,"fields" => "ids","meta_query" => [["key" => "_supplier", "value" => "pakoworld"]]]); foreach($ids as $id) { wp_delete_post($id, true); } echo "Deleted: " . count($ids) . "\n";' 
+
+wp --url="https://sc-staging.eboy.gr/" post delete $(wp --url="https://sc-staging.eboy.gr/" post list --post_type=product --post_status=trash --format=ids) --force

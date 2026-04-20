@@ -254,7 +254,7 @@ class BatchImporter {
 
                 // Only cache in production to save memory
                 if ($use_cache) {
-                    set_transient($cache_key, $all_products, HOUR_IN_SECONDS);
+                    set_transient($cache_key, $all_products, 12 * HOUR_IN_SECONDS);
                 }
 
                 if ($offset === 0) {
@@ -323,15 +323,12 @@ class BatchImporter {
 
             // Initialize active SKUs list on first batch
             if ($offset === 0) {
-                delete_transient($active_skus_key);
+                delete_option($active_skus_key);
                 error_log("BatchImporter: Starting new import session for {$supplier}");
             }
 
-            // Get existing active SKUs
-            $active_skus = get_transient($active_skus_key);
-            if ($active_skus === false) {
-                $active_skus = [];
-            }
+            // Get existing active SKUs — stored as option (no expiry) to survive long imports
+            $active_skus = get_option($active_skus_key, []);
 
             // Sync batch
             $stats = $this->sync->syncProducts($batch_products, $supplier);
@@ -344,8 +341,8 @@ class BatchImporter {
             $active_skus = array_merge($active_skus, $batch_skus);
             $active_skus = array_unique($active_skus); // Remove duplicates
 
-            // Save updated active SKUs list
-            set_transient($active_skus_key, $active_skus, HOUR_IN_SECONDS);
+            // Persist updated active SKUs list (no expiry — transients expire mid-import)
+            update_option($active_skus_key, $active_skus, false);
 
             error_log("BatchImporter: Batch synced - created={$stats['created']}, updated={$stats['updated']}, errors={$stats['errors']}");
             error_log("BatchImporter: Total active SKUs so far: " . count($active_skus));
@@ -365,7 +362,7 @@ class BatchImporter {
                 if ($use_cache) {
                     delete_transient($cache_key);
                 }
-                delete_transient($active_skus_key);
+                delete_option($active_skus_key);
 
                 error_log("BatchImporter: Completed {$supplier}, cleared cache, trashed {$trashed} products");
             }
