@@ -33,7 +33,6 @@ the readme will list any important changes.
 
   @php
     do_action('woocommerce_after_main_content');
-    do_action('get_sidebar', 'shop');
     do_action('get_footer', 'shop');
   @endphp
 @endsection

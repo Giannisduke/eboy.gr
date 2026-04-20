@@ -11,6 +11,18 @@
 
  namespace App;
 
+// Show brand but strip "Brand:" / "Brands:" label prefix
+add_action('woocommerce_product_meta_end', function () {
+    ob_start();
+}, 9);
+add_action('woocommerce_product_meta_end', function () {
+    $output = ob_get_clean();
+    $output = preg_replace('/<span class="posted_in">([^<]*?:\s*)/', '<span class="posted_in">', $output);
+    if ( trim($output) && current_user_can('manage_woocommerce') ) {
+        echo '<li class="list-inline-item">' . $output . '</li>';
+    }
+}, 11);
+
 // remove_filter('body_class', 'wc_body_class');
 // remove_filter('post_class', 'wc_product_post_class', 20);
 
@@ -54,7 +66,7 @@
  *
  * @see woocommerce_get_sidebar()
  */
-// remove_action('woocommerce_sidebar', 'woocommerce_get_sidebar', 10);
+remove_action('woocommerce_sidebar', 'woocommerce_get_sidebar', 10);
 
 /**
  * Archive descriptions.
@@ -133,8 +145,9 @@
  * @see woocommerce_upsell_display()
  * @see woocommerce_output_related_products()
  */
+// Move tabs inside the summary column, below stock (add_to_cart is priority 30)
  remove_action('woocommerce_after_single_product_summary', 'woocommerce_output_product_data_tabs', 10);
- add_action('woocommerce_single_product_summary', 'woocommerce_output_product_data_tabs', 45);
+ add_action('woocommerce_single_product_summary', 'woocommerce_output_product_data_tabs', 35);
 // remove_action('woocommerce_after_single_product_summary', 'woocommerce_upsell_display', 15);
 // remove_action('woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20);
 

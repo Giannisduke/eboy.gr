@@ -22,15 +22,39 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 global $product;
+
+$shop_url  = add_query_arg( [ 'orderby' => 'date', 'order' => 'desc' ], home_url( '/' ) );
+$cat_terms = get_the_terms( $product->get_id(), 'product_cat' );
+$tag_terms = get_the_terms( $product->get_id(), 'product_tag' );
 ?>
-<div class="product_meta">
+<ul class="product_meta list-inline">
 
 	<?php do_action( 'woocommerce_product_meta_start' ); ?>
 
-	<?php echo wc_get_product_category_list( $product->get_id(), ', ', '<span class="posted_in">' . _n( '', '', count( $product->get_category_ids() ), 'woocommerce' ) . ' ', '</span>' ); ?>
+	<?php if ( $cat_terms && ! is_wp_error( $cat_terms ) ) : ?>
+		<?php foreach ( $cat_terms as $cat ) : ?>
+			<li class="list-inline-item">
+				<span class="posted_in">
+					<a href="<?php echo esc_url( add_query_arg( 'category', $cat->term_id, $shop_url ) ); ?>">
+						<?php echo esc_html( $cat->name ); ?>
+					</a>
+				</span>
+			</li>
+		<?php endforeach; ?>
+	<?php endif; ?>
 
-	<?php echo wc_get_product_tag_list( $product->get_id(), ', ', '<span class="tagged_as">' . _n( '', '', count( $product->get_tag_ids() ), 'woocommerce' ) . ' ', '</span>' ); ?>
+	<?php if ( $tag_terms && ! is_wp_error( $tag_terms ) ) : ?>
+		<?php foreach ( $tag_terms as $tag ) : ?>
+			<li class="list-inline-item">
+				<span class="tagged_as">
+					<a href="<?php echo esc_url( add_query_arg( 'tags', $tag->term_id, $shop_url ) ); ?>">
+						<?php echo esc_html( $tag->name ); ?>
+					</a>
+				</span>
+			</li>
+		<?php endforeach; ?>
+	<?php endif; ?>
 
 	<?php do_action( 'woocommerce_product_meta_end' ); ?>
 
-</div>
+</ul>

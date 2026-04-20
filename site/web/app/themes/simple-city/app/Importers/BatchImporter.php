@@ -93,6 +93,14 @@ class BatchImporter {
         $progress_file = $xml_dir . $supplier . '-progress.json';
         $enhanced_xml_path = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml';
 
+        // Always evict parsed-products cache at the start of a new import run,
+        // before any early returns (AI processing, etc.) can skip it.
+        $use_cache = wp_get_environment_type() !== 'development';
+        $cache_key = 'xml_import_parsed_' . $supplier;
+        if ($offset === 0 && $use_cache) {
+            delete_transient($cache_key);
+        }
+
         // On fresh user-initiated import, always clear previous run so AI processes fresh
         if ($fresh_import) {
             if (file_exists($progress_file)) {
@@ -233,15 +241,6 @@ class BatchImporter {
         error_log("BatchImporter: Using enhanced XML file: {$xml_file}");
 
         // Use cached products (stored in transient) if available
-        // Disable caching for low-memory environments (development)
-        $use_cache = wp_get_environment_type() !== 'development';
-        $cache_key = 'xml_import_parsed_' . $supplier;
-
-        // On first batch, always evict stale cache so we re-parse the (possibly new) XML
-        if ($offset === 0 && $use_cache) {
-            delete_transient($cache_key);
-        }
-
         $all_products = $use_cache ? get_transient($cache_key) : false;
 
         if ($all_products === false) {

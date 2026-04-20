@@ -131,4 +131,32 @@ add_filter('wp_image_editors', 'fi_force_imagick');
   // Disable Woocommerce setup_wizard
 add_filter( 'woocommerce_prevent_automatic_wizard_redirect', '__return_true' );
 
+// ── WooCommerce + Sage template integration ──────────────────────────────────
+
+// 1. Top-level templates (single-product.php, archive-product.php):
+//    Prepend the Sage Blade/PHP paths so WooCommerce's locate_template() finds
+//    resources/views/woocommerce/ before falling back to the plugin.
+add_filter('woocommerce_template_loader_files', function (array $files, string $default): array {
+    $base  = 'resources/views/woocommerce/';
+    $blade = $base . str_replace('.php', '.blade.php', $default);
+    $php   = $base . $default;
+    return array_merge([$blade, $php], $files);
+}, 5, 2);
+
+// 2. Template parts (content-single-product.php, single-product/product-image.php …):
+//    Redirect wc_get_template() / wc_get_template_part() to resources/views/woocommerce/.
+add_filter('woocommerce_locate_template', function (string $template, string $template_name): string {
+    $base  = get_stylesheet_directory() . '/resources/views/woocommerce/';
+    $blade = $base . str_replace('.php', '.blade.php', $template_name);
+    $php   = $base . $template_name;
+
+    if (file_exists($blade)) {
+        return $blade;
+    }
+    if (file_exists($php)) {
+        return $php;
+    }
+    return $template;
+}, 10, 3);
+
 
