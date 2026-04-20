@@ -35,30 +35,22 @@ wp --url=https://simple-city.eboy.test --user=admin term list pa_color --fields=
 
 ps aux | grep -i "wp\|realtime\|xml" | grep -v grep
 
+  # PHP-FPM max_children
+grep -E "max_children|start_servers|spare_servers" /etc/php/8.3/fpm/pool.d/wordpress.conf
+
+  # nginx timeout
+grep -r "fastcgi_read_timeout" /etc/nginx/
+
+  # PHP memory και execution time
+php -r "echo 'memory_limit: ' . ini_get('memory_limit') . PHP_EOL; echo 'max_execution_time: ' . ini_get('max_execution_time') . PHP_EOL;"
+
 find /tmp /var/log /srv/www/eboy.gr/shared -name "*realtime*" -o -name            
   "*import*.log" 2>/dev/null | head -10
 
 sudo tail -30 /var/log/php8.3-fpm.log
 
-
-! sed -i '/REMBG_HOST\|REMBG_PORT/d' /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/product-ai-processor/.env.local
-
-
 ! tail -50 /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/product-ai-processor/logs/realtime-import.log | grep -i "rembg\|remote\|OK\|ERROR" 
 
-! /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/product-ai-processor/.venv/bin/python3 /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/product-ai-processor/test_rembg_models.py ~/Downloads/006-000015-1.jpg
-
-! cp ~/Downloads/006-000015-1.jpg /tmp/ && /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/product-ai-processor/.venv/bin/python3 /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/product-ai-processor/test_rembg_models.py /tmp/006-000015-1.jpg
-
-! curl -s "https://www.pakoworld.com/image/catalog/products/006-000015-1.jpg" -o /tmp/006-000015-1.jpg && /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/product-ai-processor/.venv/bin/python3 /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/product-ai-processor/test_rembg_models.py /tmp/006-000015-1.jpg
-
-! /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/product-ai-processor/.venv/bin/python3 /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/product-ai-processor/test_rembg_models.py /tmp/006-000015-1.jpg
-
-
 curl -s "https://www.pakoworld.com/image/catalog/products/142-000007.jpg" -o /tmp/142-000007.jpg -L --max-time 30 && echo "downloaded" && file /tmp/142-000007.jpg
-
-
-! /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/product-ai-processor/.venv/bin/python3 /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/product-ai-processor/test_rembg_models.py /tmp/142-000007.jpg
-
 
 /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/product-ai-processor/.venv/bin/python3 /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/product-ai-processor/test_rembg_models.py /tmp/142-000007.jpg

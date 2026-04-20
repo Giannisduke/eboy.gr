@@ -28,6 +28,7 @@ def process_remote(pairs: list, host: str):
     try:
         import requests
         from PIL import Image
+        from concurrent.futures import ThreadPoolExecutor, as_completed
     except ImportError as e:
         print(f"IMPORT_ERROR: {e}", file=sys.stderr)
         sys.exit(2)
@@ -35,26 +36,27 @@ def process_remote(pairs: list, host: str):
     bria_port = os.environ.get('BRIA_PORT', '7001')
     url = f"http://{host}:{bria_port}/api/remove"
 
-    for input_path, output_path in pairs:
-        try:
-            original = Image.open(input_path).convert('RGBA')
+    def _process_one(input_path, output_path):
+        original = Image.open(input_path).convert('RGBA')
+        buf = io.BytesIO()
+        original.convert('RGB').save(buf, 'JPEG', quality=95)
+        buf.seek(0)
+        response = requests.post(url, files={'file': buf}, timeout=120)
+        response.raise_for_status()
+        alpha = Image.open(io.BytesIO(response.content)).convert('RGBA').split()[3]
+        original.putalpha(alpha)
+        original.save(output_path, 'webp', quality=92)
 
-            buf = io.BytesIO()
-            original.convert('RGB').save(buf, 'JPEG', quality=95)
-            buf.seek(0)
-
-            response = requests.post(url, files={'file': buf}, timeout=120)
-            response.raise_for_status()
-
-            # Use mask from BRIA, colors from original
-            alpha = Image.open(io.BytesIO(response.content)).convert('RGBA').split()[3]
-            original.putalpha(alpha)
-
-            original.save(output_path, 'webp', quality=92)
-            print(f"OK:{output_path}", flush=True)
-
-        except Exception as e:
-            print(f"ERROR:{input_path}:{e}", file=sys.stderr, flush=True)
+    workers = min(len(pairs), int(os.environ.get('BRIA_WORKERS', '4')))
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = {executor.submit(_process_one, inp, out): (inp, out) for inp, out in pairs}
+        for future in as_completed(futures):
+            inp, out = futures[future]
+            try:
+                future.result()
+                print(f"OK:{out}", flush=True)
+            except Exception as e:
+                print(f"ERROR:{inp}:{e}", file=sys.stderr, flush=True)
 
 
 def process_local(pairs: list, model: str):
