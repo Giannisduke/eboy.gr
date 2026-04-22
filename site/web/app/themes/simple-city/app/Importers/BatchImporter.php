@@ -115,16 +115,34 @@ class BatchImporter {
         $xml_file = false;
 
         if (!$xml_file) {
-            // STEP 2: Check if original XML exists, if not download it
+            // STEP 2: On first batch, refresh XML from supplier (conditional GET — re-downloads only if changed)
+            $supplier_url = $this->getSupplierURL($supplier);
+
+            if ($offset === 0 && $supplier_url) {
+                $refresh = $this->downloader->refreshIfChanged($supplier_url, $supplier, (bool) $fresh_import);
+
+                // XML changed by supplier (and this is not a user-initiated fresh import where we already cleared files)
+                if (($refresh['changed'] ?? true) && !$fresh_import) {
+                    if (file_exists($enhanced_xml_path)) {
+                        unlink($enhanced_xml_path);
+                        error_log("BatchImporter: Supplier XML changed for {$supplier} — cleared enhanced XML for AI reprocessing");
+                    }
+                    if (file_exists($progress_file)) {
+                        unlink($progress_file);
+                        error_log("BatchImporter: Supplier XML changed for {$supplier} — cleared AI progress file");
+                    }
+                }
+            }
+
             $original_xml = $this->downloader->getLocalFile($supplier, false);
 
             if (!$original_xml) {
-                error_log("BatchImporter: Original XML not found for {$supplier}, attempting download...");
-
-                $supplier_url = $this->getSupplierURL($supplier);
+                // Fallback: refreshIfChanged failed or no URL configured
                 if (!$supplier_url) {
                     throw new \Exception("No URL configured for supplier: {$supplier}");
                 }
+
+                error_log("BatchImporter: Original XML not found for {$supplier}, attempting direct download...");
 
                 try {
                     $download_result = $this->downloader->downloadFeed($supplier_url, $supplier);

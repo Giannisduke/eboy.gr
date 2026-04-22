@@ -31,9 +31,30 @@ wp --url=https://sc-staging.eboy.gr term list product_tag --fields=term_id,name,
 
 scp admin@simple-city-production:../../srv/www/eboy.gr/current/product_tags.csv .
 
+wp --url="https://sc-staging.eboy.gr/" eval-file web/app/themes/simple-city/scripts/reassign-colors.php
+
+scp /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/reassign-colors.php admin@eboy.gr:/srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/
+
+
+recount για να ανανεωθούν τα counts:                                                        
+  wp --url="https://sc-staging.eboy.gr/" eval 'wc_recount_all_terms();' && echo done 
+
+
+  διάγραψε όλα τα pa_color terms με count=0:                                                  
+  wp --url="https://sc-staging.eboy.gr/" eval '                                                        
+  foreach (get_terms(["taxonomy" => "pa_color", "hide_empty" => false]) as $t) {                       
+      if ($t->count == 0) {                                                                            
+          wp_delete_term($t->term_id, "pa_color");
+          WP_CLI::log("Deleted: " . $t->name);                                                         
+      }                                                                                                
+  }
+  '
+
+
+
 wp --url=https://simple-city.eboy.test --user=admin wc product_attribute list
 
-wp --url=https://simple-city.eboy.test --user=admin term list pa_color --fields=term_id,name,slug,count,description --format=csv > pa_color.csv
+wp --url=https://sc-staging.eboy.gr --user=supergiannis term list pa_color --fields=term_id,name,slug,count,description --format=csv > pa_color.csv
 
 
 
@@ -57,22 +78,6 @@ curl -s "https://www.pakoworld.com/image/catalog/products/142-000007.jpg" -o /tm
 
 /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/product-ai-processor/.venv/bin/python3 /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/product-ai-processor/test_rembg_models.py /tmp/142-000007.jpg
 
-
-wp --url="https://sc-staging.eboy.gr/" post list --post_type=product --post_status=trash --meta_key=_supplier --meta_value=pakoworld --format=count 
-
-wp --url="https://sc-staging.eboy.gr/" post list --post_type=product --post_status=publish --meta_key=_supplier --meta_value=pakoworld --format=count
-
-wp --url="https://sc-staging.eboy.gr/" eval '$logs = get_option("xml_importer_logs", []); foreach(array_slice($logs, -50) as $log) echo $log . "\n";'
-
-
-wp --url="https://sc-staging.eboy.gr/" eval '$ids = get_posts(["post_type" => "product","post_status" => ["publish", "trash", "draft"],"posts_per_page" => -1,"fields" => "ids","meta_query" => [["key" => "_supplier", "value" => "pakoworld"]]]); foreach($ids as $id) { wp_delete_post($id, true); } echo "Deleted: " . count($ids) . "\n";' 
-
-wp --url="https://sc-staging.eboy.gr/" post delete $(wp --url="https://sc-staging.eboy.gr/" post list --post_type=product --post_status=trash --format=ids) --force
-
-Πόσα SKUs έχουν συσσωρευτεί στο active_skus (αυξάνεται με κάθε batch): 
-wp --url="https://sc-staging.eboy.gr/" eval '$skus = get_option("xml_import_active_skus_pakoworld", []); echo "Active SKUs tracked: " . count($skus) . "\n";'
-
-
 WP importer logs (τελευταίες 20 γραμμές):
   wp --url="https://sc-staging.eboy.gr/" eval '$logs = get_option("xml_importer_logs", []); foreach(array_slice($logs, -20) as $log) echo $log . "\n";'
 
@@ -81,3 +86,31 @@ WP importer logs (τελευταίες 20 γραμμές):
 
 
   wp --url=https://sc-staging.eboy.gr/ --user=supergiannis term list pa_υλικό --fields=term_id,name,slug,count,description --format=csv > pa_υλικό.csv
+
+
+
+
+  // CRON
+
+Τελευταία WP importer logs:
+wp --url="https://sc-staging.eboy.gr/" eval '$logs = get_option("xml_importer_logs", []); foreach(array_slice($logs, -30) as $log) echo $log . "\n";'
+
+Ελέγξτε αν είναι scheduled το cron:
+  wp --url="https://sc-staging.eboy.gr/" cron event list | grep xml
+
+
+  1. Σβήσε το option ώστε ο init.php να μην το ξαναφτιάχνει                                                                
+  wp --url="https://sc-staging.eboy.gr/" option update xml_importer_cron_enabled 0
+
+  2. Αφαίρεσε το τρέχον scheduled event                                                                                    
+  wp --url="https://sc-staging.eboy.gr/" eval 'wp_clear_scheduled_hook("xml_importer_daily_sync"); echo "Done\n";'
+
+  Επαλήθευση:                                                                                                                
+  wp --url="https://sc-staging.eboy.gr/" cron event list | grep xml                                                          
+  Δεν πρέπει να επιστρέφει τίποτα.                                                                                           
+                                  
+  Αν θελήσεις αργότερα να το ξανανοίξεις για production, αρκεί option update xml_importer_cron_enabled 1.
+
+
+  // pa_υλικό reassign
+  wp --url="https://sc-staging.eboy.gr/" eval-file web/app/themes/simple-city/scripts/reassign-materials.php --apply

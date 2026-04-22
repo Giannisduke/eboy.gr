@@ -771,24 +771,26 @@ class ProductSync {
         // Leading/trailing spaces on keywords prevent partial-word false matches.
         $map = [
             'Βελούδο'           => ['VELVET', 'VELOUR', 'TEDDY', 'SUEDE'],
-            'MDF'               => ['MDF', 'CLIPBOARD', 'CLIPBORD', 'CHIPBOARD', 'MELAMINE', 'ΜΕΛΑΜΙΝ', 'ΜΟΡΙΟΣΑΝΙΔ', 'PAPER WOOD', '3D PAPER', 'PAPER MELAMINE', 'LPL', 'PARTICLE BOARD', 'PARTICLEBOARD', 'E1 PARTICLE', 'FIBERBOARD', 'FIBREBOARD', 'MFC'],
+            'MDF'               => ['MDF', 'CLIPBOARD', 'CLIPBORD', 'CHIPBOARD', 'MELAMINE', 'MELAMINR', 'MELANM', 'ΜΕΛΑΜΙΝ', 'ΜΟΡΙΟΣΑΝΙΔ', 'PAPER WOOD', '3D PAPER', 'PAPER MELAMINE', 'LPL', 'PARTICLE BOARD', 'PARTICLEBOARD', 'E1 PARTICLE', 'FIBERBOARD', 'FIBREBOARD', 'MFC', ' PB '],
             'Κόντρα πλακέ'      => ['PLYWOOD', 'CONTRA PLAQUE', ' PL '],
             'HPL'               => ['HPL', 'WERZALIT', 'COMPACT LAMINATE'],
-            'Ξύλο'              => [' WOOD', 'PINE WOOD', 'RUBBERWOOD', 'BEECHWOOD', 'BEECH WOOD', 'HARDWOOD', 'MANGO WOOD', 'FINGER JOINTED', 'ΞΥΛΟ', 'ΑΚΑΚΙΑ', 'ΠΑΥΛΩΝΙΑ', 'ACACIA', 'TEAK', 'MAHOGANY', 'MINDI', 'SUAR', ' PINE ', 'MERANTI', 'PAULOWNIA', 'MANGO'],
+            'Ξύλο Teak'         => ['TEAK'],
+            'Ξύλο'              => [' WOOD', 'PINE WOOD', 'RUBBERWOOD', 'BEECHWOOD', 'BEECH WOOD', 'HARDWOOD', 'MANGO WOOD', 'FINGER JOINTED', 'ΞΥΛΟ', 'ΑΚΑΚΙΑ', 'ΠΑΥΛΩΝΙΑ', 'ACACIA', 'MAHOGANY', 'MINDI', 'SUAR', ' PINE ', 'MERANTI', 'PAULOWNIA', 'MANGO'],
             'Μέταλλο'           => ['METAL', 'ΜΕΤΑΛΛΟ', 'STEEL', 'IRON'],
             'Inox'              => ['INOX', 'STAINLESS'],
-            'Αλουμίνιο'         => ['ALUMIN', 'ALU '],
+            'Αλουμίνιο'         => ['ALUMIN', 'ALUM', 'ALU '],
+            'Χαρτί'             => [' PAPER '],
             'Μπαμπού'           => ['BAMBOO', 'BAMBOU', 'ΜΠΑΜΠΟΥ'],
-            'Ύφασμα'            => ['FABRIC', 'CANVAS', 'ΥΦΑΣΜΑ', 'TEXTILENE', 'TEXTILE', 'ROPE', 'MESH', 'OXFORD'],
+            'Ύφασμα'            => ['FABRIC', 'CANVAS', 'ΥΦΑΣΜΑ', 'TEXTILENE', 'TEXTILE', 'ROPE', 'MESH', 'OXFORD', 'LINEN', 'WOOL'],
             'Δερματίνη'         => ['PU LEATHER', ' PU ', ' PU-', '-PU ', '.PU', 'PU.', 'LEATHERETTE', 'FAUX LEATHER'],
             'Γυαλί'             => ['GLASS', 'ΓΥΑΛ', 'TEMPERED'],
             'Ρατάν'             => ['RATTAN', 'WICKER', 'RATAN', ' CANE'],
-            'Φυσικές Ίνες'      => ['JUTE', 'SEAGRASS', 'SISAL', 'ABACA', 'HEMP', 'COTTON', 'HYACINTH', 'HYACHINT', 'MENDONG', 'PANDANUS', 'STRAW', 'PALM LEAF', 'BANANA ROOT', 'ALANG', 'RAYUNG', 'RAFFIA'],
+            'Φυσικές Ίνες'      => ['JUTE', 'SEAGRASS', 'SISAL', 'SICAL', 'ABACA', 'HEMP', 'COTTON', 'HYACINTH', 'HYACHINT', 'MENDONG', 'PANDANUS', 'STRAW', 'PALM LEAF', 'BANANA ROOT', 'BANANA MIX', 'ALANG', 'RAYUNG', 'RAFFIA', 'GRASS'],
             'Κεραμικό'          => ['CERAMIC', 'TERRACOTTA', 'STONEWARE', 'DOLOMITE', 'BONE CHINA', 'PORCELAIN', 'SINTERED', 'EARTHENWARE'],
-            'Πολυπροπυλένιο'    => ['HDPE', ' PP ', ' PP-', '-PP ', 'POLYPROPYLENE'],
+            'Πολυπροπυλένιο'    => ['HDPE', ' PP ', ' PP-', '-PP ', 'POLYPROPYLENE', 'POLYETHYLENE'],
             'PVC'               => ['PVC'],
             'Πολυεστέρας'       => ['POLYESTER', '420D', '600D', '100D', 'SILICON COATED FIBER', 'MICROFIBER', 'MICRO FIBER'],
-            'Πλαστικό' => [' ABS ', 'PLASTIC', 'POLYRESIN', 'POLYETHYLENE', ' PC ', ' PS ', 'ACRYLIC', 'POLYCARBONATE'],
+            'Πλαστικό'          => [' ABS ', 'PLASTIC', 'POLYRESIN', ' PC ', ' PS ', 'ACRYLIC', 'POLYCARBONATE'],
             'Σφουγγάρι'         => ['FOAM', 'EPS BEADS', ' EPS ', 'SPRING MATTRESS', 'POCKET SPRING', 'MEMORY FOAM', 'LATEX'],
         ];
 
@@ -804,36 +806,42 @@ class ProductSync {
             }
         }
 
+        // Terms that should never appear as a material
+        $ignore = ['MULTICOLOR'];
+        if (in_array(mb_strtoupper(trim($raw), 'UTF-8'), $ignore)) {
+            return [];
+        }
+
         // Fallback: keep the raw value trimmed if nothing matched
         return $found ?: [trim($raw)];
     }
 
     private function normalizeColors(string $raw): array {
         $map = [
-            'Μαύρο'      => ['BLACK', 'ΜΑΥΡΟ', ' BACK '],
-            'Λευκό'      => ['WHITE', 'ΛΕΥΚΟ', 'IVORY', 'CREAM'],
-            'Γκρι'       => ['GREY', 'GRAY', 'ΓΚΡΙ', 'ELEPHANT', 'RUSTIC GREY'],
-            'Ανθρακί'    => ['ANTHRACITE', 'ΑΝΘΡΑΚΙ', 'CHARCOAL'],
-            'Μπεζ'       => ['BEIGE', 'ECRU'],
-            'Καφέ'       => ['BROWN', 'ΚΑΦΕ', 'TABAC', 'MOCHA'],
-            'Χρυσό'      => ['GOLD', 'ΧΡΥΣΟ', 'COPPER', 'BRONZE'],
+            'Μαύρο'      => ['BLACK', 'ΒLACK', 'ΜΑΥΡΟ', ' BACK '],
+            'Λευκό'      => ['WHITE', 'ΛΕΥΚΟ', 'IVORY', 'CREAM', 'NYMPHEAE ALBA'],
+            'Γκρι'       => ['GREY', 'GRAY', 'ΓΚΡΙ', 'ELEPHANT', 'RUSTIC GREY', 'DARK GRET', 'TILE'],
+            'Ανθρακί'    => ['ANTHRACITE', 'ΑΝΘΡΑΚΙ', 'CHARCOAL', 'ANTRACITE', 'ANTRHACITE', 'ATHRACITE'],
+            'Μπεζ'       => ['BEIGE', 'ECRU', 'ECROU', 'CAMEL', 'KHAKI', ' TAN ', 'ΒΕΙΓΕ', 'MINK'],
+            'Καφέ'       => ['BROWN', 'ΚΑΦΕ', 'TABAC', 'MOCHA', 'CAPPUCCINO', 'CAPPUCINO', 'CAPUCCINO', 'CAPUCINO'],
+            'Χρυσό'      => ['GOLD', 'ΧΡΥΣΟ', 'COPPER', 'BRONZE', 'CHAMPAGNE', 'AMBER'],
             'Ασημί'      => ['SILVER', 'CHROME', 'ΑΣΗΜΙ', 'INOX', 'PIPE'],
-            'Κόκκινο'    => ['RED', 'ROTTEN APPLE', 'CASTILLO-TORO'],
+            'Κόκκινο'    => ['RED', 'ROTTEN APPLE', 'CASTILLO TORO'],
             'Μπλε'       => ['BLUE', 'CIEL'],
-            'Πράσινο'    => ['GREEN'],
-            'Ροζ'        => ['PINK'],
-            'Πορτοκαλί'  => ['ORANGE'],
+            'Πράσινο'    => ['GREEN', 'MINT', 'ΜΙΝΤ', 'MENTA', 'OLIVE', 'PISTACHIO', 'GREN'],
+            'Ροζ'        => ['PINK', 'DUSTY ROSE'],
+            'Πορτοκαλί'  => ['ORANGE', 'TERRACOTTA', 'ΠΟΡΤΟΚΑΛΙ'],
             'Κίτρινο'    => ['YELLOW'],
             'Μωβ'        => ['PURPLE', 'VIOLET'],
-            'Τυρκουάζ'   => ['WATER GREEN', 'TURQUOISE'],
-            'Πολύχρωμο'  => ['MULTICOLOR'],
-            'Διάφανο'    => ['TRANSPARENT'],
+            'Τυρκουάζ'   => ['WATER GREEN', 'TURQUOISE', 'TIRQOISE', 'PETROL', 'TURKEY'],
+            'Πολύχρωμο'  => ['MULTICOLOR', 'MULTI', 'MNULTICOLOR', 'MULTIOCOLOR', 'COLORFUL', 'ΠΟΛΥΧΡΩΜΟ'],
+            'Διάφανο'    => ['TRANSPARENT', 'CLEAR', 'CL.EAR'],
             'Σονόμα'     => ['SONOMA'],
-            'Καρυδί'     => ['WALNUT', 'ΚΑΡΥΔΙ'],
+            'Καρυδί'     => ['WALNUT', 'ΚΑΡΥΔΙ', 'LIGHT TEAK LOOK'],
             'Βέγκε'      => ['WENGE'],
-            'Φυσικό'     => ['NATURAL', 'ΦΥΣΙΚΟ', 'OAK'],
+            'Φυσικό'     => ['NATURAL', 'ΦΥΣΙΚΟ', 'OAK', 'NATURE', 'NATYRAL', 'ATLANTIC PINE', 'UNPAID WOOD', 'UNPAINTED BEACH WOOD', 'SOLID WOOD', 'INDIA'],
             'Σφενδάμι'   => ['MAPLE'],
-            'Μαρμάρινο'  => ['MARBLE'],
+            'Μαρμάρινο'  => ['MARBLE', 'TRAVERTEN', 'TRAVERTINE', 'ΤRAVERTINE'],
             'Τσιμέντο'   => ['CEMENT'],
         ];
 

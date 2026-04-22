@@ -130,13 +130,122 @@ class XMLDownloader {
             throw new \Exception("Failed to save XML to {$filename}");
         }
 
+        // Persist ETag / Last-Modified for future conditional GETs
+        $this->saveMeta($supplier, $response);
+
         return [
-            'success' => true,
-            'supplier' => $supplier,
-            'filename' => $filename,
-            'size' => $bytes_written,
-            'downloaded_at' => current_time('mysql')
+            'success'       => true,
+            'changed'       => true,
+            'supplier'      => $supplier,
+            'filename'      => $filename,
+            'size'          => $bytes_written,
+            'downloaded_at' => current_time('mysql'),
         ];
+    }
+
+    /**
+     * Conditional GET — re-downloads only when the supplier XML has changed.
+     *
+     * Uses ETag / Last-Modified from the previous download (stored in a .meta file).
+     * If the server responds 304, the existing local file is kept as-is.
+     * Falls back to a full download when no metadata is stored yet.
+     *
+     * @param string $url      Supplier feed URL
+     * @param string $supplier Supplier identifier
+     * @param bool   $force    True → always re-download (fresh import)
+     * @return array  ['success' => bool, 'changed' => bool, ...]
+     */
+    public function refreshIfChanged(string $url, string $supplier, bool $force = false): array {
+        $gr_dir   = $this->cache_dir . 'gr/';
+        $filename = $gr_dir . $supplier . '.xml';
+
+        // Force re-download (user clicked "Fresh Import") or no local file yet
+        if ($force || !file_exists($filename)) {
+            return $this->downloadFeed($url, $supplier);
+        }
+
+        // Build conditional headers from stored metadata
+        $meta    = $this->readMeta($supplier);
+        $headers = [];
+        if (!empty($meta['etag'])) {
+            $headers['If-None-Match'] = $meta['etag'];
+        }
+        if (!empty($meta['last_modified'])) {
+            $headers['If-Modified-Since'] = $meta['last_modified'];
+        }
+
+        // No stored metadata → full download to capture headers for next time
+        if (empty($headers)) {
+            error_log("XMLDownloader: No metadata for {$supplier} — downloading fresh to capture ETag");
+            return $this->downloadFeed($url, $supplier);
+        }
+
+        $response = wp_remote_get($url, [
+            'timeout'   => 120,
+            'sslverify' => false,
+            'headers'   => $headers,
+        ]);
+
+        if (is_wp_error($response)) {
+            error_log("XMLDownloader: Conditional GET failed for {$supplier}: " . $response->get_error_message() . " — keeping existing file");
+            return ['success' => true, 'supplier' => $supplier, 'changed' => false];
+        }
+
+        $status = wp_remote_retrieve_response_code($response);
+
+        if ($status === 304) {
+            error_log("XMLDownloader: {$supplier} XML unchanged (304 Not Modified)");
+            return ['success' => true, 'supplier' => $supplier, 'changed' => false];
+        }
+
+        if ($status === 200) {
+            $body = wp_remote_retrieve_body($response);
+
+            if (empty($body)) {
+                error_log("XMLDownloader: Empty body on refresh for {$supplier} — keeping existing file");
+                return ['success' => true, 'supplier' => $supplier, 'changed' => false];
+            }
+
+            libxml_use_internal_errors(true);
+            if (simplexml_load_string($body) === false) {
+                libxml_clear_errors();
+                error_log("XMLDownloader: Invalid XML on refresh for {$supplier} — keeping existing file");
+                return ['success' => true, 'supplier' => $supplier, 'changed' => false];
+            }
+
+            file_put_contents($filename, $body);
+            $this->saveMeta($supplier, $response);
+
+            error_log("XMLDownloader: {$supplier} XML changed (200) — downloaded fresh copy");
+            return ['success' => true, 'supplier' => $supplier, 'changed' => true, 'filename' => $filename];
+        }
+
+        error_log("XMLDownloader: Unexpected HTTP {$status} for {$supplier} on conditional GET — keeping existing file");
+        return ['success' => true, 'supplier' => $supplier, 'changed' => false];
+    }
+
+    // ── Private helpers ──────────────────────────────────────────────────────
+
+    private function readMeta(string $supplier): array {
+        $file = $this->cache_dir . 'gr/' . $supplier . '.xml.meta';
+        if (!file_exists($file)) {
+            return [];
+        }
+        return json_decode(file_get_contents($file), true) ?? [];
+    }
+
+    private function saveMeta(string $supplier, $response): void {
+        $etag          = wp_remote_retrieve_header($response, 'etag');
+        $last_modified = wp_remote_retrieve_header($response, 'last-modified');
+        if (!$etag && !$last_modified) {
+            return; // Server doesn't send caching headers — nothing to store
+        }
+        $file = $this->cache_dir . 'gr/' . $supplier . '.xml.meta';
+        file_put_contents($file, json_encode([
+            'etag'          => $etag ?: null,
+            'last_modified' => $last_modified ?: null,
+            'saved_at'      => current_time('mysql'),
+        ]));
     }
 
     /**
