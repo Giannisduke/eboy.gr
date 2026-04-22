@@ -45,7 +45,7 @@ background: linear-gradient(180deg,rgba(255, 255, 255, 1) 0%, rgba(235, 232, 228
 
 #monk_slider .winter_sales_26 {
   position: absolute;
-  left: 37%;
+  left: 50%;
   top: 23%;
   transform: translateX(-50%);
   z-index: 2;
@@ -134,7 +134,7 @@ background: linear-gradient(180deg,rgba(255, 255, 255, 1) 0%, rgba(235, 232, 228
   justify-content: flex-end;
   gap: 16px;
   height: 100%;
-  width: min(1100px, 100%);
+  width: min(900px, 100%);
   line-height: 0;
   text-decoration: none;
 }
