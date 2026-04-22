@@ -35,38 +35,53 @@
     <div class="filters-container" :class="{ 'filters-open': filtersOpen }">
       <!-- Tag Cloud (Left Column) -->
       <div v-if="shopStore.tags.length > 0" class="tag-cloud">
-        <button
-          v-for="tag in sortedTags"
-          :key="tag.id"
-          class="tag-btn"
-          :class="{
-            active: shopStore.filters.tags.includes(tag.id),
-            disabled: tag.available === false && !shopStore.filters.tags.includes(tag.id)
-          }"
-          :style="{ fontSize: getTagSize(tag.count) }"
-          :disabled="tag.available === false && !shopStore.filters.tags.includes(tag.id)"
-          @click="toggleTag(tag.id)"
+        <div
+          class="cloud-inner"
+          :style="{ maxHeight: tagsExpanded ? '2000px' : COLLAPSE_ROWS_HEIGHT }"
         >
-          {{ tag.name }} <span class="tag-count">({{ tag.count }})</span>
+          <button
+            v-for="tag in sortedTags"
+            :key="tag.id"
+            class="tag-btn"
+            :class="{
+              active: shopStore.filters.tags.includes(tag.id),
+              disabled: tag.available === false && !shopStore.filters.tags.includes(tag.id)
+            }"
+            :style="{ fontSize: getTagSize(tag.count) }"
+            :disabled="tag.available === false && !shopStore.filters.tags.includes(tag.id)"
+            @click="toggleTag(tag.id)"
+          >
+            {{ tag.name }} <span class="tag-count">({{ tag.count }})</span>
+          </button>
+        </div>
+        <button class="cloud-toggle-btn" @click="tagsExpanded = !tagsExpanded">
+          {{ tagsExpanded ? 'Λιγότερα ▲' : 'Περισσότερα ▼' }}
         </button>
       </div>
 
       <!-- Υλικά Column -->
       <div v-if="shopStore.materials.length > 0" class="material">
-
-        <button
-          v-for="material in sortedMaterials"
-          :key="material.id"
-          class="material-btn"
-          :class="{
-            active: shopStore.filters.materials.includes(material.id),
-            disabled: material.available === false && !shopStore.filters.materials.includes(material.id)
-          }"
-          :style="{ fontSize: getMaterialSize(material.count) }"
-          :disabled="material.available === false && !shopStore.filters.materials.includes(material.id)"
-          @click="toggleMaterial(material.id)"
+        <div
+          class="cloud-inner"
+          :style="{ maxHeight: materialsExpanded ? '2000px' : COLLAPSE_ROWS_HEIGHT }"
         >
-          {{ material.name }} <span class="material-count">({{ material.count }})</span>
+          <button
+            v-for="material in sortedMaterials"
+            :key="material.id"
+            class="material-btn"
+            :class="{
+              active: shopStore.filters.materials.includes(material.id),
+              disabled: material.available === false && !shopStore.filters.materials.includes(material.id)
+            }"
+            :style="{ fontSize: getMaterialSize(material.count) }"
+            :disabled="material.available === false && !shopStore.filters.materials.includes(material.id)"
+            @click="toggleMaterial(material.id)"
+          >
+            {{ material.name }} <span class="material-count">({{ material.count }})</span>
+          </button>
+        </div>
+        <button class="cloud-toggle-btn" @click="materialsExpanded = !materialsExpanded">
+          {{ materialsExpanded ? 'Λιγότερα ▲' : 'Περισσότερα ▼' }}
         </button>
       </div>
       <!-- Extra Filters (Right Side) -->
@@ -242,6 +257,9 @@ let headerResizeObserver = null;
 const filterBarEl = ref(null);
 const isStuck = ref(false);
 const filtersOpen = ref(false);
+const tagsExpanded = ref(false);
+const materialsExpanded = ref(false);
+const COLLAPSE_ROWS_HEIGHT = '105px';
 
 const checkStuck = () => {
   if (!filterBarEl.value) return;
@@ -870,6 +888,29 @@ const getMaterialSize = (count) => {
 
     & .color-swatch:hover .color-name {
       opacity: 1;
+    }
+
+    & .cloud-inner {
+      overflow: hidden;
+      transition: max-height 0.35s ease;
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    & .cloud-toggle-btn {
+      margin-top: 0.5rem;
+      padding: 0.2rem 0.75rem;
+      font-size: 0.78rem;
+      background: transparent;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      color: #555;
+      transition: all 0.2s;
+
+      &:hover {
+        border-color: #000;
+        color: #000;
+      }
     }
 
     & .tag-btn {

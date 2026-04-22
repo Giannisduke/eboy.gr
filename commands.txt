@@ -68,3 +68,16 @@ wp --url="https://sc-staging.eboy.gr/" eval '$logs = get_option("xml_importer_lo
 wp --url="https://sc-staging.eboy.gr/" eval '$ids = get_posts(["post_type" => "product","post_status" => ["publish", "trash", "draft"],"posts_per_page" => -1,"fields" => "ids","meta_query" => [["key" => "_supplier", "value" => "pakoworld"]]]); foreach($ids as $id) { wp_delete_post($id, true); } echo "Deleted: " . count($ids) . "\n";' 
 
 wp --url="https://sc-staging.eboy.gr/" post delete $(wp --url="https://sc-staging.eboy.gr/" post list --post_type=product --post_status=trash --format=ids) --force
+
+Πόσα SKUs έχουν συσσωρευτεί στο active_skus (αυξάνεται με κάθε batch): 
+wp --url="https://sc-staging.eboy.gr/" eval '$skus = get_option("xml_import_active_skus_pakoworld", []); echo "Active SKUs tracked: " . count($skus) . "\n";'
+
+
+WP importer logs (τελευταίες 20 γραμμές):
+  wp --url="https://sc-staging.eboy.gr/" eval '$logs = get_option("xml_importer_logs", []); foreach(array_slice($logs, -20) as $log) echo $log . "\n";'
+
+
+  wp --url=https://sc-staging.eboy.gr/ --user=supergiannis wc product_attribute list --fields=id,name,slug --format=table
+
+
+  wp --url=https://sc-staging.eboy.gr/ --user=supergiannis term list pa_υλικό --fields=term_id,name,slug,count,description --format=csv > pa_υλικό.csv

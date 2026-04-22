@@ -767,24 +767,29 @@ class ProductSync {
      * Splits combinations (e.g. "MDF - METAL") into multiple terms.
      */
     private function normalizeMaterials(string $raw): array {
-        // Keywords that identify each canonical material (checked on uppercased string)
+        // Keywords checked against the uppercased, space-padded raw string.
+        // Leading/trailing spaces on keywords prevent partial-word false matches.
         $map = [
-            'Βελούδο'       => ['VELVET'],
-            'MDF'           => ['MDF', 'CLIPBOARD', 'CHIPBOARD', 'MELAMINE', 'ΜΕΛΑΜΙΝ', 'ΜΟΡΙΟΣΑΝΙΔ', 'PAPER WOOD', '3D PAPER', 'PAPER MELAMINE', 'LPL'],
-            'Κόντρα πλακέ'  => ['PLYWOOD'],
-            'Ξύλο'          => ['SOLID WOOD', 'PINE WOOD', 'RUBBERWOOD', 'BEECHWOOD', 'BEECH WOOD', 'HARDWOOD', 'MANGO', 'FINGER JOINTED', 'ΞΥΛΟ', 'ΑΚΑΚΙΑ', 'ΠΑΥΛΩΝΙΑ'],
-            'Μέταλλο'       => ['METAL', 'ΜΕΤΑΛΛΟ', 'STEEL', 'IRON'],
-            'Inox'          => ['INOX'],
-            'Αλουμίνιο'     => ['ALUMIN'],
-            'Μπαμπού'       => ['BAMBOO', 'BAMBOU', 'ΜΠΑΜΠΟΥ'],
-            'Ύφασμα'        => ['FABRIC', 'CANVAS', 'ΥΦΑΣΜΑ', 'TEXTILENE', 'TEXTILE', 'ROPE', 'MESH', 'OXFORD'],
-            'Δερματίνη'     => ['PU LEATHER', ' PU ', ' PU-', '-PU ', '.PU', 'PU.'],
-            'Γυαλί'         => ['GLASS', 'ΓΥΑΛ', 'TEMPERED'],
-            'Ρατάν'         => ['RATTAN'],
-            'Πολυπροπυλένιο'=> ['HDPE', ' PP ', ' PP-', '-PP '],
-            'PVC'           => ['PVC'],
-            'Πολυεστέρας'   => ['POLYESTER', '420D', '600D', '100D'],
-            'Σφουγγάρι'     => ['FOAM', 'EPS BEADS', ' EPS ', 'SPRING MATTRESS', 'POCKET SPRING', 'MEMORY FOAM', 'LATEX'],
+            'Βελούδο'           => ['VELVET', 'VELOUR', 'TEDDY', 'SUEDE'],
+            'MDF'               => ['MDF', 'CLIPBOARD', 'CLIPBORD', 'CHIPBOARD', 'MELAMINE', 'ΜΕΛΑΜΙΝ', 'ΜΟΡΙΟΣΑΝΙΔ', 'PAPER WOOD', '3D PAPER', 'PAPER MELAMINE', 'LPL', 'PARTICLE BOARD', 'PARTICLEBOARD', 'E1 PARTICLE', 'FIBERBOARD', 'FIBREBOARD', 'MFC'],
+            'Κόντρα πλακέ'      => ['PLYWOOD', 'CONTRA PLAQUE', ' PL '],
+            'HPL'               => ['HPL', 'WERZALIT', 'COMPACT LAMINATE'],
+            'Ξύλο'              => [' WOOD', 'PINE WOOD', 'RUBBERWOOD', 'BEECHWOOD', 'BEECH WOOD', 'HARDWOOD', 'MANGO WOOD', 'FINGER JOINTED', 'ΞΥΛΟ', 'ΑΚΑΚΙΑ', 'ΠΑΥΛΩΝΙΑ', 'ACACIA', 'TEAK', 'MAHOGANY', 'MINDI', 'SUAR', ' PINE ', 'MERANTI', 'PAULOWNIA', 'MANGO'],
+            'Μέταλλο'           => ['METAL', 'ΜΕΤΑΛΛΟ', 'STEEL', 'IRON'],
+            'Inox'              => ['INOX', 'STAINLESS'],
+            'Αλουμίνιο'         => ['ALUMIN', 'ALU '],
+            'Μπαμπού'           => ['BAMBOO', 'BAMBOU', 'ΜΠΑΜΠΟΥ'],
+            'Ύφασμα'            => ['FABRIC', 'CANVAS', 'ΥΦΑΣΜΑ', 'TEXTILENE', 'TEXTILE', 'ROPE', 'MESH', 'OXFORD'],
+            'Δερματίνη'         => ['PU LEATHER', ' PU ', ' PU-', '-PU ', '.PU', 'PU.', 'LEATHERETTE', 'FAUX LEATHER'],
+            'Γυαλί'             => ['GLASS', 'ΓΥΑΛ', 'TEMPERED'],
+            'Ρατάν'             => ['RATTAN', 'WICKER', 'RATAN', ' CANE'],
+            'Φυσικές Ίνες'      => ['JUTE', 'SEAGRASS', 'SISAL', 'ABACA', 'HEMP', 'COTTON', 'HYACINTH', 'HYACHINT', 'MENDONG', 'PANDANUS', 'STRAW', 'PALM LEAF', 'BANANA ROOT', 'ALANG', 'RAYUNG', 'RAFFIA'],
+            'Κεραμικό'          => ['CERAMIC', 'TERRACOTTA', 'STONEWARE', 'DOLOMITE', 'BONE CHINA', 'PORCELAIN', 'SINTERED', 'EARTHENWARE'],
+            'Πολυπροπυλένιο'    => ['HDPE', ' PP ', ' PP-', '-PP ', 'POLYPROPYLENE'],
+            'PVC'               => ['PVC'],
+            'Πολυεστέρας'       => ['POLYESTER', '420D', '600D', '100D', 'SILICON COATED FIBER', 'MICROFIBER', 'MICRO FIBER'],
+            'Πλαστικό' => [' ABS ', 'PLASTIC', 'POLYRESIN', 'POLYETHYLENE', ' PC ', ' PS ', 'ACRYLIC', 'POLYCARBONATE'],
+            'Σφουγγάρι'         => ['FOAM', 'EPS BEADS', ' EPS ', 'SPRING MATTRESS', 'POCKET SPRING', 'MEMORY FOAM', 'LATEX'],
         ];
 
         $upper = mb_strtoupper(' ' . $raw . ' ', 'UTF-8');
