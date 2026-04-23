@@ -43,10 +43,11 @@ class RealtimeImporter {
 
         $start_time = time();
         $stats = [
-            'created' => 0,
-            'updated' => 0,
-            'errors' => 0,
-            'total_imported' => 0
+            'created'        => 0,
+            'updated'        => 0,
+            'errors'         => 0,
+            'total_imported' => 0,
+            'trashed'        => 0,
         ];
 
         // Track active SKUs for missing product cleanup

@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import { productsApi } from '../services/products';
 
+let _filterDebounceTimer = null;
+
 export const useShopStore = defineStore('shop', {
     state: () => ({
         products: [],
@@ -193,6 +195,7 @@ export const useShopStore = defineStore('shop', {
 
             try {
                 const result = await productsApi.getProducts(this.filters);
+                if (!result) return;
 
                 if (append) {
                     this.products = [...this.products, ...result.products];
@@ -269,6 +272,38 @@ export const useShopStore = defineStore('shop', {
             }
         },
 
+        _applyFilters() {
+            clearTimeout(_filterDebounceTimer);
+            _filterDebounceTimer = setTimeout(() => {
+                this.fetchFilterState();
+                this.fetchProducts();
+            }, 150);
+        },
+
+        async fetchFilterState() {
+            try {
+                const data = await productsApi.getFilterState(this.filters);
+                if (!data) return;
+                this.tags      = data.tags      || [];
+                this.colors    = data.colors    || [];
+                this.materials = data.materials || [];
+                this.heights   = data.heights   || [];
+                this.widths    = data.widths    || [];
+                this.depths    = data.depths    || [];
+
+                const range = data.priceRange || {};
+                if (range.min      !== undefined) this.priceRange.min         = range.min;
+                if (range.max      !== undefined) this.priceRange.max         = range.max;
+                if (range.filteredMin !== undefined) this.priceRange.filteredMin = range.filteredMin;
+                if (range.filteredMax !== undefined) this.priceRange.filteredMax = range.filteredMax;
+
+                if (this.filters.minPrice === null) this.filters.minPrice = range.min;
+                if (this.filters.maxPrice === null) this.filters.maxPrice = range.max;
+            } catch (error) {
+                console.error('Error fetching filter state:', error);
+            }
+        },
+
         async fetchPriceRange() {
             try {
                 const range = await productsApi.getPriceRange(this.filters);
@@ -315,25 +350,14 @@ export const useShopStore = defineStore('shop', {
             this.filters.maxPrice = null;
 
             this.updateURL();
-
-            // Re-fetch filters based on new category
-            await this.fetchTags();
-            await this.fetchColors();
-            await this.fetchMaterials();
-            await this.fetchHeights();
-            await this.fetchWidths();
-            await this.fetchDepths();
-            await this.fetchPriceRange();
-
-            // Fetch products with new category
-            this.fetchProducts();
+            this._applyFilters();
         },
 
-        setSearch(searchTerm) {
+        async setSearch(searchTerm) {
             this.filters.search = searchTerm;
             this.filters.page = 1;
             this.updateURL();
-            this.fetchProducts();
+            this._applyFilters();
         },
 
         setOnSale(onSale) {
@@ -343,158 +367,69 @@ export const useShopStore = defineStore('shop', {
             this.fetchProducts();
         },
 
-        async toggleTag(tagId) {
+        toggleTag(tagId) {
             const index = this.filters.tags.indexOf(tagId);
             if (index === -1) {
-                // Add tag
                 this.filters.tags.push(tagId);
             } else {
-                // Remove tag
                 this.filters.tags.splice(index, 1);
             }
             this.filters.page = 1;
             this.updateURL();
-
-            // Re-fetch all filters to update availability
-            await Promise.all([
-                this.fetchTags(),
-                this.fetchColors(),
-                this.fetchMaterials(),
-                this.fetchHeights(),
-                this.fetchWidths(),
-                this.fetchDepths(),
-                this.fetchPriceRange()
-            ]);
-
-            this.fetchProducts();
+            this._applyFilters();
         },
 
-        async toggleColor(colorId) {
+        toggleColor(colorId) {
             const index = this.filters.colors.indexOf(colorId);
             if (index === -1) {
-                // Add color
                 this.filters.colors.push(colorId);
             } else {
-                // Remove color
                 this.filters.colors.splice(index, 1);
             }
             this.filters.page = 1;
             this.updateURL();
-
-            // Re-fetch all filters to update availability
-            await Promise.all([
-                this.fetchTags(),
-                this.fetchColors(),
-                this.fetchMaterials(),
-                this.fetchHeights(),
-                this.fetchWidths(),
-                this.fetchDepths(),
-                this.fetchPriceRange()
-            ]);
-
-            this.fetchProducts();
+            this._applyFilters();
         },
 
-        async toggleMaterial(materialId) {
+        toggleMaterial(materialId) {
             const index = this.filters.materials.indexOf(materialId);
             if (index === -1) {
-                // Add material
                 this.filters.materials.push(materialId);
             } else {
-                // Remove material
                 this.filters.materials.splice(index, 1);
             }
             this.filters.page = 1;
             this.updateURL();
-
-            // Re-fetch all filters to update availability
-            await Promise.all([
-                this.fetchTags(),
-                this.fetchColors(),
-                this.fetchMaterials(),
-                this.fetchHeights(),
-                this.fetchWidths(),
-                this.fetchDepths(),
-                this.fetchPriceRange()
-            ]);
-
-            this.fetchProducts();
+            this._applyFilters();
         },
 
-        async setHeight(height) {
+        setHeight(height) {
             this.filters.height = height;
             this.filters.page = 1;
             this.updateURL();
-
-            // Re-fetch all filters to update availability
-            await Promise.all([
-                this.fetchTags(),
-                this.fetchColors(),
-                this.fetchMaterials(),
-                this.fetchHeights(),
-                this.fetchWidths(),
-                this.fetchDepths(),
-                this.fetchPriceRange()
-            ]);
-
-            this.fetchProducts();
+            this._applyFilters();
         },
 
-        async setWidth(width) {
+        setWidth(width) {
             this.filters.width = width;
             this.filters.page = 1;
             this.updateURL();
-
-            // Re-fetch all filters to update availability
-            await Promise.all([
-                this.fetchTags(),
-                this.fetchColors(),
-                this.fetchMaterials(),
-                this.fetchHeights(),
-                this.fetchWidths(),
-                this.fetchDepths(),
-                this.fetchPriceRange()
-            ]);
-
-            this.fetchProducts();
+            this._applyFilters();
         },
 
-        async setDepth(depth) {
+        setDepth(depth) {
             this.filters.depth = depth;
             this.filters.page = 1;
             this.updateURL();
-
-            // Re-fetch all filters to update availability
-            await Promise.all([
-                this.fetchTags(),
-                this.fetchColors(),
-                this.fetchMaterials(),
-                this.fetchHeights(),
-                this.fetchWidths(),
-                this.fetchDepths(),
-                this.fetchPriceRange()
-            ]);
-
-            this.fetchProducts();
+            this._applyFilters();
         },
 
-        async setPriceRange(minPrice, maxPrice) {
+        setPriceRange(minPrice, maxPrice) {
             this.filters.minPrice = minPrice;
             this.filters.maxPrice = maxPrice;
             this.filters.page = 1;
             this.updateURL();
-
-            // Re-fetch all filters to update availability
-            await Promise.all([
-                this.fetchTags(),
-                this.fetchColors(),
-                this.fetchMaterials(),
-                this.fetchHeights(),
-                this.fetchWidths(),
-                this.fetchDepths()
-            ]);
-
-            this.fetchProducts();
+            this._applyFilters();
         },
 
         setSort(orderby, order = 'asc') {

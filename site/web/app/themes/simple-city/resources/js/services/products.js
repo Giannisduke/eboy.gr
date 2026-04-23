@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+let _productsAbort     = null;
+let _filterStateAbort  = null;
+
 /**
  * Products API Service
  */
@@ -8,6 +11,9 @@ export const productsApi = {
      * Fetch products with filters
      */
     async getProducts(filters = {}) {
+        if (_productsAbort) _productsAbort.abort();
+        _productsAbort = new AbortController();
+
         const params = {
             per_page: filters.perPage || 10,
             page: filters.page || 1,
@@ -69,14 +75,18 @@ export const productsApi = {
         }
 
         try {
-            const response = await axios.get('/wp-json/theme/v1/products', { params });
-
+            const response = await axios.get('/wp-json/theme/v1/products', {
+                params,
+                signal: _productsAbort.signal,
+            });
+            _productsAbort = null;
             return {
                 products: response.data.products,
                 total: response.data.total,
                 totalPages: response.data.totalPages
             };
         } catch (error) {
+            if (axios.isCancel(error)) return null;
             console.error('Error fetching products:', error);
             throw new Error('Failed to load products. Please try again.');
         }
@@ -161,6 +171,10 @@ export const productsApi = {
                 params.max_price = filters.maxPrice;
             }
 
+            if (filters.search) {
+                params.search = filters.search;
+            }
+
             const response = await axios.get('/wp-json/theme/v1/tags', { params });
             return response.data;
         } catch (error) {
@@ -219,6 +233,10 @@ export const productsApi = {
             }
             if (filters.maxPrice !== undefined && filters.maxPrice !== null) {
                 params.max_price = filters.maxPrice;
+            }
+
+            if (filters.search) {
+                params.search = filters.search;
             }
 
             const response = await axios.get('/wp-json/theme/v1/colors', { params });
@@ -281,6 +299,10 @@ export const productsApi = {
                 params.max_price = filters.maxPrice;
             }
 
+            if (filters.search) {
+                params.search = filters.search;
+            }
+
             const response = await axios.get('/wp-json/theme/v1/materials', { params });
             return response.data;
         } catch (error) {
@@ -339,6 +361,10 @@ export const productsApi = {
             }
             if (filters.maxPrice !== undefined && filters.maxPrice !== null) {
                 params.max_price = filters.maxPrice;
+            }
+
+            if (filters.search) {
+                params.search = filters.search;
             }
 
             const response = await axios.get('/wp-json/theme/v1/heights', { params });
@@ -401,6 +427,10 @@ export const productsApi = {
                 params.max_price = filters.maxPrice;
             }
 
+            if (filters.search) {
+                params.search = filters.search;
+            }
+
             const response = await axios.get('/wp-json/theme/v1/widths', { params });
             return response.data;
         } catch (error) {
@@ -461,11 +491,50 @@ export const productsApi = {
                 params.max_price = filters.maxPrice;
             }
 
+            if (filters.search) {
+                params.search = filters.search;
+            }
+
             const response = await axios.get('/wp-json/theme/v1/depths', { params });
             return response.data;
         } catch (error) {
             console.error('Error fetching depths:', error);
             throw new Error('Failed to load depths. Please try again.');
+        }
+    },
+
+    /**
+     * Get all filter availability data in a single request.
+     * Replaces the 7 individual filter endpoints called on every filter change.
+     */
+    async getFilterState(filters = {}) {
+        if (_filterStateAbort) _filterStateAbort.abort();
+        _filterStateAbort = new AbortController();
+
+        const params = {};
+
+        if (filters.category)                                      params.category  = filters.category;
+        if (filters.search)                                        params.search    = filters.search;
+        if (filters.tags      && filters.tags.length > 0)         params.tags      = filters.tags.join(',');
+        if (filters.colors    && filters.colors.length > 0)       params.colors    = filters.colors.join(',');
+        if (filters.materials && filters.materials.length > 0)    params.materials = filters.materials.join(',');
+        if (filters.height)                                        params.height    = filters.height;
+        if (filters.width)                                         params.width     = filters.width;
+        if (filters.depth)                                         params.depth     = filters.depth;
+        if (filters.minPrice != null)                              params.min_price = filters.minPrice;
+        if (filters.maxPrice != null)                              params.max_price = filters.maxPrice;
+
+        try {
+            const response = await axios.get('/wp-json/theme/v1/filter-state', {
+                params,
+                signal: _filterStateAbort.signal,
+            });
+            _filterStateAbort = null;
+            return response.data;
+        } catch (error) {
+            if (axios.isCancel(error)) return null;
+            console.error('Error fetching filter state:', error);
+            throw new Error('Failed to load filter state. Please try again.');
         }
     },
 
@@ -503,6 +572,10 @@ export const productsApi = {
             // Pass selected width to calculate filtered range
             if (filters.width) {
                 params.selected_width = filters.width;
+            }
+
+            if (filters.search) {
+                params.search = filters.search;
             }
 
             const response = await axios.get('/wp-json/theme/v1/price-range', { params });

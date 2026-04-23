@@ -401,6 +401,13 @@ add_action('rest_api_init', function () {
         'callback' => 'get_shop_init_data',
         'permission_callback' => '__return_true',
     ]);
+
+    // Filter state endpoint — all filter availability in one request (used on filter changes)
+    register_rest_route('theme/v1', '/filter-state', [
+        'methods' => 'GET',
+        'callback' => 'get_shop_filter_state',
+        'permission_callback' => '__return_true',
+    ]);
 });
 
 /**
@@ -557,6 +564,13 @@ function get_shop_products($request) {
     // Execute query
     $query = new WP_Query($args);
 
+    // Prefetch taxonomy terms for all products in one bulk query
+    // so get_the_terms() inside the loop hits the cache instead of the DB
+    if ($query->have_posts()) {
+        $post_ids = wp_list_pluck($query->posts, 'ID');
+        update_object_term_cache($post_ids, 'product');
+    }
+
     // Format products for Vue
     $products = [];
     if ($query->have_posts()) {
@@ -673,6 +687,243 @@ function get_shop_init_data($request) {
     // 30-minute cache — cleared automatically by clear_shop_cache on product/term changes
     set_transient($cache_key, $data, 1800);
 
+    return new WP_REST_Response($data);
+}
+
+/**
+ * Get all filter availability data in a single request.
+ * Runs ONE get_posts(-1) query instead of 7 separate ones.
+ */
+function get_shop_filter_state($request) {
+    global $wpdb;
+
+    $params    = $request->get_params();
+    $cache_key = 'shop_filter_state_' . md5(serialize($params));
+
+    $cached = get_transient($cache_key);
+    if ($cached !== false) {
+        return new WP_REST_Response($cached);
+    }
+
+    // Parse all active filters from params
+    $category_id  = isset($params['category'])  && $params['category']  !== '' ? intval($params['category'])                                          : null;
+    $tag_ids      = isset($params['tags'])       && $params['tags']      !== '' ? array_map('intval', explode(',', $params['tags']))                   : [];
+    $color_ids    = isset($params['colors'])     && $params['colors']    !== '' ? array_map('intval', explode(',', $params['colors']))                 : [];
+    $material_ids = isset($params['materials'])  && $params['materials'] !== '' ? array_map('intval', explode(',', $params['materials']))              : [];
+    $height       = isset($params['height'])     && $params['height']    !== '' ? sanitize_text_field($params['height'])                              : null;
+    $width        = isset($params['width'])      && $params['width']     !== '' ? sanitize_text_field($params['width'])                               : null;
+    $depth        = isset($params['depth'])      && $params['depth']     !== '' ? sanitize_text_field($params['depth'])                               : null;
+    $min_price    = isset($params['min_price'])  && $params['min_price'] !== '' ? floatval($params['min_price'])                                      : null;
+    $max_price    = isset($params['max_price'])  && $params['max_price'] !== '' ? floatval($params['max_price'])                                      : null;
+    $search       = isset($params['search'])     && $params['search']    !== '' ? sanitize_text_field($params['search'])                              : null;
+
+    $has_filters = !empty($tag_ids) || !empty($color_ids) || !empty($material_ids)
+        || $height || $width || $depth
+        || $min_price !== null || $max_price !== null || $search;
+
+    // Step 1: Category-scoped IDs — used to limit which terms appear in the filter bar
+    $category_product_ids = null;
+    if ($category_id) {
+        $category_product_ids = get_posts([
+            'post_type'      => 'product',
+            'posts_per_page' => -1,
+            'fields'         => 'ids',
+            'post_status'    => 'publish',
+            'tax_query'      => [[
+                'taxonomy' => 'product_cat',
+                'field'    => 'term_id',
+                'terms'    => $category_id,
+            ]],
+        ]);
+
+        if (empty($category_product_ids)) {
+            $empty = [
+                'tags'       => [],
+                'colors'     => [],
+                'materials'  => [],
+                'heights'    => [],
+                'widths'     => [],
+                'depths'     => [],
+                'priceRange' => ['min' => 0, 'max' => 0, 'filteredMin' => 0, 'filteredMax' => 0],
+            ];
+            set_transient($cache_key, $empty, 300);
+            return new WP_REST_Response($empty);
+        }
+    }
+
+    // Step 2: Fully-filtered IDs — used to mark which terms are still available
+    $filtered_product_ids = null;
+    if ($has_filters) {
+        $fq = [
+            'post_type'      => 'product',
+            'posts_per_page' => -1,
+            'fields'         => 'ids',
+            'post_status'    => 'publish',
+        ];
+
+        $fq_tax   = [];
+        $fq_meta  = [];
+
+        if ($category_id) {
+            $fq_tax[] = ['taxonomy' => 'product_cat', 'field' => 'term_id', 'terms' => $category_id];
+        }
+        if (!empty($tag_ids)) {
+            $fq_tax[] = ['taxonomy' => 'product_tag', 'field' => 'term_id', 'terms' => $tag_ids, 'operator' => 'AND'];
+        }
+        if (!empty($color_ids)) {
+            $fq_tax[] = ['taxonomy' => 'pa_color', 'field' => 'term_id', 'terms' => $color_ids, 'operator' => 'IN'];
+        }
+        if (!empty($material_ids)) {
+            $fq_tax[] = ['taxonomy' => 'pa_υλικό', 'field' => 'term_id', 'terms' => $material_ids, 'operator' => 'AND'];
+        }
+        if ($height) {
+            $fq_tax[] = ['taxonomy' => 'pa_ύψος',   'field' => 'slug', 'terms' => $height];
+        }
+        if ($width) {
+            $fq_tax[] = ['taxonomy' => 'pa_πλάτος', 'field' => 'slug', 'terms' => $width];
+        }
+        if ($depth) {
+            $fq_tax[] = ['taxonomy' => 'pa_μήκος',  'field' => 'slug', 'terms' => $depth];
+        }
+
+        if (!empty($fq_tax)) {
+            $fq_tax['relation'] = 'AND';
+            $fq['tax_query'] = $fq_tax;
+        }
+
+        if ($min_price !== null) {
+            $fq_meta[] = ['key' => '_price', 'value' => $min_price, 'compare' => '>=', 'type' => 'NUMERIC'];
+        }
+        if ($max_price !== null) {
+            $fq_meta[] = ['key' => '_price', 'value' => $max_price, 'compare' => '<=', 'type' => 'NUMERIC'];
+        }
+
+        if (!empty($fq_meta)) {
+            $fq_meta['relation'] = 'AND';
+            $fq['meta_query'] = $fq_meta;
+        }
+
+        if ($search) {
+            $fq['s'] = $search;
+        }
+
+        $filtered_product_ids = get_posts($fq);
+    }
+
+    // Helpers
+    $avail_ids = $filtered_product_ids ?? $category_product_ids;
+
+    $get_display_terms = function ($taxonomy) use ($category_product_ids) {
+        $args = ['taxonomy' => $taxonomy, 'hide_empty' => true, 'number' => 200];
+        if ($category_product_ids !== null) {
+            $args['object_ids'] = $category_product_ids;
+        }
+        $terms = get_terms($args);
+        return is_wp_error($terms) ? [] : $terms;
+    };
+
+    $get_avail_ids = function ($taxonomy) use ($avail_ids, $has_filters) {
+        if (!$has_filters || $avail_ids === null) {
+            return null; // null = no filter active, all available
+        }
+        if (empty($avail_ids)) {
+            return [];
+        }
+        $result = wp_get_object_terms($avail_ids, $taxonomy, ['fields' => 'ids']);
+        return is_array($result) ? $result : [];
+    };
+
+    $fmt = function ($term, $avail_id_list, $extra = []) {
+        $row = [
+            'id'        => $term->term_id,
+            'name'      => $term->name,
+            'slug'      => $term->slug,
+            'count'     => $term->count,
+            'available' => $avail_id_list === null ? true : in_array($term->term_id, $avail_id_list),
+        ];
+        return array_merge($row, $extra);
+    };
+
+    // Step 3: Build each filter list
+    $avail_tag_ids      = $get_avail_ids('product_tag');
+    $avail_color_ids    = $get_avail_ids('pa_color');
+    $avail_material_ids = $get_avail_ids('pa_υλικό');
+    $avail_height_ids   = $get_avail_ids('pa_ύψος');
+    $avail_width_ids    = $get_avail_ids('pa_πλάτος');
+    $avail_depth_ids    = $get_avail_ids('pa_μήκος');
+
+    $formatted_tags = [];
+    foreach ($get_display_terms('product_tag') as $t) {
+        $formatted_tags[] = $fmt($t, $avail_tag_ids);
+    }
+
+    $formatted_colors = [];
+    foreach ($get_display_terms('pa_color') as $c) {
+        $formatted_colors[] = $fmt($c, $avail_color_ids, [
+            'hex' => get_term_meta($c->term_id, 'color_hex', true) ?: '',
+        ]);
+    }
+
+    $formatted_materials = [];
+    foreach ($get_display_terms('pa_υλικό') as $m) {
+        $formatted_materials[] = $fmt($m, $avail_material_ids);
+    }
+
+    $formatted_heights = [];
+    foreach ($get_display_terms('pa_ύψος') as $h) {
+        $formatted_heights[] = $fmt($h, $avail_height_ids);
+    }
+
+    $formatted_widths = [];
+    foreach ($get_display_terms('pa_πλάτος') as $w) {
+        $formatted_widths[] = $fmt($w, $avail_width_ids);
+    }
+
+    $formatted_depths = [];
+    foreach ($get_display_terms('pa_μήκος') as $d) {
+        $formatted_depths[] = $fmt($d, $avail_depth_ids);
+    }
+
+    // Step 4: Price range
+    $base_where = "WHERE meta_key = '_price'
+        AND {$wpdb->posts}.post_type = 'product'
+        AND {$wpdb->posts}.post_status = 'publish'
+        AND meta_value != ''";
+
+    if (!empty($category_product_ids)) {
+        $cat_str     = implode(',', array_map('intval', $category_product_ids));
+        $base_where .= " AND {$wpdb->posts}.ID IN ($cat_str)";
+    }
+
+    $base_row  = $wpdb->get_row("SELECT MIN(CAST(meta_value AS DECIMAL(10,2))) as min_price, MAX(CAST(meta_value AS DECIMAL(10,2))) as max_price FROM {$wpdb->postmeta} INNER JOIN {$wpdb->posts} ON {$wpdb->postmeta}.post_id = {$wpdb->posts}.ID {$base_where}");
+    $min_val   = $base_row && $base_row->min_price ? floatval($base_row->min_price) : 0;
+    $max_val   = $base_row && $base_row->max_price ? floatval($base_row->max_price) : 1000;
+    $filt_min  = $min_val;
+    $filt_max  = $max_val;
+
+    if ($has_filters && $filtered_product_ids !== null) {
+        if (!empty($filtered_product_ids)) {
+            $filt_str  = implode(',', array_map('intval', $filtered_product_ids));
+            $filt_row  = $wpdb->get_row("SELECT MIN(CAST(meta_value AS DECIMAL(10,2))) as min_price, MAX(CAST(meta_value AS DECIMAL(10,2))) as max_price FROM {$wpdb->postmeta} INNER JOIN {$wpdb->posts} ON {$wpdb->postmeta}.post_id = {$wpdb->posts}.ID WHERE meta_key = '_price' AND {$wpdb->posts}.post_type = 'product' AND {$wpdb->posts}.post_status = 'publish' AND meta_value != '' AND {$wpdb->posts}.ID IN ($filt_str)");
+            $filt_min  = $filt_row && $filt_row->min_price ? floatval($filt_row->min_price) : $min_val;
+            $filt_max  = $filt_row && $filt_row->max_price ? floatval($filt_row->max_price) : $max_val;
+        } else {
+            $filt_min = 0;
+            $filt_max = 0;
+        }
+    }
+
+    $data = [
+        'tags'       => $formatted_tags,
+        'colors'     => $formatted_colors,
+        'materials'  => $formatted_materials,
+        'heights'    => $formatted_heights,
+        'widths'     => $formatted_widths,
+        'depths'     => $formatted_depths,
+        'priceRange' => ['min' => $min_val, 'max' => $max_val, 'filteredMin' => $filt_min, 'filteredMax' => $filt_max],
+    ];
+
+    set_transient($cache_key, $data, 300);
     return new WP_REST_Response($data);
 }
 
@@ -901,8 +1152,9 @@ function get_shop_tags($request) {
     }
 
     // Get available tags based on ALL current filters
-    $available_tag_ids = [];
-    if (isset($params['selected_tags']) || isset($params['colors']) || isset($params['materials']) || isset($params['min_price']) || isset($params['max_price'])) {
+    // null = no filter applied (show all), [] = filter applied but no tags match
+    $available_tag_ids = null;
+    if (isset($params['selected_tags']) || isset($params['colors']) || isset($params['materials']) || isset($params['min_price']) || isset($params['max_price']) || (isset($params['search']) && $params['search'] !== '')) {
         // Build query for filtered products
         $filtered_query_args = [
             'post_type' => 'product',
@@ -1001,13 +1253,19 @@ function get_shop_tags($request) {
             $filtered_query_args['meta_query'] = $meta_query;
         }
 
+        // Add search term to availability query
+        if (isset($params['search']) && $params['search'] !== '') {
+            $filtered_query_args['s'] = sanitize_text_field($params['search']);
+        }
+
         // Get filtered product IDs
         $filtered_product_ids = get_posts($filtered_query_args);
 
         if (!empty($filtered_product_ids)) {
-            // Get tags that exist in these filtered products
             $available_tags = wp_get_object_terms($filtered_product_ids, 'product_tag', ['fields' => 'ids']);
             $available_tag_ids = is_array($available_tags) ? $available_tags : [];
+        } else {
+            $available_tag_ids = [];
         }
     }
 
@@ -1015,8 +1273,7 @@ function get_shop_tags($request) {
     foreach ($tags as $tag) {
         $is_available = true;
 
-        // If we have filters applied, check if this tag is available
-        if (!empty($available_tag_ids)) {
+        if ($available_tag_ids !== null) {
             $is_available = in_array($tag->term_id, $available_tag_ids);
         }
 
@@ -1092,8 +1349,8 @@ function get_shop_colors($request) {
     }
 
     // Get available colors based on ALL current filters
-    $available_color_ids = [];
-    if (isset($params['selected_tags']) || isset($params['selected_colors']) || isset($params['min_price']) || isset($params['max_price'])) {
+    $available_color_ids = null;
+    if (isset($params['selected_tags']) || isset($params['selected_colors']) || isset($params['min_price']) || isset($params['max_price']) || (isset($params['search']) && $params['search'] !== '')) {
         // Build query for filtered products
         $filtered_query_args = [
             'post_type' => 'product',
@@ -1190,13 +1447,19 @@ function get_shop_colors($request) {
             $filtered_query_args['meta_query'] = $meta_query;
         }
 
+        // Add search term to availability query
+        if (isset($params['search']) && $params['search'] !== '') {
+            $filtered_query_args['s'] = sanitize_text_field($params['search']);
+        }
+
         // Get filtered product IDs
         $filtered_product_ids = get_posts($filtered_query_args);
 
         if (!empty($filtered_product_ids)) {
-            // Get colors that exist in these filtered products
             $available_colors = wp_get_object_terms($filtered_product_ids, 'pa_color', ['fields' => 'ids']);
             $available_color_ids = is_array($available_colors) ? $available_colors : [];
+        } else {
+            $available_color_ids = [];
         }
     }
 
@@ -1205,7 +1468,7 @@ function get_shop_colors($request) {
         $is_available = true;
 
         // If we have filters applied, check if this color is available
-        if (!empty($available_color_ids)) {
+        if ($available_color_ids !== null) {
             $is_available = in_array($color->term_id, $available_color_ids);
         }
 
@@ -1282,8 +1545,8 @@ function get_shop_materials($request) {
     }
 
     // Get available materials based on ALL current filters
-    $available_material_ids = [];
-    if (isset($params['selected_tags']) || isset($params['selected_colors']) || isset($params['selected_materials']) || isset($params['min_price']) || isset($params['max_price'])) {
+    $available_material_ids = null;
+    if (isset($params['selected_tags']) || isset($params['selected_colors']) || isset($params['selected_materials']) || isset($params['min_price']) || isset($params['max_price']) || (isset($params['search']) && $params['search'] !== '')) {
         // Build query for filtered products
         $filtered_query_args = [
             'post_type' => 'product',
@@ -1391,13 +1654,19 @@ function get_shop_materials($request) {
             $filtered_query_args['meta_query'] = $meta_query;
         }
 
+        // Add search term to availability query
+        if (isset($params['search']) && $params['search'] !== '') {
+            $filtered_query_args['s'] = sanitize_text_field($params['search']);
+        }
+
         // Get filtered product IDs
         $filtered_product_ids = get_posts($filtered_query_args);
 
         if (!empty($filtered_product_ids)) {
-            // Get materials that exist in these filtered products
             $available_materials = wp_get_object_terms($filtered_product_ids, 'pa_υλικό', ['fields' => 'ids']);
             $available_material_ids = is_array($available_materials) ? $available_materials : [];
+        } else {
+            $available_material_ids = [];
         }
     }
 
@@ -1406,7 +1675,7 @@ function get_shop_materials($request) {
         $is_available = true;
 
         // If we have filters applied, check if this material is available
-        if (!empty($available_material_ids)) {
+        if ($available_material_ids !== null) {
             $is_available = in_array($material->term_id, $available_material_ids);
         }
 
@@ -1482,8 +1751,8 @@ function get_shop_heights($request) {
     }
 
     // Get available heights based on ALL current filters
-    $available_height_ids = [];
-    if (isset($params['selected_tags']) || isset($params['selected_colors']) || isset($params['selected_materials']) || isset($params['selected_height']) || isset($params['min_price']) || isset($params['max_price'])) {
+    $available_height_ids = null;
+    if (isset($params['selected_tags']) || isset($params['selected_colors']) || isset($params['selected_materials']) || isset($params['selected_height']) || isset($params['min_price']) || isset($params['max_price']) || (isset($params['search']) && $params['search'] !== '')) {
         // Build query for filtered products
         $filtered_query_args = [
             'post_type' => 'product',
@@ -1591,6 +1860,11 @@ function get_shop_heights($request) {
             $filtered_query_args['meta_query'] = $meta_query;
         }
 
+        // Add search term to availability query
+        if (isset($params['search']) && $params['search'] !== '') {
+            $filtered_query_args['s'] = sanitize_text_field($params['search']);
+        }
+
         // Get filtered product IDs
         $filtered_product_ids = get_posts($filtered_query_args);
 
@@ -1598,6 +1872,8 @@ function get_shop_heights($request) {
             // Get heights that exist in these filtered products
             $available_heights = wp_get_object_terms($filtered_product_ids, 'pa_ύψος', ['fields' => 'ids']);
             $available_height_ids = is_array($available_heights) ? $available_heights : [];
+        } else {
+            $available_height_ids = [];
         }
     }
 
@@ -1606,7 +1882,7 @@ function get_shop_heights($request) {
         $is_available = true;
 
         // If we have filters applied, check if this height is available
-        if (!empty($available_height_ids)) {
+        if ($available_height_ids !== null) {
             $is_available = in_array($height->term_id, $available_height_ids);
         }
 
@@ -1682,8 +1958,8 @@ function get_shop_widths($request) {
     }
 
     // Get available widths based on ALL current filters
-    $available_width_ids = [];
-    if (isset($params['selected_tags']) || isset($params['selected_colors']) || isset($params['selected_materials']) || isset($params['selected_height']) || isset($params['selected_width']) || isset($params['min_price']) || isset($params['max_price'])) {
+    $available_width_ids = null;
+    if (isset($params['selected_tags']) || isset($params['selected_colors']) || isset($params['selected_materials']) || isset($params['selected_height']) || isset($params['selected_width']) || isset($params['min_price']) || isset($params['max_price']) || (isset($params['search']) && $params['search'] !== '')) {
         // Build query for filtered products
         $filtered_query_args = [
             'post_type' => 'product',
@@ -1791,6 +2067,11 @@ function get_shop_widths($request) {
             $filtered_query_args['meta_query'] = $meta_query;
         }
 
+        // Add search term to availability query
+        if (isset($params['search']) && $params['search'] !== '') {
+            $filtered_query_args['s'] = sanitize_text_field($params['search']);
+        }
+
         // Get filtered product IDs
         $filtered_product_ids = get_posts($filtered_query_args);
 
@@ -1798,6 +2079,8 @@ function get_shop_widths($request) {
             // Get widths that exist in these filtered products
             $available_widths = wp_get_object_terms($filtered_product_ids, 'pa_πλάτος', ['fields' => 'ids']);
             $available_width_ids = is_array($available_widths) ? $available_widths : [];
+        } else {
+            $available_width_ids = [];
         }
     }
 
@@ -1806,7 +2089,7 @@ function get_shop_widths($request) {
         $is_available = true;
 
         // If we have filters applied, check if this width is available
-        if (!empty($available_width_ids)) {
+        if ($available_width_ids !== null) {
             $is_available = in_array($width->term_id, $available_width_ids);
         }
 
@@ -1882,8 +2165,8 @@ function get_shop_depths($request) {
     }
 
     // Get available depths based on ALL current filters
-    $available_depth_ids = [];
-    if (isset($params['selected_tags']) || isset($params['selected_colors']) || isset($params['selected_materials']) || isset($params['selected_height']) || isset($params['selected_width']) || isset($params['selected_depth']) || isset($params['min_price']) || isset($params['max_price'])) {
+    $available_depth_ids = null;
+    if (isset($params['selected_tags']) || isset($params['selected_colors']) || isset($params['selected_materials']) || isset($params['selected_height']) || isset($params['selected_width']) || isset($params['selected_depth']) || isset($params['min_price']) || isset($params['max_price']) || (isset($params['search']) && $params['search'] !== '')) {
         // Build query for filtered products
         $filtered_query_args = [
             'post_type' => 'product',
@@ -1991,6 +2274,11 @@ function get_shop_depths($request) {
             $filtered_query_args['meta_query'] = $meta_query;
         }
 
+        // Add search term to availability query
+        if (isset($params['search']) && $params['search'] !== '') {
+            $filtered_query_args['s'] = sanitize_text_field($params['search']);
+        }
+
         // Get filtered product IDs
         $filtered_product_ids = get_posts($filtered_query_args);
 
@@ -1998,6 +2286,8 @@ function get_shop_depths($request) {
             // Get depths that exist in these filtered products
             $available_depths = wp_get_object_terms($filtered_product_ids, 'pa_μήκος', ['fields' => 'ids']);
             $available_depth_ids = is_array($available_depths) ? $available_depths : [];
+        } else {
+            $available_depth_ids = [];
         }
     }
 
@@ -2006,7 +2296,7 @@ function get_shop_depths($request) {
         $is_available = true;
 
         // If we have filters applied, check if this depth is available
-        if (!empty($available_depth_ids)) {
+        if ($available_depth_ids !== null) {
             $is_available = in_array($depth->term_id, $available_depth_ids);
         }
 
@@ -2097,7 +2387,7 @@ function get_price_range($request) {
     $filtered_min = $min_price;
     $filtered_max = $max_price;
 
-    if (isset($params['selected_tags']) || isset($params['selected_colors']) || isset($params['selected_materials'])) {
+    if (isset($params['selected_tags']) || isset($params['selected_colors']) || isset($params['selected_materials']) || (isset($params['search']) && $params['search'] !== '')) {
         // Build query for filtered products
         $filtered_query_args = [
             'post_type' => 'product',
@@ -2179,6 +2469,11 @@ function get_price_range($request) {
         if (!empty($tax_query)) {
             $tax_query['relation'] = 'AND';
             $filtered_query_args['tax_query'] = $tax_query;
+        }
+
+        // Add search term to availability query
+        if (isset($params['search']) && $params['search'] !== '') {
+            $filtered_query_args['s'] = sanitize_text_field($params['search']);
         }
 
         // Get filtered product IDs
