@@ -691,6 +691,31 @@ function get_shop_init_data($request) {
 }
 
 /**
+ * Count how many products in $product_ids belong to each term of $taxonomy.
+ * Returns an associative array [ term_id => count ].
+ */
+function shop_filtered_term_counts( $taxonomy, array $product_ids ) {
+    global $wpdb;
+    if ( empty( $product_ids ) ) {
+        return [];
+    }
+    $ids_str = implode( ',', array_map( 'intval', $product_ids ) );
+    $rows    = $wpdb->get_results( $wpdb->prepare(
+        "SELECT tt.term_id, COUNT(DISTINCT tr.object_id) AS cnt
+         FROM {$wpdb->term_taxonomy} tt
+         INNER JOIN {$wpdb->term_relationships} tr ON tt.term_taxonomy_id = tr.term_taxonomy_id
+         WHERE tt.taxonomy = %s AND tr.object_id IN ({$ids_str})
+         GROUP BY tt.term_id",
+        $taxonomy
+    ) );
+    $map = [];
+    foreach ( $rows as $row ) {
+        $map[ (int) $row->term_id ] = (int) $row->cnt;
+    }
+    return $map;
+}
+
+/**
  * Get all filter availability data in a single request.
  * Runs ONE get_posts(-1) query instead of 7 separate ones.
  */
@@ -833,12 +858,16 @@ function get_shop_filter_state($request) {
         return is_array($result) ? $result : [];
     };
 
-    $fmt = function ($term, $avail_id_list, $extra = []) {
+    $fmt = function ($term, $avail_id_list, $extra = [], $counts = null) {
+        // Use filtered count when available, fall back to global WP count
+        $count = ($counts !== null && isset($counts[$term->term_id]))
+            ? $counts[$term->term_id]
+            : $term->count;
         $row = [
             'id'        => $term->term_id,
             'name'      => $term->name,
             'slug'      => $term->slug,
-            'count'     => $term->count,
+            'count'     => $count,
             'available' => $avail_id_list === null ? true : in_array($term->term_id, $avail_id_list),
         ];
         return array_merge($row, $extra);
@@ -852,36 +881,44 @@ function get_shop_filter_state($request) {
     $avail_width_ids    = $get_avail_ids('pa_πλάτος');
     $avail_depth_ids    = $get_avail_ids('pa_μήκος');
 
+    // Filtered counts per term (one SQL query per taxonomy against $avail_ids)
+    $counts_tags      = $avail_ids !== null ? shop_filtered_term_counts('product_tag', $avail_ids) : null;
+    $counts_colors    = $avail_ids !== null ? shop_filtered_term_counts('pa_color',    $avail_ids) : null;
+    $counts_materials = $avail_ids !== null ? shop_filtered_term_counts('pa_υλικό',   $avail_ids) : null;
+    $counts_heights   = $avail_ids !== null ? shop_filtered_term_counts('pa_ύψος',    $avail_ids) : null;
+    $counts_widths    = $avail_ids !== null ? shop_filtered_term_counts('pa_πλάτος',  $avail_ids) : null;
+    $counts_depths    = $avail_ids !== null ? shop_filtered_term_counts('pa_μήκος',   $avail_ids) : null;
+
     $formatted_tags = [];
     foreach ($get_display_terms('product_tag') as $t) {
-        $formatted_tags[] = $fmt($t, $avail_tag_ids);
+        $formatted_tags[] = $fmt($t, $avail_tag_ids, [], $counts_tags);
     }
 
     $formatted_colors = [];
     foreach ($get_display_terms('pa_color') as $c) {
         $formatted_colors[] = $fmt($c, $avail_color_ids, [
             'hex' => get_term_meta($c->term_id, 'color_hex', true) ?: '',
-        ]);
+        ], $counts_colors);
     }
 
     $formatted_materials = [];
     foreach ($get_display_terms('pa_υλικό') as $m) {
-        $formatted_materials[] = $fmt($m, $avail_material_ids);
+        $formatted_materials[] = $fmt($m, $avail_material_ids, [], $counts_materials);
     }
 
     $formatted_heights = [];
     foreach ($get_display_terms('pa_ύψος') as $h) {
-        $formatted_heights[] = $fmt($h, $avail_height_ids);
+        $formatted_heights[] = $fmt($h, $avail_height_ids, [], $counts_heights);
     }
 
     $formatted_widths = [];
     foreach ($get_display_terms('pa_πλάτος') as $w) {
-        $formatted_widths[] = $fmt($w, $avail_width_ids);
+        $formatted_widths[] = $fmt($w, $avail_width_ids, [], $counts_widths);
     }
 
     $formatted_depths = [];
     foreach ($get_display_terms('pa_μήκος') as $d) {
-        $formatted_depths[] = $fmt($d, $avail_depth_ids);
+        $formatted_depths[] = $fmt($d, $avail_depth_ids, [], $counts_depths);
     }
 
     // Step 4: Price range
