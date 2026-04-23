@@ -574,11 +574,14 @@ class BatchImporter {
         $web_root     = dirname(dirname(dirname($theme_root))); // simple-city → themes → app → web
         $project_root = dirname($web_root); // web → release dir (where .env lives)
         $wp_cli_bin = trim(shell_exec('which wp') ?: '') ?: '/usr/local/bin/wp';
+        // --url targets the correct Multisite blog (e.g. sc-staging.eboy.gr = blog_id=2)
+        $site_url = get_site_url();
         $command = 'cd ' . escapeshellarg($project_root) .
                    ' && ' . escapeshellarg($wp_cli_bin) .
                    ' eval-file ' . escapeshellarg($script_path) .
                    ' ' . escapeshellarg($supplier) .
                    ' --path=' . escapeshellarg($web_root . '/wp') .
+                   ' --url=' . escapeshellarg($site_url) .
                    ' > ' . escapeshellarg($log_file) . ' 2>&1 & echo $!';
 
         error_log("BatchImporter: Starting realtime import in background");

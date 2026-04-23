@@ -35,8 +35,9 @@ require_once $theme_root . '/app/Importers/Parsers/B2BMarktParser.php';
 require_once $theme_root . '/app/Importers/Parsers/LibertaParser.php';
 require_once $theme_root . '/app/Importers/Parsers/EstiahParser.php';
 
-// No PHP time limit — this process runs until import completes or max_wait expires
+// No PHP time limit or memory cap — parsing large XMLs (50MB+) needs headroom
 set_time_limit(0);
+ini_set('memory_limit', '1024M');
 
 error_log("=== Realtime Import CLI Started ===");
 error_log("Supplier: {$supplier}");
