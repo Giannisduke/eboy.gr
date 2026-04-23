@@ -41,12 +41,12 @@ def load_config(language: str = 'el') -> dict:
 
     if env_local.exists():
         load_dotenv(env_local, override=False)
-        print(f"✓ Loaded configuration from .env.local")
+        print(f"✓ Loaded configuration from .env.local", file=sys.stderr)
     elif env_file.exists():
         load_dotenv(env_file, override=False)
-        print(f"✓ Loaded configuration from .env")
+        print(f"✓ Loaded configuration from .env", file=sys.stderr)
     else:
-        print(f"⚠ No .env or .env.local file found")
+        print(f"⚠ No .env or .env.local file found", file=sys.stderr)
 
     # Load prompts based on language
     if language == 'en':
@@ -217,6 +217,12 @@ def main():
     )
 
     parser.add_argument(
+        '--title',
+        type=str,
+        help='Single title to test optimization (skips XML processing)'
+    )
+
+    parser.add_argument(
         '--debug',
         action='store_true',
         help='Enable debug logging'
@@ -228,23 +234,35 @@ def main():
     setup_logging(args.debug)
     logger = logging.getLogger(__name__)
 
-    logger.info("=" * 60)
-    logger.info("AI-Powered Product XML Processor")
-    logger.info("=" * 60)
-
     # Load configuration
     try:
         config = load_config(language=args.language)
         if args.debug:
             config['debug'] = True
-
-        logger.info(f"Language mode: {config['language']}")
-        logger.info(f"AI Model: {config['ai_model']}")
-        if config['translation_model']:
-            logger.info(f"Translation Model: {config['translation_model']}")
     except Exception as e:
         logger.error(f"Failed to load configuration: {str(e)}")
         return 1
+
+    # Single-title test mode — no XML needed
+    if args.title:
+        from src.title_optimizer import TitleOptimizer
+        client = OllamaClient(
+            host=config['ollama_host'],
+            port=config['ollama_port'],
+            model=config['ai_model']
+        )
+        optimizer = TitleOptimizer(client, config['prompts'])
+        result = optimizer.optimize(args.title)
+        print(result)
+        return 0
+
+    logger.info("=" * 60)
+    logger.info("AI-Powered Product XML Processor")
+    logger.info("=" * 60)
+    logger.info(f"Language mode: {config['language']}")
+    logger.info(f"AI Model: {config['ai_model']}")
+    if config['translation_model']:
+        logger.info(f"Translation Model: {config['translation_model']}")
 
     # Check Ollama connection
     if not check_ollama_connection(config):

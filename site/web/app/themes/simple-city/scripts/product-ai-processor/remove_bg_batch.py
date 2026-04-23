@@ -24,6 +24,22 @@ import io
 import os
 
 
+def autocrop_product(img, padding_pct: float = 0.02):
+    """Crop transparent borders after background removal, keeping a small padding."""
+    alpha = img.split()[3]
+    bbox = alpha.getbbox()
+    if bbox is None:
+        return img
+    w, h = img.size
+    pad_x = max(1, int(w * padding_pct))
+    pad_y = max(1, int(h * padding_pct))
+    x0 = max(0, bbox[0] - pad_x)
+    y0 = max(0, bbox[1] - pad_y)
+    x1 = min(w, bbox[2] + pad_x)
+    y1 = min(h, bbox[3] + pad_y)
+    return img.crop((x0, y0, x1, y1))
+
+
 def process_remote(pairs: list, host: str):
     try:
         import requests
@@ -45,6 +61,7 @@ def process_remote(pairs: list, host: str):
         response.raise_for_status()
         alpha = Image.open(io.BytesIO(response.content)).convert('RGBA').split()[3]
         original.putalpha(alpha)
+        original = autocrop_product(original)
         original.save(output_path, 'webp', quality=92)
 
     workers = min(len(pairs), int(os.environ.get('BRIA_WORKERS', '4')))
@@ -83,6 +100,7 @@ def process_local(pairs: list, model: str):
                 alpha_matting_erode_size=15,
             )
             img = Image.open(io.BytesIO(output_data))
+            img = autocrop_product(img)
             img.save(output_path, 'webp', quality=92)
             print(f"OK:{output_path}", flush=True)
 

@@ -1,10 +1,10 @@
 Σβησιμο ολα τα products, μαζι με εικόνες
 
-URL="https://sc-staging.eboy.gr/"; PROD_IDS=$(wp --url="$URL" post list --post_type=product,product_variation --post_status=any --format=ids); IMG_IDS=$(wp --url="$URL" eval '$ids=get_posts(["post_type"=>["product","product_variation"],"posts_per_page"=>-1,"fields"=>"ids","post_status"=>"any"]); $att=[]; foreach($ids as $pid){ $t=get_post_thumbnail_id($pid); if($t) $att[$t]=1; $g=get_post_meta($pid,"_product_image_gallery",true); if($g){ foreach(array_filter(array_map("absint", explode(",",$g))) as $gid){ $att[$gid]=1; } } $children=get_children(["post_parent"=>$pid,"post_type"=>"attachment","numberposts"=>-1,"fields"=>"ids"]); foreach($children as $cid){ $att[$cid]=1; } } echo implode(" ", array_keys($att));'); [ -n "$IMG_IDS" ] && wp --url="$URL" post delete $IMG_IDS --force; [ -n "$PROD_IDS" ] && wp --url="$URL" post delete $PROD_IDS --force
+URL="https://simple-city.eboy.test"; PROD_IDS=$(wp --url="$URL" post list --post_type=product,product_variation --post_status=any --format=ids); IMG_IDS=$(wp --url="$URL" eval '$ids=get_posts(["post_type"=>["product","product_variation"],"posts_per_page"=>-1,"fields"=>"ids","post_status"=>"any"]); $att=[]; foreach($ids as $pid){ $t=get_post_thumbnail_id($pid); if($t) $att[$t]=1; $g=get_post_meta($pid,"_product_image_gallery",true); if($g){ foreach(array_filter(array_map("absint", explode(",",$g))) as $gid){ $att[$gid]=1; } } $children=get_children(["post_parent"=>$pid,"post_type"=>"attachment","numberposts"=>-1,"fields"=>"ids"]); foreach($children as $cid){ $att[$cid]=1; } } echo implode(" ", array_keys($att));'); [ -n "$IMG_IDS" ] && wp --url="$URL" post delete $IMG_IDS --force; [ -n "$PROD_IDS" ] && wp --url="$URL" post delete $PROD_IDS --force
 
 
 Σβησιμο ολα τo media library
-wp --url=https://sc-staging.eboy.gr/ post list --post_type=attachment --format=ids | xargs -r wp --url=https://sc-staging.eboy.gr/ post delete --force
+wp --url=https://simple-city.eboy.test post list --post_type=attachment --format=ids | xargs -r wp --url=https://simple-city.eboy.test/ post delete --force
 
   καθάρισε τον stale transient:
 wp --url="https://sc-staging.eboy.gr/" eval 'delete_transient("xml_import_parsed_pakoworld"); echo "Cleared\n";'
@@ -114,3 +114,7 @@ wp --url="https://sc-staging.eboy.gr/" eval '$logs = get_option("xml_importer_lo
 
   // pa_υλικό reassign
   wp --url="https://sc-staging.eboy.gr/" eval-file web/app/themes/simple-city/scripts/reassign-materials.php --apply
+
+
+
+  wp --url="https://simple-city.eboy.test" xml-import test-title "Ντουλάπα τετράφυλλη με πατάρι Athos Ι pakoworld wenge 160x42x240εκ"

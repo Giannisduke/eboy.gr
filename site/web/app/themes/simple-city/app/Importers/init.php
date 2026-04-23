@@ -102,9 +102,41 @@ add_action('admin_notices', function() {
 // Add WP-CLI command if available
 if (defined('WP_CLI') && WP_CLI) {
     WP_CLI::add_command('xml-import', function($args, $assoc_args) {
-        $importer = new \App\Importers\Importer();
-
         $action = isset($args[0]) ? $args[0] : 'full';
+
+        if ($action === 'test-title') {
+            $title = isset($args[1]) ? $args[1] : '';
+            if (empty($title)) {
+                WP_CLI::error('Usage: wp xml-import test-title "Τίτλος Προϊόντος"');
+                return;
+            }
+
+            $theme_root  = dirname(dirname(dirname(__FILE__)));
+            $script_dir  = $theme_root . '/scripts/product-ai-processor';
+            $venv_python = $script_dir . '/venv/bin/python3';
+            $python_bin  = file_exists($venv_python) ? $venv_python : '/usr/bin/python3';
+            $main_script = $script_dir . '/main.py';
+
+            $ollama_host = getenv('OLLAMA_HOST') ?: '';
+            $env_prefix  = $ollama_host ? 'OLLAMA_HOST=' . escapeshellarg($ollama_host) . ' ' : '';
+
+            $command = sprintf(
+                'cd %s && %s%s %s --title %s 2>/dev/null',
+                escapeshellarg($script_dir),
+                $env_prefix,
+                escapeshellarg($python_bin),
+                escapeshellarg($main_script),
+                escapeshellarg($title)
+            );
+
+            $result = trim(shell_exec($command) ?? '');
+
+            WP_CLI::log('Πριν : ' . $title);
+            WP_CLI::log('Μετά : ' . ($result ?: '(κανένα αποτέλεσμα)'));
+            return;
+        }
+
+        $importer = new \App\Importers\Importer();
 
         switch ($action) {
             case 'download':

@@ -5,11 +5,20 @@ Shortens and optimizes product titles for better SEO and user experience.
 
 import logging
 import re
-import yaml
 from typing import Optional
 from .ai_client import OllamaClient
 
 logger = logging.getLogger(__name__)
+
+# Supplier brand names — excluded from model name detection
+_KNOWN_BRANDS = frozenset({
+    'pakoworld', 'libertab2b', 'liberta', 'b2bmarkt', 'estiahomeart', 'estia',
+})
+
+# Latin abbreviations / materials — excluded from model name detection
+_KNOWN_NON_MODELS = frozenset({
+    'pu', 'mdf', 'pe', 'pc', 'led', 'uv', 'rattan', 'velvet', 'plus',
+})
 
 
 class TitleOptimizer:
@@ -21,148 +30,80 @@ class TitleOptimizer:
         self.prompt_template = prompts_config.get('title_optimization', '')
 
     def optimize(self, original_title: str, supplier: str = None) -> Optional[str]:
-        """
-        Optimize a product title
-
-        Args:
-            original_title: The original product title
-            supplier: Supplier name to use supplier-specific prompt
-
-        Returns:
-            Optimized title or None if failed
-        """
         if not original_title or len(original_title.strip()) == 0:
             logger.warning("Empty title provided")
             return None
 
-        # Select supplier-specific prompt if available
-        if supplier:
-            prompt_key = f'title_optimization_{supplier}'
-            prompt_template = self.prompts_config.get(prompt_key, self.prompt_template)
-            logger.debug(f"Using {prompt_key} prompt for supplier: {supplier}")
-        else:
-            prompt_template = self.prompt_template
+        prompt_key = f'title_optimization_{supplier}' if supplier else ''
+        prompt_template = (
+            self.prompts_config.get(prompt_key, self.prompt_template)
+            if prompt_key else self.prompt_template
+        )
 
-        # Use AI to optimize (even for short titles, to apply supplier-specific rules)
         prompt = prompt_template.format(original_title=original_title)
 
         try:
-            optimized = self.ai_client.generate(
+            ai_result = self.ai_client.generate(
                 prompt=prompt,
-                temperature=0.3,  # Lower temperature for more consistent results
+                temperature=0.3,
                 max_tokens=100
             )
 
-            if optimized:
-                # Clean up the response
-                optimized = optimized.strip()
-
-                # Remove quotes if AI added them
-                if optimized.startswith('"') and optimized.endswith('"'):
-                    optimized = optimized[1:-1]
-                if optimized.startswith("'") and optimized.endswith("'"):
-                    optimized = optimized[1:-1]
-
-                # Strip dimensions that AI may have left (e.g. 96X25.5X168.5ΕΚ, 150x200cm)
-                optimized = re.sub(
-                    r'\s+\d+[\.,]?\d*\s*[xX×]\s*\d+[\.,]?\d*(?:\s*[xX×]\s*\d+[\.,]?\d*)?\s*(?:cm|εκ|ΕΚ|εκ\.)?',
-                    '', optimized
-                ).strip()
-
-                # Force sentence case: capitalize first letter, lowercase the rest
-                # but keep model names capitalized (words that were already Title Case)
-                optimized = self._enforce_sentence_case(optimized)
-
-                # Validate length
-                if len(optimized) > 70:
-                    logger.warning(f"AI generated title too long ({len(optimized)} chars), falling back to simple cleanup")
-                    return self._simple_cleanup(original_title)
-
-                if len(optimized) < 10:
-                    logger.warning(f"AI generated title too short ({len(optimized)} chars), falling back to simple cleanup")
-                    return self._simple_cleanup(original_title)
-
-                logger.info(f"Title optimized: '{original_title[:50]}...' -> '{optimized}'")
-                return optimized
+            if ai_result:
+                ai_result = ai_result.strip().strip('"').strip("'")
+                optimized = self._extract_type_and_model(ai_result) \
+                            or self._extract_type_and_model(original_title)
             else:
-                logger.warning("AI failed to optimize title, using fallback")
-                return self._simple_cleanup(original_title)
+                logger.warning("AI returned empty result, using fallback")
+                optimized = self._extract_type_and_model(original_title)
 
         except Exception as e:
-            logger.error(f"Error optimizing title: {str(e)}")
-            return self._simple_cleanup(original_title)
+            logger.error(f"Error optimizing title: {e}")
+            optimized = self._extract_type_and_model(original_title)
 
-    def _enforce_sentence_case(self, title: str) -> str:
-        """
-        Enforce sentence case: ONLY first letter capitalized, everything else lowercase.
-        Numbers remain unchanged.
+        if not optimized or len(optimized) < 3:
+            return original_title
 
-        Args:
-            title: Title to process
+        logger.info(f"Title: '{original_title[:50]}' -> '{optimized}'")
+        return optimized
 
-        Returns:
-            Title in sentence case
-        """
-        if not title:
-            return title
+    def _extract_type_and_model(self, title: str) -> Optional[str]:
+        """Keep Greek type words + consecutive non-brand Latin model words."""
+        cleaned = [re.sub(r'^[^\w-]+|[^\w-]+$', '', w) for w in title.split()]
 
-        # Split into words
-        words = title.split()
-        if not words:
-            return title
+        def is_latin_word(s: str) -> bool:
+            return bool(re.match(r'^[A-Za-z][A-Za-z0-9]*(?:-[A-Za-z][A-Za-z0-9]*)*$', s))
 
-        # Process each word
-        result_words = []
-        for i, word in enumerate(words):
-            # First word: capitalize first letter, lowercase the rest
-            if i == 0:
-                if len(word) > 1:
-                    result_words.append(word[0].upper() + word[1:].lower())
-                else:
-                    result_words.append(word.upper())
-            # Numbers and words containing numbers: keep as-is
-            elif any(c.isdigit() for c in word):
-                result_words.append(word)
-            # ALL CAPS Latin word (e.g. HOLDON, REMUS) → Title Case model name
-            elif word.isupper() and len(word) > 1 and any(c.isascii() and c.isalpha() for c in word):
-                result_words.append(word.capitalize())
-            # Title Case with Latin chars (e.g. Essential, Josuane, Paris) → model name, keep
-            elif (len(word) > 1 and word[0].isupper()
-                  and word[1:].replace('-', '').islower()
-                  and any(c.isascii() and c.isalpha() for c in word)):
-                result_words.append(word)
-            # Everything else (Greek Title Case, mixed, etc.): lowercase
-            else:
-                result_words.append(word.lower())
+        def is_greek_word(s: str) -> bool:
+            return bool(re.search(r'[α-ωΑ-ΩάέήίόύώΆΈΉΊΌΎΏ]', s))
 
-        return ' '.join(result_words)
+        # Greek type words = all Greek words before the first Latin word (brand or not)
+        first_latin = next((i for i, c in enumerate(cleaned) if c and is_latin_word(c)), len(cleaned))
+        type_words = []
+        for i, clean in enumerate(cleaned[:first_latin]):
+            if clean and is_greek_word(clean):
+                word = clean[0].upper() + clean[1:].lower() if i == 0 else clean.lower()
+                type_words.append(word)
 
-    def _simple_cleanup(self, title: str) -> str:
-        """
-        Simple rule-based title cleanup as fallback
+        # Model words = consecutive non-brand Latin words starting from first non-brand Latin
+        model_start = next(
+            (i for i, c in enumerate(cleaned)
+             if c and is_latin_word(c)
+             and c.lower() not in _KNOWN_BRANDS
+             and c.lower() not in _KNOWN_NON_MODELS),
+            None
+        )
+        model_words = []
+        if model_start is not None:
+            for clean in cleaned[model_start:]:
+                if not clean:
+                    continue
+                if is_greek_word(clean):
+                    break
+                if is_latin_word(clean):
+                    if clean.lower() in _KNOWN_BRANDS or clean.lower() in _KNOWN_NON_MODELS:
+                        break
+                    model_words.append('-'.join(p.capitalize() for p in clean.split('-')))
 
-        Removes dimensions, excessive punctuation, etc.
-        """
-        import re
-
-        # Remove dimensions (e.g., "80x37x123εκ", "80x37x123cm")
-        title = re.sub(r'\d+[xX×]\d+[xX×]?\d*\s*(εκ|cm|mm|μ|m)?', '', title)
-
-        # Remove standalone dimensions (e.g., "80cm")
-        title = re.sub(r'\b\d+\s*(εκ|cm|mm|μ|m)\b', '', title)
-
-        # Remove excessive punctuation
-        title = re.sub(r'[-_]+', ' ', title)
-
-        # Normalize whitespace
-        title = ' '.join(title.split())
-
-        # Apply sentence case
-        title = self._enforce_sentence_case(title)
-
-        # Limit length
-        if len(title) > 65:
-            # Try to cut at a word boundary
-            title = title[:62].rsplit(' ', 1)[0] + '...'
-
-        return title.strip()
+        parts = type_words + model_words
+        return ' '.join(parts) if parts else None

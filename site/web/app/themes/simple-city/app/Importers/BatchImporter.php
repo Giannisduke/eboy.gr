@@ -122,14 +122,12 @@ class BatchImporter {
                 $refresh = $this->downloader->refreshIfChanged($supplier_url, $supplier, (bool) $fresh_import);
 
                 // XML changed by supplier (and this is not a user-initiated fresh import where we already cleared files)
-                if (($refresh['changed'] ?? true) && !$fresh_import) {
+                // Skip clearing if a progress file already exists — AI already ran for this session
+                // (prevents re-triggering AI on mid-import processBatch calls with offset=0)
+                if (($refresh['changed'] ?? true) && !$fresh_import && !file_exists($progress_file)) {
                     if (file_exists($enhanced_xml_path)) {
                         unlink($enhanced_xml_path);
                         error_log("BatchImporter: Supplier XML changed for {$supplier} — cleared enhanced XML for AI reprocessing");
-                    }
-                    if (file_exists($progress_file)) {
-                        unlink($progress_file);
-                        error_log("BatchImporter: Supplier XML changed for {$supplier} — cleared AI progress file");
                     }
                 }
             }
