@@ -118,3 +118,9 @@ wp --url="https://sc-staging.eboy.gr/" eval '$logs = get_option("xml_importer_lo
 
 
   wp --url="https://simple-city.eboy.test" xml-import test-title "Ντουλάπα τετράφυλλη με πατάρι Athos Ι pakoworld wenge 160x42x240εκ"
+
+
+  Υπάρχει transient με λάθος αριθμό προϊόντων;                                                                                                          
+  wp --url="https://sc-staging.eboy.gr/" eval ' $t = get_transient("xml_import_parsed_pakoworld"); echo $t ? "Transient exists: " . count($t) . " products\n" : "No transient\n";'
+
+  python3 -c "import json; d=json.load(open(\"/srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/pakoworld-ready.json\")); print(f'Ready SKUs: {len(d.get(\"ready_skus\", []))}')" 2>/dev/null || echo "No ready.json"

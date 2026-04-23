@@ -35,6 +35,9 @@ require_once $theme_root . '/app/Importers/Parsers/B2BMarktParser.php';
 require_once $theme_root . '/app/Importers/Parsers/LibertaParser.php';
 require_once $theme_root . '/app/Importers/Parsers/EstiahParser.php';
 
+// No PHP time limit — this process runs until import completes or max_wait expires
+set_time_limit(0);
+
 error_log("=== Realtime Import CLI Started ===");
 error_log("Supplier: {$supplier}");
 error_log("Theme root: {$theme_root}");
@@ -42,8 +45,8 @@ error_log("Theme root: {$theme_root}");
 // Create realtime importer
 $importer = new \App\Importers\RealtimeImporter();
 
-// Start watching and importing (poll every 5 seconds, max wait 1 hour)
-$stats = $importer->watchAndImport($supplier, 5, 3600);
+// Poll every 5 seconds; max 24 h to handle large catalogs (AI ~3 h + image processing)
+$stats = $importer->watchAndImport($supplier, 5, 86400);
 
 error_log("=== Realtime Import CLI Completed ===");
 error_log("Stats: " . json_encode($stats));

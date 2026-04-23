@@ -28,10 +28,10 @@ class RealtimeImporter {
      *
      * @param string $supplier Supplier name
      * @param int $poll_interval Seconds between checks (default 5)
-     * @param int $max_wait Maximum seconds to wait for completion (default 3600 = 1 hour)
+     * @param int $max_wait Maximum seconds to wait for completion (default 86400 = 24 hours)
      * @return array Processing statistics
      */
-    public function watchAndImport($supplier, $poll_interval = 5, $max_wait = 3600) {
+    public function watchAndImport($supplier, $poll_interval = 5, $max_wait = 86400) {
         $theme_root = dirname(dirname(dirname(__FILE__)));
         $xml_dir = $theme_root . '/scripts/xml_files/';
         $ready_file = $xml_dir . $supplier . '-ready.json';
