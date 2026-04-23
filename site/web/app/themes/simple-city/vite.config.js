@@ -9,6 +9,9 @@ import vuetify from 'vite-plugin-vuetify'
 export default defineConfig({
 
   base: '/app/themes/simple-city/public/build/',
+  build: {
+    chunkSizeWarningLimit: 600,
+  },
   server: {
     cors: true,
     strictPort: true,

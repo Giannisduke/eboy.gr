@@ -2,6 +2,9 @@ section {
    @include make-container();
 
     &.featured {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
             padding: 4rem 0 0rem 0;
             background:
                 linear-gradient(0deg, rgb(255 255 255 / 1) 0%, rgb(255 255 255 / 1) 100%) 0% 99.13% / 100% 40% no-repeat no-repeat, /* New Background */
@@ -145,7 +148,7 @@ section {
                     & .buttons {
                     @extend .d-flex;
                     @extend .d-block;
-                    @extend .d-lg-none;                   
+                    @extend .d-lg-none;
                     @include media-breakpoint-down(lg) {
                         justify-content: center;
                     }
@@ -154,6 +157,13 @@ section {
                         @extend .mx-2;
                     }
                 }
+
+            & .embla {
+                @extend .d-flex;
+                @extend .justify-content-between;    
+                @extend .flex-column;
+                flex: 1;
+            }
     }
     &.marketing {
         max-width: 1440px;
