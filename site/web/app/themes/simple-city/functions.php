@@ -947,6 +947,12 @@ function clear_shop_cache($post_id) {
     if (function_exists('wp_cache_flush')) {
         wp_cache_flush();
     }
+
+    // Schedule a background rebuild of the init cache 10s later.
+    // wp_next_scheduled prevents stacking duplicate events during bulk imports.
+    if (!wp_next_scheduled('shop_prewarm_init_cache_single')) {
+        wp_schedule_single_event(time() + 10, 'shop_prewarm_init_cache_single');
+    }
 }
 
 // Hook into product save/update/delete events
@@ -970,6 +976,43 @@ function clear_shop_cache_on_term_change($term_id, $tt_id, $taxonomy) {
 add_action('created_term', 'clear_shop_cache_on_term_change', 10, 3);
 add_action('edited_term', 'clear_shop_cache_on_term_change', 10, 3);
 add_action('delete_term', 'clear_shop_cache_on_term_change', 10, 3);
+
+/**
+ * Register a 25-minute cron interval (slightly under the 30-min transient TTL)
+ */
+add_filter('cron_schedules', function ($schedules) {
+    $schedules['every_25_minutes'] = [
+        'interval' => 1500,
+        'display'  => 'Every 25 Minutes',
+    ];
+    return $schedules;
+});
+
+/**
+ * Ensure the recurring prewarm event is scheduled on every request.
+ * wp_next_scheduled() is cheap (single options lookup) so running it on init is fine.
+ */
+add_action('init', function () {
+    if (!wp_next_scheduled('shop_prewarm_init_cache')) {
+        wp_schedule_event(time(), 'every_25_minutes', 'shop_prewarm_init_cache');
+    }
+});
+
+/**
+ * Rebuild the init transient if it is missing.
+ * Shared by both the recurring event and the one-off post-clear event.
+ */
+function shop_rebuild_init_cache() {
+    if (get_transient('shop_init_data') !== false) {
+        return; // still warm, nothing to do
+    }
+
+    $request = new WP_REST_Request('GET', '/theme/v1/init');
+    get_shop_init_data($request);
+}
+
+add_action('shop_prewarm_init_cache',        'shop_rebuild_init_cache');
+add_action('shop_prewarm_init_cache_single', 'shop_rebuild_init_cache');
 
 /**
  * Add admin menu for cache management

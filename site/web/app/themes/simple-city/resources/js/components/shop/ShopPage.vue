@@ -5,32 +5,38 @@
         <!-- Filters -->
         <FilterBar />
 
-    <!-- Loading State -->
-    <div v-if="shopStore.loading" class="loading">
-      <p>Loading products...</p>
-    </div>
-
     <!-- Error State -->
-    <div v-else-if="shopStore.error" class="error">
+    <div v-if="shopStore.error" class="error">
       <p>{{ shopStore.error }}</p>
     </div>
 
     <!-- Products Grid -->
     <div
-      v-else-if="shopStore.hasProducts"
+      v-else-if="shopStore.loading || shopStore.hasProducts"
       class="products-grid"
-      :class="`grid-cols-${shopStore.gridColumns}`"
+      :class="[`grid-cols-${shopStore.gridColumns}`, { 'is-reloading': shopStore.loading && shopStore.hasProducts }]"
     >
-      <ProductCard
-        v-for="product in shopStore.products"
-        :key="product.id"
-        :product="product"
-      />
+      <!-- Skeleton on initial load (no products in store yet) -->
+      <template v-if="shopStore.loading && !shopStore.hasProducts">
+        <ProductCardSkeleton
+          v-for="n in shopStore.filters.perPage"
+          :key="`sk-${n}`"
+        />
+      </template>
+
+      <!-- Real products (shown during filter-change loading too, dimmed) -->
+      <template v-else>
+        <ProductCard
+          v-for="product in shopStore.products"
+          :key="product.id"
+          :product="product"
+        />
+      </template>
     </div>
 
     <!-- No Products -->
     <div v-else class="no-products">
-      <p>No products found.</p>
+      <p>Δεν βρέθηκαν προϊόντα.</p>
     </div>
 
     <!-- Load More Button -->
@@ -53,6 +59,7 @@ import { onMounted, nextTick, watch } from 'vue';
 import { useShopStore } from '../../stores/shop';
 import FilterBar from './FilterBar.vue';
 import ProductCard from './ProductCard.vue';
+import ProductCardSkeleton from './ProductCardSkeleton.vue';
 
 const shopStore = useShopStore();
 
@@ -208,7 +215,6 @@ function updateButtonStates() {
   grid-template-columns: repeat(6, 1fr);
 }
 
-.loading,
 .error,
 .no-products {
   text-align: center;
@@ -218,6 +224,12 @@ function updateButtonStates() {
 
 .error {
   color: #dc3545;
+}
+
+.products-grid.is-reloading {
+  opacity: 0.45;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
 }
 
 .load-more-container {

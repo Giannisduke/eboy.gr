@@ -478,7 +478,7 @@ export const useShopStore = defineStore('shop', {
                 perPage: 12
             };
             this.updateURL();
-            this.fetchProducts();
+            this._applyFilters();
         },
 
         setGridColumns(columns) {
