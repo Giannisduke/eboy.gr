@@ -96,8 +96,8 @@
             <div class="price-slider">
               <v-range-slider
                 v-model="priceRange"
-                :min="shopStore.priceRange.filteredMin"
-                :max="shopStore.priceRange.filteredMax"
+                :min="shopStore.priceRange.min"
+                :max="shopStore.priceRange.max"
                 :step="1"
                 hide-details
                 color="primary"
@@ -253,6 +253,8 @@ const priceRange = ref([0, 1000]);
 const sortValue = ref('date-desc');
 let priceUpdateTimeout = null;
 let headerResizeObserver = null;
+let _priceChangePending = false;
+let _priceChangeTimer  = null;
 
 const filterBarEl = ref(null);
 const isStuck = ref(false);
@@ -287,9 +289,8 @@ onMounted(() => {
   selectedWidth.value = shopStore.filters.width;
   selectedDepth.value = shopStore.filters.depth;
   sortValue.value = `${shopStore.filters.orderby}-${shopStore.filters.order}`;
-  // Use filtered range for initialization
-  localMinPrice.value = shopStore.filters.minPrice || shopStore.priceRange.filteredMin;
-  localMaxPrice.value = shopStore.filters.maxPrice || shopStore.priceRange.filteredMax;
+  localMinPrice.value = shopStore.filters.minPrice ?? shopStore.priceRange.min;
+  localMaxPrice.value = shopStore.filters.maxPrice ?? shopStore.priceRange.max;
   priceRange.value = [localMinPrice.value, localMaxPrice.value];
 
   // Sticky category menu: track header height
@@ -340,13 +341,22 @@ watch(() => `${shopStore.filters.orderby}-${shopStore.filters.order}`, (newVal) 
   sortValue.value = newVal;
 });
 
-// Watch price range changes (both overall and filtered)
-watch(() => [shopStore.priceRange.min, shopStore.priceRange.max, shopStore.priceRange.filteredMin, shopStore.priceRange.filteredMax], ([min, max, filteredMin, filteredMax]) => {
-  // Use filtered range as the slider bounds
-  // Constrain current values to the new filtered range
-  localMinPrice.value = Math.max(shopStore.filters.minPrice || filteredMin, filteredMin);
-  localMaxPrice.value = Math.min(shopStore.filters.maxPrice || filteredMax, filteredMax);
+// Watch overall bounds — resets slider when category changes (min/max change completely)
+watch(() => [shopStore.priceRange.min, shopStore.priceRange.max], ([min, max]) => {
+  const currentMin = shopStore.filters.minPrice;
+  const currentMax = shopStore.filters.maxPrice;
+  localMinPrice.value = (currentMin !== null && currentMin >= min) ? currentMin : min;
+  localMaxPrice.value = (currentMax !== null && currentMax <= max) ? currentMax : max;
   priceRange.value = [localMinPrice.value, localMaxPrice.value];
+});
+
+// Watch available range — auto-snaps handles when another filter narrows the price range.
+// Skipped while the user is dragging the price slider itself (_priceChangePending flag).
+watch(() => [shopStore.priceRange.filteredMin, shopStore.priceRange.filteredMax], ([filteredMin, filteredMax]) => {
+  if (_priceChangePending) return;
+  localMinPrice.value = filteredMin;
+  localMaxPrice.value = filteredMax;
+  priceRange.value = [filteredMin, filteredMax];
 });
 
 // Computed property to check if current range is outside filtered range
@@ -461,7 +471,14 @@ const onSortChange = (value) => {
 const onPriceRangeChange = (value) => {
   localMinPrice.value = value[0];
   localMaxPrice.value = value[1];
+
+  // Prevent the filteredMin/Max watch from auto-snapping while the user is dragging.
+  // The flag stays active for 700ms (500ms debounce + buffer) so the store response
+  // doesn't reset the slider position mid-drag.
+  clearTimeout(_priceChangeTimer);
+  _priceChangePending = true;
   debouncedPriceUpdate();
+  _priceChangeTimer = setTimeout(() => { _priceChangePending = false; }, 700);
 };
 
 const debouncedPriceUpdate = () => {
