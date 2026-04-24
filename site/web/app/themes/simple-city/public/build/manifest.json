@@ -4,7 +4,7 @@
     "src": "editor.deps.json"
   },
   "resources/css/app.scss": {
-    "file": "assets/app-PV7J1ibJ.css",
+    "file": "assets/app-ixNleou0.css",
     "src": "resources/css/app.scss",
     "isEntry": true
   },
@@ -161,6 +161,10 @@
     "file": "assets/bedroom-Bh8B20E2.svg",
     "src": "resources/images/bedroom.svg"
   },
+  "resources/images/dot.svg": {
+    "file": "assets/dot-n7auKOWp.svg",
+    "src": "resources/images/dot.svg"
+  },
   "resources/images/garden.svg": {
     "file": "assets/garden-D5g2VUHZ.svg",
     "src": "resources/images/garden.svg"
@@ -168,6 +172,10 @@
   "resources/images/kitchen.svg": {
     "file": "assets/kitchen-CWGgO1IH.svg",
     "src": "resources/images/kitchen.svg"
+  },
+  "resources/images/line.svg": {
+    "file": "assets/line-BVSYy6I5.svg",
+    "src": "resources/images/line.svg"
   },
   "resources/images/logo.svg": {
     "file": "assets/logo-Vti560dz.svg",

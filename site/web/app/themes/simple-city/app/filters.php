@@ -159,4 +159,22 @@ add_filter('woocommerce_locate_template', function (string $template, string $te
     return $template;
 }, 10, 3);
 
+// 3. Template parts via wc_get_template_part() (e.g. content-single-product.php):
+//    wc_get_template_part() uses locate_template() which checks theme root only,
+//    so we redirect here to resources/views/woocommerce/.
+add_filter('wc_get_template_part', function (string $template, string $slug, string $name): string {
+    $base     = get_stylesheet_directory() . '/resources/views/woocommerce/';
+    $filename = $name ? "{$slug}-{$name}" : $slug;
+    $blade    = $base . $filename . '.blade.php';
+    $php      = $base . $filename . '.php';
+
+    if (file_exists($blade)) {
+        return $blade;
+    }
+    if (file_exists($php)) {
+        return $php;
+    }
+    return $template;
+}, 10, 3);
+
 

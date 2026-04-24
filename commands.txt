@@ -164,3 +164,10 @@ python3 -c "from lxml import etree; tree=etree.parse('/srv/www/eboy.gr/current/w
 
 duplicate SKU check:
 wp --url="https://sc-staging.eboy.gr/" eval 'global $wpdb; $dups=$wpdb->get_results("SELECT meta_value as sku, COUNT(*) as cnt FROM {$wpdb->postmeta} WHERE meta_key=\"_sku\" GROUP BY meta_value HAVING cnt > 1 LIMIT 10"); foreach($dups as $d) echo $d->sku." appears ".$d->cnt." times\n"; if(empty($dups)) echo "No duplicates found\n";'
+
+
+# Έλεγχος αν το ready.json έχει duplicates:
+python3 -c "import json; d=json.load(open('/srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/pakoworld-ready.json')); skus=d.get('ready_skus',[]); print(f'Total: {len(skus)}, Unique: {len(set(skus))}, Dups: {len(skus)-len(set(skus))}')"
+
+
+python3 -c "import json; d=json.load(open('/srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/pakoworld-ready.json')); print(f'Ready: {d[\"total_ready\"]} / {d[\"total_products\"]}')"
