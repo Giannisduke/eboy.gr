@@ -14,6 +14,7 @@ class ProductSync {
     private $synced_skus = []; // Track SKUs that were synced
     private $sku_tracker = null;
     private $auto_track_enhancements = false;
+    private $sku_id_cache = []; // Local cache: sku => product_id, bypasses stale WP object cache
 
     // Attributes that should be global WooCommerce taxonomies (filterable via layered nav).
     // Key = mb_strtolower'd input name, value = [canonical Greek label, taxonomy slug].
@@ -165,6 +166,12 @@ class ProductSync {
         $this->setProductData($wc_product, $product);
 
         $product_id = $wc_product->save();
+
+        // Register in local cache immediately so findProductBySKU won't create a duplicate
+        // if the same SKU is encountered again in this request (stale WP object cache issue).
+        if ($product_id && !empty($product->sku)) {
+            $this->sku_id_cache[$product->sku] = $product_id;
+        }
 
         // Set images
         $this->setProductImages($product_id, $product);
@@ -960,12 +967,17 @@ class ProductSync {
      * Find product by SKU
      */
     private function findProductBySKU($sku) {
-        global $wpdb;
+        // Local cache takes priority — $wpdb query cache does not invalidate on INSERT,
+        // so a product created earlier in the same request would not be found otherwise.
+        if (isset($this->sku_id_cache[$sku])) {
+            return $this->sku_id_cache[$sku];
+        }
 
-        $product_id = $wpdb->get_var($wpdb->prepare(
-            "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_sku' AND meta_value = %s LIMIT 1",
-            $sku
-        ));
+        $product_id = wc_get_product_id_by_sku($sku) ?: null;
+
+        if ($product_id) {
+            $this->sku_id_cache[$sku] = $product_id;
+        }
 
         return $product_id;
     }

@@ -124,3 +124,6 @@ wp --url="https://sc-staging.eboy.gr/" eval '$logs = get_option("xml_importer_lo
   wp --url="https://sc-staging.eboy.gr/" eval ' $t = get_transient("xml_import_parsed_pakoworld"); echo $t ? "Transient exists: " . count($t) . " products\n" : "No transient\n";'
 
   python3 -c "import json; d=json.load(open(\"/srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/pakoworld-ready.json\")); print(f'Ready SKUs: {len(d.get(\"ready_skus\", []))}')" 2>/dev/null || echo "No ready.json"
+
+# Duplicate SKU check - ποια posts μοιράζονται το ίδιο SKU
+wp --url="https://sc-staging.eboy.gr/" eval 'global $wpdb; $rows=$wpdb->get_results("SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key=\"_sku\" AND meta_value=\"006-000012\""); foreach($rows as $r){ $s=get_post_status($r->post_id); $d=get_post_field("post_date",$r->post_id); echo "post_id={$r->post_id} sku={$r->meta_value} status={$s} date={$d}\n"; }'
