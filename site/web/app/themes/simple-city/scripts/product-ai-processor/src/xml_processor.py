@@ -183,6 +183,24 @@ class XMLProcessor:
         except Exception as e:
             logger.warning(f"Failed to create ready file: {str(e)}")
 
+        # Write initial progress file AFTER resetting ready.json.
+        # PHP polls this file and will not start importing until status != 'complete'.
+        # This prevents PHP from reading stale ready.json/enhanced.xml from a previous run.
+        run_started_at = time.time()
+        try:
+            with open(progress_file, 'w') as f:
+                json.dump({
+                    'started_at': run_started_at,
+                    'current': 0,
+                    'total': len(products),
+                    'percent': 0,
+                    'processed': 0,
+                    'failed': 0,
+                    'status': 'processing'
+                }, f)
+        except Exception as e:
+            logger.warning(f"Failed to initialize progress file: {e}")
+
         # Build new tree with metadata
         # Determine product container tag based on supplier
         if supplier == 'estiahomeart' or supplier == 'b2bmarkt':
@@ -323,6 +341,7 @@ class XMLProcessor:
             try:
                 with open(progress_file, 'w') as f:
                     json.dump({
+                        'started_at': run_started_at,
                         'current': pos + 1,
                         'total': total,
                         'percent': round(((pos + 1) / total) * 100, 1),
@@ -345,6 +364,7 @@ class XMLProcessor:
 
         # Mark as complete
         complete_data = {
+            'started_at': run_started_at,
             'current': len(products),
             'total': len(products),
             'percent': 100,
