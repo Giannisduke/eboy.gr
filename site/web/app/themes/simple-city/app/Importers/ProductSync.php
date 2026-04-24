@@ -129,6 +129,8 @@ class ProductSync {
         // Check if product exists by SKU
         $existing_id = $this->findProductBySKU($product->sku);
 
+        error_log("ProductSync::syncProduct SKU={$product->sku} cache=" . (isset($this->sku_id_cache[$product->sku]) ? 'HIT:'.$this->sku_id_cache[$product->sku] : 'MISS') . " existing_id=" . ($existing_id ?: 'null'));
+
         if ($existing_id) {
             $this->updateProduct($existing_id, $product);
             $this->stats['updated']++;
