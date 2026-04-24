@@ -967,13 +967,22 @@ class ProductSync {
      * Find product by SKU
      */
     private function findProductBySKU($sku) {
-        // Local cache takes priority — $wpdb query cache does not invalidate on INSERT,
-        // so a product created earlier in the same request would not be found otherwise.
+        // Local cache takes priority — prevents duplicate creates within the same request
+        // regardless of any DB or object cache staleness.
         if (isset($this->sku_id_cache[$sku])) {
             return $this->sku_id_cache[$sku];
         }
 
-        $product_id = wc_get_product_id_by_sku($sku) ?: null;
+        global $wpdb;
+
+        // Raw query with no post_status filter — finds published, draft, trash, etc.
+        // Use ORDER BY meta_id DESC to get the most recent entry if somehow multiple exist.
+        $product_id = $wpdb->get_var($wpdb->prepare(
+            "SELECT post_id FROM {$wpdb->postmeta}
+            WHERE meta_key = '_sku' AND meta_value = %s
+            ORDER BY meta_id DESC LIMIT 1",
+            $sku
+        ));
 
         if ($product_id) {
             $this->sku_id_cache[$sku] = $product_id;

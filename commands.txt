@@ -1,10 +1,10 @@
 Σβησιμο ολα τα products, μαζι με εικόνες
 
-URL="https://simple-city.eboy.test"; PROD_IDS=$(wp --url="$URL" post list --post_type=product,product_variation --post_status=any --format=ids); IMG_IDS=$(wp --url="$URL" eval '$ids=get_posts(["post_type"=>["product","product_variation"],"posts_per_page"=>-1,"fields"=>"ids","post_status"=>"any"]); $att=[]; foreach($ids as $pid){ $t=get_post_thumbnail_id($pid); if($t) $att[$t]=1; $g=get_post_meta($pid,"_product_image_gallery",true); if($g){ foreach(array_filter(array_map("absint", explode(",",$g))) as $gid){ $att[$gid]=1; } } $children=get_children(["post_parent"=>$pid,"post_type"=>"attachment","numberposts"=>-1,"fields"=>"ids"]); foreach($children as $cid){ $att[$cid]=1; } } echo implode(" ", array_keys($att));'); [ -n "$IMG_IDS" ] && wp --url="$URL" post delete $IMG_IDS --force; [ -n "$PROD_IDS" ] && wp --url="$URL" post delete $PROD_IDS --force
+URL="https://sc-staging.eboy.gr/"; PROD_IDS=$(wp --url="$URL" post list --post_type=product,product_variation --post_status=any --format=ids); IMG_IDS=$(wp --url="$URL" eval '$ids=get_posts(["post_type"=>["product","product_variation"],"posts_per_page"=>-1,"fields"=>"ids","post_status"=>"any"]); $att=[]; foreach($ids as $pid){ $t=get_post_thumbnail_id($pid); if($t) $att[$t]=1; $g=get_post_meta($pid,"_product_image_gallery",true); if($g){ foreach(array_filter(array_map("absint", explode(",",$g))) as $gid){ $att[$gid]=1; } } $children=get_children(["post_parent"=>$pid,"post_type"=>"attachment","numberposts"=>-1,"fields"=>"ids"]); foreach($children as $cid){ $att[$cid]=1; } } echo implode(" ", array_keys($att));'); [ -n "$IMG_IDS" ] && wp --url="$URL" post delete $IMG_IDS --force; [ -n "$PROD_IDS" ] && wp --url="$URL" post delete $PROD_IDS --force
 
 
 Σβησιμο ολα τo media library
-wp --url=https://simple-city.eboy.test post list --post_type=attachment --format=ids | xargs -r wp --url=https://simple-city.eboy.test/ post delete --force
+wp --url=https://sc-staging.eboy.gr/ post list --post_type=attachment --format=ids | xargs -r wp --url=https://simple-city.eboy.test/ post delete --force
 
   καθάρισε τον stale transient:
 wp --url="https://sc-staging.eboy.gr/" eval 'delete_transient("xml_import_parsed_pakoworld"); echo "Cleared\n";'
@@ -14,6 +14,37 @@ wp --url="https://sc-staging.eboy.gr/" post list --post_type=product --post_stat
 
 τι τρέχει αυτη τη στιγμη
 ps aux | grep -i "wp\|realtime\|xml" | grep -v grep
+
+ένα δείγμα αν υπάρχουν ήδη duplicate SKUs στη DB:
+wp --url="https://sc-staging.eboy.gr/" eval 'global $wpdb; $dups = $wpdb->get_results("SELECT meta_value as sku, COUNT(*) as cnt FROM {$wpdb->postmeta} WHERE meta_key=\"_sku\" GROUP BY meta_value HAVING cnt > 1 LIMIT 10"); foreach($dups as $d) echo $d->sku . " appears " . $d->cnt . " times\n"; if(empty($dups)) echo "No duplicates found\n";'
+
+
+Τα κύρια logs για το import είναι:
+
+  Real-time import log:
+  tail -f web/app/themes/simple-city/scripts/xml_files/realtime-import.log
+
+  Δείτε τι λέει το import log:
+  tail -50 web/app/themes/simple-city/scripts/product-ai-processor/logs/realtime-import.log
+   | grep -E "created|updated|Found|Importing"
+
+  AI enhancement log:
+  tail -f web/app/themes/simple-city/scripts/xml_files/ai-enhancement.log
+
+  Progress JSON (structured data):
+  watch -n 10 "cat web/app/themes/simple-city/scripts/xml_files/pakoworld-progress.json | python3 -m json.tool"
+
+  PHP error_log (το import script γράφει και εκεί):
+  # Βρες πού είναι το PHP error log:
+  php -i | grep error_log
+
+
+  Ελέγξτε αν το ready.json έχει duplicate SKUs:                                          
+ python3 -c "import json; d=json.load(open('/srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/pakoworld-ready.json')); skus=d.get('ready_skus',[]); print(f'Total: {len(skus)}, Unique: {len(set(skus))}, Dups: {len(skus)-len(set(skus))}')"
+python3 -c "from lxml import etree; tree=etree.parse('/srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/enhanced/pakoworld-enhanced.xml'); skus=[e.text for e in tree.findall('.//model') if e.text]; print(f'Total in XML: {len(skus)}, Unique: {len(set(skus))}, Dups: {len(skus)-len(set(skus))}')"
+
+Τι λέει το import log (created vs updated);
+  grep -E "created|updated|Importing|new products" /web/app/themes/simple-city/scripts/product-ai-processor/logs/realtime-import.log | tail -30
 
 Μπορείς να παρακολουθείς με:
 watch -n 30 "wp --url='https://sc-staging.eboy.gr/' post list --post_type=product --post_status=any --format=count"
@@ -123,7 +154,13 @@ wp --url="https://sc-staging.eboy.gr/" eval '$logs = get_option("xml_importer_lo
   Υπάρχει transient με λάθος αριθμό προϊόντων;                                                                                                          
   wp --url="https://sc-staging.eboy.gr/" eval ' $t = get_transient("xml_import_parsed_pakoworld"); echo $t ? "Transient exists: " . count($t) . " products\n" : "No transient\n";'
 
-  python3 -c "import json; d=json.load(open(\"/srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/pakoworld-ready.json\")); print(f'Ready SKUs: {len(d.get(\"ready_skus\", []))}')" 2>/dev/null || echo "No ready.json"
 
-# Duplicate SKU check - ποια posts μοιράζονται το ίδιο SKU
-wp --url="https://sc-staging.eboy.gr/" eval 'global $wpdb; $rows=$wpdb->get_results("SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key=\"_sku\" AND meta_value=\"006-000012\""); foreach($rows as $r){ $s=get_post_status($r->post_id); $d=get_post_field("post_date",$r->post_id); echo "post_id={$r->post_id} sku={$r->meta_value} status={$s} date={$d}\n"; }'
+p
+python3 -c "import json; d=json.load(open(\"/srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/pakoworld-ready.json\")); print(f'Ready SKUs: {len(d.get(\"ready_skus\", []))}')" 2>/dev/null || echo "No ready.json"
+
+
+Αν το XML έχει το ίδιο SKU δύο φορές
+python3 -c "from lxml import etree; tree=etree.parse('/srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/gr/pakoworld.xml'); skus=[e.text for e in tree.findall('.//model') if e.text]; print(f'Total: {len(skus)}, Unique: {len(set(skus))}, Dups: {len(skus)-len(set(skus))}')"
+
+duplicate SKU check:
+wp --url="https://sc-staging.eboy.gr/" eval 'global $wpdb; $dups=$wpdb->get_results("SELECT meta_value as sku, COUNT(*) as cnt FROM {$wpdb->postmeta} WHERE meta_key=\"_sku\" GROUP BY meta_value HAVING cnt > 1 LIMIT 10"); foreach($dups as $d) echo $d->sku." appears ".$d->cnt." times\n"; if(empty($dups)) echo "No duplicates found\n";'
