@@ -16,14 +16,21 @@ class LibertaParser extends AbstractParser {
 
     public function parseProducts() {
         $this->loadXML();
-        $products = [];
+        $products   = [];
+        $seen_skus  = [];
 
         foreach ($this->getProductNodes() as $productNode) {
             try {
                 $product = $this->parseProduct($productNode);
-                if ($product->validate() === true) {
-                    $products[] = $product;
+                if ($product->validate() !== true) {
+                    continue;
                 }
+                if (isset($seen_skus[$product->sku])) {
+                    error_log("LibertaParser: Skipping duplicate SKU: {$product->sku}");
+                    continue;
+                }
+                $seen_skus[$product->sku] = true;
+                $products[] = $product;
             } catch (\Exception $e) {
                 error_log("Liberta Parser Error: " . $e->getMessage());
             }
@@ -116,6 +123,9 @@ class LibertaParser extends AbstractParser {
 
         // Brand
         $product->manufacturer = 'Liberta';
+
+        // AI-Enhanced Fields (woo_category, tags, tech_specs)
+        $this->parseAIFields($product, $node);
 
         return $product;
     }

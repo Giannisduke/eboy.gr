@@ -72,17 +72,8 @@ class PakoworldParser extends AbstractParser {
             }
         }
 
-        // AI-Enhanced Fields (if available)
-        if (isset($node->woo_category)) {
-            $product->woo_category = $this->getNodeValue($node->woo_category);
-        }
-
-        if (isset($node->tags)) {
-            $tagsString = $this->getNodeValue($node->tags);
-            if (!empty($tagsString)) {
-                $product->tags = array_map('trim', explode(',', $tagsString));
-            }
-        }
+        // AI-Enhanced Fields (woo_category, tags, tech_specs)
+        $this->parseAIFields($product, $node);
 
         // Attributes - parse "Name: Value" format
         if (isset($node->attributes->attribute)) {
@@ -94,6 +85,16 @@ class PakoworldParser extends AbstractParser {
                     [$name, $value] = explode(':', $attrText, 2);
                     $name  = trim($name);
                     $value = trim($value);
+
+                    $attributeRenames = [
+                        'Μεικτό Βάρος -  Gross Weight'    => 'Μεικτό Βάρος',
+                        'Μεικτό Βάρος - Gross Weight'     => 'Μεικτό Βάρος',
+                        'Πραγματικό Βάρος -  Net Weight'  => 'Πραγματικό Βάρος',
+                        'Πραγματικό Βάρος - Net Weight'   => 'Πραγματικό Βάρος',
+                    ];
+                    if (isset($attributeRenames[$name])) {
+                        $name = $attributeRenames[$name];
+                    }
                 } else {
                     $name  = 'Attribute ' . $this->getNodeAttribute($attr, 'id');
                     $value = trim($attrText);

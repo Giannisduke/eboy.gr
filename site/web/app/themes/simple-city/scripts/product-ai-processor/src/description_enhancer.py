@@ -69,6 +69,11 @@ class DescriptionEnhancer:
             )
 
             if enhanced:
+                # Strip markdown code fences (```html ... ```) that some models add
+                enhanced = re.sub(r'^```(?:html)?\s*', '', enhanced.strip(), flags=re.IGNORECASE)
+                enhanced = re.sub(r'\s*```$', '', enhanced.strip())
+                enhanced = enhanced.strip()
+
                 # Validate that it's HTML
                 if not self._contains_html(enhanced):
                     # If AI didn't return HTML, wrap it in basic HTML

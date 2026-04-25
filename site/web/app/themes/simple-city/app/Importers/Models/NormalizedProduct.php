@@ -30,8 +30,9 @@ class NormalizedProduct {
 
     // Categories
     public $categories = [];
-    public $woo_category; // AI-enhanced WooCommerce category
-    public $tags = []; // AI-generated product tags
+    public $woo_category;  // AI-enhanced WooCommerce category
+    public $tags = [];     // AI-generated product tags
+    public $tech_specs;    // AI-generated technical specifications HTML (<ul><li>...</li></ul>)
 
     // Attributes
     public $attributes = [];

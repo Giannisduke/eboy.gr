@@ -131,6 +131,106 @@ add_filter('wp_image_editors', 'fi_force_imagick');
   // Disable Woocommerce setup_wizard
 add_filter( 'woocommerce_prevent_automatic_wizard_redirect', '__return_true' );
 
+// "Τεχνικά χαρακτηριστικά" tab — reads AI-generated _tech_specs meta (all suppliers).
+add_filter('woocommerce_product_tabs', function (array $tabs): array {
+    global $product;
+    if (! $product instanceof \WC_Product) {
+        return $tabs;
+    }
+    $tech_specs = get_post_meta($product->get_id(), '_tech_specs', true);
+    if (empty($tech_specs)) {
+        return $tabs;
+    }
+    $tabs['tech_specs'] = [
+        'title'    => 'Τεχνικά χαρακτηριστικά',
+        'priority' => 12,
+        'callback' => static function () use ($tech_specs): void {
+            echo wp_kses_post($tech_specs);
+        },
+    ];
+    return $tabs;
+}, 20);
+
+// Hide "Επιπλέον πληροφορίες" tab from non-managers (shop_manager + administrator only).
+add_filter('woocommerce_product_tabs', function (array $tabs): array {
+    if (! current_user_can('manage_woocommerce')) {
+        unset($tabs['additional_information']);
+    }
+    return $tabs;
+}, 98);
+
+// Add "Διαστάσεις / Βάρος" tab after "Περιγραφή" (priority 15, between description=10 and additional_information=20).
+add_filter('woocommerce_product_tabs', function (array $tabs): array {
+    $tabs['dimensions_weight'] = [
+        'title'    => 'Διαστάσεις / Βάρος',
+        'priority' => 15,
+        'callback' => function () {
+            global $product;
+            if (! $product instanceof \WC_Product) {
+                return;
+            }
+
+            $keywords = ['βάρος', 'weight', 'διαστάσ', 'dimension', 'μήκος', 'πλάτος', 'ύψος', 'βάθος', 'length', 'width', 'height', 'depth'];
+            $exclude  = ['Μεικτό Βάρος', 'Ογκομετρικό Βάρος'];
+            $rows     = [];
+
+            // WooCommerce built-in weight & dimensions.
+            if ($product->get_weight()) {
+                $rows[] = ['label' => 'Βάρος', 'value' => wc_format_weight($product->get_weight())];
+            }
+
+            if ($product->get_length() || $product->get_width() || $product->get_height()) {
+                $rows[] = ['label' => 'Διαστάσεις', 'value' => wc_format_dimensions($product->get_dimensions(false))];
+            }
+
+            // Product attributes filtered by dimension/weight keywords.
+            foreach ($product->get_attributes() as $attribute) {
+                $label = $attribute->is_taxonomy()
+                    ? wc_attribute_label($attribute->get_name(), $product)
+                    : $attribute->get_name();
+
+                $matched = false;
+                foreach ($keywords as $kw) {
+                    if (mb_stripos($label, $kw) !== false) {
+                        $matched = true;
+                        break;
+                    }
+                }
+
+                if (! $matched || in_array($label, $exclude, true)) {
+                    continue;
+                }
+
+                if ($attribute->is_taxonomy()) {
+                    $terms  = $attribute->get_terms();
+                    $values = $terms ? wp_list_pluck($terms, 'name') : [];
+                } else {
+                    $values = $attribute->get_options();
+                }
+
+                if (! empty($values)) {
+                    $rows[] = ['label' => $label, 'value' => implode(', ', $values)];
+                }
+            }
+
+            if (empty($rows)) {
+                return;
+            }
+
+            echo '<table class="woocommerce-product-attributes shop_attributes">';
+            foreach ($rows as $row) {
+                printf(
+                    '<tr><th class="woocommerce-product-attributes-item__label">%s</th><td class="woocommerce-product-attributes-item__value">%s</td></tr>',
+                    esc_html($row['label']),
+                    esc_html($row['value'])
+                );
+            }
+            echo '</table>';
+        },
+    ];
+    return $tabs;
+}, 15);
+
 // ── WooCommerce + Sage template integration ──────────────────────────────────
 
 // 1. Top-level templates (single-product.php, archive-product.php):

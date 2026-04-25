@@ -98,6 +98,9 @@ class B2BMarktParser extends AbstractParser {
             $product->manufacturer = 'B2BMarkt';
         }
 
+        // AI-Enhanced Fields (woo_category, tags, tech_specs)
+        $this->parseAIFields($product, $node);
+
         return $product;
     }
 }

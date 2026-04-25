@@ -119,6 +119,9 @@ class EstiahParser extends AbstractParser {
         // Brand
         $product->manufacturer = 'Estia';
 
+        // AI-Enhanced Fields (woo_category, tags, tech_specs)
+        $this->parseAIFields($product, $node);
+
         return $product;
     }
 }

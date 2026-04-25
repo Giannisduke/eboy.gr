@@ -68,13 +68,13 @@ class CategoryMapper:
             else:
                 # Final fallback
                 logger.warning(f"AI mapping failed for: {supplier_category}, using default")
-                fallback = ("Έπιπλο", 0.5, [])
+                fallback = ("Σαλόνι & Βοηθητικά", 0.5, [])
                 self._store_mapping_for_review(supplier_category, product_name, *fallback, method="fallback")
                 return fallback
 
         except Exception as e:
             logger.error(f"Error mapping category: {str(e)}")
-            fallback = ("Έπιπλο", 0.3, [])
+            fallback = ("Σαλόνι & Βοηθητικά", 0.3, [])
             return fallback
 
     def _ai_mapping_with_confidence(self, supplier_category: str, product_name: str) -> Optional[Tuple[str, float, List[str]]]:
@@ -195,7 +195,7 @@ class CategoryMapper:
         return subcats[:5]  # Limit to first 5 levels
 
     def _is_valid_category(self, category: str) -> bool:
-        """Check if category is one of the valid 9 categories"""
+        """Check if category is one of the valid categories defined in categories.yaml"""
         valid_categories = [cat['name'] for cat in self.categories]
         return category in valid_categories
 

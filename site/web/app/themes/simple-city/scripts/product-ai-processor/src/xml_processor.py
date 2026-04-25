@@ -15,6 +15,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from .ai_client import OllamaClient
 from .title_optimizer import TitleOptimizer
 from .description_enhancer import DescriptionEnhancer
+from .tech_specs_generator import TechSpecsGenerator
 from .tag_generator import TagGenerator
 from .category_mapper import CategoryMapper
 from .image_optimizer import ImageOptimizer
@@ -77,6 +78,7 @@ class XMLProcessor:
         # Initialize processors
         self.title_optimizer = TitleOptimizer(self.ai_client, self.prompts_config)
         self.description_enhancer = DescriptionEnhancer(self.ai_client, self.prompts_config)
+        self.tech_specs_generator = TechSpecsGenerator(self.ai_client, self.prompts_config)
         self.tag_generator = TagGenerator(self.ai_client, self.prompts_config)
         self.category_mapper = CategoryMapper(self.ai_client, self.prompts_config, self.categories_config)
         skip_images = config.get('skip_images', False)
@@ -560,9 +562,37 @@ class XMLProcessor:
             # Use basic tags as fallback
             enhanced['tags'] = []
 
-        # 4. Enhance description (TEMPORARILY DISABLED for faster processing)
-        # TODO: Re-enable description enhancement after optimization
-        logger.debug(f"Skipping description enhancement for faster processing: {product_data.get('name', '')[:50]}")
+        # 4. Enhance description
+        try:
+            desc_data = {
+                'title': enhanced.get('optimized_title', product_data.get('name', '')),
+                'supplier_category': product_data.get('category', ''),
+                'material': product_data.get('material', ''),
+                'dimensions': product_data.get('dimensions_text', ''),
+                'features': product_data.get('attributes', []),
+                'original_description': product_data.get('description', ''),
+            }
+            ai_desc = self.description_enhancer.enhance(desc_data)
+            if ai_desc:
+                enhanced['enhanced_description'] = ai_desc
+        except Exception as e:
+            logger.warning(f"Description enhancement failed for {product_data.get('sku')}: {str(e)}")
+
+        # 4b. Generate tech specs
+        try:
+            tech_data = {
+                'title': enhanced.get('optimized_title', product_data.get('name', '')),
+                'supplier_category': product_data.get('category', ''),
+                'material': product_data.get('material', ''),
+                'dimensions': product_data.get('dimensions_text', ''),
+                'attributes': product_data.get('attributes', []),
+                'original_description': product_data.get('description', ''),
+            }
+            tech_specs = self.tech_specs_generator.generate(tech_data)
+            if tech_specs:
+                enhanced['tech_specs'] = tech_specs
+        except Exception as e:
+            logger.warning(f"Tech specs generation failed for {product_data.get('sku')}: {str(e)}")
 
         # 5. Translate to Greek if in English mode
         if self.translator and self.language == 'en':
@@ -665,6 +695,11 @@ class XMLProcessor:
                 desc_elem = etree.SubElement(elem, 'Description')
                 desc_elem.text = etree.CDATA(enhanced_data['enhanced_description'])
                 logger.debug(f"Created description ({len(enhanced_data['enhanced_description'])} chars)")
+
+        # Tech specs
+        if enhanced_data.get('tech_specs'):
+            tech_elem = etree.SubElement(elem, 'tech_specs')
+            tech_elem.text = etree.CDATA(enhanced_data['tech_specs'])
 
         # Processed images
         if 'processed_images' in enhanced_data:

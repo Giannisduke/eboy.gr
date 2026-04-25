@@ -14,7 +14,8 @@ class ProductSync {
     private $synced_skus = []; // Track SKUs that were synced
     private $sku_tracker = null;
     private $auto_track_enhancements = false;
-    private $sku_id_cache = []; // Local cache: sku => product_id, bypasses stale WP object cache
+    private $sku_id_cache = [];          // Local cache: sku => product_id, bypasses stale WP object cache
+    private $preloaded_suppliers = [];   // Tracks suppliers whose SKUs have been preloaded
 
     // Attributes that should be global WooCommerce taxonomies (filterable via layered nav).
     // Key = mb_strtolower'd input name, value = [canonical Greek label, taxonomy slug].
@@ -44,9 +45,40 @@ class ProductSync {
     }
 
     /**
+     * Pre-load all existing SKUs for a supplier into the local cache.
+     * Prevents race conditions when RealtimeImporter and BatchImporter run in parallel.
+     */
+    public function preloadSupplierSkus($supplier) {
+        if (isset($this->preloaded_suppliers[$supplier])) {
+            return;
+        }
+        global $wpdb;
+        $rows = $wpdb->get_results($wpdb->prepare(
+            "SELECT pm_sku.meta_value AS sku, p.ID AS post_id
+             FROM {$wpdb->posts} p
+             INNER JOIN {$wpdb->postmeta} pm_sku   ON p.ID = pm_sku.post_id   AND pm_sku.meta_key   = '_sku'
+             INNER JOIN {$wpdb->postmeta} pm_sup    ON p.ID = pm_sup.post_id   AND pm_sup.meta_key   = '_supplier' AND pm_sup.meta_value = %s
+             WHERE p.post_type = 'product'",
+            $supplier
+        ));
+        foreach ($rows as $row) {
+            if (!isset($this->sku_id_cache[$row->sku])) {
+                $this->sku_id_cache[$row->sku] = $row->post_id;
+            }
+        }
+        $this->preloaded_suppliers[$supplier] = true;
+        error_log("ProductSync: Preloaded " . count($rows) . " existing SKUs for supplier {$supplier}");
+    }
+
+    /**
      * Sync multiple products
      */
     public function syncProducts($products, $supplier = null) {
+        // Pre-load existing SKUs to prevent duplicates from parallel import processes.
+        if ($supplier) {
+            $this->preloadSupplierSkus($supplier);
+        }
+
         // Track which SKUs we've seen in this batch
         foreach ($products as $product) {
             try {
@@ -280,6 +312,10 @@ class ProductSync {
 
         if (!empty($product->manufacturer)) {
             $wc_product->update_meta_data('_manufacturer', $product->manufacturer);
+        }
+
+        if (!empty($product->tech_specs)) {
+            $wc_product->update_meta_data('_tech_specs', $product->tech_specs);
         }
     }
 

@@ -138,6 +138,27 @@ abstract class AbstractParser {
     }
 
     /**
+     * Parse AI-enhanced fields (woo_category, tags, tech_specs) from any enhanced XML node.
+     * Call this from each parser's parseProduct() after the supplier-specific fields.
+     */
+    protected function parseAIFields(NormalizedProduct $product, $node): void {
+        if (isset($node->woo_category)) {
+            $product->woo_category = $this->getNodeValue($node->woo_category);
+        }
+
+        if (isset($node->tags)) {
+            $tagsString = $this->getNodeValue($node->tags);
+            if (!empty($tagsString)) {
+                $product->tags = array_map('trim', explode(',', $tagsString));
+            }
+        }
+
+        if (isset($node->tech_specs)) {
+            $product->tech_specs = $this->getNodeValue($node->tech_specs);
+        }
+    }
+
+    /**
      * Clean HTML description
      */
     protected function cleanDescription($html) {
