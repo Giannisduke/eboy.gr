@@ -64,10 +64,8 @@ body {
                 background: white;
     
                 & .top_wrapper {
-                    @include make-row();
-                    @extend .align-items-start;
-                    @extend .justify-content-between;
-                   
+                    @include make-container();
+                    max-width: 1440px;
                    & nav {
                         @include make-col-ready();
 

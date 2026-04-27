@@ -3,13 +3,13 @@
   --slide-spacing: 1rem;
   max-width: 100%;
   overflow-x: clip;
-  padding-right: 8rem;
 
   @media (max-width: 991px) { --slide-size: 33.333%; }
   @media (max-width: 575px) { --slide-size: 100%; }
 
   .embla__viewport {
     overflow: visible;
+    padding: 8rem;
   }
 
   .embla__container {
