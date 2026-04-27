@@ -24,6 +24,7 @@ if ($slider_query->have_posts()) {
             $slides[]  = [
                 'title' => get_the_title(),
                 'image' => $thumb_src[0],
+                'url'   => get_permalink(),
             ];
         }
     }
@@ -45,9 +46,9 @@ wp_reset_postdata();
         <div class="embla__container">
             <?php foreach ($slides as $slide) : ?>
             <div class="embla__slide">
-                <div class="embla__slide__inner">
+                <a class="embla__slide__inner" href="<?php echo esc_url($slide['url']); ?>">
                     <img src="<?php echo esc_url($slide['image']); ?>" alt="<?php echo esc_attr($slide['title']); ?>">
-                </div>
+                </a>
             </div>
             <?php endforeach; ?>
         </div>

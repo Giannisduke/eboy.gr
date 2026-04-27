@@ -7,7 +7,7 @@ section {
             flex-direction: column;
             padding: 4rem 0 0rem 0;
             background:
-                linear-gradient(0deg, rgb(255 255 255 / 1) 0%, rgb(255 255 255 / 1) 100%) 0% 99.13% / 100% 40% no-repeat no-repeat, /* New Background */
+                linear-gradient(0deg, rgb(255 255 255 / 1) 0%, rgb(255 255 255 / 1) 100%) 0% 99.13% / 100% 25% no-repeat no-repeat, /* New Background */
                 linear-gradient(0deg, rgb(255 230 0 / 1) 0%, rgb(255 230 0 / 1) 100%) 0% 0% / 99.8% 78.4% repeat no-repeat; /* New Background */          
             
             @include media-breakpoint-up(xl) {
