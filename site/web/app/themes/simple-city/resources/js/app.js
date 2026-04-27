@@ -86,7 +86,51 @@ if (emblaNode) {
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
+// Text reveal for .slogan_move spans — one at a time, no layout shift
+const sloganMoveEls = document.querySelectorAll('.slogan_move');
+if (sloganMoveEls.length) {
+    // Wrap each span in a clip (still inline at this point)
+    sloganMoveEls.forEach(el => {
+        const clip = document.createElement('span');
+        clip.classList.add('slogan_move__clip');
+        el.parentNode.insertBefore(clip, el);
+        clip.appendChild(el);
+    });
 
+    const clips = document.querySelectorAll('.slogan_move__clip');
+
+    // Measure while clips are still inline-block
+    let maxW = 0, maxH = 0;
+    clips.forEach(c => {
+        maxW = Math.max(maxW, c.offsetWidth);
+        maxH = Math.max(maxH, c.offsetHeight);
+    });
+
+    // Now wrap in cycle container and set fixed size
+    const cycle = document.createElement('span');
+    cycle.classList.add('slogan_cycle');
+    clips[0].parentNode.insertBefore(cycle, clips[0]);
+    clips.forEach(c => cycle.appendChild(c));
+    cycle.style.width  = maxW + 'px';
+    cycle.style.height = maxH + 'px';
+
+    // Hide all, then animate
+    gsap.set(sloganMoveEls, { y: '110%' });
+
+    const tl = gsap.timeline({
+        repeat: -1,
+        scrollTrigger: {
+            trigger: '.slogan',
+            start: 'top 90%',
+            once: true,
+        },
+    });
+
+    sloganMoveEls.forEach(el => {
+        tl.to(el, { y: '0%', duration: 0.7, ease: 'power3.out' });
+        tl.to(el, { y: '-110%', duration: 0.5, ease: 'power3.in' }, '+=1.2');
+    });
+}
 
 const grid_2 = document.getElementById('grid_2');
 const grid_4 = document.getElementById('grid_4');

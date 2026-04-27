@@ -22,6 +22,9 @@ add_filter('woocommerce_enqueue_styles', '__return_empty_array');
 
 add_filter('use_block_editor_for_post', '__return_false');
 
+remove_filter('the_content', 'wpautop');
+remove_filter('the_excerpt', 'wpautop');
+
 
 // Facet remove All css
 add_filter( 'facetwp_load_css', '__return_false' );

@@ -46,6 +46,34 @@ section {
                     }
                     }
 
+                    .slogan_cycle {
+                        display: inline-block;
+                        position: relative;
+                        overflow: hidden;
+                        vertical-align: bottom;
+                    }
+
+                    .slogan_move__clip {
+                        display: inline-block;
+                        overflow: hidden;
+                        vertical-align: bottom;
+                    }
+
+                    .slogan_cycle .slogan_move__clip {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        overflow: hidden;
+                    }
+
+                    .slogan_move {
+                        display: inline-block;
+                        white-space: nowrap;
+                        font-size: 2rem;
+                    }
+
   
               }
 
