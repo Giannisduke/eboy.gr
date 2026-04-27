@@ -17,16 +17,17 @@ section {
             & .featured_wrapper {
                 @include make-container();
                 margin-top: 6rem;
+                max-width: 1440px;
                 
                 @include media-breakpoint-up(lg) {
                     margin-top: 3rem;
                 } 
                 
                 @include media-breakpoint-up(xl) {
-                    margin-top: 1rem;
+                    padding: 1rem 0 5rem 0;
                 } 
                 
-                    & .slogan_1 {
+                    & .slogan {
                     @include make-col-ready();
 
                     @include media-breakpoint-up(sm) {
@@ -35,115 +36,18 @@ section {
                     @include media-breakpoint-up(lg) {
                         @include make-col(12);
                     }
+                   // @extend .test;
 
-                    @extend .d-flex;
-                  //  @extend .flex-column;
-                    @extend .justify-content-start;
-                    @extend .align-items-end;
-                    @extend .test;
-                    }
-                  
-                    & .slogan {
-                        @include make-col-ready();
-                        @include make-col(12);
-
-                        @extend .p-0;
-                        @extend .d-flex;
-                        @extend .flex-column;
-                        @extend .justify-content-between;
-                        align-items: center;
-
-                        @include media-breakpoint-up(md) {
-                            align-items: start;
-                          }
-
-
-                        & h2 {
-
-                          }
-                        & .buttons {
-                            @extend .d-none;
-                            @extend .d-lg-block;
-
-                        }
-
-                    }
-
-                    & .featured_slider {
-                    @include make-col-ready();
-
-                    @include make-col(12);
-                    
-
-                  //  @extend .p-0;
-                    position: relative;
-                    top: -5.4rem;
-
-                    @include media-breakpoint-up(lg) {
-                      top: -6rem;
-                    }
-
-                     @include media-breakpoint-up(xxl) {
-                      top: -9rem;
+                    & h1 {
+                        font-family: PFBagueSansPro-Bold;
+                        font-size: 4rem;
+                        letter-spacing: .02rem;
                     }
                     }
+
+  
               }
-          
-          & .carousel_wrap {
-            @include make-col-ready();
 
-            @include media-breakpoint-up(sm) {
-                @include make-col(12);
-            }
-            @include media-breakpoint-up(lg) {
-                @include make-col(12);
-            }
-
-            & .carousel {
-                & .carousel-inner {
-                    @include make-container;
-                    max-width: 1440px;
-    
-                    & .carousel-item {
-                        
-                        & .featured_image {
-                           @extend .text-center;
-                            & img {
-                                height: 300px;
-                            }
-                        }
-                        & .carousel-caption {
-                            
-                            @extend .d-flex;
-                            @extend .flex-column;
-                            @extend .justify-content-center;
-                            @extend .align-items-center;
-                            @extend .h-100;
-    
-                            position: absolute;
-                            left: 0;
-                            top: 0;
-                            color: $primary;
-                            & h2 {
-//                                font-family: 'PFEncoreSansPro-Bold';
-                                font-size: 1.5rem;
-                            }
-    
-                            & p {
-                                font-family: 'PFEncoreSansPro-Light';
-                                letter-spacing: 0.015rem;
-                            }
-                        }
-                        
-    
-                        & img {
-                            @extend .img-fluid;
-                         //   @extend .w-50;
-                        }
-                    }
-                }
-            }
-          }
 
                     & .buttons {
                     @extend .d-flex;

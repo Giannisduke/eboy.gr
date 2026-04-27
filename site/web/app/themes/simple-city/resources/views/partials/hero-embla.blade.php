@@ -33,9 +33,9 @@ wp_reset_postdata();
 
 <div class="embla">
 
-    <div class="container">
+    <div class="featured_wrapper">
         <div class="row">
-            <div class="col content">
+            <div class="slogan">
                 <?php echo apply_filters('the_content', $page_content); ?>
             </div>
         </div>
