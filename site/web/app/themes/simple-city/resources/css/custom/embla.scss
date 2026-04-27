@@ -9,7 +9,7 @@
 
   .embla__viewport {
     overflow: visible;
-    padding: 0 8rem;
+    padding: 0 25rem 0 0rem;
   }
 
   .embla__container {
@@ -30,8 +30,8 @@
   }
 
   .embla__slide__inner {
-    opacity: 0.5;
-    transform: scale(0.85);
+    opacity: 0.8;
+    transform: scale(0.55);
     transform-origin: bottom center;
     transition: transform 0.35s ease, opacity 0.35s ease;
 
