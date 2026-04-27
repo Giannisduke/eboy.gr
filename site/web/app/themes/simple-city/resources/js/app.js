@@ -44,6 +44,8 @@ if (emblaNode) {
     const emblaApi = EmblaCarousel(emblaNode, {
         loop: true,
         align: 'end',
+        skipSnaps: true,
+        loop: true,
     }, [Autoplay({ delay: 3000, stopOnInteraction: false })]);
 
     const prevBtn = document.querySelector('.embla__button--prev');
