@@ -15,6 +15,8 @@ wp --url="https://sc-staging.eboy.gr/" post list --post_type=product --post_stat
 τι τρέχει αυτη τη στιγμη
 ps aux | grep -i "wp\|realtime\|xml" | grep -v grep
 
+tail -50 /srv/www/eboy.gr/releases/20260425202808/web/app/themes/simple-city/scripts/product-ai-processor/logs/processor.log 2>/dev/null
+
 ένα δείγμα αν υπάρχουν ήδη duplicate SKUs στη DB:
 wp --url="https://sc-staging.eboy.gr/" eval 'global $wpdb; $dups = $wpdb->get_results("SELECT meta_value as sku, COUNT(*) as cnt FROM {$wpdb->postmeta} WHERE meta_key=\"_sku\" GROUP BY meta_value HAVING cnt > 1 LIMIT 10"); foreach($dups as $d) echo $d->sku . " appears " . $d->cnt . " times\n"; if(empty($dups)) echo "No duplicates found\n";'
 
@@ -37,14 +39,6 @@ wp --url="https://sc-staging.eboy.gr/" eval 'global $wpdb; $dups = $wpdb->get_re
   PHP error_log (το import script γράφει και εκεί):
   # Βρες πού είναι το PHP error log:
   php -i | grep error_log
-
-
-  Ελέγξτε αν το ready.json έχει duplicate SKUs:                                          
- python3 -c "import json; d=json.load(open('/srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/pakoworld-ready.json')); skus=d.get('ready_skus',[]); print(f'Total: {len(skus)}, Unique: {len(set(skus))}, Dups: {len(skus)-len(set(skus))}')"
-python3 -c "from lxml import etree; tree=etree.parse('/srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/enhanced/pakoworld-enhanced.xml'); skus=[e.text for e in tree.findall('.//model') if e.text]; print(f'Total in XML: {len(skus)}, Unique: {len(set(skus))}, Dups: {len(skus)-len(set(skus))}')"
-
-Τι λέει το import log (created vs updated);
-  grep -E "created|updated|Importing|new products" /web/app/themes/simple-city/scripts/product-ai-processor/logs/realtime-import.log | tail -30
 
 Μπορείς να παρακολουθείς με:
 watch -n 30 "wp --url='https://sc-staging.eboy.gr/' post list --post_type=product --post_status=any --format=count"

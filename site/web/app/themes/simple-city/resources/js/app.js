@@ -41,16 +41,46 @@ import ClassNames from 'embla-carousel-class-names'
 const emblaNode = document.querySelector('.embla__viewport');
 
 if (emblaNode) {
-    const options = {
+    const emblaApi = EmblaCarousel(emblaNode, {
         loop: true,
         align: 'end',
-        containScroll: 'keepSnaps' // Prevents empty space at the end
+    });
+
+    const prevBtn = document.querySelector('.embla__button--prev');
+    const nextBtn = document.querySelector('.embla__button--next');
+    if (prevBtn) prevBtn.addEventListener('click', () => emblaApi.scrollPrev());
+    if (nextBtn) nextBtn.addEventListener('click', () => emblaApi.scrollNext());
+
+    const slideNodes = emblaApi.slideNodes();
+
+    const updateActive = () => {
+        const selected = emblaApi.selectedScrollSnap();
+        slideNodes.forEach((slide, i) => slide.classList.toggle('is-active', i === selected));
     };
-    const plugins = [
-        //Autoplay(),
-        ClassNames()
-    ];
-    const emblaApi = EmblaCarousel(emblaNode, options, plugins);
+
+    emblaApi.on('select', updateActive);
+    emblaApi.on('reInit', updateActive);
+    updateActive();
+
+    const dotsContainer = document.querySelector('.embla__dots');
+    if (dotsContainer) {
+        const dots = emblaApi.scrollSnapList().map((_, i) => {
+            const dot = document.createElement('button');
+            dot.classList.add('embla__dot');
+            dot.type = 'button';
+            dotsContainer.appendChild(dot);
+            dot.addEventListener('click', () => emblaApi.scrollTo(i));
+            return dot;
+        });
+
+        const updateDots = () => {
+            const selected = emblaApi.selectedScrollSnap();
+            dots.forEach((dot, i) => dot.classList.toggle('embla__dot--selected', i === selected));
+        };
+
+        emblaApi.on('select', updateDots);
+        updateDots();
+    }
 }
 
 
