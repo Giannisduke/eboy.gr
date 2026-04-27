@@ -3,16 +3,16 @@ section {
 
     &.featured {
             position: relative;
-            min-height: 60vh;
+            min-height: 80vh;
             display: flex;
             flex-direction: column;
             padding: 4rem 0 0rem 0;
             background:
-                linear-gradient(0deg, rgb(255 255 255 / 1) 0%, rgb(255 255 255 / 1) 100%) 0% 99.13% / 100% 33% no-repeat no-repeat, /* New Background */
+                linear-gradient(0deg, rgb(255 255 255 / 1) 0%, rgb(255 255 255 / 1) 100%) 0% 99.13% / 100% 15% no-repeat no-repeat, /* New Background */
                 linear-gradient(0deg, rgb(255 230 0 / 1) 0%, rgb(255 230 0 / 1) 100%) 0% 0% / 99.8% 78.4% repeat no-repeat; /* New Background */          
             
             @include media-breakpoint-up(xl) {
-                padding: 8rem 0 0rem 0;
+                padding: 8rem 0 4rem 0;
             } 
 
             & .featured_wrapper {
