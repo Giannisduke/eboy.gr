@@ -209,15 +209,14 @@ class ProductTranslator:
         """
         # Use direct mapping for categories (more reliable)
         category_map = {
-            'Furniture': 'Έπιπλο',
+            'Living Room & Seating': 'Σαλόνι & Καθιστικό',
+            'Bedroom': 'Υπνοδωμάτιο',
             'Office': 'Γραφείο',
-            'Garden': 'Κήπος',
+            'Storage & Organization': 'Αποθήκευση & Οργάνωση',
             'Decoration': 'Διακόσμηση',
-            'White goods': 'Λευκά είδη',
-            'Home organization': 'Οργάνωση σπιτιού',
-            'Kitchen': 'Κουζίνα',
+            'Garden & Outdoor': 'Κήπος & Εξωτερικός Χώρος',
             'Bathroom': 'Μπάνιο',
-            'Lighting': 'Φωτισμός'
+            'Kitchen': 'Κουζίνα',
         }
 
         greek_category = category_map.get(english_category, english_category)

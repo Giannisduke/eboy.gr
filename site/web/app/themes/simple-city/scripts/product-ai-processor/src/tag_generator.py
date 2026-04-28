@@ -20,10 +20,9 @@ class TagGenerator:
         'κονσόλα', 'μπουφές', 'βιτρίνα', 'ραφιέρα', 'παπουτσοθήκη',
         'κρεμάστρα', 'καλόγερος', 'σομιέ', 'στρώμα', 'μαξιλάρι',
         'φωτιστικό', 'καθρέφτης', 'διακοσμητικό', 'βάζο', 'ξαπλώστρα',
-        'σεζλόνγκ', 'ομπρέλα', 'αιώρα', 'καλάθι', 'έπιπλο τηλεόρασης', 'φυτά', 
-        'πίνακας', 'κηροπήγιο', 'χαλί', 'ρολόι', 'βάζο', 'ριχτάρ', 'μπαούλο', 'καλάθι',
-        
-
+        'σεζλόνγκ', 'ομπρέλα', 'αιώρα', 'καλάθι', 'έπιπλο τηλεόρασης', 'φυτά',
+        'πίνακας', 'κηροπήγιο', 'χαλί', 'ρολόι', 'ριχτάρ', 'μπαούλο', 'λουλούδι',
+        'παγκάκι',
     }
 
     def __init__(self, ai_client: OllamaClient, prompts_config: dict):
@@ -68,28 +67,46 @@ class TagGenerator:
         )
 
         try:
-            # Get AI-generated tags
-            ai_response = self.ai_client.generate(
-                prompt=prompt,
-                temperature=0.6,
-                max_tokens=200
-            )
-
-            if ai_response:
-                ai_tags = self._parse_tag_response(ai_response)
-            else:
-                ai_tags = []
-
-            # Enforce whitelist: find first AI tag that maps to a valid canonical
+            # Priority 1: title token scan — most reliable for deterministic titles
+            # (e.g. "Πουφ Jutta" → πουφ, "Σκαμπό Cube" → σκαμπό)
             final_tags = []
-            for raw in ai_tags:
-                canonical = self._enforce_whitelist(self._clean_tag(raw))
+            title_clean = self._clean_tag(title)
+            for token in title_clean.split():
+                canonical = self._enforce_whitelist(token)
                 if canonical:
                     final_tags = [canonical]
                     break
+            # Also try the full cleaned title for multi-word tags
+            if not final_tags:
+                canonical = self._enforce_whitelist(title_clean)
+                if canonical:
+                    final_tags = [canonical]
 
             if not final_tags:
-                # Fallback: rule-based tags checked against whitelist
+                # Priority 2: AI-generated tag (uses title + category context)
+                ai_response = self.ai_client.generate(
+                    prompt=prompt,
+                    temperature=0.6,
+                    max_tokens=200
+                )
+                ai_tags = self._parse_tag_response(ai_response) if ai_response else []
+                for raw in ai_tags:
+                    canonical = self._enforce_whitelist(self._clean_tag(raw))
+                    if canonical:
+                        final_tags = [canonical]
+                        break
+
+            if not final_tags:
+                # Priority 3: supplier_category
+                if supplier_category:
+                    for part in supplier_category.split('>'):
+                        canonical = self._enforce_whitelist(self._clean_tag(part.strip()))
+                        if canonical:
+                            final_tags = [canonical]
+                            break
+
+            if not final_tags:
+                # Priority 4: rule-based fallback (attributes, material keywords)
                 rule_tags = self._extract_rule_based_tags(product_data)
                 for raw in rule_tags:
                     canonical = self._enforce_whitelist(self._clean_tag(raw))
@@ -198,6 +215,19 @@ class TagGenerator:
         'κρεβατοκάμαρα': 'κρεβάτι', 'κρεβατοκαμαρα': 'κρεβάτι',
         'κρεβατάκι': 'κρεβάτι', 'κρεβατακι': 'κρεβάτι',
         'κρεβατιού': 'κρεβάτι',
+        'κρεβάτια': 'κρεβάτι', 'κρεβατια': 'κρεβάτι',
+        # plural category forms (from supplier XML categories)
+        'καναπέδες': 'καναπές', 'καναπεδες': 'καναπές',
+        'τραπέζια': 'τραπέζι', 'τραπεζια': 'τραπέζι',
+        'καρέκλες': 'καρέκλα', 'καρεκλες': 'καρέκλα',
+        'ντουλάπες': 'ντουλάπα', 'ντουλαπες': 'ντουλάπα',
+        'βιβλιοθήκες': 'βιβλιοθήκη', 'βιβλιοθηκες': 'βιβλιοθήκη',
+        'κομοδίνα': 'κομοδίνο', 'κομοδινα': 'κομοδίνο',
+        'καθρέφτες': 'καθρέφτης', 'καθρεφτες': 'καθρέφτης',
+        'σομιέδες': 'σομιέ', 'σομιεδες': 'σομιέ',
+        'στρώματα': 'στρώμα', 'στρωματα': 'στρώμα',
+        'χαλιά': 'χαλί', 'χαλια': 'χαλί',
+        'φωτιστικά': 'φωτιστικό', 'φωτιστικα': 'φωτιστικό',
         # ντουλάπα variants
         'ντουλάπι': 'ντουλάπα', 'ντουλαπι': 'ντουλάπα',
         'ντουλαπάκι': 'ντουλάπα', 'ντουλαπακι': 'ντουλάπα',
@@ -205,10 +235,11 @@ class TagGenerator:
         'συρταριερα': 'συρταριέρα',
         # κομόδιο → κομοδίνο (κομόδιο δεν είναι στη whitelist)
         'κομόδιο': 'κομοδίνο', 'κομοδιο': 'κομοδίνο',
-        # σκαμπό variants
+        # σκαμπό / παγκάκι variants
         'σκαμνός': 'σκαμπό', 'σκαμνος': 'σκαμπό',
         'σκαμνάκι': 'σκαμπό', 'σκαμνακι': 'σκαμπό',
         'σκαμπώ': 'σκαμπό',
+        'παγκακι': 'παγκάκι',
         'σκαμπό-παπουτσοθήκη': 'παπουτσοθήκη',
         # παπουτσοθήκη typo (latin o)
         'παπουτσoθήκη': 'παπουτσοθήκη',

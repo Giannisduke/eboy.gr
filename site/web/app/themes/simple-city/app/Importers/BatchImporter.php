@@ -92,6 +92,7 @@ class BatchImporter {
         $xml_dir = $theme_root . '/scripts/xml_files/';
         $progress_file = $xml_dir . $supplier . '-progress.json';
         $enhanced_xml_path = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml';
+        $realtime_flag_file = $xml_dir . $supplier . '-realtime.flag';
 
         // Always evict parsed-products cache at the start of a new import run,
         // before any early returns (AI processing, etc.) can skip it.
@@ -110,6 +111,9 @@ class BatchImporter {
             if (file_exists($enhanced_xml_path)) {
                 unlink($enhanced_xml_path);
                 error_log("BatchImporter: Cleared previous enhanced XML for {$supplier} (fresh import)");
+            }
+            if (file_exists($realtime_flag_file)) {
+                unlink($realtime_flag_file);
             }
         }
         $xml_file = false;
@@ -166,6 +170,21 @@ class BatchImporter {
 
                 if ($progress_data && isset($progress_data['status'])) {
                     if ($progress_data['status'] === 'complete') {
+                        // If RealtimeImporter handled the import, skip batch import entirely.
+                        if (file_exists($realtime_flag_file)) {
+                            unlink($realtime_flag_file);
+                            error_log("BatchImporter: RealtimeImporter handled import for {$supplier} — skipping batch import");
+                            return [
+                                'success'   => true,
+                                'complete'  => true,
+                                'processed' => $progress_data['processed'] ?? 0,
+                                'total'     => $progress_data['total'] ?? 0,
+                                'offset'    => $progress_data['total'] ?? 0,
+                                'stats'     => ['created' => 0, 'updated' => 0, 'trashed' => 0, 'errors' => 0],
+                                'message'   => 'Import completed via real-time importer.',
+                            ];
+                        }
+
                         // AI enhancement completed, check if XML exists
                         $xml_file = $this->downloader->getLocalFile($supplier, true);
                         if ($xml_file) {
@@ -220,7 +239,9 @@ class BatchImporter {
                     try {
                         $this->runAIEnhancement($supplier, $original_xml, $total_limit);
 
-                        // Start realtime import in parallel with AI enhancement
+                        // Start realtime import in parallel with AI enhancement.
+                        // Write flag so BatchImporter skips its own batch import when AI completes.
+                        file_put_contents($realtime_flag_file, '1');
                         $this->startRealtimeImport($supplier);
 
                         // Return status that AI enhancement has started

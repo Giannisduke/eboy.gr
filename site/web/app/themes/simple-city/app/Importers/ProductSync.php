@@ -195,11 +195,40 @@ class ProductSync {
      * Create new WooCommerce product
      */
     private function createProduct(NormalizedProduct $product) {
+        // Final race-condition guard: re-query DB directly (bypasses local cache)
+        // to handle the BatchImporter + RealtimeImporter overlap window.
+        if (!empty($product->sku)) {
+            global $wpdb;
+            $live_id = $wpdb->get_var($wpdb->prepare(
+                "SELECT post_id FROM {$wpdb->postmeta}
+                 WHERE meta_key = '_sku' AND meta_value = %s
+                 ORDER BY meta_id DESC LIMIT 1",
+                $product->sku
+            ));
+            if ($live_id) {
+                error_log("ProductSync: Race-condition guard for SKU {$product->sku} — found ID {$live_id}, updating instead of creating");
+                $this->sku_id_cache[$product->sku] = $live_id;
+                return $this->updateProduct($live_id, $product);
+            }
+        }
+
         $wc_product = new \WC_Product_Simple();
 
-        $this->setProductData($wc_product, $product);
-
-        $product_id = $wc_product->save();
+        try {
+            $this->setProductData($wc_product, $product);
+            $product_id = $wc_product->save();
+        } catch (\WC_Data_Exception $e) {
+            // WooCommerce threw "duplicate SKU" — another process created it just now.
+            // Fall back to update.
+            if (!empty($product->sku)) {
+                $concurrent_id = $this->findProductBySKU($product->sku);
+                if ($concurrent_id) {
+                    error_log("ProductSync: Duplicate SKU exception for {$product->sku} — updating existing ID {$concurrent_id}");
+                    return $this->updateProduct($concurrent_id, $product);
+                }
+            }
+            throw $e;
+        }
 
         // Register in local cache immediately so findProductBySKU won't create a duplicate
         // if the same SKU is encountered again in this request (stale WP object cache issue).
@@ -308,6 +337,14 @@ class ProductSync {
         $wc_product->update_meta_data('_supplier', $product->supplier);
         $wc_product->update_meta_data('_supplier_product_id', $product->supplier_product_id);
         $wc_product->update_meta_data('_barcode', $product->barcode);
+        // Store as WooCommerce standard GTIN field (WC 8.6+)
+        if (!empty($product->barcode)) {
+            if (method_exists($wc_product, 'set_global_unique_id')) {
+                $wc_product->set_global_unique_id($product->barcode);
+            } else {
+                $wc_product->update_meta_data('_global_unique_id', $product->barcode);
+            }
+        }
         $wc_product->update_meta_data('_last_synced', current_time('mysql'));
 
         if (!empty($product->manufacturer)) {
@@ -830,7 +867,7 @@ class ProductSync {
             'Δερματίνη'         => ['PU LEATHER', ' PU ', ' PU-', '-PU ', '.PU', 'PU.', 'LEATHERETTE', 'FAUX LEATHER'],
             'Γυαλί'             => ['GLASS', 'ΓΥΑΛ', 'TEMPERED'],
             'Ρατάν'             => ['RATTAN', 'WICKER', 'RATAN', ' CANE'],
-            'Φυσικές Ίνες'      => ['JUTE', 'SEAGRASS', 'SISAL', 'SICAL', 'ABACA', 'HEMP', 'COTTON', 'HYACINTH', 'HYACHINT', 'MENDONG', 'PANDANUS', 'STRAW', 'PALM LEAF', 'BANANA ROOT', 'BANANA MIX', 'ALANG', 'RAYUNG', 'RAFFIA', 'GRASS'],
+            'Φυσικές Ίνες'      => ['JUTE', 'ΓΙΟΥΤΑ', 'SEAGRASS', 'SISAL', 'SICAL', 'ABACA', 'HEMP', 'COTTON', 'HYACINTH', 'HYACHINT', 'MENDONG', 'PANDANUS', 'STRAW', 'PALM LEAF', 'BANANA ROOT', 'BANANA MIX', 'ALANG', 'RAYUNG', 'RAFFIA', 'GRASS'],
             'Κεραμικό'          => ['CERAMIC', 'TERRACOTTA', 'STONEWARE', 'DOLOMITE', 'BONE CHINA', 'PORCELAIN', 'SINTERED', 'EARTHENWARE'],
             'Πολυπροπυλένιο'    => ['HDPE', ' PP ', ' PP-', '-PP ', 'POLYPROPYLENE', 'POLYETHYLENE'],
             'PVC'               => ['PVC'],
@@ -864,29 +901,29 @@ class ProductSync {
     private function normalizeColors(string $raw): array {
         $map = [
             'Μαύρο'      => ['BLACK', 'ΒLACK', 'ΜΑΥΡΟ', ' BACK '],
-            'Λευκό'      => ['WHITE', 'ΛΕΥΚΟ', 'IVORY', 'CREAM', 'NYMPHEAE ALBA'],
-            'Γκρι'       => ['GREY', 'GRAY', 'ΓΚΡΙ', 'ELEPHANT', 'RUSTIC GREY', 'DARK GRET', 'TILE'],
+            'Λευκό'      => ['WHITE', 'ΛΕΥΚΟ', 'IVORY', 'CREAM', 'NYMPHEAE ALBA', 'ΑΣΠΡΟ', 'ΚΡΕΜ', 'ΖΑΧΑΡΙ', 'OFF WHITE', 'NUDE'],
+            'Γκρι'       => ['GREY', 'GRAY', 'ΓΚΡΙ', 'ELEPHANT', 'RUSTIC GREY', 'DARK GRET', 'TILE', 'ΓΡΑΦΙΤΗΣ', 'GUNMETAL', 'STONE', 'TITAN'],
             'Ανθρακί'    => ['ANTHRACITE', 'ΑΝΘΡΑΚΙ', 'CHARCOAL', 'ANTRACITE', 'ANTRHACITE', 'ATHRACITE'],
-            'Μπεζ'       => ['BEIGE', 'ECRU', 'ECROU', 'CAMEL', 'KHAKI', ' TAN ', 'ΒΕΙΓΕ', 'MINK'],
-            'Καφέ'       => ['BROWN', 'ΚΑΦΕ', 'TABAC', 'MOCHA', 'CAPPUCCINO', 'CAPPUCINO', 'CAPUCCINO', 'CAPUCINO'],
-            'Χρυσό'      => ['GOLD', 'ΧΡΥΣΟ', 'COPPER', 'BRONZE', 'CHAMPAGNE', 'AMBER'],
-            'Ασημί'      => ['SILVER', 'CHROME', 'ΑΣΗΜΙ', 'INOX', 'PIPE'],
-            'Κόκκινο'    => ['RED', 'ROTTEN APPLE', 'CASTILLO TORO'],
-            'Μπλε'       => ['BLUE', 'CIEL'],
-            'Πράσινο'    => ['GREEN', 'MINT', 'ΜΙΝΤ', 'MENTA', 'OLIVE', 'PISTACHIO', 'GREN'],
-            'Ροζ'        => ['PINK', 'DUSTY ROSE'],
-            'Πορτοκαλί'  => ['ORANGE', 'TERRACOTTA', 'ΠΟΡΤΟΚΑΛΙ'],
-            'Κίτρινο'    => ['YELLOW'],
-            'Μωβ'        => ['PURPLE', 'VIOLET'],
-            'Τυρκουάζ'   => ['WATER GREEN', 'TURQUOISE', 'TIRQOISE', 'PETROL', 'TURKEY'],
+            'Μπεζ'       => ['BEIGE', 'ECRU', 'ECROU', 'CAMEL', 'KHAKI', ' TAN ', 'ΒΕΙΓΕ', 'MINK', 'ΜΠΕΖ', 'ΚΑΜΕΛ', 'ΕΚΑΙ', 'ΧΑΚΙ', 'ΜΑΝΙΤΑΡΙ', 'LATTE', 'TAUPE', 'SAND', 'MUSHROOM'],
+            'Καφέ'       => ['BROWN', 'ΚΑΦΕ', 'TABAC', 'MOCHA', 'CAPPUCCINO', 'CAPPUCINO', 'CAPUCCINO', 'CAPUCINO', 'ΣΟΚΟΛΑ', 'CHOCOLAT', 'COFFEE', 'CARAMEL', 'MOCCA', 'RUSTY'],
+            'Χρυσό'      => ['GOLD', 'ΧΡΥΣΟ', 'COPPER', 'BRONZE', 'CHAMPAGNE', 'AMBER', 'ΜΕΛΙ', 'ΣΑΜΠΑΝΙ', 'ΧΑΛΚΙΝΟ', 'ΜΠΡΟΝΖΕ', 'BRASS'],
+            'Ασημί'      => ['SILVER', 'CHROME', 'ΑΣΗΜΙ', 'INOX', 'PIPE', 'ΝΙΚΕΛ', 'NICKEL'],
+            'Κόκκινο'    => ['RED', 'ROTTEN APPLE', 'CASTILLO TORO', 'ΚΟΚΚΙΝΟ', 'ΣΑΠΙΟ ΜΗΛΟ', 'BORDEAUX', 'BURGUNDY', 'ROTTENRUST'],
+            'Μπλε'       => ['BLUE', 'CIEL', 'ΜΠΛΕ', 'ΓΑΛΑΖΙΟ'],
+            'Πράσινο'    => ['GREEN', 'MINT', 'ΜΙΝΤ', 'MENTA', 'OLIVE', 'PISTACHIO', 'GREN', 'ΠΡΑΣΙΝΟ', 'ΜΕΝΤΑ', 'ΚΥΠΑΡΙΣΣΙ', 'ΣΜΑΡΑΓΔΙ', 'ΛΑΔΙ', 'LIME'],
+            'Ροζ'        => ['PINK', 'DUSTY ROSE', 'ΡΟΖ', 'ΚΟΡΑΛΛΙ', 'ΣΟΜΟΝ', 'ΡΟΔΑΚΙΝΙ', 'SALMON', 'PEACH', 'CORAL'],
+            'Πορτοκαλί'  => ['ORANGE', 'TERRACOTTA', 'ΠΟΡΤΟΚΑΛΙ', 'ΚΕΡΑΜΙΔΙ', 'ΠΑΠΡΙΚΑ'],
+            'Κίτρινο'    => ['YELLOW', 'ΚΙΤΡΙΝΟ', 'ΜΟΥΣΤΑΡΔΙ', 'MUSTARD', 'DIJON'],
+            'Μωβ'        => ['PURPLE', 'VIOLET', 'ΜΩΒ', 'ΛΙΛΑ', 'ΦΟΥΞΙΑ', 'FUCHSIA', 'LILAC'],
+            'Τυρκουάζ'   => ['WATER GREEN', 'TURQUOISE', 'TIRQOISE', 'PETROL', 'TURKEY', 'ΠΕΤΡΟΛ', 'ΤΣΑΓΑΛΙ', 'AQUA', 'TEAL'],
             'Πολύχρωμο'  => ['MULTICOLOR', 'MULTI', 'MNULTICOLOR', 'MULTIOCOLOR', 'COLORFUL', 'ΠΟΛΥΧΡΩΜΟ'],
             'Διάφανο'    => ['TRANSPARENT', 'CLEAR', 'CL.EAR'],
-            'Σονόμα'     => ['SONOMA'],
+            'Σονόμα'     => ['SONOMA', 'ΣΟΝΟΜΑ'],
             'Καρυδί'     => ['WALNUT', 'ΚΑΡΥΔΙ', 'LIGHT TEAK LOOK'],
             'Βέγκε'      => ['WENGE'],
             'Φυσικό'     => ['NATURAL', 'ΦΥΣΙΚΟ', 'OAK', 'NATURE', 'NATYRAL', 'ATLANTIC PINE', 'UNPAID WOOD', 'UNPAINTED BEACH WOOD', 'SOLID WOOD', 'INDIA'],
             'Σφενδάμι'   => ['MAPLE'],
-            'Μαρμάρινο'  => ['MARBLE', 'TRAVERTEN', 'TRAVERTINE', 'ΤRAVERTINE'],
+            'Μαρμάρινο'  => ['MARBLE', 'TRAVERTEN', 'TRAVERTINE', 'ΤRAVERTINE', 'ΜΑΡΜΑΡΟ', 'TERRAZZO'],
             'Τσιμέντο'   => ['CEMENT'],
         ];
 

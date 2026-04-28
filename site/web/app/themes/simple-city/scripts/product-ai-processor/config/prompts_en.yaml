@@ -134,28 +134,30 @@ tag_generation: |
   {title} →
 
 category_mapping: |
-  Map the supplier category to ONE of the 9 WooCommerce categories:
+  Map the supplier category to ONE of the 8 WooCommerce categories:
 
   Supplier category: {supplier_category}
   Product name: {product_name}
 
   Available WooCommerce categories:
-  1. Furniture - Furniture for all spaces (living room, bedroom, hall, dining room, beds, wardrobes, tables, chairs)
-  2. Office - Office furniture and accessories (desks, office chairs, office bookcases)
-  3. Garden - Outdoor furniture and accessories (garden furniture, balcony, terrace)
-  4. Decoration - Decorative items (frames, vases, clocks, mirrors, wall shelves)
-  5. White goods - Bedding, towels, curtains (sheets, duvets, blinds)
-  6. Home organization - Storage solutions (baskets, boxes, organizing shelves)
-  7. Kitchen - Kitchenware and equipment (plates, glasses, cutlery, cookware)
-  8. Bathroom - Bathroom furniture and accessories
-  9. Lighting - Indoor and outdoor lighting (lamps, ceiling/wall/floor lights)
+  1. Living Room & Seating - Sofas, armchairs, stools, coffee tables, TV units, consoles, bookcases
+  2. Bedroom - Beds, wardrobes, drawers, bedside tables, mattresses
+  3. Office - Desks, office chairs, office bookcases
+  4. Storage & Organization - Shoe racks, trunks, baskets, boxes, coat racks
+  5. Decoration - Frames, vases, clocks, mirrors, candles, lighting, rugs, seasonal items
+  6. Garden & Outdoor - Garden furniture, sun loungers, umbrellas, hammocks, balcony
+  7. Bathroom - Bathroom furniture and accessories
+  8. Kitchen - Tableware, cookware, dining tables, dining chairs, buffets
 
   Instructions:
-  - Analyze the full hierarchy of the supplier category
-  - Choose the most appropriate category based on the product
-  - If it's furniture (table, chair, wardrobe, bed, shoe cabinet), choose "Furniture" (unless it's for garden or office)
-  - If it's for outdoor/garden, choose "Garden"
-  - If it's a desk or office chair, choose "Office"
-  - If in doubt, prefer the more general category
+  - Analyze the full hierarchy of the supplier category and the product name
+  - Living room sofas, armchairs, stools, coffee tables, TV units → "Living Room & Seating"
+  - Beds, wardrobes, nightstands, mattresses → "Bedroom"
+  - Desks, office chairs, office bookcases → "Office"
+  - Storage, baskets, shoe racks, trunks → "Storage & Organization"
+  - Decorative items, lighting, rugs, candles, seasonal → "Decoration"
+  - Garden/outdoor furniture → "Garden & Outdoor"
+  - Bathroom items → "Bathroom"
+  - Dining tables, plates, glasses, cookware → "Kitchen"
 
-  Answer with ONLY the category name in English (e.g., "Furniture"), without any other text or explanations.
+  Answer with ONLY the English category name (e.g., "Living Room & Seating"), without any other text or explanations.

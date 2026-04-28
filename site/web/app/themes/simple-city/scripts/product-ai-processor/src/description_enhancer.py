@@ -74,6 +74,9 @@ class DescriptionEnhancer:
                 enhanced = re.sub(r'\s*```$', '', enhanced.strip())
                 enhanced = enhanced.strip()
 
+                # Remove any heading tags (h1–h6) — product already has a title
+                enhanced = re.sub(r'<h[1-6][^>]*>.*?</h[1-6]>', '', enhanced, flags=re.DOTALL | re.IGNORECASE).strip()
+
                 # Validate that it's HTML
                 if not self._contains_html(enhanced):
                     # If AI didn't return HTML, wrap it in basic HTML

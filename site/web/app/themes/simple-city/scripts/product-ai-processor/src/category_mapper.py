@@ -68,13 +68,13 @@ class CategoryMapper:
             else:
                 # Final fallback
                 logger.warning(f"AI mapping failed for: {supplier_category}, using default")
-                fallback = ("Σαλόνι & Βοηθητικά", 0.5, [])
+                fallback = ("Σαλόνι & Καθιστικό", 0.5, [])
                 self._store_mapping_for_review(supplier_category, product_name, *fallback, method="fallback")
                 return fallback
 
         except Exception as e:
             logger.error(f"Error mapping category: {str(e)}")
-            fallback = ("Σαλόνι & Βοηθητικά", 0.3, [])
+            fallback = ("Σαλόνι & Καθιστικό", 0.3, [])
             return fallback
 
     def _ai_mapping_with_confidence(self, supplier_category: str, product_name: str) -> Optional[Tuple[str, float, List[str]]]:
@@ -160,19 +160,26 @@ class CategoryMapper:
 
     def _rule_based_mapping(self, supplier_category: str) -> Optional[Tuple[str, float, List[str]]]:
         """
-        Rule-based category mapping using keywords
-
-        Fast and reliable for common patterns
+        Rule-based category mapping using keywords.
+        Prefers the longest (most specific) matching keyword across all categories.
         """
         category_lower = supplier_category.lower()
 
-        # Check each category's keywords
+        best_category = None
+        best_keyword = None
+
         for category_name, keywords in self.category_keywords.items():
             for keyword in keywords:
-                if keyword.lower() in category_lower:
-                    subcats = self._extract_subcategories(supplier_category)
-                    logger.debug(f"Rule-based match: '{supplier_category}' -> '{category_name}' (keyword: {keyword})")
-                    return (category_name, 0.9, subcats)
+                kw_lower = keyword.lower()
+                if kw_lower in category_lower:
+                    if best_keyword is None or len(kw_lower) > len(best_keyword):
+                        best_keyword = kw_lower
+                        best_category = category_name
+
+        if best_category:
+            subcats = self._extract_subcategories(supplier_category)
+            logger.debug(f"Rule-based match: '{supplier_category}' -> '{best_category}' (keyword: {best_keyword})")
+            return (best_category, 0.9, subcats)
 
         return None
 

@@ -480,6 +480,30 @@ class XMLProcessor:
             # Get ProductSpecification elements as attributes
             specs = elem.findall('.//ProductSpecification')
             data['attributes'] = [spec.text.strip() for spec in specs if spec.text and spec.text.strip()]
+        elif supplier == 'libertab2b':
+            data['sku'] = self._get_text(elem, './/sku')
+            data['name'] = self._get_text(elem, './/name')
+            data['barcode'] = self._get_text(elem, './/barcode')
+
+            # Liberta uses <categories><item> — read the first Greek category item
+            cat_items = elem.findall('.//categories/item')
+            data['category'] = cat_items[0].text.strip() if cat_items and cat_items[0].text else None
+
+            data['description'] = self._get_text(elem, './/description') or ''
+            data['price'] = self._get_text(elem, './/retail-price')
+            data['main_image'] = self._get_text(elem, './/photo')
+
+            # Gallery images are under <photos><item>
+            photos = elem.findall('.//photos/item')
+            data['images'] = [p.text.strip() for p in photos if p.text and p.text.strip()]
+
+            # Attributes from material, color, dimensions, comments
+            attrs = []
+            for field in ('material', 'color', 'dimensions', 'comments'):
+                val = self._get_text(elem, f'.//{field}')
+                if val:
+                    attrs.append(val)
+            data['attributes'] = attrs
         else:
             # Common fields for other suppliers
             data['sku'] = self._get_text(elem, './/model') or self._get_text(elem, './/ProductCode') or self._get_text(elem, './/sku')
