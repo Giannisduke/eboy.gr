@@ -31,6 +31,15 @@ const vuetify = createVuetify({
 
 import 'bootstrap';
 
+function syncHeaderHeight() {
+    const top = document.querySelector('.top');
+    if (top) {
+        document.documentElement.style.setProperty('--header-height', top.offsetHeight + 'px');
+    }
+}
+syncHeaderHeight();
+window.addEventListener('resize', syncHeaderHeight);
+
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";

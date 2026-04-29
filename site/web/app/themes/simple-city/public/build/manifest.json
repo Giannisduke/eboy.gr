@@ -4,7 +4,7 @@
     "src": "editor.deps.json"
   },
   "resources/css/app.scss": {
-    "file": "assets/app-F_314UfE.css",
+    "file": "assets/app-DdIJEkz6.css",
     "src": "resources/css/app.scss",
     "isEntry": true
   },
@@ -161,6 +161,14 @@
     "file": "assets/bedroom-Bh8B20E2.svg",
     "src": "resources/images/bedroom.svg"
   },
+  "resources/images/carousel_arrow_l.svg": {
+    "file": "assets/carousel_arrow_l-t8jLrXG2.svg",
+    "src": "resources/images/carousel_arrow_l.svg"
+  },
+  "resources/images/carousel_arrow_r.svg": {
+    "file": "assets/carousel_arrow_r-CWNai7N5.svg",
+    "src": "resources/images/carousel_arrow_r.svg"
+  },
   "resources/images/dot.svg": {
     "file": "assets/dot-n7auKOWp.svg",
     "src": "resources/images/dot.svg"
@@ -168,6 +176,10 @@
   "resources/images/garden.svg": {
     "file": "assets/garden-D5g2VUHZ.svg",
     "src": "resources/images/garden.svg"
+  },
+  "resources/images/icon-login.svg": {
+    "file": "assets/icon-login-DYDBlalg.svg",
+    "src": "resources/images/icon-login.svg"
   },
   "resources/images/kitchen.svg": {
     "file": "assets/kitchen-CWGgO1IH.svg",
@@ -222,7 +234,7 @@
     "src": "resources/images/view_small_s.svg"
   },
   "resources/js/app.js": {
-    "file": "assets/app-DH0hwq4B.js",
+    "file": "assets/app-BNu6Fpk3.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

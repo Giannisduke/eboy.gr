@@ -7,6 +7,11 @@ body {
    // @extend .bg-light;
    letter-spacing: .018rem;
 }
+
+.navbar-toggler-icon {
+    width: 2em;
+    height: 2em;
+}
 .app {
     @include make-container();
     @extend .p-0;
@@ -55,17 +60,16 @@ body {
         }
 
         &.head02 {
-            & .top {    
-                @include make-container();
-    
-                @extend .px-1;
-            //      @extend .pt-3;
-               // @extend .border-bottom;
+            @include make-container();
+            & .top {
+                @extend .shadow-sm;
+                @extend .fixed-top;
                 background: white;
-    
+                z-index: 9999;
+
                 & .top_wrapper {
                     @include make-container();
-                    max-width: 1440px;
+                    max-width: 1400px;
                    & nav {
                         @include make-col-ready();
 
@@ -235,6 +239,126 @@ body {
                             }
                    }
                    
+                }
+                & .top_left {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    height: 100%;
+                    @extend .d-flex;
+                    @extend .align-items-center;
+                    @extend .ps-3;
+
+                    & .menu-toggle {
+                        color: var(--bs-body-color);
+                        line-height: 1;
+                    }
+
+                    & .ham {
+                        cursor: pointer;
+                        -webkit-tap-highlight-color: transparent;
+                        transition: transform 400ms;
+                        -moz-user-select: none;
+                        -webkit-user-select: none;
+                        -ms-user-select: none;
+                        user-select: none;
+                        }
+                    & .hamRotate.active {
+                        transform: rotate(45deg);
+                        }
+                    & .hamRotate180.active {
+                        transform: rotate(180deg);
+                        }
+                        & .line {
+                        fill:none;
+                        transition: stroke-dasharray 400ms, stroke-dashoffset 400ms;
+                        stroke:#000;
+                        stroke-width:5.5;
+                        stroke-linecap:round;
+                        }
+
+                        & .ham7 .top {
+                        stroke-dasharray: 40 82;
+                        }
+                        & .ham7 .middle {
+                        stroke-dasharray: 40 111;
+                        }
+                        & .ham7 .bottom {
+                        stroke-dasharray: 40 161;
+                        }
+                        & .ham7.active .top {
+                        stroke-dasharray: 17 82;
+                        stroke-dashoffset: -62px;
+                        }
+                        & .ham7.active .middle {
+                        stroke-dashoffset: 23px;
+                        }
+                        & .ham7.active .bottom {
+                        stroke-dashoffset: -83px;
+                        }
+
+                }
+
+                & .top_right {
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    height: 100%;
+                    @extend .d-flex;
+                    @extend .align-items-center;
+                    @extend .justify-content-end;
+                    @extend .gap-3;
+
+                    & .cart-icon {
+                        position: relative;
+
+                        & .cart-link {
+                            color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
+                            text-decoration: none;
+                            font-size: 1.5rem;
+                        }
+                    }
+                    & .account-icon {
+                        background: url("../images/icon-login.svg") no-repeat center center;
+                        width: 30px;
+                        height: 30px;
+                        margin: 0 2rem 0 0;
+
+                        & a {
+                            padding: 1rem;
+                        }
+                    }
+                }
+            }
+
+            & .offcanvas {
+                top: var(--header-height, 80px);
+                height: calc(100dvh - var(--header-height, 80px));
+
+                & .offcanvas-body {
+                    & nav {
+                        & ul {
+                            @extend .list-unstyled;
+                            @extend .m-0;
+
+                            & li {
+                                @extend .py-1;
+                                @extend .border-bottom;
+
+                                & a {
+                                    @extend .d-block;
+                                    @extend .py-2;
+                                    @extend .px-1;
+                                    color: var(--bs-body-color);
+                                    text-decoration: none;
+
+                                    &:hover {
+                                        color: var(--bs-primary);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
