@@ -34,7 +34,7 @@ export const useShopStore = defineStore('shop', {
             orderby: 'date',
             order: 'desc',
             page: 1,
-            perPage: 12
+            perPage: 24
         },
         pagination: {
             total: 0,
@@ -475,7 +475,7 @@ export const useShopStore = defineStore('shop', {
                 orderby: 'date',
                 order: 'desc',
                 page: 1,
-                perPage: 12
+                perPage: 24
             };
             this.updateURL();
             this._applyFilters();
