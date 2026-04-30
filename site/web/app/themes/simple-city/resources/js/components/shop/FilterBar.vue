@@ -188,7 +188,21 @@
 
 			<!-- Results Count -->
 			<div class="results-count">
-				<span class="results-text">Εμφάνιση {{ shopStore.products.length }} από {{ shopStore.pagination.total }} προϊόντα</span>
+				<div class="results-text">
+					<span
+						v-for="chip in activeFilters"
+						:key="chip.key"
+						class="filter-chip"
+					>
+						{{ chip.label }}
+						<button class="filter-chip-remove" @click="chip.action" aria-label="Αφαίρεση φίλτρου">×</button>
+					</span>
+					<button
+						v-if="activeFilters.length > 0"
+						class="filter-clear-all"
+						@click="shopStore.clearFilters()"
+					>Ακύρωση Όλων</button>
+				</div>
 				<button class="filters-toggle-btn" @click="filtersOpen = !filtersOpen">
 					<span>Φίλτρα Αναζήτησης</span>
 					<span class="filters-toggle-icon">{{ filtersOpen ? '✕' : '⊞' }}</span>
@@ -492,6 +506,67 @@ const updatePriceRange = () => {
   shopStore.setPriceRange(localMinPrice.value, localMaxPrice.value);
 };
 
+const activeFilters = computed(() => {
+  const chips = [];
+  const f = shopStore.filters;
+
+  if (f.onSale) {
+    chips.push({ key: 'onSale', label: 'Προσφορές', action: () => shopStore.setOnSale(false) });
+  }
+
+  if (f.category) {
+    const cat = shopStore.categories.find(c => c.id === f.category);
+    chips.push({ key: `cat-${f.category}`, label: cat ? cat.name : `Κατηγορία #${f.category}`, action: () => shopStore.setCategory(null) });
+  }
+
+  for (const id of f.tags) {
+    const tag = shopStore.tags.find(t => t.id === id);
+    chips.push({ key: `tag-${id}`, label: tag ? tag.name : `Tag #${id}`, action: () => shopStore.toggleTag(id) });
+  }
+
+  for (const id of f.colors) {
+    const color = shopStore.colors.find(c => c.id === id);
+    chips.push({ key: `color-${id}`, label: color ? color.name : `Χρώμα #${id}`, action: () => shopStore.toggleColor(id) });
+  }
+
+  for (const id of f.materials) {
+    const material = shopStore.materials.find(m => m.id === id);
+    chips.push({ key: `mat-${id}`, label: material ? material.name : `Υλικό #${id}`, action: () => shopStore.toggleMaterial(id) });
+  }
+
+  if (f.height) {
+    const h = shopStore.heights.find(item => item.slug === f.height);
+    chips.push({ key: 'height', label: `Ύψος: ${h ? h.name : f.height}`, action: () => { shopStore.setHeight(null); selectedHeight.value = null; } });
+  }
+
+  if (f.width) {
+    const w = shopStore.widths.find(item => item.slug === f.width);
+    chips.push({ key: 'width', label: `Πλάτος: ${w ? w.name : f.width}`, action: () => { shopStore.setWidth(null); selectedWidth.value = null; } });
+  }
+
+  if (f.depth) {
+    const d = shopStore.depths.find(item => item.slug === f.depth);
+    chips.push({ key: 'depth', label: `Μήκος: ${d ? d.name : f.depth}`, action: () => { shopStore.setDepth(null); selectedDepth.value = null; } });
+  }
+
+  if (
+    f.minPrice !== null && f.maxPrice !== null &&
+    (f.minPrice > shopStore.priceRange.min || f.maxPrice < shopStore.priceRange.max)
+  ) {
+    chips.push({
+      key: 'price',
+      label: `${f.minPrice}€ – ${f.maxPrice}€`,
+      action: () => shopStore.setPriceRange(shopStore.priceRange.min, shopStore.priceRange.max)
+    });
+  }
+
+  if (f.search) {
+    chips.push({ key: 'search', label: `"${f.search}"`, action: () => shopStore.setSearch('') });
+  }
+
+  return chips;
+});
+
 const sortedTags = computed(() =>
   [...shopStore.tags].sort((a, b) => b.count - a.count)
 );
@@ -579,7 +654,61 @@ const getMaterialSize = (count) => {
 }
 
 .results-text {
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.6rem;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 2rem;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.filter-chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  padding: 0;
+  background: #888;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover {
+    background: #333;
+  }
+}
+
+.filter-clear-all {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.75rem;
+  background: transparent;
+  color: #555;
+  border: 1px solid #bbb;
+  border-radius: 2rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+
+  &:hover {
+    border-color: #333;
+    color: #000;
+  }
 }
 
 .filters-toggle-btn {
