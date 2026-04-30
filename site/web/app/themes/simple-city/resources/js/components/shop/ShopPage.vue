@@ -46,7 +46,7 @@
         :disabled="shopStore.loadingMore"
         class="load-more-button"
       >
-        {{ shopStore.loadingMore ? 'Φορτώνει...' : 'Δείτε Περισσότερα' }}
+        {{ shopStore.loadingMore ? 'Φορτώνει...' : `Δείτε ακόμα ${shopStore.pagination.total - shopStore.products.length} προϊόντα` }}
       </button>
     </div>
       </div>

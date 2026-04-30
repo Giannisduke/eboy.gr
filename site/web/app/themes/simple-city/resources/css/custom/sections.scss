@@ -46,6 +46,15 @@ section {
                     }
                     }
 
+                    & .slogan-product-count {
+                        @include make-col-ready();
+                        font-family: PFBagueSansPro-Bold;
+                        font-size: 1rem;
+                        letter-spacing: .04rem;
+                        opacity: 0.6;
+                        margin-top: 0.25rem;
+                    }
+
                     .slogan_cycle {
                         display: inline-block;
                         position: relative;

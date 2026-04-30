@@ -69,6 +69,8 @@ wp_reset_postdata();
             <div class="slogan">
                 <?php echo apply_filters('the_content', $page_content); ?>
             </div>
+            @php $product_count = wp_count_posts('product')->publish; @endphp
+            <div class="slogan-product-count">{{ $product_count }} προϊόντα</div>
         </div>
     </div>
 
