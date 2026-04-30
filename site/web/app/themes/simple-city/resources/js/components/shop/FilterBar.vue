@@ -571,9 +571,14 @@ const sortedTags = computed(() =>
   [...shopStore.tags].sort((a, b) => b.count - a.count)
 );
 
-const sortedMaterials = computed(() =>
-  [...shopStore.materials].sort((a, b) => b.count - a.count)
-);
+const sortedMaterials = computed(() => {
+  return [...shopStore.materials].sort((a, b) => {
+    const aAvail = a.available === false ? 1 : 0;
+    const bAvail = b.available === false ? 1 : 0;
+    if (aAvail !== bAvail) return aAvail - bAvail;
+    return b.count - a.count;
+  });
+});
 
 const getTagSize = (count) => {
   // Calculate font size based on product count (tag cloud effect)
@@ -665,10 +670,12 @@ const getMaterialSize = (count) => {
   align-items: center;
   gap: 0.3rem;
   padding: 0.2rem 0.6rem;
-  background: #f0f0f0;
-  border: 1px solid #ccc;
+  background: #ffd700;
+  border: 1px solid #ffd700;
   border-radius: 2rem;
   font-size: 0.8rem;
+  font-weight: 600;
+  color: #000;
   white-space: nowrap;
 }
 
@@ -689,7 +696,7 @@ const getMaterialSize = (count) => {
   transition: background 0.15s;
 
   &:hover {
-    background: #333;
+    background: #0E0C0A;
   }
 }
 
