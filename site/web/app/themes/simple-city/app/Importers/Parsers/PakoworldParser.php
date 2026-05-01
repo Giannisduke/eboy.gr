@@ -123,9 +123,10 @@ class PakoworldParser extends AbstractParser {
             }
         }
 
-        // Stock - Pakoworld doesn't provide stock, set as backorder
-        $product->stock_status = 'onbackorder';
-        $product->stock_quantity = 0;
+        // Stock
+        $qty = (int) $this->getNodeValue($node->quantity);
+        $product->stock_quantity = $qty;
+        $product->stock_status = $qty > 0 ? 'instock' : 'outofstock';
 
         return $product;
     }
