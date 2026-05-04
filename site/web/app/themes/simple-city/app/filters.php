@@ -165,7 +165,7 @@ add_filter('woocommerce_product_tabs', function (array $tabs): array {
 // Add "Διαστάσεις / Βάρος" tab after "Περιγραφή" (priority 15, between description=10 and additional_information=20).
 add_filter('woocommerce_product_tabs', function (array $tabs): array {
     $tabs['dimensions_weight'] = [
-        'title'    => 'Διαστάσεις / Βάρος',
+        'title'    => 'Διαστάσεις',
         'priority' => 15,
         'callback' => function () {
             global $product;
@@ -173,46 +173,70 @@ add_filter('woocommerce_product_tabs', function (array $tabs): array {
                 return;
             }
 
-            $keywords = ['βάρος', 'weight', 'διαστάσ', 'dimension', 'μήκος', 'πλάτος', 'ύψος', 'βάθος', 'length', 'width', 'height', 'depth'];
-            $exclude  = ['Μεικτό Βάρος', 'Ογκομετρικό Βάρος'];
-            $rows     = [];
+            $rows      = [];
+            $is_pakoworld = get_post_meta($product->get_id(), '_supplier', true) === 'Pakoworld';
 
-            // WooCommerce built-in weight & dimensions.
-            if ($product->get_weight()) {
-                $rows[] = ['label' => 'Βάρος', 'value' => wc_format_weight($product->get_weight())];
-            }
+            if ($is_pakoworld) {
+                // Pakoworld: show only WC dimensions + "Πραγματικό Βάρος" attribute (label: "Βάρος").
+                if ($product->get_length() || $product->get_width() || $product->get_height()) {
+                    $rows[] = ['label' => 'Διαστάσεις', 'value' => wc_format_dimensions($product->get_dimensions(false))];
+                }
 
-            if ($product->get_length() || $product->get_width() || $product->get_height()) {
-                $rows[] = ['label' => 'Διαστάσεις', 'value' => wc_format_dimensions($product->get_dimensions(false))];
-            }
+                foreach ($product->get_attributes() as $attribute) {
+                    $label = $attribute->is_taxonomy()
+                        ? wc_attribute_label($attribute->get_name(), $product)
+                        : $attribute->get_name();
 
-            // Product attributes filtered by dimension/weight keywords.
-            foreach ($product->get_attributes() as $attribute) {
-                $label = $attribute->is_taxonomy()
-                    ? wc_attribute_label($attribute->get_name(), $product)
-                    : $attribute->get_name();
+                    if ($label !== 'Πραγματικό Βάρος') {
+                        continue;
+                    }
 
-                $matched = false;
-                foreach ($keywords as $kw) {
-                    if (mb_stripos($label, $kw) !== false) {
-                        $matched = true;
-                        break;
+                    $values = $attribute->is_taxonomy()
+                        ? ($attribute->get_terms() ? wp_list_pluck($attribute->get_terms(), 'name') : [])
+                        : $attribute->get_options();
+
+                    if (! empty($values)) {
+                        $rows[] = ['label' => 'Βάρος', 'value' => implode(', ', array_map(fn($v) => ((float) $v) . ' kg', $values))];
                     }
                 }
+            } else {
+                $keywords = ['βάρος', 'weight', 'διαστάσ', 'dimension', 'μήκος', 'πλάτος', 'ύψος', 'βάθος', 'length', 'width', 'height', 'depth'];
+                $exclude  = ['Μεικτό Βάρος', 'Ογκομετρικό Βάρος'];
 
-                if (! $matched || in_array($label, $exclude, true)) {
-                    continue;
+                // WooCommerce built-in dimensions first, then weight.
+                if ($product->get_length() || $product->get_width() || $product->get_height()) {
+                    $rows[] = ['label' => 'Διαστάσεις', 'value' => wc_format_dimensions($product->get_dimensions(false))];
                 }
 
-                if ($attribute->is_taxonomy()) {
-                    $terms  = $attribute->get_terms();
-                    $values = $terms ? wp_list_pluck($terms, 'name') : [];
-                } else {
-                    $values = $attribute->get_options();
+                if ($product->get_weight()) {
+                    $rows[] = ['label' => 'Βάρος', 'value' => ((float) $product->get_weight()) . ' kg'];
                 }
 
-                if (! empty($values)) {
-                    $rows[] = ['label' => $label, 'value' => implode(', ', $values)];
+                // Product attributes filtered by dimension/weight keywords.
+                foreach ($product->get_attributes() as $attribute) {
+                    $label = $attribute->is_taxonomy()
+                        ? wc_attribute_label($attribute->get_name(), $product)
+                        : $attribute->get_name();
+
+                    $matched = false;
+                    foreach ($keywords as $kw) {
+                        if (mb_stripos($label, $kw) !== false) {
+                            $matched = true;
+                            break;
+                        }
+                    }
+
+                    if (! $matched || in_array($label, $exclude, true)) {
+                        continue;
+                    }
+
+                    $values = $attribute->is_taxonomy()
+                        ? ($attribute->get_terms() ? wp_list_pluck($attribute->get_terms(), 'name') : [])
+                        : $attribute->get_options();
+
+                    if (! empty($values)) {
+                        $rows[] = ['label' => $label, 'value' => implode(', ', $values)];
+                    }
                 }
             }
 

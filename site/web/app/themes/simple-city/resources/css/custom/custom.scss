@@ -140,6 +140,12 @@ body {
 
                             & .custom-logo {
                                 @extend .img-fluid;
+                                max-height: 40px;
+                                width: auto;
+
+                                @include media-breakpoint-up(lg) {
+                                    max-height: 50px;
+                                }
                             }
                             }
 

@@ -34,6 +34,13 @@
                             margin-bottom: 1rem;
                             background: #f8f9fa;
                             height: 100vh;
+
+                            .carousel-control-prev-icon,
+                            .carousel-control-next-icon {
+                                background-size: contain;
+                                width: 3rem;
+                                height: 1rem;
+                            }
                             @extend .d-flex;
                             @extend .flex-column;
                             @extend .justify-content-end;
@@ -95,10 +102,25 @@
                             @include make-col(6);
                         }
                         @include media-breakpoint-up(lg) {
-                            @include make-col(6);
+                            @include make-col(5);
                         }
                         @extend .ps-5;
                         @extend .pt-5;
+
+                        & .product_title {
+                            display: inline;
+                            margin-right: .4rem;
+                        }
+
+                        & .product-sku {
+                            display: inline;
+                            vertical-align: middle;
+
+                            small {
+                                font-size: 0.75rem;
+                                color: $primary;
+                            }
+                        }
 
                         & .product_meta {
                             @extend .pt-4;
@@ -156,7 +178,7 @@
                         }
 
                         & .woocommerce-tabs {
-                            & ul {
+                            & ul.wc-tabs {
                                 @extend .list-inline;
                                 margin-bottom: 1rem;
 
@@ -189,4 +211,52 @@
 section.products ul.list-inline li.product {
     display: inline-block;
     vertical-align: top;
+}
+
+// Tech specs tab — round bullets
+.woocommerce-Tabs-panel--tech_specs {
+    ul {
+        list-style: none;
+        padding-left: 1.25rem;
+    }
+
+    ul li {
+        position: relative;
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: -1rem;
+            top: 0.45em;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: $primary;
+            display: block;
+        }
+    }
+}
+
+// Dimensions / attributes tab — alternating row colors
+table.woocommerce-product-attributes.shop_attributes {
+    width: 100%;
+    border-collapse: collapse;
+
+    tr:nth-child(odd) {
+        background-color: $white;
+    }
+
+    tr:nth-child(even) {
+        background-color: $third;
+    }
+
+    th, td {
+        padding: 0.6rem 0.9rem;
+        vertical-align: middle;
+    }
+
+    th {
+        font-weight: 600;
+        width: 40%;
+    }
 }

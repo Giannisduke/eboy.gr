@@ -165,6 +165,16 @@ remove_action('woocommerce_sidebar', 'woocommerce_get_sidebar', 10);
  * @see woocommerce_template_single_sharing()
  */
 // remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_title', 5);
+
+// Show SKU below the title
+add_action('woocommerce_single_product_summary', function () {
+    global $product;
+    $sku = $product->get_sku();
+    if ($sku) {
+        echo '<p class="product-sku"><small>' . esc_html($sku) . '</small></p>';
+    }
+}, 6);
+
 // remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_rating', 10);
 // remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_price', 10);
 // remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_excerpt', 20);
