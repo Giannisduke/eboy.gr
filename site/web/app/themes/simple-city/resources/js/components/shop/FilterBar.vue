@@ -1,4 +1,5 @@
 <template>
+  <div ref="sentinelEl" class="filter-bar-sentinel" aria-hidden="true"></div>
   <div class="filter-bar" :class="{ 'is-stuck': isStuck }" ref="filterBarEl">
     <!-- Category Menu with Icons -->
     <div class="category-menu">
@@ -267,26 +268,39 @@ let _priceChangePending = false;
 let _priceChangeTimer  = null;
 
 const filterBarEl = ref(null);
+const sentinelEl = ref(null);
 const isStuck = ref(false);
 const filtersOpen = ref(false);
 const tagsExpanded = ref(false);
 const materialsExpanded = ref(false);
 const COLLAPSE_ROWS_HEIGHT = '105px';
 
-const checkStuck = () => {
-  if (!filterBarEl.value) return;
+let stickyObserver = null;
+
+const setupStickyObserver = () => {
+  if (stickyObserver) stickyObserver.disconnect();
   const headerHeight = parseFloat(
     getComputedStyle(document.documentElement).getPropertyValue('--header-height')
   ) || 80;
-  const stuck = filterBarEl.value.getBoundingClientRect().top <= headerHeight;
-  if (!stuck) filtersOpen.value = false; // reset when unstuck
-  isStuck.value = stuck;
+  stickyObserver = new IntersectionObserver(
+    ([entry]) => {
+      const stuck = !entry.isIntersecting;
+      isStuck.value = stuck;
+      if (!stuck) filtersOpen.value = false;
+    },
+    {
+      rootMargin: `-${Math.ceil(headerHeight)}px 0px 0px 0px`,
+      threshold: 0,
+    }
+  );
+  if (sentinelEl.value) stickyObserver.observe(sentinelEl.value);
 };
 
 const syncHeaderHeight = () => {
   const header = document.querySelector('.head02');
   if (header) {
     document.documentElement.style.setProperty('--header-height', `${header.offsetHeight}px`);
+    setupStickyObserver();
   }
 };
 
@@ -303,22 +317,18 @@ onMounted(() => {
   localMaxPrice.value = shopStore.filters.maxPrice ?? shopStore.priceRange.max;
   priceRange.value = [localMinPrice.value, localMaxPrice.value];
 
-  // Sticky category menu: track header height
+  // Sticky detection: sync header height and set up IntersectionObserver on sentinel
   syncHeaderHeight();
   const header = document.querySelector('.head02');
   if (header) {
     headerResizeObserver = new ResizeObserver(syncHeaderHeight);
     headerResizeObserver.observe(header);
   }
-
-  // Detect sticky state
-  window.addEventListener('scroll', checkStuck, { passive: true });
-  checkStuck();
 });
 
 onUnmounted(() => {
+  if (stickyObserver) stickyObserver.disconnect();
   if (headerResizeObserver) headerResizeObserver.disconnect();
-  window.removeEventListener('scroll', checkStuck);
 });
 
 // Watch store changes to keep local state in sync
@@ -619,6 +629,12 @@ const getMaterialSize = (count) => {
 @import "bootstrap/scss/grid";
 @import "bootstrap/scss/utilities";
 @import "bootstrap/scss/utilities/api";
+
+.filter-bar-sentinel {
+  height: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
 
 .filter-bar {
   @include make-row();
