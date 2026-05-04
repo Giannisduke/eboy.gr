@@ -203,10 +203,6 @@
 						@click="shopStore.clearFilters()"
 					>Ακύρωση Όλων</button>
 				</div>
-				<button class="filters-toggle-btn" @click="filtersOpen = !filtersOpen">
-					<span>Φίλτρα Αναζήτησης</span>
-					<span class="filters-toggle-icon">{{ filtersOpen ? '✕' : '⊞' }}</span>
-				</button>
 			</div>
 
 			<div class="right">
@@ -716,33 +712,6 @@ const getMaterialSize = (count) => {
     border-color: #333;
     color: #000;
   }
-}
-
-.filters-toggle-btn {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1.25rem;
-  background: $primary;
-  color: $secondary;
-  border: none;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-family: 'PFBagueSansPro-Bold';
-  letter-spacing: 0.04rem;
-
-  .filters-toggle-icon {
-    font-size: 1rem;
-  }
-}
-
-.filter-bar.is-stuck .results-text {
-  display: none;
-}
-
-.filter-bar.is-stuck .filters-toggle-btn {
-  display: flex;
 }
 
 /* Filters container collapse */
