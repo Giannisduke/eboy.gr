@@ -78,16 +78,29 @@ class B2BMarktParser extends AbstractParser {
 
         // Filters as attributes
         if (isset($node->Filters->Filter)) {
+            $attributeRenames = [
+                'Απόχρωση' => 'χρώμα',
+            ];
+
             foreach ($node->Filters->Filter as $filter) {
                 $group = $this->getNodeValue($filter->Group);
                 $value = $this->getNodeValue($filter->Value);
                 if (!empty($group) && !empty($value)) {
                     $product->attributes[] = [
-                        'name' => $group,
+                        'name' => $attributeRenames[$group] ?? $group,
                         'value' => $value
                     ];
                 }
             }
+
+            // Ensure "υλικό" is always the first attribute.
+            usort($product->attributes, function (array $a, array $b): int {
+                $aIsYliko = mb_strtolower($a['name']) === 'υλικό';
+                $bIsYliko = mb_strtolower($b['name']) === 'υλικό';
+                if ($aIsYliko && !$bIsYliko) return -1;
+                if (!$aIsYliko && $bIsYliko) return 1;
+                return 0;
+            });
         }
 
         // Weight

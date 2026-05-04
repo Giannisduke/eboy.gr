@@ -497,6 +497,10 @@ class XMLProcessor:
             photos = elem.findall('.//photos/item')
             data['images'] = [p.text.strip() for p in photos if p.text and p.text.strip()]
 
+            # Keyed fields used by AI (tech_specs / description prompts)
+            data['material'] = self._get_text(elem, './/material') or ''
+            data['dimensions_text'] = self._get_text(elem, './/dimensions') or ''
+
             # Attributes from material, color, dimensions, comments
             attrs = []
             for field in ('material', 'color', 'dimensions', 'comments'):
