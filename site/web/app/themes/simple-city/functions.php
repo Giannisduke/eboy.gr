@@ -877,17 +877,28 @@ function get_shop_filter_state($request) {
     // The subquery representing the current product set (filtered > category > null)
     $active_subquery = $filter_subquery ?? ($category_id ? $cat_subquery : null);
 
-    // Returns term rows visible within the current category (or globally)
-    $get_display_terms = function ($taxonomy) use ($wpdb, $cat_subquery, $category_id) {
+    // Returns term rows visible within the current category (or globally).
+    // Uses direct JOINs instead of a derived table so MySQL avoids re-materializing
+    // the category subquery for each of the 6 taxonomy calls.
+    $get_display_terms = function ($taxonomy) use ($wpdb, $category_id, $hide_oos) {
         if ($category_id) {
+            $oos_join = $hide_oos
+                ? "INNER JOIN {$wpdb->postmeta} pm_oos ON p.ID = pm_oos.post_id
+                   AND pm_oos.meta_key = '_stock_status' AND pm_oos.meta_value = 'instock'"
+                : '';
             return $wpdb->get_results($wpdb->prepare(
                 "SELECT DISTINCT t.term_id, t.name, t.slug, tt.count
                  FROM {$wpdb->terms} t
-                 INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id AND tt.taxonomy = %s
+                 INNER JOIN {$wpdb->term_taxonomy} tt  ON t.term_id = tt.term_id AND tt.taxonomy = %s
                  INNER JOIN {$wpdb->term_relationships} tr ON tt.term_taxonomy_id = tr.term_taxonomy_id
-                 INNER JOIN ({$cat_subquery}) cp ON tr.object_id = cp.ID
+                 INNER JOIN {$wpdb->posts} p ON tr.object_id = p.ID
+                     AND p.post_type = 'product' AND p.post_status = 'publish'
+                 INNER JOIN {$wpdb->term_relationships} tr_cat ON p.ID = tr_cat.object_id
+                 INNER JOIN {$wpdb->term_taxonomy} tt_cat ON tr_cat.term_taxonomy_id = tt_cat.term_taxonomy_id
+                     AND tt_cat.taxonomy = 'product_cat' AND tt_cat.term_id = %d
+                 {$oos_join}
                  WHERE tt.count > 0 ORDER BY t.name",
-                $taxonomy
+                $taxonomy, $category_id
             )) ?: [];
         }
         return $wpdb->get_results($wpdb->prepare(
@@ -915,9 +926,10 @@ function get_shop_filter_state($request) {
         return array_map('intval', $rows ?: []);
     };
 
-    // Returns per-term product counts within the current filter context
-    $get_term_counts = function ($taxonomy) use ($wpdb, $active_subquery) {
-        if ($active_subquery === null) {
+    // Returns per-term product counts within the current filter context.
+    // Skipped when no filters are active — WP's native tt.count is used instead.
+    $get_term_counts = function ($taxonomy) use ($wpdb, $active_subquery, $has_filters) {
+        if (!$has_filters || $active_subquery === null) {
             return null;
         }
         $rows = $wpdb->get_results($wpdb->prepare(
