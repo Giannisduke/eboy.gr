@@ -440,7 +440,7 @@ class XMLProcessor:
         if supplier == 'pakoworld':
             return root.findall('.//product')
         elif supplier == 'b2bmarkt':
-            return root.findall('.//Product')
+            return root.findall('./Product')
         elif supplier == 'libertab2b':
             return root.findall('.//product')
         elif supplier == 'estiahomeart':

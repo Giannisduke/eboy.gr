@@ -40,6 +40,20 @@ export default defineConfig({
       disableTailwindFontSizes: true,
     }),
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `
+          @import "bootstrap/scss/functions";
+          @import "/resources/css/custom/shared-variables";
+          @import "bootstrap/scss/variables";
+          @import "bootstrap/scss/variables-dark";
+          @import "bootstrap/scss/maps";
+          @import "bootstrap/scss/mixins";
+        `,
+      },
+    },
+  },
   resolve: {
     alias: {
       '@scripts': '/resources/js',

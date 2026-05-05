@@ -19,7 +19,25 @@
                     @include make-col-ready();
                     @include make-col(12);
 
-                    & .woocommerce-product-gallery {
+                    & .product-layout {
+                        @include make-row($gutter: $grid-gutter-width);
+                        position: relative;
+
+                        & .onsale {
+                            position: absolute;
+                            left: 49.5%;
+                            transform: translateX(-50%);
+                            top: 1rem;
+                            z-index: 10;
+                            margin: 0;
+                            top: 19.5%;
+                            background: url("../images/sales-sketo.svg") no-repeat center center;
+                            font-size: 0.75rem;
+                            @extend .p-3;
+                            font-family: 'PFBagueSansPro-Bold';
+                        }
+
+                                            & .woocommerce-product-gallery {
                         @include make-col-ready();
 
                         @include media-breakpoint-up(sm) {
@@ -124,21 +142,40 @@
 
                         & .product_meta {
                             @extend .pt-4;
+                            @extend .list-inline;
+                            padding-left: 0;
+                            margin-bottom: 0.25rem;
+
+                            li.list-inline-item {
+                                margin-right: 0;
+                            }
 
                             li.list-inline-item + li.list-inline-item::before {
-                                content: '';
+                                content: '·';
                                 display: inline-block;
-                                width: 4px;
-                                height: 4px;
-                                background: url('../images/dot.svg') no-repeat center / contain;
                                 vertical-align: middle;
-                                margin-right: 0.4rem;
+                                margin: 0 0.4rem;
+                                color: $primary;
                             }
+
+                        }
+
+                        & .stock {
+                            font-size: .85rem;
+                            @extend .mt-4;
+                            @extend .mb-1;
                         }
 
                         & .price {
                             font-size: 1.5rem;
                             margin-bottom: 1rem;
+
+                            & .woocommerce-Price-amount {
+                                background: $primary;
+                                color: $white;
+                                font-family: 'PFBagueSansPro-Medium';
+                                font-size: 1rem;
+                            }
                         }
 
                         & .woocommerce-product-details__short-description {
@@ -146,33 +183,42 @@
                         }
 
                         & form.cart {
-                            display: flex;
-                            gap: 1rem;
-                            margin-bottom: 2rem;
+                            @extend .d-flex;
+                            @extend .align-items-center;
+                            
+                            @extend .mt-2;
+                            @extend .mb-4;
+                            @extend .justify-content-start;
+
+                            & .price {
+                                margin-bottom: 0;
+                                padding: 0rem 1rem;
+                                background: $primary;
+                            }
 
                             & .quantity {
-                                width: 100px;
+                                width: 70px;
 
                                 & input {
                                     width: 100%;
-                                    padding: .375rem .75rem;
+                                    padding: 0.3rem 0.5rem;
                                     border: 1px solid #ced4da;
-                                    border-radius: .25rem;
+                                    border-radius: 0.25rem 0 0 0.25rem;
                                     text-align: center;
                                 }
                             }
 
                             & button {
                                 padding: .375rem 1.5rem;
-                                background-color: $primary;
-                                color: $white;
+                                background-color: $secondary;
+                                color: $primary;
                                 border: none;
-                                border-radius: .25rem;
+                                border-radius: 0 .25rem .25rem 0;
                                 cursor: pointer;
                                 transition: background-color .2s;
 
                                 &:hover {
-                                    background-color: darken($primary, 10%);
+                                    background-color: darken($secondary, 10%);
                                 }
                             }
                         }
@@ -202,6 +248,8 @@
                                 }
                             }
                         }
+                    }
+
                     }
             }
         

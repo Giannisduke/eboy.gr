@@ -13,17 +13,16 @@
         />
       </div>
 
+        <!-- Price -->
+        <div class="product-price">
+          <span class="price-display" v-html="product.price_html"></span>
+        </div>
+
       <!-- Product Info -->
       <div class="product-info">
         <h3 class="product-title">{{ product.name }}</h3>
 
-        <!-- Price -->
-        <div class="product-price">
-          <span v-if="product.on_sale" class="regular-price">
-            <del v-html="product.regular_price_html"></del>
-          </span>
-          <span class="sale-price" v-html="product.price_html"></span>
-        </div>
+
       </div>
     </a>
   </div>
@@ -44,7 +43,7 @@ const placeholderImage = computed(() => {
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .product-card {
   border-radius: 8px;
   overflow: hidden;
@@ -74,6 +73,7 @@ const placeholderImage = computed(() => {
   font-size: 0.85rem;
   font-weight: 600;
   z-index: 1;
+  display: none;
 }
 
 .product-image {
@@ -99,7 +99,7 @@ const placeholderImage = computed(() => {
 }
 
 .product-info {
-  padding: 1rem;
+  padding: 0rem 0rem 0rem .5rem;
 }
 
 .product-title {
@@ -112,17 +112,47 @@ const placeholderImage = computed(() => {
 
 .product-price {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
+  position: relative;
+  bottom: .5rem;
 }
 
-.regular-price {
-  color: #999;
-  font-size: 0.9rem;
-}
+.price-display {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  background: $primary;
+  font-family: 'PFBagueSansPro-Medium';
+  color: $white;
 
-.sale-price {
-  font-size: 1rem;
-  color: $primary;
+
+
+  :deep(ins) {
+    display: block;
+    order: -1;
+    text-decoration: none;
+    background: $secondary;
+    color: $dark;
+    font-size: 0.8rem;
+    padding: 0 .25rem;
+    position: absolute;
+    bottom: 1.21rem;
+  }
+
+  :deep(del) {
+    display: block;
+    font-family: 'PFBagueSansPro-Medium';
+    color: $white;
+    font-size: 0.8rem;
+    padding: 0 .25rem;
+  }
+
+  :deep(bdi) {
+    font-size: 0.8rem;
+    padding: 0 .25rem;
+  }
+
 }
 </style>

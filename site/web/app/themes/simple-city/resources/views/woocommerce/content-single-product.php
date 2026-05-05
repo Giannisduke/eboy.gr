@@ -23,9 +23,9 @@ if ( post_password_required() ) {
 	return;
 }
 ?>
-<div id="product-<?php the_ID(); ?>" <?php wc_product_class( 'test', $product ); ?>>
+<div id="product-<?php the_ID(); ?>" <?php wc_product_class( '', $product ); ?>>
 
-	<div class="product-layout row">
+	<div class="product-layout">
 
 		
 			<?php
@@ -42,13 +42,16 @@ if ( post_password_required() ) {
 
 			<div class="summary entry-summary">
 				<?php
+				// Move price inside the cart form, before the quantity input
+				remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_price', 10 );
+				add_action( 'woocommerce_after_add_to_cart_quantity', 'woocommerce_template_single_price' );
+
 				/**
 				 * Hook: woocommerce_single_product_summary.
 				 *
 				 * @hooked woocommerce_template_single_meta - 4
 				 * @hooked woocommerce_template_single_title - 5
 				 * @hooked woocommerce_template_single_rating - 10
-				 * @hooked woocommerce_template_single_price - 10
 				 * @hooked woocommerce_template_single_excerpt - 20
 				 * @hooked woocommerce_template_single_add_to_cart - 30
 				 * @hooked woocommerce_template_single_sharing - 50

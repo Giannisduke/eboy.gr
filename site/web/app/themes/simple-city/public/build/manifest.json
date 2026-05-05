@@ -4,7 +4,7 @@
     "src": "editor.deps.json"
   },
   "resources/css/app.scss": {
-    "file": "assets/app-sS3y3tWJ.css",
+    "file": "assets/app-BrG9R-uz.css",
     "src": "resources/css/app.scss",
     "isEntry": true
   },
@@ -197,6 +197,10 @@
     "file": "assets/office-zTi99C67.svg",
     "src": "resources/images/office.svg"
   },
+  "resources/images/sales-sketo.svg": {
+    "file": "assets/sales-sketo-CP2LTabL.svg",
+    "src": "resources/images/sales-sketo.svg"
+  },
   "resources/images/sales.svg": {
     "file": "assets/sales-9FCY2qef.svg",
     "src": "resources/images/sales.svg"
@@ -234,12 +238,12 @@
     "src": "resources/images/view_small_s.svg"
   },
   "resources/js/app.js": {
-    "file": "assets/app-NtWvIaw8.js",
+    "file": "assets/app-DrnXywir.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-C33W_NKX.css"
+      "assets/app-BALPUUb3.css"
     ],
     "assets": [
       "assets/bathroom-H5gpXJb4.svg",

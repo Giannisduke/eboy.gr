@@ -6,7 +6,7 @@
             <p>για παραγγελίες άνω των 50$</p>
         <?php gravity_form( 2, false, false, false, '', false ); ?>
         </div>
-        <div class="col-6 test">
+        <div class="col-6">
         Test 2
         </div>
     </div>

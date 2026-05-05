@@ -27,7 +27,7 @@ $shop_url  = add_query_arg( [ 'orderby' => 'date', 'order' => 'desc' ], home_url
 $cat_terms = get_the_terms( $product->get_id(), 'product_cat' );
 $tag_terms = get_the_terms( $product->get_id(), 'product_tag' );
 ?>
-<ul class="product_meta list-inline">
+<ul class="product_meta">
 
 	<?php do_action( 'woocommerce_product_meta_start' ); ?>
 
