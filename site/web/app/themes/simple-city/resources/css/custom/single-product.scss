@@ -37,7 +37,7 @@
                             font-family: 'PFBagueSansPro-Bold';
                         }
 
-                                            & .woocommerce-product-gallery {
+                        & .woocommerce-product-gallery {
                         @include make-col-ready();
 
                         @include media-breakpoint-up(sm) {
@@ -176,6 +176,8 @@
                                 font-family: 'PFBagueSansPro-Medium';
                                 font-size: 1rem;
                             }
+
+
                         }
 
                         & .woocommerce-product-details__short-description {

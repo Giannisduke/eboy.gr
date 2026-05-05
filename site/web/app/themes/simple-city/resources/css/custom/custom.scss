@@ -594,3 +594,9 @@ body {
         }
     }
 }
+.woocommerce ul.products li.product .price del,
+.woocommerce div.product .price del,
+.woocommerce span.price del {
+    text-decoration-color: $secondary;
+    text-decoration-thickness: 2px;
+}

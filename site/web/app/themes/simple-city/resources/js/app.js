@@ -200,6 +200,55 @@ if (grid_6) {
     };
 }
 
+// Single product: update displayed price based on quantity
+const priceEl = document.querySelector('.summary .price');
+const qtyInput = document.querySelector('.quantity input.qty');
+
+if (priceEl && qtyInput) {
+    let basePrice = NaN;
+
+    const getAmountEl = () =>
+        priceEl.querySelector('ins .woocommerce-Price-amount bdi')
+     || priceEl.querySelector('.woocommerce-Price-amount bdi');
+
+    const readBasePrice = () => {
+        const el = getAmountEl();
+        if (!el) return NaN;
+        const sym = el.querySelector('.woocommerce-Price-currencySymbol');
+        const raw = el.textContent.replace(sym ? sym.textContent : '', '').trim();
+        return parseFloat(raw.replace(/\./g, '').replace(',', '.'));
+    };
+
+    const updatePrice = () => {
+        if (isNaN(basePrice)) return;
+        const el = getAmountEl();
+        if (!el) return;
+        const sym = el.querySelector('.woocommerce-Price-currencySymbol');
+        const symHTML = sym ? sym.outerHTML : '';
+        const symFirst = sym && el.innerHTML.indexOf(sym.outerHTML) < el.innerHTML.length / 2;
+        const qty = Math.max(1, parseInt(qtyInput.value) || 1);
+        const formatted = (basePrice * qty).toLocaleString('el-GR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        el.innerHTML = symFirst ? symHTML + formatted : formatted + ' ' + symHTML;
+    };
+
+    basePrice = readBasePrice();
+    qtyInput.addEventListener('input', updatePrice);
+    qtyInput.addEventListener('change', updatePrice);
+
+    // Variable products: WooCommerce fires jQuery events with the exact display_price value
+    const variationForm = document.querySelector('form.variations_form');
+    if (variationForm && window.jQuery) {
+        window.jQuery(variationForm)
+            .on('found_variation', (e, variation) => {
+                basePrice = variation.display_price;
+                updatePrice();
+            })
+            .on('reset_data', () => {
+                basePrice = NaN;
+            });
+    }
+}
+
 // Mount Vue Shop App
 const shopAppElement = document.getElementById('vue-shop-app');
 if (shopAppElement) {
