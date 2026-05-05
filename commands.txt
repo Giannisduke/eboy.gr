@@ -179,3 +179,8 @@ python3 main.py --input /srv/www/eboy.gr/current/web/app/themes/simple-city/scri
 python3 main.py --input /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/xml_files/gr/libertab2b.xml --output /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/xml_files/enhanced/libertab2b-enhanced.xml --skus 05-0766 --extend-from-backup --skip-images
 
 wp xml-import sku 05-0766 libertab2b --path=/srv/www/eboy.gr/current/web/wordpress
+
+
+wp db query "ALTER TABLE wp_term_taxonomy ADD INDEX IF NOT EXISTS idx_taxonomy_count (taxonomy(20), count);"
+
+wp transient delete --all

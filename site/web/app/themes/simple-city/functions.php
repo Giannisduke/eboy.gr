@@ -757,10 +757,16 @@ function get_shop_filter_state($request) {
 
     $hide_oos = get_option('woocommerce_hide_out_of_stock_items') === 'yes';
 
-    // Fast path: no filters, no category → init cache already has this data
+    // Fast path: no filters, no category → reuse init data (same dataset, no extra queries).
+    // If init is cold, build it now — one-time cost, then both caches are warm.
     if (!$has_filters && !$category_id) {
         $init = get_transient('shop_init_data');
-        if ($init !== false) {
+        if ($init === false) {
+            $init_req  = new WP_REST_Request('GET', '/theme/v1/init');
+            $init_resp = get_shop_init_data($init_req);
+            $init      = $init_resp->get_data();
+        }
+        if ($init !== false && is_array($init)) {
             $data = [
                 'tags'       => $init['tags']       ?? [],
                 'colors'     => $init['colors']     ?? [],
@@ -1127,12 +1133,16 @@ add_action('edited_term', 'clear_shop_cache_on_term_change', 10, 3);
 add_action('delete_term', 'clear_shop_cache_on_term_change', 10, 3);
 
 /**
- * Register a 25-minute cron interval (slightly under the 30-min transient TTL)
+ * Register cron intervals for cache pre-warming.
  */
 add_filter('cron_schedules', function ($schedules) {
     $schedules['every_25_minutes'] = [
         'interval' => 1500,
         'display'  => 'Every 25 Minutes',
+    ];
+    $schedules['every_10_minutes'] = [
+        'interval' => 600,
+        'display'  => 'Every 10 Minutes',
     ];
     return $schedules;
 });
@@ -1140,10 +1150,11 @@ add_filter('cron_schedules', function ($schedules) {
 /**
  * Ensure the recurring prewarm event is scheduled on every request.
  * wp_next_scheduled() is cheap (single options lookup) so running it on init is fine.
+ * Runs every 10 minutes to keep cache warm after product saves clear it.
  */
 add_action('init', function () {
     if (!wp_next_scheduled('shop_prewarm_init_cache')) {
-        wp_schedule_event(time(), 'every_25_minutes', 'shop_prewarm_init_cache');
+        wp_schedule_event(time(), 'every_10_minutes', 'shop_prewarm_init_cache');
     }
 });
 
