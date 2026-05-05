@@ -517,9 +517,10 @@ function get_shop_products($request) {
         }
     }
 
-    // Add search filter
+    // Add search filter (title only)
     if (isset($params['search']) && !empty($params['search'])) {
         $args['s'] = sanitize_text_field($params['search']);
+        $args['search_columns'] = ['post_title'];
     }
 
     // Build meta_query
@@ -848,6 +849,7 @@ function get_shop_filter_state($request) {
 
         if ($search) {
             $fq['s'] = $search;
+            $fq['search_columns'] = ['post_title'];
         }
 
         $filtered_product_ids = get_posts($fq);
