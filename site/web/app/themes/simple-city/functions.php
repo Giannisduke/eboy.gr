@@ -525,6 +525,15 @@ function get_shop_products($request) {
     // Build meta_query
     $meta_query = [];
 
+    // Respect WooCommerce "hide out of stock" setting
+    if ( get_option( 'woocommerce_hide_out_of_stock_items' ) === 'yes' ) {
+        $meta_query[] = [
+            'key'     => '_stock_status',
+            'value'   => 'instock',
+            'compare' => '=',
+        ];
+    }
+
     // Add on sale filter
     if (isset($params['on_sale']) && $params['on_sale'] === 'true') {
         $meta_query[] = [
@@ -746,10 +755,12 @@ function get_shop_filter_state($request) {
         || $height || $width || $depth
         || $min_price !== null || $max_price !== null || $search;
 
+    $hide_oos = get_option( 'woocommerce_hide_out_of_stock_items' ) === 'yes';
+
     // Step 1: Category-scoped IDs — used to limit which terms appear in the filter bar
     $category_product_ids = null;
     if ($category_id) {
-        $category_product_ids = get_posts([
+        $cat_query_args = [
             'post_type'      => 'product',
             'posts_per_page' => -1,
             'fields'         => 'ids',
@@ -759,7 +770,11 @@ function get_shop_filter_state($request) {
                 'field'    => 'term_id',
                 'terms'    => $category_id,
             ]],
-        ]);
+        ];
+        if ( $hide_oos ) {
+            $cat_query_args['meta_query'] = [['key' => '_stock_status', 'value' => 'instock', 'compare' => '=']];
+        }
+        $category_product_ids = get_posts($cat_query_args);
 
         if (empty($category_product_ids)) {
             $empty = [
@@ -821,6 +836,9 @@ function get_shop_filter_state($request) {
         }
         if ($max_price !== null) {
             $fq_meta[] = ['key' => '_price', 'value' => $max_price, 'compare' => '<=', 'type' => 'NUMERIC'];
+        }
+        if ( $hide_oos ) {
+            $fq_meta[] = ['key' => '_stock_status', 'value' => 'instock', 'compare' => '='];
         }
 
         if (!empty($fq_meta)) {
