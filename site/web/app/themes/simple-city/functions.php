@@ -757,6 +757,24 @@ function get_shop_filter_state($request) {
 
     $hide_oos = get_option('woocommerce_hide_out_of_stock_items') === 'yes';
 
+    // Fast path: no filters, no category → init cache already has this data
+    if (!$has_filters && !$category_id) {
+        $init = get_transient('shop_init_data');
+        if ($init !== false) {
+            $data = [
+                'tags'       => $init['tags']       ?? [],
+                'colors'     => $init['colors']     ?? [],
+                'materials'  => $init['materials']  ?? [],
+                'heights'    => $init['heights']    ?? [],
+                'widths'     => $init['widths']     ?? [],
+                'depths'     => $init['depths']     ?? [],
+                'priceRange' => $init['priceRange'] ?? ['min' => 0, 'max' => 0, 'filteredMin' => 0, 'filteredMax' => 0],
+            ];
+            set_transient($cache_key, $data, 1800);
+            return new WP_REST_Response($data);
+        }
+    }
+
     // Base SQL fragments shared by all subqueries
     $base_joins  = [];
     $base_wheres = ["p.post_type = 'product'", "p.post_status = 'publish'"];
@@ -790,7 +808,7 @@ function get_shop_filter_state($request) {
                 'heights' => [], 'widths' => [], 'depths' => [],
                 'priceRange' => ['min' => 0, 'max' => 0, 'filteredMin' => 0, 'filteredMax' => 0],
             ];
-            set_transient($cache_key, $empty, 300);
+            set_transient($cache_key, $empty, 1800);
             return new WP_REST_Response($empty);
         }
     }
@@ -1054,7 +1072,7 @@ function get_shop_filter_state($request) {
         'priceRange' => ['min' => $min_val, 'max' => $max_val, 'filteredMin' => $filt_min, 'filteredMax' => $filt_max],
     ];
 
-    set_transient($cache_key, $data, 300);
+    set_transient($cache_key, $data, 1800);
     return new WP_REST_Response($data);
 }
 
@@ -1134,12 +1152,17 @@ add_action('init', function () {
  * Shared by both the recurring event and the one-off post-clear event.
  */
 function shop_rebuild_init_cache() {
-    if (get_transient('shop_init_data') !== false) {
-        return; // still warm, nothing to do
+    if (get_transient('shop_init_data') === false) {
+        $request = new WP_REST_Request('GET', '/theme/v1/init');
+        get_shop_init_data($request);
     }
 
-    $request = new WP_REST_Request('GET', '/theme/v1/init');
-    get_shop_init_data($request);
+    // Pre-warm base filter-state (no filters, no category) — used when filters are cleared
+    $base_key = 'shop_filter_state_' . md5(serialize([]));
+    if (get_transient($base_key) === false) {
+        $request = new WP_REST_Request('GET', '/theme/v1/filter-state');
+        get_shop_filter_state($request);
+    }
 }
 
 add_action('shop_prewarm_init_cache',        'shop_rebuild_init_cache');
