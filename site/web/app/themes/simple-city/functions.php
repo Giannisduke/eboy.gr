@@ -727,7 +727,7 @@ function shop_filtered_term_counts( $taxonomy, array $product_ids ) {
 
 /**
  * Get all filter availability data in a single request.
- * Runs ONE get_posts(-1) query instead of 7 separate ones.
+ * Uses SQL subqueries instead of PHP ID arrays to avoid large IN() clauses at scale.
  */
 function get_shop_filter_state($request) {
     global $wpdb;
@@ -740,51 +740,54 @@ function get_shop_filter_state($request) {
         return new WP_REST_Response($cached);
     }
 
-    // Parse all active filters from params
-    $category_id  = isset($params['category'])  && $params['category']  !== '' ? intval($params['category'])                                          : null;
-    $tag_ids      = isset($params['tags'])       && $params['tags']      !== '' ? array_map('intval', explode(',', $params['tags']))                   : [];
-    $color_ids    = isset($params['colors'])     && $params['colors']    !== '' ? array_map('intval', explode(',', $params['colors']))                 : [];
-    $material_ids = isset($params['materials'])  && $params['materials'] !== '' ? array_map('intval', explode(',', $params['materials']))              : [];
-    $height       = isset($params['height'])     && $params['height']    !== '' ? sanitize_text_field($params['height'])                              : null;
-    $width        = isset($params['width'])      && $params['width']     !== '' ? sanitize_text_field($params['width'])                               : null;
-    $depth        = isset($params['depth'])      && $params['depth']     !== '' ? sanitize_text_field($params['depth'])                               : null;
-    $min_price    = isset($params['min_price'])  && $params['min_price'] !== '' ? floatval($params['min_price'])                                      : null;
-    $max_price    = isset($params['max_price'])  && $params['max_price'] !== '' ? floatval($params['max_price'])                                      : null;
-    $search       = isset($params['search'])     && $params['search']    !== '' ? sanitize_text_field($params['search'])                              : null;
+    $category_id  = isset($params['category'])  && $params['category']  !== '' ? intval($params['category'])                                 : null;
+    $tag_ids      = isset($params['tags'])       && $params['tags']      !== '' ? array_map('intval', explode(',', $params['tags']))          : [];
+    $color_ids    = isset($params['colors'])     && $params['colors']    !== '' ? array_map('intval', explode(',', $params['colors']))        : [];
+    $material_ids = isset($params['materials'])  && $params['materials'] !== '' ? array_map('intval', explode(',', $params['materials']))     : [];
+    $height       = isset($params['height'])     && $params['height']    !== '' ? sanitize_text_field($params['height'])                     : null;
+    $width        = isset($params['width'])      && $params['width']     !== '' ? sanitize_text_field($params['width'])                      : null;
+    $depth        = isset($params['depth'])      && $params['depth']     !== '' ? sanitize_text_field($params['depth'])                      : null;
+    $min_price    = isset($params['min_price'])  && $params['min_price'] !== '' ? floatval($params['min_price'])                             : null;
+    $max_price    = isset($params['max_price'])  && $params['max_price'] !== '' ? floatval($params['max_price'])                             : null;
+    $search       = isset($params['search'])     && $params['search']    !== '' ? sanitize_text_field($params['search'])                     : null;
 
     $has_filters = !empty($tag_ids) || !empty($color_ids) || !empty($material_ids)
         || $height || $width || $depth
         || $min_price !== null || $max_price !== null || $search;
 
-    $hide_oos = get_option( 'woocommerce_hide_out_of_stock_items' ) === 'yes';
+    $hide_oos = get_option('woocommerce_hide_out_of_stock_items') === 'yes';
 
-    // Step 1: Category-scoped IDs — used to limit which terms appear in the filter bar
-    $category_product_ids = null;
+    // Base SQL fragments shared by all subqueries
+    $base_joins  = [];
+    $base_wheres = ["p.post_type = 'product'", "p.post_status = 'publish'"];
+
     if ($category_id) {
-        $cat_query_args = [
-            'post_type'      => 'product',
-            'posts_per_page' => -1,
-            'fields'         => 'ids',
-            'post_status'    => 'publish',
-            'tax_query'      => [[
-                'taxonomy' => 'product_cat',
-                'field'    => 'term_id',
-                'terms'    => $category_id,
-            ]],
-        ];
-        if ( $hide_oos ) {
-            $cat_query_args['meta_query'] = [['key' => '_stock_status', 'value' => 'instock', 'compare' => '=']];
-        }
-        $category_product_ids = get_posts($cat_query_args);
+        $base_joins[] = $wpdb->prepare(
+            "INNER JOIN {$wpdb->term_relationships} tr_cat ON p.ID = tr_cat.object_id
+             INNER JOIN {$wpdb->term_taxonomy} tt_cat ON tr_cat.term_taxonomy_id = tt_cat.term_taxonomy_id
+                 AND tt_cat.taxonomy = 'product_cat' AND tt_cat.term_id = %d",
+            $category_id
+        );
+    }
 
-        if (empty($category_product_ids)) {
+    if ($hide_oos) {
+        $base_joins[] = "INNER JOIN {$wpdb->postmeta} pm_oos ON p.ID = pm_oos.post_id
+                         AND pm_oos.meta_key = '_stock_status' AND pm_oos.meta_value = 'instock'";
+    }
+
+    $cat_subquery = sprintf(
+        "SELECT DISTINCT p.ID FROM {$wpdb->posts} p %s WHERE %s",
+        implode(' ', $base_joins),
+        implode(' AND ', $base_wheres)
+    );
+
+    // Early-exit: category is set but has no matching products
+    if ($category_id) {
+        $count = (int) $wpdb->get_var("SELECT COUNT(*) FROM ({$cat_subquery}) AS _cnt");
+        if (!$count) {
             $empty = [
-                'tags'       => [],
-                'colors'     => [],
-                'materials'  => [],
-                'heights'    => [],
-                'widths'     => [],
-                'depths'     => [],
+                'tags' => [], 'colors' => [], 'materials' => [],
+                'heights' => [], 'widths' => [], 'depths' => [],
                 'priceRange' => ['min' => 0, 'max' => 0, 'filteredMin' => 0, 'filteredMax' => 0],
             ];
             set_transient($cache_key, $empty, 300);
@@ -792,122 +795,172 @@ function get_shop_filter_state($request) {
         }
     }
 
-    // Step 2: Fully-filtered IDs — used to mark which terms are still available
-    $filtered_product_ids = null;
+    // Build filtered subquery — extends the base with all active filter JOINs
+    $filter_subquery = null;
     if ($has_filters) {
-        $fq = [
-            'post_type'      => 'product',
-            'posts_per_page' => -1,
-            'fields'         => 'ids',
-            'post_status'    => 'publish',
-        ];
+        $fq_joins  = $base_joins;
+        $fq_wheres = $base_wheres;
+        $i         = 1;
 
-        $fq_tax   = [];
-        $fq_meta  = [];
+        // AND-operator taxonomy filters: one JOIN per term so all must match
+        foreach ([
+            ['taxonomy' => 'product_tag', 'ids' => $tag_ids],
+            ['taxonomy' => 'pa_υλικό',    'ids' => $material_ids],
+        ] as $tf) {
+            foreach ($tf['ids'] as $tid) {
+                $fq_joins[] = $wpdb->prepare(
+                    "INNER JOIN {$wpdb->term_relationships} tr_f{$i} ON p.ID = tr_f{$i}.object_id
+                     INNER JOIN {$wpdb->term_taxonomy} tt_f{$i} ON tr_f{$i}.term_taxonomy_id = tt_f{$i}.term_taxonomy_id
+                         AND tt_f{$i}.taxonomy = %s AND tt_f{$i}.term_id = %d",
+                    $tf['taxonomy'], $tid
+                );
+                $i++;
+            }
+        }
 
-        if ($category_id) {
-            $fq_tax[] = ['taxonomy' => 'product_cat', 'field' => 'term_id', 'terms' => $category_id];
-        }
-        if (!empty($tag_ids)) {
-            $fq_tax[] = ['taxonomy' => 'product_tag', 'field' => 'term_id', 'terms' => $tag_ids, 'operator' => 'AND'];
-        }
+        // IN-operator taxonomy filter: single JOIN with IN(...)
         if (!empty($color_ids)) {
-            $fq_tax[] = ['taxonomy' => 'pa_color', 'field' => 'term_id', 'terms' => $color_ids, 'operator' => 'IN'];
-        }
-        if (!empty($material_ids)) {
-            $fq_tax[] = ['taxonomy' => 'pa_υλικό', 'field' => 'term_id', 'terms' => $material_ids, 'operator' => 'AND'];
-        }
-        if ($height) {
-            $fq_tax[] = ['taxonomy' => 'pa_ύψος',   'field' => 'slug', 'terms' => $height];
-        }
-        if ($width) {
-            $fq_tax[] = ['taxonomy' => 'pa_πλάτος', 'field' => 'slug', 'terms' => $width];
-        }
-        if ($depth) {
-            $fq_tax[] = ['taxonomy' => 'pa_μήκος',  'field' => 'slug', 'terms' => $depth];
+            $ids_str = implode(',', $color_ids);
+            $fq_joins[] = $wpdb->prepare(
+                "INNER JOIN {$wpdb->term_relationships} tr_f{$i} ON p.ID = tr_f{$i}.object_id
+                 INNER JOIN {$wpdb->term_taxonomy} tt_f{$i} ON tr_f{$i}.term_taxonomy_id = tt_f{$i}.term_taxonomy_id
+                     AND tt_f{$i}.taxonomy = %s AND tt_f{$i}.term_id IN ({$ids_str})",
+                'pa_color'
+            );
+            $i++;
         }
 
-        if (!empty($fq_tax)) {
-            $fq_tax['relation'] = 'AND';
-            $fq['tax_query'] = $fq_tax;
+        // Slug-based taxonomy filters
+        foreach ([
+            ['taxonomy' => 'pa_ύψος',   'slug' => $height],
+            ['taxonomy' => 'pa_πλάτος', 'slug' => $width],
+            ['taxonomy' => 'pa_μήκος',  'slug' => $depth],
+        ] as $sf) {
+            if (!$sf['slug']) continue;
+            $fq_joins[] = $wpdb->prepare(
+                "INNER JOIN {$wpdb->term_relationships} tr_f{$i} ON p.ID = tr_f{$i}.object_id
+                 INNER JOIN {$wpdb->term_taxonomy} tt_f{$i} ON tr_f{$i}.term_taxonomy_id = tt_f{$i}.term_taxonomy_id
+                     AND tt_f{$i}.taxonomy = %s
+                 INNER JOIN {$wpdb->terms} t_f{$i} ON tt_f{$i}.term_id = t_f{$i}.term_id AND t_f{$i}.slug = %s",
+                $sf['taxonomy'], $sf['slug']
+            );
+            $i++;
         }
 
+        // Price filters via postmeta JOINs
         if ($min_price !== null) {
-            $fq_meta[] = ['key' => '_price', 'value' => $min_price, 'compare' => '>=', 'type' => 'NUMERIC'];
+            $fq_joins[] = $wpdb->prepare(
+                "INNER JOIN {$wpdb->postmeta} pm_min ON p.ID = pm_min.post_id
+                 AND pm_min.meta_key = '_price' AND CAST(pm_min.meta_value AS DECIMAL(10,2)) >= %f",
+                $min_price
+            );
         }
         if ($max_price !== null) {
-            $fq_meta[] = ['key' => '_price', 'value' => $max_price, 'compare' => '<=', 'type' => 'NUMERIC'];
-        }
-        if ( $hide_oos ) {
-            $fq_meta[] = ['key' => '_stock_status', 'value' => 'instock', 'compare' => '='];
-        }
-
-        if (!empty($fq_meta)) {
-            $fq_meta['relation'] = 'AND';
-            $fq['meta_query'] = $fq_meta;
+            $fq_joins[] = $wpdb->prepare(
+                "INNER JOIN {$wpdb->postmeta} pm_max ON p.ID = pm_max.post_id
+                 AND pm_max.meta_key = '_price' AND CAST(pm_max.meta_value AS DECIMAL(10,2)) <= %f",
+                $max_price
+            );
         }
 
         if ($search) {
-            $fq['s'] = $search;
-            $fq['search_columns'] = ['post_title'];
+            $fq_wheres[] = $wpdb->prepare("p.post_title LIKE %s", '%' . $wpdb->esc_like($search) . '%');
         }
 
-        $filtered_product_ids = get_posts($fq);
+        $filter_subquery = sprintf(
+            "SELECT DISTINCT p.ID FROM {$wpdb->posts} p %s WHERE %s",
+            implode(' ', $fq_joins),
+            implode(' AND ', $fq_wheres)
+        );
     }
 
-    // Helpers
-    $avail_ids = $filtered_product_ids ?? $category_product_ids;
+    // The subquery representing the current product set (filtered > category > null)
+    $active_subquery = $filter_subquery ?? ($category_id ? $cat_subquery : null);
 
-    $get_display_terms = function ($taxonomy) use ($category_product_ids) {
-        $args = ['taxonomy' => $taxonomy, 'hide_empty' => true, 'number' => 200];
-        if ($category_product_ids !== null) {
-            $args['object_ids'] = $category_product_ids;
+    // Returns term rows visible within the current category (or globally)
+    $get_display_terms = function ($taxonomy) use ($wpdb, $cat_subquery, $category_id) {
+        if ($category_id) {
+            return $wpdb->get_results($wpdb->prepare(
+                "SELECT DISTINCT t.term_id, t.name, t.slug, tt.count
+                 FROM {$wpdb->terms} t
+                 INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id AND tt.taxonomy = %s
+                 INNER JOIN {$wpdb->term_relationships} tr ON tt.term_taxonomy_id = tr.term_taxonomy_id
+                 INNER JOIN ({$cat_subquery}) cp ON tr.object_id = cp.ID
+                 WHERE tt.count > 0 ORDER BY t.name",
+                $taxonomy
+            )) ?: [];
         }
-        $terms = get_terms($args);
-        return is_wp_error($terms) ? [] : $terms;
+        return $wpdb->get_results($wpdb->prepare(
+            "SELECT t.term_id, t.name, t.slug, tt.count
+             FROM {$wpdb->terms} t
+             INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id AND tt.taxonomy = %s
+             WHERE tt.count > 0 ORDER BY t.name",
+            $taxonomy
+        )) ?: [];
     };
 
-    $get_avail_ids = function ($taxonomy) use ($avail_ids, $has_filters) {
-        if (!$has_filters || $avail_ids === null) {
-            return null; // null = no filter active, all available
+    // Returns term IDs still valid given current filters (null = all available)
+    $get_avail_term_ids = function ($taxonomy) use ($wpdb, $active_subquery, $has_filters) {
+        if (!$has_filters || $active_subquery === null) {
+            return null;
         }
-        if (empty($avail_ids)) {
-            return [];
-        }
-        $result = wp_get_object_terms($avail_ids, $taxonomy, ['fields' => 'ids']);
-        return is_array($result) ? $result : [];
+        $rows = $wpdb->get_col($wpdb->prepare(
+            "SELECT DISTINCT tt.term_id
+             FROM {$wpdb->term_taxonomy} tt
+             INNER JOIN {$wpdb->term_relationships} tr ON tt.term_taxonomy_id = tr.term_taxonomy_id
+             INNER JOIN ({$active_subquery}) ap ON tr.object_id = ap.ID
+             WHERE tt.taxonomy = %s",
+            $taxonomy
+        ));
+        return array_map('intval', $rows ?: []);
     };
 
-    $fmt = function ($term, $avail_id_list, $extra = [], $counts = null) {
-        // Use filtered count when available, fall back to global WP count
-        $count = ($counts !== null && isset($counts[$term->term_id]))
-            ? $counts[$term->term_id]
-            : $term->count;
-        $row = [
-            'id'        => $term->term_id,
-            'name'      => $term->name,
-            'slug'      => $term->slug,
+    // Returns per-term product counts within the current filter context
+    $get_term_counts = function ($taxonomy) use ($wpdb, $active_subquery) {
+        if ($active_subquery === null) {
+            return null;
+        }
+        $rows = $wpdb->get_results($wpdb->prepare(
+            "SELECT tt.term_id, COUNT(DISTINCT tr.object_id) AS cnt
+             FROM {$wpdb->term_taxonomy} tt
+             INNER JOIN {$wpdb->term_relationships} tr ON tt.term_taxonomy_id = tr.term_taxonomy_id
+             INNER JOIN ({$active_subquery}) ap ON tr.object_id = ap.ID
+             WHERE tt.taxonomy = %s
+             GROUP BY tt.term_id",
+            $taxonomy
+        ));
+        $map = [];
+        foreach ($rows as $row) {
+            $map[(int) $row->term_id] = (int) $row->cnt;
+        }
+        return $map;
+    };
+
+    $fmt = function ($row, $avail_id_list, $extra = [], $counts = null) {
+        $term_id = (int) $row->term_id;
+        $count   = ($counts !== null && isset($counts[$term_id])) ? $counts[$term_id] : (int) $row->count;
+        return array_merge([
+            'id'        => $term_id,
+            'name'      => $row->name,
+            'slug'      => $row->slug,
             'count'     => $count,
-            'available' => $avail_id_list === null ? true : in_array($term->term_id, $avail_id_list),
-        ];
-        return array_merge($row, $extra);
+            'available' => $avail_id_list === null ? true : in_array($term_id, $avail_id_list),
+        ], $extra);
     };
 
-    // Step 3: Build each filter list
-    $avail_tag_ids      = $get_avail_ids('product_tag');
-    $avail_color_ids    = $get_avail_ids('pa_color');
-    $avail_material_ids = $get_avail_ids('pa_υλικό');
-    $avail_height_ids   = $get_avail_ids('pa_ύψος');
-    $avail_width_ids    = $get_avail_ids('pa_πλάτος');
-    $avail_depth_ids    = $get_avail_ids('pa_μήκος');
+    $avail_tag_ids      = $get_avail_term_ids('product_tag');
+    $avail_color_ids    = $get_avail_term_ids('pa_color');
+    $avail_material_ids = $get_avail_term_ids('pa_υλικό');
+    $avail_height_ids   = $get_avail_term_ids('pa_ύψος');
+    $avail_width_ids    = $get_avail_term_ids('pa_πλάτος');
+    $avail_depth_ids    = $get_avail_term_ids('pa_μήκος');
 
-    // Filtered counts per term (one SQL query per taxonomy against $avail_ids)
-    $counts_tags      = $avail_ids !== null ? shop_filtered_term_counts('product_tag', $avail_ids) : null;
-    $counts_colors    = $avail_ids !== null ? shop_filtered_term_counts('pa_color',    $avail_ids) : null;
-    $counts_materials = $avail_ids !== null ? shop_filtered_term_counts('pa_υλικό',   $avail_ids) : null;
-    $counts_heights   = $avail_ids !== null ? shop_filtered_term_counts('pa_ύψος',    $avail_ids) : null;
-    $counts_widths    = $avail_ids !== null ? shop_filtered_term_counts('pa_πλάτος',  $avail_ids) : null;
-    $counts_depths    = $avail_ids !== null ? shop_filtered_term_counts('pa_μήκος',   $avail_ids) : null;
+    $counts_tags      = $get_term_counts('product_tag');
+    $counts_colors    = $get_term_counts('pa_color');
+    $counts_materials = $get_term_counts('pa_υλικό');
+    $counts_heights   = $get_term_counts('pa_ύψος');
+    $counts_widths    = $get_term_counts('pa_πλάτος');
+    $counts_depths    = $get_term_counts('pa_μήκος');
 
     $formatted_tags = [];
     foreach ($get_display_terms('product_tag') as $t) {
@@ -917,7 +970,7 @@ function get_shop_filter_state($request) {
     $formatted_colors = [];
     foreach ($get_display_terms('pa_color') as $c) {
         $formatted_colors[] = $fmt($c, $avail_color_ids, [
-            'hex' => get_term_meta($c->term_id, 'color_hex', true) ?: '',
+            'hex' => get_term_meta((int) $c->term_id, 'color_hex', true) ?: '',
         ], $counts_colors);
     }
 
@@ -941,29 +994,38 @@ function get_shop_filter_state($request) {
         $formatted_depths[] = $fmt($d, $avail_depth_ids, [], $counts_depths);
     }
 
-    // Step 4: Price range
-    $base_where = "WHERE meta_key = '_price'
-        AND {$wpdb->posts}.post_type = 'product'
-        AND {$wpdb->posts}.post_status = 'publish'
-        AND meta_value != ''";
+    // Price range — uses subqueries instead of IN() with materialized ID lists
+    $get_price_range = function ($subquery) use ($wpdb) {
+        if ($subquery) {
+            return $wpdb->get_row(
+                "SELECT MIN(CAST(pm.meta_value AS DECIMAL(10,2))) AS min_price,
+                        MAX(CAST(pm.meta_value AS DECIMAL(10,2))) AS max_price
+                 FROM {$wpdb->postmeta} pm
+                 INNER JOIN ({$subquery}) fp ON pm.post_id = fp.ID
+                 WHERE pm.meta_key = '_price' AND pm.meta_value != ''"
+            );
+        }
+        return $wpdb->get_row(
+            "SELECT MIN(CAST(pm.meta_value AS DECIMAL(10,2))) AS min_price,
+                    MAX(CAST(pm.meta_value AS DECIMAL(10,2))) AS max_price
+             FROM {$wpdb->postmeta} pm
+             INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID
+             WHERE pm.meta_key = '_price' AND pm.meta_value != ''
+             AND p.post_type = 'product' AND p.post_status = 'publish'"
+        );
+    };
 
-    if (!empty($category_product_ids)) {
-        $cat_str     = implode(',', array_map('intval', $category_product_ids));
-        $base_where .= " AND {$wpdb->posts}.ID IN ($cat_str)";
-    }
+    $base_row = $get_price_range($category_id ? $cat_subquery : null);
+    $min_val  = $base_row && $base_row->min_price !== null ? floatval($base_row->min_price) : 0;
+    $max_val  = $base_row && $base_row->max_price !== null ? floatval($base_row->max_price) : 1000;
+    $filt_min = $min_val;
+    $filt_max = $max_val;
 
-    $base_row  = $wpdb->get_row("SELECT MIN(CAST(meta_value AS DECIMAL(10,2))) as min_price, MAX(CAST(meta_value AS DECIMAL(10,2))) as max_price FROM {$wpdb->postmeta} INNER JOIN {$wpdb->posts} ON {$wpdb->postmeta}.post_id = {$wpdb->posts}.ID {$base_where}");
-    $min_val   = $base_row && $base_row->min_price ? floatval($base_row->min_price) : 0;
-    $max_val   = $base_row && $base_row->max_price ? floatval($base_row->max_price) : 1000;
-    $filt_min  = $min_val;
-    $filt_max  = $max_val;
-
-    if ($has_filters && $filtered_product_ids !== null) {
-        if (!empty($filtered_product_ids)) {
-            $filt_str  = implode(',', array_map('intval', $filtered_product_ids));
-            $filt_row  = $wpdb->get_row("SELECT MIN(CAST(meta_value AS DECIMAL(10,2))) as min_price, MAX(CAST(meta_value AS DECIMAL(10,2))) as max_price FROM {$wpdb->postmeta} INNER JOIN {$wpdb->posts} ON {$wpdb->postmeta}.post_id = {$wpdb->posts}.ID WHERE meta_key = '_price' AND {$wpdb->posts}.post_type = 'product' AND {$wpdb->posts}.post_status = 'publish' AND meta_value != '' AND {$wpdb->posts}.ID IN ($filt_str)");
-            $filt_min  = $filt_row && $filt_row->min_price ? floatval($filt_row->min_price) : $min_val;
-            $filt_max  = $filt_row && $filt_row->max_price ? floatval($filt_row->max_price) : $max_val;
+    if ($has_filters && $filter_subquery !== null) {
+        $filt_row = $get_price_range($filter_subquery);
+        if ($filt_row && $filt_row->min_price !== null) {
+            $filt_min = floatval($filt_row->min_price);
+            $filt_max = floatval($filt_row->max_price);
         } else {
             $filt_min = 0;
             $filt_max = 0;
