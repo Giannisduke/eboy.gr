@@ -597,6 +597,17 @@ body {
 .woocommerce ul.products li.product .price del,
 .woocommerce div.product .price del,
 .woocommerce span.price del {
-    text-decoration-color: $secondary;
-    text-decoration-thickness: 2px;
+    text-decoration: none;
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 42%;
+        height: 2px;
+        background-color: $secondary;
+        pointer-events: none;
+    }
 }
