@@ -24,6 +24,9 @@ class ProductSync {
         'color'    => ['χρώμα', 'xroma'],
         'υλικό'    => ['υλικό', 'yliko'],
         'material' => ['υλικό', 'yliko'],
+        'ύψος'     => ['ύψος', 'ypsos'],
+        'πλάτος'   => ['πλάτος', 'platos'],
+        'μήκος'    => ['μήκος', 'mikos'],
     ];
 
     public function __construct($auto_track_enhancements = false) {
@@ -758,6 +761,18 @@ class ProductSync {
     private function setProductAttributes($product_id, NormalizedProduct $product) {
         $attrs_to_set = $product->attributes ?? [];
 
+        // Mirror numeric WC dimensions into global filterable attributes so the
+        // shop layered-nav (pa_ύψος / pa_πλάτος / pa_μήκος) gets populated.
+        if (!empty($product->height)) {
+            $attrs_to_set[] = ['name' => 'ύψος', 'value' => $this->formatDimensionTerm($product->height)];
+        }
+        if (!empty($product->width)) {
+            $attrs_to_set[] = ['name' => 'πλάτος', 'value' => $this->formatDimensionTerm($product->width)];
+        }
+        if (!empty($product->length)) {
+            $attrs_to_set[] = ['name' => 'μήκος', 'value' => $this->formatDimensionTerm($product->length)];
+        }
+
         if (empty($attrs_to_set)) {
             return;
         }
@@ -1006,6 +1021,18 @@ class ProductSync {
     }
 
     /**
+     * Format a numeric dimension (cm) as a filter term name, e.g. 83 → "83 εκ.",
+     * 82.5 → "82.5 εκ.". Whole numbers are rendered without a decimal.
+     */
+    private function formatDimensionTerm($value): string {
+        $value = (float) $value;
+        if (floor($value) == $value) {
+            return ((int) $value) . ' εκ.';
+        }
+        return rtrim(rtrim(number_format($value, 2, '.', ''), '0'), '.') . ' εκ.';
+    }
+
+    /**
      * Get or create a global WooCommerce attribute taxonomy.
      *
      * @param string $label Human-readable label (e.g. "χρώμα")
@@ -1013,8 +1040,9 @@ class ProductSync {
      * @return array|null   [attribute_id, taxonomy_name] or null on failure
      */
     private function getOrCreateGlobalAttribute(string $label, string $slug): ?array {
+        $label_key = mb_strtolower($label, 'UTF-8');
         foreach (wc_get_attribute_taxonomies() as $tax) {
-            if ($tax->attribute_label === $label) {
+            if (mb_strtolower($tax->attribute_label, 'UTF-8') === $label_key) {
                 return [(int) $tax->attribute_id, wc_attribute_taxonomy_name($tax->attribute_name)];
             }
         }
