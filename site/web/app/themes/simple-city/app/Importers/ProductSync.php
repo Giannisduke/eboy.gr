@@ -16,6 +16,7 @@ class ProductSync {
     private $auto_track_enhancements = false;
     private $sku_id_cache = [];          // Local cache: sku => product_id, bypasses stale WP object cache
     private $preloaded_suppliers = [];   // Tracks suppliers whose SKUs have been preloaded
+    private $max_images = null;          // null = no cap; integer = max images per product
 
     // Attributes that should be global WooCommerce taxonomies (filterable via layered nav).
     // Key = mb_strtolower'd input name, value = [canonical Greek label, taxonomy slug].
@@ -28,6 +29,16 @@ class ProductSync {
         'πλάτος'   => ['πλάτος', 'platos'],
         'μήκος'    => ['μήκος', 'mikos'],
     ];
+
+    /**
+     * Cap the number of images sideloaded per product. Pass null to disable
+     * the cap. Setting it to 1 means only the featured image is processed —
+     * gallery is dropped entirely. Setting it to N>1 keeps featured + (N-1)
+     * gallery items.
+     */
+    public function setMaxImages(?int $max): void {
+        $this->max_images = $max;
+    }
 
     public function __construct($auto_track_enhancements = false) {
         $this->markup_settings = get_option('xml_importer_markup', []);
@@ -368,11 +379,22 @@ class ProductSync {
             return;
         }
 
+        // Image cap (set via setMaxImages): 0 = skip everything, 1 = featured only,
+        // N>1 = featured + (N-1) gallery items. null = no cap.
+        if ($this->max_images === 0) {
+            return;
+        }
+
         require_once(ABSPATH . 'wp-admin/includes/file.php');
         require_once(ABSPATH . 'wp-admin/includes/media.php');
         require_once(ABSPATH . 'wp-admin/includes/image.php');
 
         $gallery_urls  = $product->gallery_image_urls ?? [];
+        if ($this->max_images !== null) {
+            // Trim the gallery so total images (featured + gallery) does not exceed the cap.
+            $allowed_gallery = max(0, $this->max_images - 1);
+            $gallery_urls    = array_slice($gallery_urls, 0, $allowed_gallery);
+        }
         $featured_url  = $product->main_image_url;
         $final_gallery = $gallery_urls;
 

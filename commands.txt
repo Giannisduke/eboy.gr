@@ -196,3 +196,35 @@ wp transient delete --all
                                                                                                                                    
   # 6-hour cutoff                                                                                                                
   wp eval-file web/app/themes/simple-city/scripts/realtime-import-cli.php b2bmarkt resume 6h
+
+
+
+  python3 -c 'import json; d=json.load(open("web/app/themes/simple-city/scripts/xml_files/b2bmarkt-ready.json")); print("ready_skus:", len(d.get("ready_skus",[])))'
+
+
+cd /srv/www/eboy.gr/current && nohup wp eval-file web/app/themes/simple-city/scripts/realtime-import-cli.php b2bmarkt resume 12h > web/app/themes/simple-city/scripts/xml_files/realtime-import.log 2>&1 < /dev/null & disown
+
+tail -f /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/realtime-import.log | grep -v "rembg_php.log"
+
+curl -s -o /dev/null -w "rembg HTTP: %{http_code}, time: %{time_total}s\n" http://localhost:7860/ 2>/dev/null || echo "rembg server unreachable"
+
+
+ wp post list --post_type=product --post_status=any --meta_key=_sku --meta_value=0612058 --fields=ID,post_status,post_title --format=table
+
+
+ Δες όλα τα B2BMarkt προϊόντα που γράφτηκαν τα τελευταία 10 λεπτά
+  wp db query "SELECT p.ID, p.post_status, p.post_title,
+  pm_sync.meta_value AS synced
+    FROM wp_posts p
+    INNER JOIN wp_postmeta pm_sup ON p.ID=pm_sup.post_id AND
+  pm_sup.meta_key='_supplier' AND pm_sup.meta_value='B2BMarkt'
+    INNER JOIN wp_postmeta pm_sync ON p.ID=pm_sync.post_id AND
+  pm_sync.meta_key='_last_synced'
+    WHERE pm_sync.meta_value >= DATE_SUB(NOW(), INTERVAL 10 MINUTE)
+    ORDER BY pm_sync.meta_value DESC"
+
+    wp db query "SELECT meta_value, COUNT(*) AS n FROM wp_postmeta WHERE meta_key='_supplier' GROUP BY meta_value ORDER BY n DESC"
+
+    ls -la /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/product-ai-processor/rembg_run.sh
+
+    cat /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/product-ai-processor/rembg_run.sh

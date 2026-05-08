@@ -7,28 +7,33 @@
  * Usage: php realtime-import-cli.php <supplier>
  */
 
-// Get supplier (and optional "resume" flag + cutoff window) from command line.
-// When run via WP-CLI eval-file, arguments are in $args (not $argv).
-$resume          = false;
-$resume_hours    = 24; // default: skip SKUs synced in the last 24h
-$cli_args        = !empty($args) ? $args : array_slice($argv, 1);
+// Get supplier (+ optional flags) from command line. When run via WP-CLI
+// eval-file, arguments are in $args (not $argv).
+$resume       = false;
+$resume_hours = 24;   // default: skip SKUs synced in the last 24h
+$max_images   = null; // null = no limit; integer = max images per product
+$cli_args     = !empty($args) ? $args : array_slice($argv, 1);
 if (empty($cli_args)) {
-    echo "Usage: wp eval-file realtime-import-cli.php <supplier> [resume [<hours>h]]\n";
-    echo "       resume       = skip the Python-AI wait and import directly from existing enhanced.xml\n";
-    echo "       <hours>h     = window for already-synced SKUs to skip (default 24h, e.g. 6h, 12h)\n";
+    echo "Usage: wp eval-file realtime-import-cli.php <supplier> [resume] [<hours>h] [images=N]\n";
+    echo "       resume    = skip Python-AI wait and import from existing enhanced.xml\n";
+    echo "       <hours>h  = window for already-synced SKUs to skip (default 24h, e.g. 6h, 12h)\n";
+    echo "       images=N  = process at most N images per product (e.g. images=1 → only featured)\n";
     exit(1);
 }
 $supplier = $cli_args[0];
-if (!empty($cli_args[1]) && strtolower((string) $cli_args[1]) === 'resume') {
-    $resume = true;
-    if (!empty($cli_args[2])) {
-        $window_arg = strtolower(trim((string) $cli_args[2]));
-        if (preg_match('/^(\d+)\s*h?$/', $window_arg, $m)) {
-            $resume_hours = max(1, (int) $m[1]);
-        } else {
-            echo "Invalid resume window: '{$cli_args[2]}'. Expected an integer like '6', '12h', '24'.\n";
-            exit(1);
-        }
+foreach (array_slice($cli_args, 1) as $arg) {
+    $a = strtolower(trim((string) $arg));
+    if ($a === '') continue;
+    if ($a === 'resume') {
+        $resume = true;
+    } elseif (preg_match('/^(\d+)\s*h$/', $a, $m)) {
+        $resume_hours = max(1, (int) $m[1]);
+    } elseif (preg_match('/^(?:images?|imgs|max-images)\s*=\s*(\d+)$/', $a, $m)) {
+        $max_images = max(0, (int) $m[1]);
+    } else {
+        echo "Unknown argument: '{$arg}'.\n";
+        echo "Usage: wp eval-file realtime-import-cli.php <supplier> [resume] [<hours>h] [images=N]\n";
+        exit(1);
     }
 }
 
@@ -93,6 +98,13 @@ if ($resume) {
 
 // Create realtime importer
 $importer = new \App\Importers\RealtimeImporter();
+
+// Apply image limit if requested. Skips downloading/rembg/sideloading images
+// beyond the Nth, drastically cutting per-product time when N is small.
+if ($max_images !== null) {
+    $importer->setMaxImages($max_images);
+    error_log("RealtimeImporter CLI: Per-product image cap set to {$max_images}.");
+}
 
 // In resume mode, skip SKUs already synced within the last `$resume_hours` so
 // we don't re-download images and re-run rembg for items the previous run

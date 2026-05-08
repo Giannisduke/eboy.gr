@@ -33,9 +33,20 @@ class B2BMarktParser extends AbstractParser {
 
     public function parseProducts() {
         $this->loadXML();
-        $products = [];
+        $products       = [];
+        $skipped_nostock = 0;
 
         foreach ($this->getProductNodes() as $productNode) {
+            // Strict skip: any product whose raw <Stock> is < 1 is not imported.
+            // Reading the tag directly (not the parsed stock_status) so that the
+            // availability-text fallback in parseStockStatus() doesn't keep
+            // out-of-stock items alive. This saves ~70s/product on import.
+            $raw_stock = (float) str_replace(',', '.', (string) $productNode->Stock);
+            if ($raw_stock < 1) {
+                $skipped_nostock++;
+                continue;
+            }
+
             try {
                 $product = $this->parseProduct($productNode);
                 if ($product->validate() === true) {
@@ -44,6 +55,10 @@ class B2BMarktParser extends AbstractParser {
             } catch (\Exception $e) {
                 error_log("B2BMarkt Parser Error: " . $e->getMessage());
             }
+        }
+
+        if ($skipped_nostock > 0) {
+            error_log("B2BMarktParser: Skipped {$skipped_nostock} products with Stock < 1.");
         }
 
         return $products;

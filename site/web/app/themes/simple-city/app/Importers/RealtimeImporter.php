@@ -33,6 +33,14 @@ class RealtimeImporter {
     }
 
     /**
+     * Cap the number of images sideloaded per product. Proxies to ProductSync.
+     * Pass null to remove the cap (default behaviour: import all images).
+     */
+    public function setMaxImages(?int $max): void {
+        $this->sync->setMaxImages($max);
+    }
+
+    /**
      * Find SKUs for a supplier whose `_last_synced` meta is at or after a given
      * timestamp. Used by `resume` mode to skip recently-imported products.
      *
