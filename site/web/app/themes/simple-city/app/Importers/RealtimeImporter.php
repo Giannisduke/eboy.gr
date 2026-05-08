@@ -24,6 +24,39 @@ class RealtimeImporter {
     }
 
     /**
+     * Seed the processed-SKUs list so the next watchAndImport() run skips
+     * those products. Used by `resume` mode to avoid re-importing items that
+     * a previous run already finished.
+     */
+    public function seedProcessedSkus(array $skus): void {
+        $this->processed_skus = array_values(array_unique(array_merge($this->processed_skus, $skus)));
+    }
+
+    /**
+     * Find SKUs for a supplier whose `_last_synced` meta is at or after a given
+     * timestamp. Used by `resume` mode to skip recently-imported products.
+     *
+     * @param string $supplier  Supplier slug, e.g. "B2BMarkt"
+     * @param int    $since_ts  Unix timestamp; SKUs synced ≥ this are returned
+     * @return string[]         SKU strings
+     */
+    public function findRecentlySyncedSkus(string $supplier, int $since_ts): array {
+        global $wpdb;
+        $since_mysql = date('Y-m-d H:i:s', $since_ts);
+        $rows = $wpdb->get_col($wpdb->prepare(
+            "SELECT pm_sku.meta_value
+             FROM {$wpdb->posts} p
+             INNER JOIN {$wpdb->postmeta} pm_sku   ON p.ID = pm_sku.post_id   AND pm_sku.meta_key   = '_sku'
+             INNER JOIN {$wpdb->postmeta} pm_sup   ON p.ID = pm_sup.post_id   AND pm_sup.meta_key   = '_supplier' AND pm_sup.meta_value = %s
+             INNER JOIN {$wpdb->postmeta} pm_sync  ON p.ID = pm_sync.post_id  AND pm_sync.meta_key  = '_last_synced' AND pm_sync.meta_value >= %s
+             WHERE p.post_type = 'product'",
+            $supplier,
+            $since_mysql
+        ));
+        return array_values(array_filter((array) $rows, fn($s) => $s !== ''));
+    }
+
+    /**
      * Watch for AI-enhanced products and import them in real-time
      *
      * @param string $supplier Supplier name

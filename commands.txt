@@ -184,3 +184,15 @@ wp xml-import sku 05-0766 libertab2b --path=/srv/www/eboy.gr/current/web/wordpre
 wp db query "ALTER TABLE wp_term_taxonomy ADD INDEX IF NOT EXISTS idx_taxonomy_count (taxonomy(20), count);"
 
 wp transient delete --all
+
+
+
+                                                                                                                                   
+  # Default: skip SKUs synced τις τελευταίες 24 ώρες                                                                               
+  wp eval-file web/app/themes/simple-city/scripts/realtime-import-cli.php b2bmarkt resume                                          
+                                                                                                                                   
+  # 12-hour cutoff                                                                                                                 
+  wp eval-file web/app/themes/simple-city/scripts/realtime-import-cli.php b2bmarkt resume 12h                                      
+                                                                                                                                   
+  # 6-hour cutoff                                                                                                                
+  wp eval-file web/app/themes/simple-city/scripts/realtime-import-cli.php b2bmarkt resume 6h
