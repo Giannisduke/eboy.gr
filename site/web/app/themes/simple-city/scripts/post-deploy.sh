@@ -29,4 +29,15 @@ rm -rf "$DEST/product-ai-processor/logs"
 ln -sfn "$SHARED/product-ai-processor/logs" "$DEST/product-ai-processor/logs"
 
 chmod +x "$DEST/product-ai-processor/"*.sh
+
+# Clear stale Acorn cache from previous release. Compiled service paths in
+# /web/app/cache/acorn point at the OLD release directory and produce a fatal
+# error on the first frontend request after deploy. Removing the directory
+# forces Acorn to re-build the cache against the new release paths.
+ACORN_CACHE="$RELEASE/web/app/cache/acorn"
+if [ -d "$ACORN_CACHE" ]; then
+    rm -rf "$ACORN_CACHE"
+    echo "Cleared Acorn cache: $ACORN_CACHE"
+fi
+
 ls -la "$DEST/"

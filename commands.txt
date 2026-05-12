@@ -267,3 +267,12 @@ wp --url=sc-staging.eboy.gr term list product_cat --hide_empty=0 --fields=term_i
 
 
 wp --url=sc-staging.eboy.gr eval-file web/app/themes/simple-city/scripts/recategorize-orphans-cli.php dry-run 2579
+
+
+for f in /srv/www/eboy.gr/current/web/app/themes/simple-city/app/Importers/Parsers/B2BMarktParser.php /srv/www/eboy.gr/current/web/app/themes/simple-city/app/Importers/ProductSync.php /srv/www/eboy.gr/current/web/app/themes/simple-city/app/Importers/RealtimeImporter.php /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/realtime-import-cli.php /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/recategorize-orphans-cli.php do echo "--- $(basename $f)" php -l "$f" 2>&1 | grep -v imagick done 
+
+
+sudo -u web php -r 'echo "error_log: " . ini_get("error_log") . PHP_EOL; echo "log_errors: " . ini_get("log_errors") . PHP_EOL;'
+
+
+grep -rn "WP_DEBUG\|WP_ENVIRONMENT_TYPE" /srv/www/eboy.gr/current/web/wp-config.php /srv/www/eboy.gr/current/config/ /srv/www/eboy.gr/current/.env /srv/www/eboy.gr/shared/.env 2>/dev/null | head -10
