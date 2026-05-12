@@ -244,5 +244,9 @@ nohup wp --url=sc-staging.eboy.gr eval-file /srv/www/eboy.gr/current/web/app/the
 
 
 Όλες οι κατηγορίες
-wp --url=sc-staging.eboy.gr term list product_cat --fields=term_id,name,count --format=tableble
+wp --url=sc-staging.eboy.gr term list product_cat --fields=term_id,name,count --format=table
 
+
+wp --url=sc-staging.eboy.gr term list product_cat --hide_empty=0 --fields=term_id,name,count --format=csv | awk -F',' 'NR>1 && $3==0 {print $1}' > /tmp/empty_cats.txt wc -l /tmp/empty_cats.txt
+
+wp --url=sc-staging.eboy.gr term list product_cat --hide_empty=0 --fields=term_id,name,count --format=csv | awk -F',' 'NR>1 && $3==0 {print $1":"$2}' | head -50
