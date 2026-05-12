@@ -54,6 +54,19 @@ RELEASE=$(readlink /srv/www/eboy.gr/current) && \
   ln -sfn /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/product-ai-processor/logs $RELEASE/web/app/themes/simple-city/scripts/product-ai-processor/logs && \
   ls -la $RELEASE/web/app/themes/simple-city/scripts/
 
+bash ../../srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/post-deploy.sh
+
+# === Δημιουργία post-deploy.sh στο home directory ===
+# Τρέξε ΜΙΑ φορά (paste-safe — κάθε γραμμή <80 chars, χωρίς line continuations).
+# Μετά από κάθε deploy, καλείς μόνο: ~/post-deploy.sh
+cat > ~/post-deploy.sh << 'PDEND' 
+#!/bin/bash set -e RELEASE=$(readlink /srv/www/eboy.gr/current) SHARED=/srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts DEST=$RELEASE/web/app/themes/simple-city/scripts echo "Post-deploy for: $RELEASE" rm -rf "$DEST/xml_files" ln -sfn "$SHARED/xml_files" "$DEST/xml_files" rm -rf "$DEST/product-ai-processor/logs" ln -sfn "$SHARED/product-ai-processor/logs" "$DEST/product-ai-processor/logs" chmod +x "$DEST/product-ai-processor/"*.sh ls -la "$DEST/" 
+PDEND
+chmod +x ~/post-deploy.sh
+cat ~/post-deploy.sh
+
+# === Από εδώ και πέρα, μετά από κάθε deploy ===
+~/post-deploy.sh
 
 wp --url=https://sc-staging.eboy.gr term list product_tag --fields=term_id,name,slug,count,description --format=csv > `/Users/eboy/sites/eboy.gr`/product_tags.csv
 
@@ -251,14 +264,3 @@ wp --url=sc-staging.eboy.gr term list product_cat --hide_empty=0 --fields=term_i
 
 wp --url=sc-staging.eboy.gr term list product_cat --hide_empty=0 --fields=term_id,name,count --format=csv | awk -F',' 'NR>1 && $3==0 {print $1":"$2}' | head -50
 
-# === Post-deploy: τρέξε ΜΙΑ ΚΟΝΤΗ εντολή μετά από κάθε deploy ===
-# Το script είναι μέρος του repo (scripts/post-deploy.sh), οπότε deploy-άρεται
-# αυτόματα μαζί με τον υπόλοιπο κώδικα.
-
-bash /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/post-deploy.sh
-
-# Optional: αν θες να το καλείς ως 'post-deploy' σκέτο, βάλε στο ~/.bashrc:
-# alias post-deploy='bash /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/post-deploy.sh'
-
-# === Από εδώ και πέρα, μετά από κάθε deploy ===
-~/post-deploy.sh
