@@ -34,9 +34,10 @@ chmod +x "$DEST/product-ai-processor/"*.sh
 # /web/app/cache/acorn point at the OLD release directory and produce a fatal
 # error on the first frontend request after deploy. Removing the directory
 # forces Acorn to re-build the cache against the new release paths.
+# Cache files are written by php-fpm (user `web`), so we need sudo to wipe them.
 ACORN_CACHE="$RELEASE/web/app/cache/acorn"
 if [ -d "$ACORN_CACHE" ]; then
-    rm -rf "$ACORN_CACHE"
+    sudo rm -rf "$ACORN_CACHE"
     echo "Cleared Acorn cache: $ACORN_CACHE"
 fi
 

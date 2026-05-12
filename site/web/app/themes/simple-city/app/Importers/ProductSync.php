@@ -368,6 +368,20 @@ class ProductSync {
         if (!empty($product->tech_specs)) {
             $wc_product->update_meta_data('_tech_specs', $product->tech_specs);
         }
+
+        // Shipping packs: stored as meta, not as WC dimensions, because they
+        // describe the packaging (number of cartons + size per carton), not
+        // the open product size.
+        if (!empty($product->shipping_packs)) {
+            $wc_product->update_meta_data('_shipping_boxes', count($product->shipping_packs));
+            $wc_product->update_meta_data(
+                '_shipping_packs',
+                wp_json_encode($product->shipping_packs, JSON_UNESCAPED_UNICODE)
+            );
+        } else {
+            $wc_product->delete_meta_data('_shipping_boxes');
+            $wc_product->delete_meta_data('_shipping_packs');
+        }
     }
 
     /**

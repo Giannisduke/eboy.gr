@@ -157,6 +157,14 @@ class B2BMarktParser extends AbstractParser {
         // Weight
         $product->weight = $this->parsePrice($this->getNodeValue($node->Weight));
 
+        // Shipping packs: per-box data from <Packs><Pack>. These describe how
+        // the product ships (one or more cartons), NOT the open product size,
+        // so they go into meta rather than the WC dimensions fields. The
+        // sibling <DimensionsData> node is intentionally ignored — it carries
+        // the same packaging info as an HTML table and we already have the
+        // structured form here.
+        $product->shipping_packs = $this->parseShippingPacks($node);
+
         // Brand: extract from filters if available, otherwise use supplier name
         if (empty($product->manufacturer)) {
             $product->manufacturer = 'B2BMarkt';
@@ -272,47 +280,81 @@ class B2BMarktParser extends AbstractParser {
         // because it often mentions the diameter of unrelated parts (e.g. tubes).
         $sources = [$dimBlock, $title, $filterDs];
 
+        $result = null;
+
+        // Pass 0: labeled diameter in metres ("Φ3 μέτρα ... Ύψος: 2,40μ") in the
+        // dimensions block. Runs first because the generic Pass-1 regex matches
+        // component specs that appear later in the same block (e.g. "Φ48x1,2mm"
+        // for an aluminium pole) and would otherwise win. parseLabeledDiameter
+        // requires explicit metre units, so it safely skips mm/cm specs.
+        $result = $this->parseLabeledDiameter($dimBlock);
+
+        // Pass 0.5: labelled "Διάσταση: N×N(×N)? unit" line. Wins over generic
+        // passes for the same reason — the labelled line is the product's own
+        // declaration, while loose triples later in the same block may belong
+        // to a component (radius/pole/base).
+        if ($result === null) {
+            $result = $this->findLabeledDimsLine($dimBlock);
+        }
+
         // Pass 1: 3-value-equivalent matches (triple OR diameter+height).
         // Within each source we pick whichever pattern STARTS EARLIEST so that
         // a primary "Διαστάσεις: Φ152x74" wins over a later "Κλειστό 152x152x6",
         // while a primary triple "70x70x72" still wins over an incidental
         // "Φ25x0.8mm" tube spec that comes after it.
-        foreach ($sources as $text) {
-            if ($text === '') continue;
-            $best = $this->earliest([
-                $this->findTripleWithPos($text),
-                $this->findDiameterHeightWithPos($text),
-            ]);
-            if ($best !== null) {
-                return $best['result'];
+        if ($result === null) {
+            foreach ($sources as $text) {
+                if ($text === '') continue;
+                $best = $this->earliest([
+                    $this->findTripleWithPos($text),
+                    $this->findDiameterHeightWithPos($text),
+                ]);
+                if ($best !== null) {
+                    $result = $best['result'];
+                    break;
+                }
             }
         }
 
         // Pass 2: 2-value matches — a pair OR a diameter alone (width=length=Ø).
-        foreach ($sources as $text) {
-            if ($text === '') continue;
-            $best = $this->earliest([
-                $this->findPairWithPos($text),
-                $this->findDiameterAloneWithPos($text),
-            ]);
-            if ($best !== null) {
-                return $best['result'];
+        if ($result === null) {
+            foreach ($sources as $text) {
+                if ($text === '') continue;
+                $best = $this->earliest([
+                    $this->findPairWithPos($text),
+                    $this->findDiameterAloneWithPos($text),
+                ]);
+                if ($best !== null) {
+                    $result = $best['result'];
+                    break;
+                }
             }
         }
 
-        // Final fallback: labeled "Μήκος / Πλάτος / Ύψος" patterns in description.
-        $labeled = $this->parseLabeledDims($desc);
-        if (is_array($labeled)) {
-            return $this->dimsToWLH($labeled);
+        // Fallback: labeled "Μήκος / Πλάτος / Ύψος" patterns in description.
+        if ($result === null) {
+            $labeled = $this->parseLabeledDims($desc);
+            if (is_array($labeled)) {
+                $result = $this->dimsToWLH($labeled);
+            }
         }
 
         // Last resort: labeled diameter "διάμετρο X μέτρα" in description (umbrellas).
-        $labeledDia = $this->parseLabeledDiameter($desc);
-        if ($labeledDia !== null) {
-            return $labeledDia;
+        if ($result === null) {
+            $result = $this->parseLabeledDiameter($desc);
         }
 
-        return null;
+        // Post-processing: if we have width/length but no height (typical of
+        // products whose dimensions come from a 2-value title), try to recover
+        // an overall height from the description ("ΣΥΝΟΛΙΚΟ ΥΨΟΣ ΟΜΠΡΕΛΑΣ: N εκ.").
+        if ($result !== null && empty($result['height'])) {
+            $height = $this->parseTotalHeight($desc);
+            if ($height !== null) {
+                $result['height'] = $height;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -350,7 +392,7 @@ class B2BMarktParser extends AbstractParser {
         }
 
         $height = null;
-        if (preg_match('/ύψος\s+(\d+(?:[.,]\d+)?)\s*(μέτρα|μ\.?)/iu', $text, $m)) {
+        if (preg_match('/ύψος[\s:]+(\d+(?:[.,]\d+)?)\s*(μέτρα|μ\.?)/iu', $text, $m)) {
             $height = $this->convertOneToCm($this->toFloat($m[1]), $m[2] ?? '');
         }
 
@@ -359,9 +401,11 @@ class B2BMarktParser extends AbstractParser {
 
     /**
      * Convert a single value to centimetres based on its captured unit suffix.
+     * Unit comparison is lowercased so "Μ" (e.g. "Διάσταση: 4x4 Μ") is
+     * recognised the same as "μ".
      */
     private function convertOneToCm(float $v, string $unit): float {
-        $u = trim(rtrim($unit, '.'));
+        $u = mb_strtolower(trim(rtrim($unit, '.')), 'UTF-8');
         if ($u === 'μ' || $u === 'μέτρα' || $u === 'm') return $v * 100;
         if ($u === 'mm') return $v / 10;
         return $v;
@@ -379,8 +423,13 @@ class B2BMarktParser extends AbstractParser {
         if ($text === '') {
             return '';
         }
-        $offset = mb_stripos($text, 'Διαστ', 0, 'UTF-8');
-        return $offset !== false ? mb_substr($text, $offset, null, 'UTF-8') : '';
+        // mb_stripos is case-insensitive but NOT tonos-insensitive — "Διάσταση"
+        // (with tonos on alpha) wouldn't anchor against the literal "Διαστ".
+        // Use a regex that accepts both α/ά variants for the alpha slot.
+        if (preg_match('/[Δδ][ιΙ][αάΑΆ][σΣ][τΤ]/u', $text, $m, PREG_OFFSET_CAPTURE)) {
+            return substr($text, $m[0][1]);
+        }
+        return '';
     }
 
     /**
@@ -422,6 +471,47 @@ class B2BMarktParser extends AbstractParser {
             }
         }
         return $best;
+    }
+
+    /**
+     * Find a labelled "Διάσταση(...): N×N(×N)? unit?" declaration. Preferred
+     * over the generic Pass-1 regex because that one happily picks up component
+     * triples (e.g. a tube spec "2,4χ1,4χ40εκ" inside a Radius section) when
+     * the product's own labelled line is only a 2-value pair. The label can be
+     * "Διάσταση", "Διαστάσεις", or any tonos/case variant; trailing Greek
+     * letters between the label root and the colon (e.g. "Διαστάσεις σκίαστρου")
+     * are also accepted.
+     */
+    private function findLabeledDimsLine(string $text): ?array {
+        if ($text === '') return null;
+        // Allow Greek qualifier words between the label root and the colon,
+        // e.g. "Διαστ κρεβατιού: 186x80 εκ." or "Διαστάσεις σκίαστρου: 2,38x2,2".
+        // Capped at 30 chars so a runaway match can't span paragraphs.
+        // Optional [Φφ] flag right after the label captures diameter+height
+        // patterns like "Διαστάσεις: Φ152x74 εκ." (diameter 152, height 74).
+        $re = '/[Δδ][ιΙ][αάΑΆ][σΣ][τΤ][\p{Greek}\s]{0,30}:?\s*([Φφ])?\s*'
+            . self::RE_NUM . '\s*' . self::RE_SEP . '\s*'
+            . self::RE_NUM . '(?:\s*' . self::RE_SEP . '\s*' . self::RE_NUM . ')?'
+            . self::RE_UNIT . '/iu';
+        if (!preg_match($re, $text, $m)) {
+            return null;
+        }
+        $isDiameter = !empty($m[1]);
+        $unit = $m[5] ?? '';
+        if ($isDiameter) {
+            // "Φ N × M" → diameter (=width=length) + height. A third number,
+            // if present, is ignored (B2BMarkt doesn't use Φ-prefixed triples).
+            $d = $this->convertOneToCm($this->toFloat($m[2]), $unit);
+            $h = $this->convertOneToCm($this->toFloat($m[3]), $unit);
+            return ['width' => $d, 'length' => $d, 'height' => $h];
+        }
+        if (!empty($m[4])) {
+            $vals = [$this->toFloat($m[2]), $this->toFloat($m[3]), $this->toFloat($m[4])];
+        } else {
+            $vals = [$this->toFloat($m[2]), $this->toFloat($m[3])];
+        }
+        $vals = $this->applyUnit($vals, $unit);
+        return $this->dimsToWLH($vals);
     }
 
     /** Find first 3-value triple in $text. */
@@ -483,9 +573,10 @@ class B2BMarktParser extends AbstractParser {
 
     /**
      * Normalize values to centimetres based on a captured unit string.
+     * Unit comparison is lowercased so "Μ" / "ΜΈΤΡΑ" are treated as metres.
      */
     private function applyUnit(array $vals, string $unit): array {
-        $u = trim(rtrim($unit, '.'));
+        $u = mb_strtolower(trim(rtrim($unit, '.')), 'UTF-8');
         if ($u === 'μ' || $u === 'μέτρα' || $u === 'm') {
             return array_map(fn($v) => $v * 100, $vals);
         }
@@ -505,10 +596,13 @@ class B2BMarktParser extends AbstractParser {
         if ($text === '') {
             return null;
         }
+        // Character classes cover both tonos and non-tonos vowels: Unicode case
+        // folding (the `i` flag) handles upper/lower for the same letter, but
+        // does NOT bridge "ή" ↔ "η" or "Ύ" ↔ "Υ" — those are distinct chars.
         $patterns = [
-            'length' => '/Μήκος[\s:]*\(?\s*(\d+(?:[.,]\d+)?)\s*(μ|εκ|cm|mm)?/u',
-            'width'  => '/Πλάτος[\s:]*\(?\s*(\d+(?:[.,]\d+)?)\s*(μ|εκ|cm|mm)?/u',
-            'height' => '/Ύψος[\s:]*\(?\s*(\d+(?:[.,]\d+)?)\s*(μ|εκ|cm|mm)?/u',
+            'length' => '/Μ[ήη]κος[\s:]*\(?\s*(\d+(?:[.,]\d+)?)\s*(μ|εκ|cm|mm)?/iu',
+            'width'  => '/Π[λΛ][άα]τος[\s:]*\(?\s*(\d+(?:[.,]\d+)?)\s*(μ|εκ|cm|mm)?/iu',
+            'height' => '/[ΎΥ]ψος[\s:]*\(?\s*(\d+(?:[.,]\d+)?)\s*(μ|εκ|cm|mm)?/iu',
         ];
         $vals = [];
         foreach ($patterns as $key => $regex) {
@@ -550,5 +644,79 @@ class B2BMarktParser extends AbstractParser {
 
     private function toFloat(string $raw): float {
         return (float) str_replace(',', '.', $raw);
+    }
+
+    /**
+     * Find an overall/total height when the primary dimension match left
+     * height empty (e.g. when W×L came from the title alone). Two tiers:
+     *   1) "ΣΥΝΟΛΙΚ- ΥΨΟΣ [whatever]: N εκ./μ" — preferred, used to disambiguate
+     *      from component specs like "ΥΨΟΣ ΣΤΥΛΟΥ: 2,50μ".
+     *   2) Strict "ΥΨΟΣ: N εκ./μ" — only when no intervening Greek words
+     *      appear between the label and the value.
+     */
+    private function parseTotalHeight(string $text): ?float {
+        if ($text === '') {
+            return null;
+        }
+        $patterns = [
+            // Tier 1: requires a "συνολικ-" qualifier somewhere before "Ύψος".
+            '/συνολικ\S*\s+[ΎΥ]ψος[\p{Greek}\s]*?[\s:]+(\d+(?:[.,]\d+)?)' . self::RE_UNIT . '/iu',
+            // Tier 2: strict label, no extra words between label and number.
+            '/[ΎΥ]ψος[\s:]+(\d+(?:[.,]\d+)?)' . self::RE_UNIT . '/iu',
+            // Tier 3: one Greek qualifier word allowed, e.g. "Ύψος στρώματος: 19
+            // εκ." or "Ύψος ομπρέλας: 3.90μ". Best-effort — may pick up a
+            // component height (e.g. "Ύψος μπράτσων") when the product has no
+            // proper product-level label.
+            '/[ΎΥ]ψος\s+\p{Greek}+[\s:]+(\d+(?:[.,]\d+)?)' . self::RE_UNIT . '/iu',
+        ];
+        foreach ($patterns as $re) {
+            if (preg_match($re, $text, $m)) {
+                $value = $this->toFloat($m[1]);
+                $unit  = $m[2] ?? '';
+                $cm    = $this->convertOneToCm($value, $unit);
+                // Known B2BMarkt typo: "ύψος 2,50 εκ." (or "cm") where the
+                // supplier meant 2,50 μ. The literal reading gives a sub-10cm
+                // height for what is obviously a tall product, so auto-correct
+                // by treating the value as if it were in metres — 2,50 → 250
+                // (cm). Other sub-10cm matches (mm or no unit) are skipped.
+                if ($cm < 10) {
+                    $unitLower = mb_strtolower(trim(rtrim($unit, '.')), 'UTF-8');
+                    if ($unitLower === 'εκ' || $unitLower === 'cm') {
+                        return $value * 100;
+                    }
+                    continue;
+                }
+                return $cm;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Parse <Packs><Pack> entries into an array of pack records.
+     * DimX/Y/Z are in metres in the feed; we store cm for consistency with the
+     * rest of the dimensions in the store. Weight stays in kg, volume in m³.
+     */
+    private function parseShippingPacks($node): array {
+        $packs = [];
+        if (!isset($node->Packs->Pack)) {
+            return $packs;
+        }
+        foreach ($node->Packs->Pack as $pack) {
+            $length_m = $this->toFloat((string) $pack->DimX);
+            $width_m  = $this->toFloat((string) $pack->DimY);
+            $height_m = $this->toFloat((string) $pack->DimZ);
+            $packs[] = [
+                'description'     => (string) $pack->Description,
+                'length_cm'       => $length_m > 0 ? round($length_m * 100, 2) : null,
+                'width_cm'        => $width_m  > 0 ? round($width_m  * 100, 2) : null,
+                'height_cm'       => $height_m > 0 ? round($height_m * 100, 2) : null,
+                'gross_weight_kg' => $this->toFloat((string) $pack->GrossWeight) ?: null,
+                'net_weight_kg'   => $this->toFloat((string) $pack->NetsWeight)  ?: null,
+                'volume_m3'       => $this->toFloat((string) $pack->MainVolume)  ?: null,
+                'qty'             => (int) ($pack->Qty ?? 1) ?: 1,
+            ];
+        }
+        return $packs;
     }
 }

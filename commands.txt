@@ -54,7 +54,7 @@ RELEASE=$(readlink /srv/www/eboy.gr/current) && \
   ln -sfn /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/product-ai-processor/logs $RELEASE/web/app/themes/simple-city/scripts/product-ai-processor/logs && \
   ls -la $RELEASE/web/app/themes/simple-city/scripts/
 
-bash /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/post-deploy.sh
+sudo bash /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/post-deploy.sh
 
 # === Δημιουργία post-deploy.sh στο home directory ===
 # Τρέξε ΜΙΑ φορά (paste-safe — κάθε γραμμή <80 chars, χωρίς line continuations).

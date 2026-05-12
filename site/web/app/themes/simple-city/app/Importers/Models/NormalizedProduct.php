@@ -44,6 +44,12 @@ class NormalizedProduct {
     public $height;
     public $dimensions_text;
 
+    // Shipping/packaging packs (per-box data, NOT product size).
+    // Array of associative arrays:
+    //   ['description', 'length_cm', 'width_cm', 'height_cm',
+    //    'gross_weight_kg', 'net_weight_kg', 'volume_m3', 'qty']
+    public $shipping_packs = [];
+
     // Additional
     public $manufacturer;
     public $material;
@@ -63,6 +69,7 @@ class NormalizedProduct {
         $this->gallery_image_urls = [];
         $this->related_skus = [];
         $this->specifications = [];
+        $this->shipping_packs = [];
     }
 
     /**
