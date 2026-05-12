@@ -151,3 +151,4 @@ foreach ($term_ids as $orphan_term_id) {
 
 $mode = $dry_run ? '[DRY-RUN] ' : '';
 echo "\n{$mode}Done. Moved: {$total_moved}, Failed: {$total_failed}, Skipped: {$total_skipped}\n";
+
