@@ -6,6 +6,7 @@
 namespace App\Importers\Parsers;
 
 use App\Importers\Models\NormalizedProduct;
+use App\Importers\ProductSync;
 
 class B2BMarktParser extends AbstractParser {
     protected $supplier_name = 'B2BMarkt';
@@ -129,6 +130,10 @@ class B2BMarktParser extends AbstractParser {
             // Filter groups that must NOT become product attributes — their data
             // is consumed elsewhere (dimensions go into ύψος/πλάτος/μήκος globals).
             $skipGroups = ['Διαστάσεις'];
+            // Sub-material groups ("Υλικό τραπεζιού", "Υλικό καρέκλας", …) are
+            // folded into a single canonical "υλικό" so they land in the
+            // pa_yliko global taxonomy instead of becoming per-part local attrs.
+            $ylikoValues = [];
 
             foreach ($node->Filters->Filter as $filter) {
                 $group = $this->getNodeValue($filter->Group);
@@ -136,23 +141,86 @@ class B2BMarktParser extends AbstractParser {
                 if (in_array($group, $skipGroups, true)) {
                     continue;
                 }
-                if (!empty($group) && !empty($value)) {
+                if (empty($group) || empty($value)) {
+                    continue;
+                }
+                if (mb_strpos($group, 'Υλικό', 0, 'UTF-8') === 0) {
+                    $ylikoValues[] = $value;
+                    continue;
+                }
+                $product->attributes[] = [
+                    'name' => $attributeRenames[$group] ?? $group,
+                    'value' => $value
+                ];
+            }
+
+            if (!empty($ylikoValues)) {
+                $product->attributes[] = [
+                    'name'  => 'υλικό',
+                    'value' => implode(', ', array_unique($ylikoValues)),
+                ];
+            }
+        }
+
+        // Fallback when the feed omits the Απόχρωση filter (either via
+        // <Filters xsi:nil="true"/> or simply not including that group): scan
+        // the <Name> for canonical color keywords. Description is intentionally
+        // skipped — it often mentions material/base colors that aren't the
+        // product's primary color (e.g. "βάση από φυσικό γρανίτη").
+        $hasColor = false;
+        foreach ($product->attributes as $existing) {
+            if (mb_strtolower($existing['name'], 'UTF-8') === 'χρώμα') {
+                $hasColor = true;
+                break;
+            }
+        }
+        if (!$hasColor) {
+            $name = $this->getNodeValue($node->Name);
+            if ($name !== '') {
+                $detected = ProductSync::detectColors($name);
+                if (!empty($detected)) {
                     $product->attributes[] = [
-                        'name' => $attributeRenames[$group] ?? $group,
-                        'value' => $value
+                        'name'  => 'χρώμα',
+                        'value' => implode(' ', $detected),
                     ];
                 }
             }
-
-            // Ensure "υλικό" is always the first attribute.
-            usort($product->attributes, function (array $a, array $b): int {
-                $aIsYliko = mb_strtolower($a['name']) === 'υλικό';
-                $bIsYliko = mb_strtolower($b['name']) === 'υλικό';
-                if ($aIsYliko && !$bIsYliko) return -1;
-                if (!$aIsYliko && $bIsYliko) return 1;
-                return 0;
-            });
         }
+
+        // Fallback when the feed omits a Υλικό-style group entirely: scan the
+        // <Name> for canonical material keywords. ~31% of B2BMarkt in-stock
+        // products have no Υλικό filter (Στόμα <Filters xsi:nil="true"/> or
+        // filters that only carry Απόχρωση/Είδος/Τύπος). Description is
+        // intentionally skipped — it often mentions secondary/base materials
+        // that aren't the product's primary material.
+        $hasMaterial = false;
+        foreach ($product->attributes as $existing) {
+            if (mb_strtolower($existing['name'], 'UTF-8') === 'υλικό') {
+                $hasMaterial = true;
+                break;
+            }
+        }
+        if (!$hasMaterial) {
+            $name = $this->getNodeValue($node->Name);
+            if ($name !== '') {
+                $detected = ProductSync::detectMaterials($name);
+                if (!empty($detected)) {
+                    $product->attributes[] = [
+                        'name'  => 'υλικό',
+                        'value' => implode(', ', $detected),
+                    ];
+                }
+            }
+        }
+
+        // Ensure "υλικό" is always the first attribute (after all fallbacks).
+        usort($product->attributes, function (array $a, array $b): int {
+            $aIsYliko = mb_strtolower($a['name'], 'UTF-8') === 'υλικό';
+            $bIsYliko = mb_strtolower($b['name'], 'UTF-8') === 'υλικό';
+            if ($aIsYliko && !$bIsYliko) return -1;
+            if (!$aIsYliko && $bIsYliko) return 1;
+            return 0;
+        });
 
         // Weight
         $product->weight = $this->parsePrice($this->getNodeValue($node->Weight));
