@@ -79,8 +79,10 @@ foreach ($term_ids as $orphan_term_id) {
     foreach ($product_ids as $pid) {
         $title = get_the_title($pid);
 
+        // Send stderr (Python logs) to /tmp/recategorize-orphans.log so it doesn't
+        // pollute stdout where the JSON payload lives. stdout-only is parsed below.
         $cmd = sprintf(
-            'sh %s %s %s 2>&1',
+            'sh %s %s %s 2>>/tmp/recategorize-orphans.log',
             escapeshellarg($wrapper),
             escapeshellarg($orphan_name),
             escapeshellarg($title)

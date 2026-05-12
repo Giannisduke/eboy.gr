@@ -54,7 +54,7 @@ RELEASE=$(readlink /srv/www/eboy.gr/current) && \
   ln -sfn /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/product-ai-processor/logs $RELEASE/web/app/themes/simple-city/scripts/product-ai-processor/logs && \
   ls -la $RELEASE/web/app/themes/simple-city/scripts/
 
-bash ../../srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/post-deploy.sh
+bash /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/post-deploy.sh
 
 # === Δημιουργία post-deploy.sh στο home directory ===
 # Τρέξε ΜΙΑ φορά (paste-safe — κάθε γραμμή <80 chars, χωρίς line continuations).
@@ -264,3 +264,6 @@ wp --url=sc-staging.eboy.gr term list product_cat --hide_empty=0 --fields=term_i
 
 wp --url=sc-staging.eboy.gr term list product_cat --hide_empty=0 --fields=term_id,name,count --format=csv | awk -F',' 'NR>1 && $3==0 {print $1":"$2}' | head -50
 
+
+
+wp --url=sc-staging.eboy.gr eval-file web/app/themes/simple-city/scripts/recategorize-orphans-cli.php dry-run 2579

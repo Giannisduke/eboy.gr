@@ -47,6 +47,7 @@ def main() -> int:
         categories = yaml.safe_load(f)
 
     # Read env (REMBG/OLLAMA host etc.) from .env files — same pattern as rembg_run.sh.
+    import os
     for env_file in [SCRIPT_DIR / ".env", SCRIPT_DIR / ".env.local"]:
         if env_file.exists():
             for line in env_file.read_text(encoding="utf-8").splitlines():
@@ -54,12 +55,13 @@ def main() -> int:
                 if not line or line.startswith("#") or "=" not in line:
                     continue
                 key, _, value = line.partition("=")
-                # Don't overwrite already-set env vars.
-                import os
                 os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
 
-    # Build AI client and mapper
-    ai = OllamaClient()
+    # Build AI client with the model from .env (OllamaClient hard-codes a
+    # default mistral model that isn't installed on the user's Ollama server).
+    model = os.environ.get("OLLAMA_MODEL", "ilsp/Llama-Krikri-8B-Instruct:latest")
+    port  = int(os.environ.get("OLLAMA_PORT", "11434"))
+    ai = OllamaClient(model=model, port=port)
     mapper = CategoryMapper(ai, prompts, categories)
 
     try:
