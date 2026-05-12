@@ -189,7 +189,7 @@ wp transient delete --all
 
                                                                                                                                    
   # Default: skip SKUs synced τις τελευταίες 24 ώρες                                                                               
-  wp eval-file web/app/themes/simple-city/scripts/realtime-import-cli.php b2bmarkt resume                                          
+  wp eval-file web/app/themes/simple-city/scripts/realtime-import-cli.php b2bmarkt resume images=1                                          
                                                                                                                                    
   # 12-hour cutoff                                                                                                                 
   wp eval-file web/app/themes/simple-city/scripts/realtime-import-cli.php b2bmarkt resume 12h                                      
@@ -228,3 +228,21 @@ curl -s -o /dev/null -w "rembg HTTP: %{http_code}, time: %{time_total}s\n" http:
     ls -la /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/product-ai-processor/rembg_run.sh
 
     cat /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/product-ai-processor/rembg_run.sh
+
+
+    nohup wp eval-file web/app/themes/simple-city/scripts/realtime-import-cli.php b2bmarkt resume 12h images=1 > web/app/themes/simple-city/scripts/xml_files/realtime-import.log 2>&1 < /dev/null & disown
+
+
+    grep -c "raw_stock\|skipped_nostock" /srv/www/eboy.gr/current/web/app/themes/simple-city/app/Importers/Parsers/B2BMarktParser.php
+
+
+echo "=== ProductSync image cap ==="grep -c "max_images\|setMaxImages" /srv/www/eboy.gr/current/web/app/themes/simple-city/app/Importers/ProductSync.php
+
+
+
+nohup wp --url=sc-staging.eboy.gr eval-file /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/realtime-import-cli.php b2bmarkt resume 12h images=1 > /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/realtime-import.log 2>&1 < /dev/null & disown
+
+
+Όλες οι κατηγορίες
+wp --url=sc-staging.eboy.gr term list product_cat --fields=term_id,name,count --format=tableble
+

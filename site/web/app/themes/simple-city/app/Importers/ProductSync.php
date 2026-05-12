@@ -706,48 +706,65 @@ class ProductSync {
     }
 
     /**
-     * Set product categories
+     * The only categories products are allowed to land in. Must match
+     * `scripts/product-ai-processor/config/categories.yaml`.
+     * Any other name produced by the AI or supplier feed is rejected here so
+     * the WooCommerce `product_cat` taxonomy stays clean.
+     */
+    private const ALLOWED_CATEGORIES = [
+        'Σαλόνι & Καθιστικό',
+        'Υπνοδωμάτιο',
+        'Γραφείο',
+        'Αποθήκευση & Οργάνωση',
+        'Διακόσμηση',
+        'Κήπος & Εξωτερικός Χώρος',
+        'Μπάνιο',
+        'Κουζίνα',
+    ];
+
+    /**
+     * Set product categories.
+     * Only the AI-mapped `woo_category` is honoured, and only if it is in the
+     * whitelist. Raw supplier categories (e.g. "Εσωτερικός χώρος", "Πολυθρόνες")
+     * are intentionally NOT used as fallback — they pollute the taxonomy with
+     * names that exist on the supplier side but are not part of our 8-category
+     * scheme. If the AI didn't produce a valid category, the product is left
+     * uncategorised and logged for review.
      */
     private function setProductCategories($product_id, NormalizedProduct $product) {
-        $category_ids = [];
+        if (empty($product->woo_category)) {
+            error_log("ProductSync: No AI woo_category for SKU {$product->sku} — leaving uncategorised.");
+            $this->maybeAssignTags($product_id, $product);
+            return;
+        }
 
-        // Priority 1: Use AI-enhanced WooCommerce category if available
-        if (!empty($product->woo_category)) {
-            $term = get_term_by('name', $product->woo_category, 'product_cat');
+        if (!in_array($product->woo_category, self::ALLOWED_CATEGORIES, true)) {
+            error_log("ProductSync: woo_category '{$product->woo_category}' for SKU {$product->sku} is not in the whitelist — skipping.");
+            $this->maybeAssignTags($product_id, $product);
+            return;
+        }
 
-            if (!$term) {
-                // Create AI category
-                $new_term = wp_insert_term($product->woo_category, 'product_cat');
-                if (!is_wp_error($new_term)) {
-                    $category_ids[] = $new_term['term_id'];
-                }
-            } else {
-                $category_ids[] = $term->term_id;
+        $term = get_term_by('name', $product->woo_category, 'product_cat');
+        if (!$term) {
+            $new_term = wp_insert_term($product->woo_category, 'product_cat');
+            if (is_wp_error($new_term)) {
+                error_log("ProductSync: Failed to create category '{$product->woo_category}': " . $new_term->get_error_message());
+                $this->maybeAssignTags($product_id, $product);
+                return;
             }
-        }
-        // Priority 2: Fallback to supplier categories
-        elseif (!empty($product->categories)) {
-            foreach ($product->categories as $cat) {
-                $cat_name = $cat['name'];
-                $term = get_term_by('name', $cat_name, 'product_cat');
-
-                if (!$term) {
-                    // Create category
-                    $new_term = wp_insert_term($cat_name, 'product_cat');
-                    if (!is_wp_error($new_term)) {
-                        $category_ids[] = $new_term['term_id'];
-                    }
-                } else {
-                    $category_ids[] = $term->term_id;
-                }
-            }
+            $term_id = (int) $new_term['term_id'];
+        } else {
+            $term_id = (int) $term->term_id;
         }
 
-        if (!empty($category_ids)) {
-            wp_set_object_terms($product_id, $category_ids, 'product_cat');
-        }
+        wp_set_object_terms($product_id, [$term_id], 'product_cat');
+        $this->maybeAssignTags($product_id, $product);
+    }
 
-        // Set AI-generated tags
+    /**
+     * Apply AI-generated product tags if any.
+     */
+    private function maybeAssignTags(int $product_id, NormalizedProduct $product): void {
         if (!empty($product->tags)) {
             wp_set_object_terms($product_id, $product->tags, 'product_tag');
         }

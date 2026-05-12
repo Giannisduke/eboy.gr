@@ -569,8 +569,10 @@ class XMLProcessor:
                 enhanced['subcategories'] = subcats
             except Exception as e:
                 logger.warning(f"Category mapping failed for {product_data.get('sku')}: {str(e)}")
-                # Use a safe default category
-                enhanced['woo_category'] = 'Οργάνωση σπιτιού'
+                # Use a safe default category that EXISTS in categories.yaml whitelist.
+                # "Οργάνωση σπιτιού" was a non-whitelisted name that polluted the
+                # WooCommerce product_cat taxonomy.
+                enhanced['woo_category'] = 'Αποθήκευση & Οργάνωση'
                 enhanced['category_confidence'] = 0.5
                 enhanced['subcategories'] = []
 
