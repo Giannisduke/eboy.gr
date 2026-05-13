@@ -6,7 +6,9 @@
 #      files persist between releases).
 #   2. symlink for `scripts/product-ai-processor/logs` → /shared (so Python
 #      logs persist between releases).
-#   3. exec bit on every *.sh under product-ai-processor (some deploys lose it).
+#   3. symlink for `scripts/product-ai-processor/venv` → /shared (Capistrano
+#      ships an empty venv shell; the real virtualenv lives in /shared).
+#   4. exec bit on every *.sh under product-ai-processor (some deploys lose it).
 #
 # Run after every deploy:
 #   bash /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/post-deploy.sh
@@ -27,6 +29,9 @@ ln -sfn "$SHARED/xml_files" "$DEST/xml_files"
 
 rm -rf "$DEST/product-ai-processor/logs"
 ln -sfn "$SHARED/product-ai-processor/logs" "$DEST/product-ai-processor/logs"
+
+rm -rf "$DEST/product-ai-processor/venv"
+ln -sfn "$SHARED/product-ai-processor/venv" "$DEST/product-ai-processor/venv"
 
 chmod +x "$DEST/product-ai-processor/"*.sh
 
