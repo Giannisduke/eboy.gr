@@ -4,6 +4,7 @@ Main orchestrator that processes XML files and coordinates all AI enhancements.
 """
 
 import logging
+import os
 from pathlib import Path
 from typing import Dict, List, Optional
 from lxml import etree
@@ -28,6 +29,14 @@ from .xml_processor_incremental import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+def _atomic_tree_write(tree: etree.ElementTree, output_path) -> None:
+    """Write XML tree atomically so concurrent readers never see a half-written file."""
+    output_path = str(output_path)
+    tmp_path = f"{output_path}.tmp"
+    tree.write(tmp_path, encoding='utf-8', xml_declaration=True, pretty_print=True)
+    os.replace(tmp_path, output_path)
 
 
 class XMLProcessor:
@@ -251,7 +260,7 @@ class XMLProcessor:
             new_tree = etree.ElementTree(new_root)
 
         # Write initial empty XML
-        new_tree.write(str(output_path), encoding='utf-8', xml_declaration=True, pretty_print=True)
+        _atomic_tree_write(new_tree, output_path)
         logger.info(f"Created initial XML file: {output_path}")
 
         # Process each product (concurrent: 2 at a time matching OLLAMA_NUM_PARALLEL)
@@ -323,8 +332,9 @@ class XMLProcessor:
 
                 self.stats['processed'] += 1
 
-            # Write XML after each product (for realtime import)
-            new_tree.write(str(output_path), encoding='utf-8', xml_declaration=True, pretty_print=True)
+            # Write XML after each product (for realtime import) — atomic so the
+            # concurrent importer never reads a half-written file.
+            _atomic_tree_write(new_tree, output_path)
 
             # Mark SKU as ready
             try:

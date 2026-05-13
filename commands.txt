@@ -276,3 +276,13 @@ sudo -u web php -r 'echo "error_log: " . ini_get("error_log") . PHP_EOL; echo "l
 
 
 grep -rn "WP_DEBUG\|WP_ENVIRONMENT_TYPE" /srv/www/eboy.gr/current/web/wp-config.php /srv/www/eboy.gr/current/config/ /srv/www/eboy.gr/current/.env /srv/www/eboy.gr/shared/.env 2>/dev/null | head -10
+
+
+# Δες τι έχει η γραμμή που σπάει (CDATA με HTML)
+  sed -n '133570,133590p' /srv/www/eboy.gr/releases/20260512151541/web/app/themes/simple-city/scripts/xml_files/enhanced/b2bmarkt-enhanced.xml
+
+  grep -c '<!DOCTYPE html>' /srv/www/eboy.gr/releases/20260512151541/web/app/themes/simple-city/scripts/xml_files/enhanced/b2bmarkt-enhanced.xml
+
+  grep -c '<!DOCTYPE html>' /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/gr/b2bmarkt.xml
+
+  grep -n -A 5 '<!DOCTYPE html>' /srv/www/eboy.gr/releases/20260512151541/web/app/themes/simple-city/scripts/xml_files/enhanced/b2bmarkt-enhanced.xml | head -30

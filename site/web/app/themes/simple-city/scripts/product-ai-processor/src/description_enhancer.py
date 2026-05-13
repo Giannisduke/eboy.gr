@@ -10,6 +10,10 @@ from .ai_client import OllamaClient
 
 logger = logging.getLogger(__name__)
 
+# Detects AI outputs that drifted into a full HTML document
+_HTML_PAGE_MARKER_RE = re.compile(r'<!DOCTYPE|<html[\s>]|<head[\s>]|<body[\s>]', re.IGNORECASE)
+_BODY_CONTENT_RE = re.compile(r'<body[^>]*>(.*?)</body>', re.DOTALL | re.IGNORECASE)
+
 
 class DescriptionEnhancer:
     """Enhances product descriptions using AI"""
@@ -74,8 +78,23 @@ class DescriptionEnhancer:
                 enhanced = re.sub(r'\s*```$', '', enhanced.strip())
                 enhanced = enhanced.strip()
 
+                # Model sometimes hallucinates a full HTML document — keep only <body>
+                if _HTML_PAGE_MARKER_RE.search(enhanced[:500]):
+                    body_match = _BODY_CONTENT_RE.search(enhanced)
+                    if body_match:
+                        enhanced = body_match.group(1).strip()
+                        logger.warning(f"AI returned full HTML page for: {title[:50]} — extracted <body>")
+                    else:
+                        logger.warning(f"AI returned HTML page with no <body> for: {title[:50]} — falling back to original")
+                        return self._wrap_in_html(cleaned_description) if cleaned_description else None
+
                 # Remove any heading tags (h1–h6) — product already has a title
                 enhanced = re.sub(r'<h[1-6][^>]*>.*?</h[1-6]>', '', enhanced, flags=re.DOTALL | re.IGNORECASE).strip()
+
+                # Reject if extraction left us with nothing usable
+                if not enhanced:
+                    logger.warning(f"Enhanced description empty after cleanup for: {title[:50]} — falling back to original")
+                    return self._wrap_in_html(cleaned_description) if cleaned_description else None
 
                 # Validate that it's HTML
                 if not self._contains_html(enhanced):
