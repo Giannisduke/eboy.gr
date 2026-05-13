@@ -241,6 +241,140 @@ if (defined('WP_CLI') && WP_CLI) {
             return;
         }
 
+        // Multi-SKU full pipeline: wp xml-import skus <SKU1,SKU2,...|@file.txt> <supplier>
+        // Same as `sku` but processes a batch in one AI run. Never trashes missing products.
+        if ($action === 'skus') {
+            $skus_arg = isset($args[1]) ? trim($args[1]) : '';
+            $supplier = isset($args[2]) ? trim($args[2]) : '';
+
+            $parser_map = [
+                'pakoworld'    => '\\App\\Importers\\Parsers\\PakoworldParser',
+                'b2bmarkt'     => '\\App\\Importers\\Parsers\\B2BMarktParser',
+                'libertab2b'   => '\\App\\Importers\\Parsers\\LibertaParser',
+                'estiahomeart' => '\\App\\Importers\\Parsers\\EstiahParser',
+            ];
+
+            if (empty($skus_arg) || empty($supplier)) {
+                WP_CLI::error('Usage: wp xml-import skus <SKU1,SKU2,...|@/path/to/skus.txt> <supplier>');
+                WP_CLI::error('  Suppliers: ' . implode(', ', array_keys($parser_map)));
+                return;
+            }
+
+            if (!isset($parser_map[$supplier])) {
+                WP_CLI::error("Unknown supplier: {$supplier}. Use: " . implode(', ', array_keys($parser_map)));
+                return;
+            }
+
+            // Resolve SKU list: @file.txt (one SKU per line) or comma-separated
+            if (strpos($skus_arg, '@') === 0) {
+                $skus_file = substr($skus_arg, 1);
+                if (!is_readable($skus_file)) {
+                    WP_CLI::error("Cannot read SKU file: {$skus_file}");
+                    return;
+                }
+                $raw_skus = file($skus_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            } else {
+                $raw_skus = explode(',', $skus_arg);
+            }
+
+            $skus = array_values(array_unique(array_filter(array_map('trim', $raw_skus))));
+            if (empty($skus)) {
+                WP_CLI::error('No SKUs provided.');
+                return;
+            }
+
+            $theme_root   = dirname(dirname(dirname(__FILE__)));
+            $xml_dir      = $theme_root . '/scripts/xml_files/';
+            $script_dir   = $theme_root . '/scripts/product-ai-processor';
+            $venv_python  = $script_dir . '/venv/bin/python3';
+            $python_main  = $script_dir . '/main.py';
+            $input_xml    = $xml_dir . 'gr/' . $supplier . '.xml';
+            $enhanced_xml = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml';
+
+            if (!file_exists($input_xml)) {
+                WP_CLI::error("Raw XML not found: {$input_xml}");
+                return;
+            }
+            if (!file_exists($venv_python)) {
+                WP_CLI::error("Python venv not found: {$venv_python}");
+                return;
+            }
+
+            $skus_csv = implode(',', $skus);
+            WP_CLI::log(sprintf('Step 1/2 — AI processing %d SKUs from %s...', count($skus), $supplier));
+
+            $command = sprintf(
+                'cd %s && %s %s --mode process --input %s --output %s --skus %s --extend-from-backup --skip-images 2>&1',
+                escapeshellarg($script_dir),
+                escapeshellarg($venv_python),
+                escapeshellarg($python_main),
+                escapeshellarg($input_xml),
+                escapeshellarg($enhanced_xml),
+                escapeshellarg($skus_csv)
+            );
+
+            $output      = [];
+            $return_code = 0;
+            exec($command, $output, $return_code);
+
+            if ($return_code !== 0) {
+                WP_CLI::warning('AI processor exited with code ' . $return_code);
+                foreach ($output as $line) {
+                    WP_CLI::log('  ' . $line);
+                }
+                WP_CLI::error('AI processing failed. Import aborted.');
+                return;
+            }
+
+            WP_CLI::log('  AI processing complete.');
+
+            if (!file_exists($enhanced_xml)) {
+                WP_CLI::error("Enhanced XML not found after AI processing: {$enhanced_xml}");
+                return;
+            }
+
+            WP_CLI::log(sprintf('Step 2/2 — Importing %d SKUs into WordPress...', count($skus)));
+
+            $parser_class = $parser_map[$supplier];
+            $parser       = new $parser_class($enhanced_xml);
+            $products     = $parser->parseProducts();
+
+            $by_sku = [];
+            foreach ($products as $p) {
+                if (!empty($p->sku)) {
+                    $by_sku[(string) $p->sku] = $p;
+                }
+            }
+
+            $sync       = new \App\Importers\ProductSync();
+            $ok         = 0;
+            $missing    = [];
+            $failed     = [];
+
+            foreach ($skus as $sku) {
+                if (!isset($by_sku[$sku])) {
+                    $missing[] = $sku;
+                    WP_CLI::warning("  SKU {$sku} not in enhanced XML — skipped");
+                    continue;
+                }
+                try {
+                    $sync->syncProduct($by_sku[$sku]);
+                    $post_id = wc_get_product_id_by_sku($sku);
+                    WP_CLI::log("  ✓ {$sku} → post_id=" . ($post_id ?: '?'));
+                    $ok++;
+                } catch (\Throwable $e) {
+                    $failed[] = $sku;
+                    WP_CLI::warning("  ✗ {$sku} failed: " . $e->getMessage());
+                }
+            }
+
+            WP_CLI::success(sprintf(
+                'Done. Imported: %d, missing: %d, failed: %d (of %d)',
+                $ok, count($missing), count($failed), count($skus)
+            ));
+            return;
+        }
+
         $importer = new \App\Importers\Importer();
 
         switch ($action) {

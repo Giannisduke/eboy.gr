@@ -286,3 +286,31 @@ grep -rn "WP_DEBUG\|WP_ENVIRONMENT_TYPE" /srv/www/eboy.gr/current/web/wp-config.
   grep -c '<!DOCTYPE html>' /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/gr/b2bmarkt.xml
 
   grep -n -A 5 '<!DOCTYPE html>' /srv/www/eboy.gr/releases/20260512151541/web/app/themes/simple-city/scripts/xml_files/enhanced/b2bmarkt-enhanced.xml | head -30
+
+
+Διέγραψε corrupted enhanced XML
+    rm -f /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/enhanced/b2bmarkt-enhanced.xml
+
+    rm -f /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/b2bmarkt-ready.json
+
+    rm -f /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/b2bmarkt-progress.json
+
+
+
+    # Με comma-separated SKUs
+  wp --url=https://sc-staging.eboy.gr xml-import skus "0605329,142-000007,05-0766" b2bmarkt
+
+  # Με αρχείο (ένα SKU ανά γραμμή)
+  wp --url=https://sc-staging.eboy.gr xml-import skus @/tmp/skus.txt b2bmarkt
+
+  Παράδειγμα με αρχείο:
+
+  cat > /tmp/skus.txt <<'EOF'
+  0605329
+  142-000007
+  05-0766
+  EOF
+
+  wp --url=https://sc-staging.eboy.gr xml-import skus @/tmp/skus.txt b2bmarkt
+
+  Suppliers: pakoworld, b2bmarkt, libertab2b, estiahomeart
