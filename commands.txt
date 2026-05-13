@@ -298,7 +298,7 @@ grep -rn "WP_DEBUG\|WP_ENVIRONMENT_TYPE" /srv/www/eboy.gr/current/web/wp-config.
 
 
     # Με comma-separated SKUs
-  wp --url=https://sc-staging.eboy.gr xml-import skus "0612058" b2bmarkt
+  wp --url=https://sc-staging.eboy.gr xml-import skus "218-000025" pakoworld
 
   # Με αρχείο (ένα SKU ανά γραμμή)
   wp --url=https://sc-staging.eboy.gr xml-import skus @/tmp/skus.txt b2bmarkt
@@ -314,3 +314,35 @@ grep -rn "WP_DEBUG\|WP_ENVIRONMENT_TYPE" /srv/www/eboy.gr/current/web/wp-config.
   wp --url=https://sc-staging.eboy.gr xml-import skus @/tmp/skus.txt b2bmarkt
 
   Suppliers: pakoworld, b2bmarkt, libertab2b, estiahomeart
+
+
+
+Νέα εντολή: wp xml-import supplier
+
+  Χωρίς AI (import μόνο από έτοιμο enhanced XML)
+
+  wp --url=https://sc-staging.eboy.gr xml-import supplier b2bmarkt
+
+  Με AI (run AI processor → μετά import) - (μόνο νέα/αλλαγμένα products παίρνουν AI, υπάρχοντα κρατούνται)
+
+  wp --url=https://sc-staging.eboy.gr xml-import supplier b2bmarkt --ai
+
+
+  Νέα εντολή: wp xml-import delete-supplier
+
+  Πάντα πρώτα δοκίμασε με --dry-run
+  
+  wp --url=https://sc-staging.eboy.gr xml-import delete-supplier pakoworld --dry-run
+
+  Με confirmation prompt (interactive)
+
+  wp --url=https://sc-staging.eboy.gr xml-import delete-supplier b2bmarkt
+
+  Χωρίς prompt (για cron/scripts)
+
+  wp --url=https://sc-staging.eboy.gr xml-import delete-supplier b2bmarkt --yes
+
+  
+
+  - Δεν σβήνει product_brand / product_cat / product_tag terms — μένουν με count=0. Αν θες cleanup μετά:
+  wp --url=https://sc-staging.eboy.gr eval 'wc_recount_all_terms();'

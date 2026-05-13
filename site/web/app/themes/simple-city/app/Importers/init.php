@@ -398,6 +398,251 @@ if (defined('WP_CLI') && WP_CLI) {
             return;
         }
 
+        // Delete every product + variation + image for a supplier:
+        //   wp xml-import delete-supplier <supplier> [--dry-run] [--yes]
+        // Interactive confirmation unless --yes. --dry-run reports counts only.
+        if ($action === 'delete-supplier') {
+            global $wpdb;
+
+            $supplier = isset($args[1]) ? trim($args[1]) : '';
+            $dry_run  = isset($assoc_args['dry-run']);
+            $yes      = isset($assoc_args['yes']);
+
+            if (empty($supplier)) {
+                WP_CLI::error('Usage: wp xml-import delete-supplier <supplier> [--dry-run] [--yes]');
+                return;
+            }
+
+            // Resolve all product + variation IDs for this supplier (case-insensitive match on _supplier meta)
+            $product_ids = $wpdb->get_col($wpdb->prepare(
+                "SELECT DISTINCT pm.post_id
+                 FROM {$wpdb->postmeta} pm
+                 INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+                 WHERE pm.meta_key = '_supplier'
+                   AND LOWER(pm.meta_value) = LOWER(%s)
+                   AND p.post_type IN ('product', 'product_variation')",
+                $supplier
+            ));
+            $product_ids = array_map('intval', $product_ids);
+
+            // Include variations whose parent matches even if they lack the meta
+            if (!empty($product_ids)) {
+                $placeholders = implode(',', array_fill(0, count($product_ids), '%d'));
+                $child_ids = $wpdb->get_col($wpdb->prepare(
+                    "SELECT ID FROM {$wpdb->posts}
+                     WHERE post_type = 'product_variation'
+                       AND post_parent IN ({$placeholders})",
+                    ...$product_ids
+                ));
+                $product_ids = array_values(array_unique(array_merge($product_ids, array_map('intval', $child_ids))));
+            }
+
+            if (empty($product_ids)) {
+                WP_CLI::warning("No products found for supplier '{$supplier}'.");
+                return;
+            }
+
+            // Collect every attachment associated with these products
+            $attachment_ids = [];
+            foreach ($product_ids as $pid) {
+                $thumb = get_post_thumbnail_id($pid);
+                if ($thumb) {
+                    $attachment_ids[(int) $thumb] = true;
+                }
+                $gallery = get_post_meta($pid, '_product_image_gallery', true);
+                if (!empty($gallery)) {
+                    foreach (array_filter(array_map('absint', explode(',', $gallery))) as $gid) {
+                        $attachment_ids[$gid] = true;
+                    }
+                }
+                $children = get_children([
+                    'post_parent' => $pid,
+                    'post_type'   => 'attachment',
+                    'numberposts' => -1,
+                    'fields'      => 'ids',
+                ]);
+                foreach ($children as $cid) {
+                    $attachment_ids[(int) $cid] = true;
+                }
+            }
+            $attachment_ids = array_keys($attachment_ids);
+
+            $product_count    = count($product_ids);
+            $attachment_count = count($attachment_ids);
+
+            WP_CLI::log(sprintf(
+                "Supplier '%s': %d products/variations + %d attachments (images)",
+                $supplier, $product_count, $attachment_count
+            ));
+
+            if ($dry_run) {
+                WP_CLI::success('Dry run — nothing deleted.');
+                return;
+            }
+
+            if (!$yes) {
+                WP_CLI::confirm(sprintf(
+                    'PERMANENTLY delete %d products and %d attachments for supplier "%s"? This cannot be undone.',
+                    $product_count, $attachment_count, $supplier
+                ));
+            }
+
+            // Delete attachments first (so files on disk get cleaned)
+            $att_deleted = 0;
+            $att_failed  = 0;
+            foreach ($attachment_ids as $aid) {
+                $r = wp_delete_attachment($aid, true);
+                if ($r) {
+                    $att_deleted++;
+                } else {
+                    $att_failed++;
+                }
+                if ($att_deleted % 100 === 0 && $att_deleted > 0) {
+                    WP_CLI::log("  attachments deleted: {$att_deleted}/{$attachment_count}");
+                }
+            }
+
+            // Delete products (force=true skips trash, removes meta+terms automatically)
+            $prod_deleted = 0;
+            $prod_failed  = 0;
+            foreach ($product_ids as $pid) {
+                $r = wp_delete_post($pid, true);
+                if ($r) {
+                    $prod_deleted++;
+                } else {
+                    $prod_failed++;
+                }
+                if ($prod_deleted % 100 === 0 && $prod_deleted > 0) {
+                    WP_CLI::log("  products deleted: {$prod_deleted}/{$product_count}");
+                }
+            }
+
+            WP_CLI::success(sprintf(
+                'Deleted %d/%d products and %d/%d attachments for %s (failures: %d products, %d attachments)',
+                $prod_deleted, $product_count,
+                $att_deleted, $attachment_count,
+                $supplier, $prod_failed, $att_failed
+            ));
+            return;
+        }
+
+        // Single-supplier full import: wp xml-import supplier <supplier> [--ai]
+        // Default: import-only from existing enhanced XML.
+        // --ai: run AI processor first (extend-from-backup, skip-images) then import.
+        // Never trashes missing products (uses syncProducts, not watchAndImport).
+        if ($action === 'supplier') {
+            $supplier = isset($args[1]) ? trim($args[1]) : '';
+            $use_ai   = isset($assoc_args['ai']);
+
+            $parser_map = [
+                'pakoworld'    => '\\App\\Importers\\Parsers\\PakoworldParser',
+                'b2bmarkt'     => '\\App\\Importers\\Parsers\\B2BMarktParser',
+                'libertab2b'   => '\\App\\Importers\\Parsers\\LibertaParser',
+                'estiahomeart' => '\\App\\Importers\\Parsers\\EstiahParser',
+            ];
+
+            if (empty($supplier)) {
+                WP_CLI::error('Usage: wp xml-import supplier <supplier> [--ai]');
+                WP_CLI::error('  Suppliers: ' . implode(', ', array_keys($parser_map)));
+                return;
+            }
+
+            if (!isset($parser_map[$supplier])) {
+                WP_CLI::error("Unknown supplier: {$supplier}. Use: " . implode(', ', array_keys($parser_map)));
+                return;
+            }
+
+            $theme_root   = dirname(dirname(dirname(__FILE__)));
+            $xml_dir      = $theme_root . '/scripts/xml_files/';
+            $script_dir   = $theme_root . '/scripts/product-ai-processor';
+            $python_main  = $script_dir . '/main.py';
+            $input_xml    = $xml_dir . 'gr/' . $supplier . '.xml';
+            $enhanced_xml = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml';
+
+            if ($use_ai) {
+                $venv_candidates = [
+                    $script_dir . '/venv/bin/python3',
+                    $script_dir . '/.venv/bin/python3',
+                ];
+                $venv_python = null;
+                foreach ($venv_candidates as $candidate) {
+                    if (file_exists($candidate)) {
+                        $venv_python = $candidate;
+                        break;
+                    }
+                }
+                if (!$venv_python) {
+                    WP_CLI::error('Python venv not found. Tried: ' . implode(', ', $venv_candidates));
+                    return;
+                }
+
+                if (!file_exists($input_xml)) {
+                    WP_CLI::error("Raw XML not found: {$input_xml}");
+                    return;
+                }
+
+                WP_CLI::log("Step 1/2 — AI processing {$supplier} (extend-from-backup, skip-images)...");
+
+                $command = sprintf(
+                    'cd %s && %s %s --mode process --input %s --output %s --extend-from-backup --skip-images 2>&1',
+                    escapeshellarg($script_dir),
+                    escapeshellarg($venv_python),
+                    escapeshellarg($python_main),
+                    escapeshellarg($input_xml),
+                    escapeshellarg($enhanced_xml)
+                );
+
+                $output      = [];
+                $return_code = 0;
+                exec($command, $output, $return_code);
+
+                if ($return_code !== 0) {
+                    WP_CLI::warning('AI processor exited with code ' . $return_code);
+                    foreach ($output as $line) {
+                        WP_CLI::log('  ' . $line);
+                    }
+                    WP_CLI::error('AI processing failed. Import aborted.');
+                    return;
+                }
+
+                WP_CLI::log('  AI processing complete.');
+                $step_label = 'Step 2/2';
+            } else {
+                $step_label = 'Step 1/1';
+            }
+
+            if (!file_exists($enhanced_xml)) {
+                WP_CLI::error("Enhanced XML not found: {$enhanced_xml}");
+                WP_CLI::error('Hint: run with --ai to generate it, or run the AI processor manually.');
+                return;
+            }
+
+            WP_CLI::log("{$step_label} — Importing {$supplier} from enhanced XML...");
+
+            try {
+                $importer = new \App\Importers\Importer();
+                $stats    = $importer->processSupplier($supplier);
+            } catch (\Throwable $e) {
+                WP_CLI::error("Import failed: " . $e->getMessage());
+                return;
+            }
+
+            if (!empty($stats) && !empty($stats['success'])) {
+                WP_CLI::success(sprintf(
+                    '%s done. Total=%d, Created=%d, Updated=%d, Skipped=%d, Errors=%d',
+                    $supplier,
+                    $stats['total_products'] ?? 0,
+                    $stats['created']        ?? 0,
+                    $stats['updated']        ?? 0,
+                    $stats['skipped']        ?? 0,
+                    $stats['errors']         ?? 0
+                ));
+            } else {
+                WP_CLI::error("Import of {$supplier} did not complete successfully.");
+            }
+            return;
+        }
+
         $importer = new \App\Importers\Importer();
 
         switch ($action) {
