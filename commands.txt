@@ -298,7 +298,7 @@ grep -rn "WP_DEBUG\|WP_ENVIRONMENT_TYPE" /srv/www/eboy.gr/current/web/wp-config.
 
 
     # Με comma-separated SKUs
-  wp --url=https://sc-staging.eboy.gr xml-import skus "0605329,142-000007,05-0766" b2bmarkt
+  wp --url=https://sc-staging.eboy.gr xml-import skus "0612058" b2bmarkt
 
   # Με αρχείο (ένα SKU ανά γραμμή)
   wp --url=https://sc-staging.eboy.gr xml-import skus @/tmp/skus.txt b2bmarkt

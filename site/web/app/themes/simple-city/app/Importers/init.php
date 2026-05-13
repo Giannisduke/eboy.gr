@@ -163,18 +163,30 @@ if (defined('WP_CLI') && WP_CLI) {
             $theme_root  = dirname(dirname(dirname(__FILE__)));
             $xml_dir     = $theme_root . '/scripts/xml_files/';
             $script_dir  = $theme_root . '/scripts/product-ai-processor';
-            $venv_python = $script_dir . '/venv/bin/python3';
             $python_main = $script_dir . '/main.py';
             $input_xml   = $xml_dir . 'gr/' . $supplier . '.xml';
             $enhanced_xml = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml';
 
+            // Resolve python: prefer project venv (venv or .venv), else system
+            $venv_candidates = [
+                $script_dir . '/venv/bin/python3',
+                $script_dir . '/.venv/bin/python3',
+            ];
+            $venv_python = null;
+            foreach ($venv_candidates as $candidate) {
+                if (file_exists($candidate)) {
+                    $venv_python = $candidate;
+                    break;
+                }
+            }
+            if (!$venv_python) {
+                WP_CLI::error('Python venv not found. Tried: ' . implode(', ', $venv_candidates));
+                return;
+            }
+
             // Validate paths
             if (!file_exists($input_xml)) {
                 WP_CLI::error("Raw XML not found: {$input_xml}");
-                return;
-            }
-            if (!file_exists($venv_python)) {
-                WP_CLI::error("Python venv not found: {$venv_python}");
                 return;
             }
 
@@ -286,17 +298,28 @@ if (defined('WP_CLI') && WP_CLI) {
             $theme_root   = dirname(dirname(dirname(__FILE__)));
             $xml_dir      = $theme_root . '/scripts/xml_files/';
             $script_dir   = $theme_root . '/scripts/product-ai-processor';
-            $venv_python  = $script_dir . '/venv/bin/python3';
             $python_main  = $script_dir . '/main.py';
             $input_xml    = $xml_dir . 'gr/' . $supplier . '.xml';
             $enhanced_xml = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml';
 
-            if (!file_exists($input_xml)) {
-                WP_CLI::error("Raw XML not found: {$input_xml}");
+            $venv_candidates = [
+                $script_dir . '/venv/bin/python3',
+                $script_dir . '/.venv/bin/python3',
+            ];
+            $venv_python = null;
+            foreach ($venv_candidates as $candidate) {
+                if (file_exists($candidate)) {
+                    $venv_python = $candidate;
+                    break;
+                }
+            }
+            if (!$venv_python) {
+                WP_CLI::error('Python venv not found. Tried: ' . implode(', ', $venv_candidates));
                 return;
             }
-            if (!file_exists($venv_python)) {
-                WP_CLI::error("Python venv not found: {$venv_python}");
+
+            if (!file_exists($input_xml)) {
+                WP_CLI::error("Raw XML not found: {$input_xml}");
                 return;
             }
 
