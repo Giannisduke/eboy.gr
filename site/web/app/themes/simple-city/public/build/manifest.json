@@ -169,17 +169,33 @@
     "file": "assets/carousel_arrow_r-CWNai7N5.svg",
     "src": "resources/images/carousel_arrow_r.svg"
   },
+  "resources/images/diakosmisi.svg": {
+    "file": "assets/diakosmisi-ru1tDzWY.svg",
+    "src": "resources/images/diakosmisi.svg"
+  },
   "resources/images/dot.svg": {
     "file": "assets/dot-n7auKOWp.svg",
     "src": "resources/images/dot.svg"
+  },
+  "resources/images/exoterikos-choros.svg": {
+    "file": "assets/exoterikos-choros-Cj6WAXaL.svg",
+    "src": "resources/images/exoterikos-choros.svg"
   },
   "resources/images/garden.svg": {
     "file": "assets/garden-D5g2VUHZ.svg",
     "src": "resources/images/garden.svg"
   },
+  "resources/images/grafeio.svg": {
+    "file": "assets/grafeio-7S-e5iFD.svg",
+    "src": "resources/images/grafeio.svg"
+  },
   "resources/images/icon-login.svg": {
     "file": "assets/icon-login-DYDBlalg.svg",
     "src": "resources/images/icon-login.svg"
+  },
+  "resources/images/kathistiko.svg": {
+    "file": "assets/kathistiko-Blj_tEzt.svg",
+    "src": "resources/images/kathistiko.svg"
   },
   "resources/images/kitchen.svg": {
     "file": "assets/kitchen-CWGgO1IH.svg",
@@ -193,9 +209,17 @@
     "file": "assets/logo-Vti560dz.svg",
     "src": "resources/images/logo.svg"
   },
+  "resources/images/mpanio.svg": {
+    "file": "assets/mpanio-DIuXGWg2.svg",
+    "src": "resources/images/mpanio.svg"
+  },
   "resources/images/office.svg": {
     "file": "assets/office-zTi99C67.svg",
     "src": "resources/images/office.svg"
+  },
+  "resources/images/organosi.svg": {
+    "file": "assets/organosi-0ZDkyJw-.svg",
+    "src": "resources/images/organosi.svg"
   },
   "resources/images/sales-sketo.svg": {
     "file": "assets/sales-sketo-CP2LTabL.svg",
@@ -237,50 +261,26 @@
     "file": "assets/view_small_s-D171-pXS.svg",
     "src": "resources/images/view_small_s.svg"
   },
-  "resources/images/γραφείο.svg": {
-    "file": "assets/γραφείο-7S-e5iFD.svg",
-    "src": "resources/images/γραφείο.svg"
-  },
-  "resources/images/διακόσμηση.svg": {
-    "file": "assets/διακόσμηση-ru1tDzWY.svg",
-    "src": "resources/images/διακόσμηση.svg"
-  },
-  "resources/images/εξωτερικός-χώρος.svg": {
-    "file": "assets/εξωτερικός-χώρος-Cj6WAXaL.svg",
-    "src": "resources/images/εξωτερικός-χώρος.svg"
-  },
-  "resources/images/μπάνιο.svg": {
-    "file": "assets/μπάνιο-DIuXGWg2.svg",
-    "src": "resources/images/μπάνιο.svg"
-  },
-  "resources/images/οργάνωση.svg": {
-    "file": "assets/οργάνωση-0ZDkyJw-.svg",
-    "src": "resources/images/οργάνωση.svg"
-  },
-  "resources/images/σαλόνι-καθιστικό.svg": {
-    "file": "assets/σαλόνι-καθιστικό-Blj_tEzt.svg",
-    "src": "resources/images/σαλόνι-καθιστικό.svg"
-  },
-  "resources/images/υπνοδωμάτιο.svg": {
-    "file": "assets/υπνοδωμάτιο-Cj53gFPd.svg",
-    "src": "resources/images/υπνοδωμάτιο.svg"
+  "resources/images/ypnodomatio.svg": {
+    "file": "assets/ypnodomatio-Cj53gFPd.svg",
+    "src": "resources/images/ypnodomatio.svg"
   },
   "resources/js/app.js": {
-    "file": "assets/app-DqdU7jMP.js",
+    "file": "assets/app-BsTCExH8.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-BqX8dsEP.css"
+      "assets/app-CeRHq0KM.css"
     ],
     "assets": [
-      "assets/σαλόνι-καθιστικό-Blj_tEzt.svg",
-      "assets/υπνοδωμάτιο-Cj53gFPd.svg",
-      "assets/γραφείο-7S-e5iFD.svg",
-      "assets/οργάνωση-0ZDkyJw-.svg",
-      "assets/διακόσμηση-ru1tDzWY.svg",
-      "assets/εξωτερικός-χώρος-Cj6WAXaL.svg",
-      "assets/μπάνιο-DIuXGWg2.svg",
+      "assets/kathistiko-Blj_tEzt.svg",
+      "assets/ypnodomatio-Cj53gFPd.svg",
+      "assets/grafeio-7S-e5iFD.svg",
+      "assets/organosi-0ZDkyJw-.svg",
+      "assets/diakosmisi-ru1tDzWY.svg",
+      "assets/exoterikos-choros-Cj6WAXaL.svg",
+      "assets/mpanio-DIuXGWg2.svg",
       "assets/kitchen-CWGgO1IH.svg",
       "assets/sales-9FCY2qef.svg"
     ]

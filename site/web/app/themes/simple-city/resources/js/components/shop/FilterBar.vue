@@ -232,14 +232,14 @@
 import { ref, watch, onMounted, onUnmounted, computed } from 'vue';
 import { useShopStore } from '../../stores/shop';
 
-// Import SVG icons (filenames match WP category slugs)
-import iconKathistiko from '../../../images/σαλόνι-καθιστικό.svg';
-import iconYpnodomatio from '../../../images/υπνοδωμάτιο.svg';
-import iconGrafeio from '../../../images/γραφείο.svg';
-import iconOrganosi from '../../../images/οργάνωση.svg';
-import iconDiakosmisi from '../../../images/διακόσμηση.svg';
-import iconExoterikos from '../../../images/εξωτερικός-χώρος.svg';
-import iconMpanio from '../../../images/μπάνιο.svg';
+// Import SVG icons (ASCII filenames; mapped to Greek WP slugs in categoryIcons below)
+import iconKathistiko from '../../../images/kathistiko.svg';
+import iconYpnodomatio from '../../../images/ypnodomatio.svg';
+import iconGrafeio from '../../../images/grafeio.svg';
+import iconOrganosi from '../../../images/organosi.svg';
+import iconDiakosmisi from '../../../images/diakosmisi.svg';
+import iconExoterikos from '../../../images/exoterikos-choros.svg';
+import iconMpanio from '../../../images/mpanio.svg';
 import iconKouzina from '../../../images/kitchen.svg';
 import salesIcon from '../../../images/sales.svg';
 

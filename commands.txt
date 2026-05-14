@@ -354,3 +354,6 @@ nohup wp --url=https://sc-staging.eboy.gr xml-import delete-supplier pakoworld -
 
 
 hf download Comfy-Org/flux2-dev split_files/diffusion_models/flux2-dev-nvfp4-mixed.safetensors --local-dir ~/ComfyUI/models
+
+
+https://sc-staging.eboy.gr/app/themes/simple-city/public/build/assets/%CE%B4%CE%B9%CE%B1%CE%BA%CE%BF%CC%81%CF%83%CE%BC%CE%B7%CF%83%CE%B7-ru1tDzWY.svg 404 (Not Found)
