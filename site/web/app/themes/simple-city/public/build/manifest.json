@@ -198,7 +198,7 @@
     "src": "resources/images/kathistiko.svg"
   },
   "resources/images/kitchen.svg": {
-    "file": "assets/kitchen-CWGgO1IH.svg",
+    "file": "assets/kitchen-7lBY_rBu.svg",
     "src": "resources/images/kitchen.svg"
   },
   "resources/images/line.svg": {
@@ -266,12 +266,12 @@
     "src": "resources/images/ypnodomatio.svg"
   },
   "resources/js/app.js": {
-    "file": "assets/app-BsTCExH8.js",
+    "file": "assets/app-Cj40JWbD.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-CeRHq0KM.css"
+      "assets/app-Dz53vONp.css"
     ],
     "assets": [
       "assets/kathistiko-Blj_tEzt.svg",
@@ -281,7 +281,7 @@
       "assets/diakosmisi-ru1tDzWY.svg",
       "assets/exoterikos-choros-Cj6WAXaL.svg",
       "assets/mpanio-DIuXGWg2.svg",
-      "assets/kitchen-CWGgO1IH.svg",
+      "assets/kitchen-7lBY_rBu.svg",
       "assets/sales-9FCY2qef.svg"
     ]
   },

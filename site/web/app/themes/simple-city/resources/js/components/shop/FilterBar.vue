@@ -676,14 +676,14 @@ const getMaterialSize = (count) => {
       max-width: 1440px;
     padding-top: 3rem;
     padding-bottom: 3rem;
-    transition: padding 0.25s ease;
+    transition: padding 0.12s cubic-bezier(0.2, 0, 0.2, 1);
   @extend .d-flex;
   @extend .justify-content-between;
 }
 
 .filter-bar.is-stuck .category-menu {
-  padding-top: 0;
-  padding-bottom: 0;
+  padding-top: 2.5rem;
+  padding-bottom: 0.5rem;
 }
 
 /* Results count: toggle between text and button */
@@ -753,22 +753,40 @@ const getMaterialSize = (count) => {
   }
 }
 
-/* Filters container collapse */
+/* Filters container collapse — fast transform/opacity + delayed max-height snap (no layout thrashing during animation) */
 .filters-container {
   max-height: 2000px;
   overflow: hidden;
-  transition: max-height 0.35s ease, opacity 0.25s ease;
   opacity: 1;
+  transform: scaleY(1);
+  transform-origin: top;
+  transform-box: border-box;
+  /* Un-stick: max-height snaps back instantly (0s), then transform/opacity animate in */
+  transition:
+    opacity 0.12s cubic-bezier(0.2, 0, 0.2, 1),
+    transform 0.12s cubic-bezier(0.2, 0, 0.2, 1),
+    max-height 0s linear;
+  will-change: opacity, transform;
+  contain: layout style;
 }
 
 .filter-bar.is-stuck .filters-container {
-  max-height: 0;
   opacity: 0;
+  transform: scaleY(0);
+  max-height: 0;
+  pointer-events: none;
+  /* Stick: transform/opacity animate, then max-height snaps at the end (after 0.12s) */
+  transition:
+    opacity 0.12s cubic-bezier(0.2, 0, 0.2, 1),
+    transform 0.12s cubic-bezier(0.2, 0, 0.2, 1),
+    max-height 0s linear 0.12s;
 }
 
 .filter-bar.is-stuck .filters-container.filters-open {
-  max-height: 2000px;
   opacity: 1;
+  transform: scaleY(1);
+  max-height: 2000px;
+  pointer-events: auto;
 }
 
 .filter-bar.is-stuck .views {
