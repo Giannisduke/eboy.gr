@@ -1289,7 +1289,7 @@ function get_shop_categories($request) {
     foreach ($categories as $category) {
         $formatted_categories[] = [
             'id' => $category->term_id,
-            'name' => $category->name,
+            'name' => html_entity_decode($category->name, ENT_QUOTES, 'UTF-8'),
             'slug' => $category->slug,
             'count' => $category->count,
             'description' => $category->description,

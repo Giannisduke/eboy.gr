@@ -647,10 +647,8 @@ const getMaterialSize = (count) => {
 
 /* Category Menu */
 .category-menu {
-      @include make-col-ready();
-      @include media-breakpoint-up(lg) {
-      @include make-col(12);
-    }
+      @include make-container();
+      max-width: 1440px;
     padding-top: 3rem;
     padding-bottom: 3rem;
     transition: padding 0.25s ease;

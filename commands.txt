@@ -298,7 +298,7 @@ grep -rn "WP_DEBUG\|WP_ENVIRONMENT_TYPE" /srv/www/eboy.gr/current/web/wp-config.
 
 
     # Με comma-separated SKUs
-  wp --url=https://sc-staging.eboy.gr xml-import skus "218-000025" pakoworld
+wp --url=https://sc-staging.eboy.gr xml-import skus "218-000025" pakoworld
 
   # Με αρχείο (ένα SKU ανά γραμμή)
   wp --url=https://sc-staging.eboy.gr xml-import skus @/tmp/skus.txt b2bmarkt
@@ -336,13 +336,21 @@ grep -rn "WP_DEBUG\|WP_ENVIRONMENT_TYPE" /srv/www/eboy.gr/current/web/wp-config.
 
   Με confirmation prompt (interactive)
 
-  wp --url=https://sc-staging.eboy.gr xml-import delete-supplier b2bmarkt
+wp --url=https://sc-staging.eboy.gr xml-import delete-supplier pakoworld
 
   Χωρίς prompt (για cron/scripts)
 
   wp --url=https://sc-staging.eboy.gr xml-import delete-supplier b2bmarkt --yes
 
-  
+
 
   - Δεν σβήνει product_brand / product_cat / product_tag terms — μένουν με count=0. Αν θες cleanup μετά:
   wp --url=https://sc-staging.eboy.gr eval 'wc_recount_all_terms();'
+
+
+nohup wp --url=https://sc-staging.eboy.gr xml-import delete-supplier pakoworld --yes > /srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts/xml_files/delete-pakoworld.log 2>&1 < /dev/null & disown
+
+
+
+
+hf download Comfy-Org/flux2-dev split_files/diffusion_models/flux2-dev-nvfp4-mixed.safetensors --local-dir ~/ComfyUI/models
