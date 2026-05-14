@@ -4,30 +4,21 @@
     <!-- Category Menu with Icons -->
     <div class="category-menu">
       <button
-        class="category-btn"
+        class="category-btn test"
         :class="{ active: showOnSale }"
+        :style="{ '--category-bg-image': `url(${salesIcon})` }"
         @click="toggleOnSale"
       >
-        <img
-          :src="salesIcon"
-          alt="Προσφορές"
-          class="category-icon"
-        />
         <span class="category-name">Προσφορές</span>
       </button>
       <button
         v-for="category in shopStore.categories"
         :key="category.id"
         class="category-btn"
-        :class="{ active: selectedCategory === category.id }"
+        :class="{ active: selectedCategory === category.id, 'no-icon': !getCategoryIcon(category.slug) }"
+        :style="categoryBtnStyle(category.slug)"
         @click="selectCategory(category.id)"
       >
-        <img
-          v-if="getCategoryIcon(category.slug)"
-          :src="getCategoryIcon(category.slug)"
-          :alt="category.name"
-          class="category-icon"
-        />
         <span class="category-name">{{ category.name }}</span>
       </button>
     </div>
@@ -241,14 +232,16 @@
 import { ref, watch, onMounted, onUnmounted, computed } from 'vue';
 import { useShopStore } from '../../stores/shop';
 
-// Import SVG icons
-import bathroomIcon from '../../../images/bathroom.svg';
-import bedroomIcon from '../../../images/bedroom.svg';
-import gardenIcon from '../../../images/garden.svg';
-import kitchenIcon from '../../../images/kitchen.svg';
-import officeIcon from '../../../images/office.svg';
+// Import SVG icons (filenames match WP category slugs)
+import iconKathistiko from '../../../images/σαλόνι-καθιστικό.svg';
+import iconYpnodomatio from '../../../images/υπνοδωμάτιο.svg';
+import iconGrafeio from '../../../images/γραφείο.svg';
+import iconOrganosi from '../../../images/οργάνωση.svg';
+import iconDiakosmisi from '../../../images/διακόσμηση.svg';
+import iconExoterikos from '../../../images/εξωτερικός-χώρος.svg';
+import iconMpanio from '../../../images/μπάνιο.svg';
+import iconKouzina from '../../../images/kitchen.svg';
 import salesIcon from '../../../images/sales.svg';
-import saloniIcon from '../../../images/saloni.svg';
 
 const shopStore = useShopStore();
 
@@ -421,26 +414,58 @@ const sortItems = computed(() => {
   ];
 });
 
-// Category icon mapping
+// Category icon mapping — keyed by WP category slug.
+// Greek slugs are the source of truth (per new WP setup); Latin aliases kept for safety.
 const categoryIcons = {
-  'bathroom': bathroomIcon,
-  'mpanio': bathroomIcon,
-  'bedroom': bedroomIcon,
-  'ypnodomatio': bedroomIcon,
-  'garden': gardenIcon,
-  'kipos': gardenIcon,
-  'kitchen': kitchenIcon,
-  'kouzina': kitchenIcon,
-  'office': officeIcon,
-  'grafeio': officeIcon,
-  'sales': salesIcon,
-  'prosfores': salesIcon,
-  'saloni': saloniIcon,
-  'salon': saloniIcon,
+  // Σαλόνι - Καθιστικό (slug: καθιστικό)
+  'καθιστικό': iconKathistiko,
+  'σαλόνι-καθιστικό': iconKathistiko,
+  'saloni-kathistiko': iconKathistiko,
+  'kathistiko': iconKathistiko,
+  // Υπνοδωμάτιο
+  'υπνοδωμάτιο': iconYpnodomatio,
+  'ypnodomatio': iconYpnodomatio,
+  'bedroom': iconYpnodomatio,
+  // Γραφείο
+  'γραφείο': iconGrafeio,
+  'grafeio': iconGrafeio,
+  'office': iconGrafeio,
+  // Οργάνωση
+  'οργάνωση': iconOrganosi,
+  'organosi': iconOrganosi,
+  // Διακόσμηση
+  'διακόσμηση': iconDiakosmisi,
+  'diakosmisi': iconDiakosmisi,
+  // Εξωτερικός Χώρος
+  'εξωτερικός-χώρος': iconExoterikos,
+  'exoterikos-choros': iconExoterikos,
+  'kipos-exoterikos': iconExoterikos,
+  'garden': iconExoterikos,
+  // Μπάνιο
+  'μπάνιο': iconMpanio,
+  'mpanio': iconMpanio,
+  'bathroom': iconMpanio,
+  // Κουζίνα
+  'κουζίνα': iconKouzina,
+  'kouzina': iconKouzina,
+  'kitchen': iconKouzina,
 };
 
 const getCategoryIcon = (slug) => {
-  return categoryIcons[slug] || null;
+  if (!slug) return null;
+  // WP REST επιστρέφει τα Greek slugs URL-encoded (π.χ. %ce%b3%cf%81%ce%b1%cf%86%ce%b5%ce%af%ce%bf).
+  let decoded = slug;
+  try {
+    decoded = decodeURIComponent(slug);
+  } catch (e) {
+    // Αν το slug δεν είναι valid percent-encoded, κράτα το όπως ήρθε.
+  }
+  return categoryIcons[decoded] || categoryIcons[slug] || null;
+};
+
+const categoryBtnStyle = (slug) => {
+  const icon = getCategoryIcon(slug);
+  return icon ? { '--category-bg-image': `url(${icon})` } : {};
 };
 
 const selectCategory = (categoryId) => {
@@ -755,23 +780,32 @@ const getMaterialSize = (count) => {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  padding: 1rem;
-  background: transparent;
+  padding: calc(48px + 1.5rem) 1rem 1rem;
+  background-color: transparent;
+  background-image: var(--category-bg-image, none);
+  background-repeat: no-repeat;
+  background-position: center 1rem;
+  background-size: 68px 68px;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
   border-radius: 8px;
-  min-width: 100px;
+  width: 150px;
+  flex: 0 0 150px;
   position: relative;
 }
 
+.category-btn.no-icon {
+  padding: 1rem;
+}
+
 .category-btn:hover {
-  background: #f5f5f5;
+  background-color: #f5f5f5;
   transform: translateY(-2px);
 }
 
 .category-btn.active {
-  background: #f0f0f0;
+  background-color: #f0f0f0;
 }
 
 .category-btn.active::after {
@@ -785,17 +819,13 @@ const getMaterialSize = (count) => {
   background: $secondary;
 }
 
-.category-icon {
-  width: 48px;
-  height: 48px;
-  object-fit: contain;
-}
-
 .category-name {
   font-size: 0.9rem;
   font-weight: 500;
   text-align: center;
-  white-space: nowrap;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 /* Filters Container (Two Columns) */
@@ -1153,12 +1183,13 @@ const getMaterialSize = (count) => {
 
   .category-btn {
     min-width: 80px;
-    padding: 0.75rem 0.5rem;
+    padding: calc(36px + 1.25rem) 0.5rem 0.75rem;
+    background-size: 36px 36px;
+    background-position: center 0.5rem;
   }
 
-  .category-icon {
-    width: 36px;
-    height: 36px;
+  .category-btn.no-icon {
+    padding: 0.75rem 0.5rem;
   }
 
   .category-name {

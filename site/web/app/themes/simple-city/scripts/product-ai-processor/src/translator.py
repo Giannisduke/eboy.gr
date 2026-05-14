@@ -209,12 +209,12 @@ class ProductTranslator:
         """
         # Use direct mapping for categories (more reliable)
         category_map = {
-            'Living Room & Seating': 'Σαλόνι & Καθιστικό',
+            'Living Room & Seating': 'Σαλόνι - Καθιστικό',
             'Bedroom': 'Υπνοδωμάτιο',
             'Office': 'Γραφείο',
-            'Storage & Organization': 'Αποθήκευση & Οργάνωση',
+            'Storage & Organization': 'Οργάνωση',
             'Decoration': 'Διακόσμηση',
-            'Garden & Outdoor': 'Κήπος & Εξωτερικός Χώρος',
+            'Garden & Outdoor': 'Εξωτερικός Χώρος',
             'Bathroom': 'Μπάνιο',
             'Kitchen': 'Κουζίνα',
         }

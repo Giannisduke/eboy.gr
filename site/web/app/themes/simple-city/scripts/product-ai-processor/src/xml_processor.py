@@ -582,7 +582,7 @@ class XMLProcessor:
                 # Use a safe default category that EXISTS in categories.yaml whitelist.
                 # "Οργάνωση σπιτιού" was a non-whitelisted name that polluted the
                 # WooCommerce product_cat taxonomy.
-                enhanced['woo_category'] = 'Αποθήκευση & Οργάνωση'
+                enhanced['woo_category'] = 'Οργάνωση'
                 enhanced['category_confidence'] = 0.5
                 enhanced['subcategories'] = []
 

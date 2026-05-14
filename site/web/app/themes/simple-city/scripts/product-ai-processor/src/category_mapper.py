@@ -68,13 +68,13 @@ class CategoryMapper:
             else:
                 # Final fallback
                 logger.warning(f"AI mapping failed for: {supplier_category}, using default")
-                fallback = ("Σαλόνι & Καθιστικό", 0.5, [])
+                fallback = ("Σαλόνι - Καθιστικό", 0.5, [])
                 self._store_mapping_for_review(supplier_category, product_name, *fallback, method="fallback")
                 return fallback
 
         except Exception as e:
             logger.error(f"Error mapping category: {str(e)}")
-            fallback = ("Σαλόνι & Καθιστικό", 0.3, [])
+            fallback = ("Σαλόνι - Καθιστικό", 0.3, [])
             return fallback
 
     def _ai_mapping_with_confidence(self, supplier_category: str, product_name: str) -> Optional[Tuple[str, float, List[str]]]:

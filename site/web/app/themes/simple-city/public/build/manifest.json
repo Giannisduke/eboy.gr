@@ -237,22 +237,52 @@
     "file": "assets/view_small_s-D171-pXS.svg",
     "src": "resources/images/view_small_s.svg"
   },
+  "resources/images/γραφείο.svg": {
+    "file": "assets/γραφείο-7S-e5iFD.svg",
+    "src": "resources/images/γραφείο.svg"
+  },
+  "resources/images/διακόσμηση.svg": {
+    "file": "assets/διακόσμηση-ru1tDzWY.svg",
+    "src": "resources/images/διακόσμηση.svg"
+  },
+  "resources/images/εξωτερικός-χώρος.svg": {
+    "file": "assets/εξωτερικός-χώρος-Cj6WAXaL.svg",
+    "src": "resources/images/εξωτερικός-χώρος.svg"
+  },
+  "resources/images/μπάνιο.svg": {
+    "file": "assets/μπάνιο-DIuXGWg2.svg",
+    "src": "resources/images/μπάνιο.svg"
+  },
+  "resources/images/οργάνωση.svg": {
+    "file": "assets/οργάνωση-0ZDkyJw-.svg",
+    "src": "resources/images/οργάνωση.svg"
+  },
+  "resources/images/σαλόνι-καθιστικό.svg": {
+    "file": "assets/σαλόνι-καθιστικό-Blj_tEzt.svg",
+    "src": "resources/images/σαλόνι-καθιστικό.svg"
+  },
+  "resources/images/υπνοδωμάτιο.svg": {
+    "file": "assets/υπνοδωμάτιο-Cj53gFPd.svg",
+    "src": "resources/images/υπνοδωμάτιο.svg"
+  },
   "resources/js/app.js": {
-    "file": "assets/app-D-Y9lgwq.js",
+    "file": "assets/app-DqdU7jMP.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-BMsGogDh.css"
+      "assets/app-BqX8dsEP.css"
     ],
     "assets": [
-      "assets/bathroom-H5gpXJb4.svg",
-      "assets/bedroom-Bh8B20E2.svg",
-      "assets/garden-D5g2VUHZ.svg",
+      "assets/σαλόνι-καθιστικό-Blj_tEzt.svg",
+      "assets/υπνοδωμάτιο-Cj53gFPd.svg",
+      "assets/γραφείο-7S-e5iFD.svg",
+      "assets/οργάνωση-0ZDkyJw-.svg",
+      "assets/διακόσμηση-ru1tDzWY.svg",
+      "assets/εξωτερικός-χώρος-Cj6WAXaL.svg",
+      "assets/μπάνιο-DIuXGWg2.svg",
       "assets/kitchen-CWGgO1IH.svg",
-      "assets/office-zTi99C67.svg",
-      "assets/sales-9FCY2qef.svg",
-      "assets/saloni-hVbrlUkY.svg"
+      "assets/sales-9FCY2qef.svg"
     ]
   },
   "resources/js/editor.js": {
