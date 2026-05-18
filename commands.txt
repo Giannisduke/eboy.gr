@@ -56,18 +56,6 @@ RELEASE=$(readlink /srv/www/eboy.gr/current) && \
 
 sudo bash /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/post-deploy.sh
 
-# === Δημιουργία post-deploy.sh στο home directory ===
-# Τρέξε ΜΙΑ φορά (paste-safe — κάθε γραμμή <80 chars, χωρίς line continuations).
-# Μετά από κάθε deploy, καλείς μόνο: ~/post-deploy.sh
-cat > ~/post-deploy.sh << 'PDEND' 
-#!/bin/bash set -e RELEASE=$(readlink /srv/www/eboy.gr/current) SHARED=/srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts DEST=$RELEASE/web/app/themes/simple-city/scripts echo "Post-deploy for: $RELEASE" rm -rf "$DEST/xml_files" ln -sfn "$SHARED/xml_files" "$DEST/xml_files" rm -rf "$DEST/product-ai-processor/logs" ln -sfn "$SHARED/product-ai-processor/logs" "$DEST/product-ai-processor/logs" chmod +x "$DEST/product-ai-processor/"*.sh ls -la "$DEST/" 
-PDEND
-chmod +x ~/post-deploy.sh
-cat ~/post-deploy.sh
-
-# === Από εδώ και πέρα, μετά από κάθε deploy ===
-~/post-deploy.sh
-
 wp --url=https://sc-staging.eboy.gr term list product_tag --fields=term_id,name,slug,count,description --format=csv > `/Users/eboy/sites/eboy.gr`/product_tags.csv
 
 
@@ -97,6 +85,10 @@ recount για να ανανεωθούν τα counts:
 wp --url=https://simple-city.eboy.test --user=admin wc product_attribute list
 
 wp --url=https://sc-staging.eboy.gr --user=supergiannis term list pa_color --fields=term_id,name,slug,count,description --format=csv > pa_color.csv
+
+wp --url=https://sc-staging.eboy.gr --user=supergiannis term list pa_υλικό --fields=term_id,name,slug,count,description --format=csv > pa_υλικό.csv
+
+scp admin@eboy.gr:../../srv/www/eboy.gr/current/pa_υλικό.csv /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city
 
 
 
