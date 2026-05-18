@@ -121,7 +121,11 @@ WP importer logs (τελευταίες 20 γραμμές):
 
   wp --url=https://sc-staging.eboy.gr/ --user=supergiannis term list pa_υλικό --fields=term_id,name,slug,count,description --format=csv > pa_υλικό.csv
 
+Για να δεις τι θα αλλάξει χωρίς να γραφτεί τίποτα:
+  wp eval-file scripts/reassign-materials.php --url=sc-staging.eboy.gr
 
+Όταν το επιβεβαιώσεις, για actual apply:
+ wp eval-file scripts/reassign-materials.php apply --url=sc-staging.eboy.gr
 
 
   // CRON
@@ -157,8 +161,6 @@ wp --url="https://sc-staging.eboy.gr/" eval '$logs = get_option("xml_importer_lo
   Υπάρχει transient με λάθος αριθμό προϊόντων;                                                                                                          
   wp --url="https://sc-staging.eboy.gr/" eval ' $t = get_transient("xml_import_parsed_pakoworld"); echo $t ? "Transient exists: " . count($t) . " products\n" : "No transient\n";'
 
-
-p
 python3 -c "import json; d=json.load(open(\"/srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/xml_files/pakoworld-ready.json\")); print(f'Ready SKUs: {len(d.get(\"ready_skus\", []))}')" 2>/dev/null || echo "No ready.json"
 
 
@@ -183,6 +185,8 @@ python3 main.py --input /srv/www/eboy.gr/current/web/app/themes/simple-city/scri
 
 python3 main.py --input /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/xml_files/gr/libertab2b.xml --output /Users/eboy/sites/eboy.gr/site/web/app/themes/simple-city/scripts/xml_files/enhanced/libertab2b-enhanced.xml --skus 05-0766 --extend-from-backup --skip-images
 
+
+Εισαωγή μεμονομένου
 wp xml-import sku 05-0766 libertab2b --path=/srv/www/eboy.gr/current/web/wordpress
 
 

@@ -3,8 +3,8 @@
  * Reassign pa_υλικό terms on existing products using the ProductSync material mapping.
  *
  * Usage:
- *   wp eval-file reassign-materials.php              # dry run (no changes)
- *   wp eval-file reassign-materials.php -- --apply   # apply changes
+ *   wp eval-file scripts/reassign-materials.php --url=sc-staging.eboy.gr           # dry run
+ *   wp eval-file scripts/reassign-materials.php apply --url=sc-staging.eboy.gr     # apply changes
  */
 
 use App\Importers\ProductSync;
