@@ -952,41 +952,44 @@ class ProductSync {
         }
 
         static $map = [
-            'Βελούδο'           => ['VELVET', 'VELOUR', 'TEDDY', 'SUEDE'],
-            'MDF'               => ['MDF', 'CLIPBOARD', 'CLIPBORD', 'CHIPBOARD', 'MELAMINE', 'MELAMINR', 'MELANM', 'ΜΕΛΑΜΙΝ', 'ΜΟΡΙΟΣΑΝΙΔ', 'PAPER WOOD', '3D PAPER', 'PAPER MELAMINE', 'LPL', 'PARTICLE BOARD', 'PARTICLEBOARD', 'E1 PARTICLE', 'FIBERBOARD', 'FIBREBOARD', 'MFC', ' PB '],
-            'Κόντρα πλακέ'      => ['PLYWOOD', 'CONTRA PLAQUE', ' PL '],
+            'Βελούδο'           => ['VELVET', 'VELOUR', 'TEDDY', 'SUEDE', 'ΒΕΛΟΥΔ'],
+            'MDF'               => ['MDF', 'CLIPBOARD', 'CLIPBORD', 'CHIPBOARD', 'MELAMINE', 'MELAMINR', 'MELANM', 'ΜΕΛΑΜΙΝ', 'ΜΟΡΙΟΣΑΝΙΔ', 'PAPER WOOD', '3D PAPER', 'PAPER MELAMINE', 'LPL', 'PARTICLE BOARD', 'PARTICLEBOARD', 'E1 PARTICLE', 'FIBERBOARD', 'FIBREBOARD', 'MFC', ' PB ', 'PLYWOOD', 'CONTRA PLAQUE', ' PL ', 'ΚΟΝΤΡΑ', 'ΠΛΑΚ', 'HONEYCOMB'],
             'HPL'               => ['HPL', 'WERZALIT', 'COMPACT LAMINATE'],
             'MGO'               => [' MGO ', 'MAGNESIUM OXIDE'],
-            'Ξύλο Teak'         => ['TEAK'],
-            'Ξύλο'              => [' WOOD', 'PINE WOOD', 'RUBBERWOOD', 'BEECHWOOD', 'BEECH WOOD', 'HARDWOOD', 'MANGO WOOD', 'FINGER JOINTED', 'ΞΥΛΟ', 'ΞΥΛΙΝ', 'ΑΚΑΚΙΑ', 'ΠΑΥΛΩΝΙΑ', 'ACACIA', 'MAHOGANY', 'MINDI', 'SUAR', ' PINE ', 'MERANTI', 'PAULOWNIA', 'MANGO', 'ΜΑΣΙΦ', 'VENEER', 'ΚΑΠΛΑΜΑ', 'DRIFTWOOD', 'DRIFT WOOD', 'ΣΗΜΥΔ', 'BIRCH', 'ΟΞΙΑΣ', ' ΟΞΙΑ', 'ΑΛΒΑΣΙΑ', 'ΦΡΑΞΙΝ', ' ASH ', 'ΕΥΚΑΛΥΠΤ', 'EUCALYPT', 'ΠΕΥΚΟΥ', 'ΜΑΟΝΙ', 'TOON', 'SUNGKAI', 'ΑΠΟΛΙΘΩΜΕΝΟ', 'ARUM', 'LILIANA', 'ΛΙΛΙΑΝΑ', 'ΚΑΡΥΔΙΑΣ', 'ΜΕΛΙΑΣ', 'POLYWOOD'],
+            'Ξύλο'              => [' WOOD', 'PINE WOOD', 'RUBBERWOOD', 'BEECHWOOD', 'BEECH WOOD', 'HARDWOOD', 'MANGO WOOD', 'FINGER JOINTED', 'ΞΥΛΟ', 'ΞΥΛΙΝ', 'ΑΚΑΚΙΑ', 'ΠΑΥΛΩΝΙΑ', 'ACACIA', 'MAHOGANY', 'MINDI', 'SUAR', ' PINE ', 'MERANTI', 'PAULOWNIA', 'MANGO', 'ΜΑΣΙΦ', 'VENEER', 'ΚΑΠΛΑΜΑ', 'DRIFTWOOD', 'DRIFT WOOD', 'ΣΗΜΥΔ', 'BIRCH', 'ΟΞΙΑΣ', ' ΟΞΙΑ', 'ΑΛΒΑΣΙΑ', 'ΦΡΑΞΙΝ', ' ASH ', 'ΕΥΚΑΛΥΠΤ', 'EUCALYPT', 'ΠΕΥΚΟΥ', 'ΜΑΟΝΙ', 'TOON', 'SUNGKAI', 'ΑΠΟΛΙΘΩΜΕΝΟ', 'ARUM', 'LILIANA', 'ΛΙΛΙΑΝΑ', 'ΚΑΡΥΔΙΑΣ', 'ΜΕΛΙΑΣ', 'POLYWOOD', 'TEAK'],
             'Μέταλλο'           => ['METAL', 'ΜΕΤΑΛΛ', 'STEEL', 'IRON', 'ΧΡΩΜΙΟΥ', 'ΧΡΩΜΙΟ ', 'ΑΤΣΑΛΙ', 'ΣΙΔΕΡΟ', 'ΜΑΝΤΕΜ', 'CAST IRON'],
             'Inox'              => ['INOX', 'STAINLESS'],
             'Αλουμίνιο'         => ['ALUMIN', 'ALUM', 'ALU ', 'ΑΛΟΥΜΙΝΙ'],
             'Μάρμαρο'           => ['MARBLE', 'ΜΑΡΜΑΡ'],
-            'Πέτρα'             => ['ΠΕΤΡΑ', 'LIMESTONE', 'TRAVERTINE', 'TRAVERTIN', 'ΤΡΑΒΕΡΤΙΝ'],
+            'Πέτρα'             => ['ΠΕΤΡΑ', 'LIMESTONE', 'TRAVERTINE', 'TRAVERTIN', 'ΤΡΑΒΕΡΤΙΝ', 'Ψηφίδα'],
             'Τσιμέντο'          => ['ΤΣΙΜΕΝΤ', 'CEMENT', 'CIMENT', 'CONCRETE', 'ΣΚΥΡΟΔΕΜ'],
-            'Χαρτί'             => [' PAPER '],
+            'Χαρτί'             => [' PAPER ', 'ΧΑΡΤ'],
             'Μπαμπού'           => ['BAMBOO', 'BAMBOU', 'ΜΠΑΜΠΟΥ', 'ΒΑΜΒΟΟ'],
-            'Ύφασμα'            => ['FABRIC', 'CANVAS', 'ΥΦΑΣΜΑ', 'TEXTILENE', 'TEXTILE', 'MESH', 'OXFORD', 'LINEN', 'WOOL', 'ΠΑΝΙ ', 'ΒΑΜΒΑΚΙ', 'ΒΑΜΒΑΚΕΡ', 'ΚΑΜΒΑΣ', 'OLEFIN', 'ΟΛΕΦΙΝ', 'ΤΣΟΧΑ', 'FELT', 'CHENILLE', 'ΧΕΝΙΛ', 'ΜΠΟΥΚΛΕ', 'BOUCLE', 'NYLON', 'ΝΑΪΛΟΝ', 'ΝΑΥΛΟΝ', 'ΚΑΡΑΒΟΠΑΝΟ', 'ΛΙΝΟ', 'ΒΙΣΚΟΖΗ', 'VISCOSE', 'ΜΑΛΛΙΝ', 'MOHAIR', 'ΜΟΧΕΡ', 'TESLIN'],
-            'Δερματίνη'         => ['PU LEATHER', ' PU ', ' PU-', '-PU ', '.PU', 'PU.', 'LEATHERETTE', 'FAUX LEATHER', 'ΤΕΧΝΟΔΕΡΜ', 'NUBUCK'],
+            'Ύφασμα'            => ['FABRIC', 'CANVAS', 'ΥΦΑΣΜΑ', 'TEXTILENE', 'TEXTILE', 'MESH', 'OXFORD', 'LINEN', 'WOOL', 'ΠΑΝΙ ', 'ΒΑΜΒΑΚΙ', 'ΒΑΜΒΑΚΕΡ', 'ΚΑΜΒΑΣ', 'OLEFIN', 'ΟΛΕΦΙΝ', 'ΤΣΟΧΑ', 'FELT', 'CHENILLE', 'ΧΕΝΙΛ', 'ΜΠΟΥΚΛΕ', 'BOUCLE', 'NYLON', 'ΝΑΙΛΟΝ', 'ΝΑΥΛΟΝ', 'ΚΑΡΑΒΟΠΑΝΟ', 'ΛΙΝΟ', 'ΒΙΣΚΟΖΗ', 'VISCOSE', 'ΜΑΛΛΙΝ', 'MOHAIR', 'ΜΟΧΕΡ', 'TESLIN', 'Κοράλι'],
+            'Δερματίνη'         => ['PU LEATHER', ' PU ', ' PU-', '-PU ', '.PU', 'PU.', 'LEATHERETTE', 'FAUX LEATHER', 'ΤΕΧΝΟΔΕΡΜ', 'NUBUCK', 'ΔΕΡΜΑΤΙΝ'],
             'Δέρμα'             => [' ΔΕΡΜΑ '],
             'Γυαλί'             => ['GLASS', 'ΓΥΑΛ', 'TEMPERED'],
-            'Ρατάν'             => ['RATTAN', 'WICKER', 'RATAN', ' CANE'],
+            'Ρατάν'             => ['RATTAN', 'WICKER', 'RATAN', ' CANE', 'ΡΑΤΑΝ'],
             'Σχοινί'            => ['ROPE', 'ΣΧΟΙΝ', ' CORD ', 'ΚΟΡΔΟΝ', 'VIRO'],
-            'Φυσικές Ίνες'      => ['JUTE', 'ΓΙΟΥΤΑ', 'SEAGRASS', 'SISAL', 'SICAL', 'ABACA', 'HEMP', 'COTTON', 'HYACINTH', 'HYACHINT', 'MENDONG', 'PANDANUS', 'STRAW', 'PALM LEAF', 'BANANA ROOT', 'BANANA MIX', 'BANANA WOOD', 'ALANG', 'RAYUNG', 'RAFFIA', 'GRASS', 'ΨΑΘΑ', 'ΨΑΘΙΝ', 'ΥΑΚΙΝΘ', 'ΥΔΡΟΥΑΚΙΝΘ', 'ΚΑΛΑΜΙ', 'REED', 'ΚΟΚΟΦΟΙΝΙΚ', 'COCONUT', 'ΦΥΛΛΑ ΚΑΛΑΜΠΟΚΙ', 'CORN HUSK', 'ΜΠΑΝΑΝΙΑΣ', 'ΦΟΙΝΙΚΑ'],
+            'Φυσικές Ίνες'      => ['JUTE', 'ΓΙΟΥΤΑ', 'SEAGRASS', 'SISAL', 'SICAL', 'ABACA', 'HEMP', 'COTTON', 'HYACINTH', 'HYACHINT', 'MENDONG', 'PANDANUS', 'STRAW', 'PALM LEAF', 'BANANA ROOT', 'BANANA MIX', 'BANANA WOOD', 'ALANG', 'RAYUNG', 'RAFFIA', 'GRASS', 'ΨΑΘΑ', 'ΨΑΘΙΝ', 'ΥΑΚΙΝΘ', 'ΥΔΡΟΥΑΚΙΝΘ', 'ΚΑΛΑΜΙ', 'REED', 'ΚΟΚΟΦΟΙΝΙΚ', 'COCONUT', 'ΦΥΛΛΑ ΚΑΛΑΜΠΟΚΙ', 'CORN HUSK', 'ΜΠΑΝΑΝΙΑΣ', 'ΦΟΙΝΙΚΑ', 'ΦΥΣΙΚΕΣ'],
             'Φτερό'             => ['ΦΤΕΡΟ', 'FEATHER', 'PLUME'],
-            'Κεραμικό'          => ['CERAMIC', 'ΚΕΡΑΜΙΚ', 'TERRACOTTA', 'STONEWARE', 'DOLOMITE', 'BONE CHINA', 'PORCELAIN', 'SINTERED', 'EARTHENWARE'],
-            'Πολυπροπυλένιο'    => ['HDPE', ' PP ', ' PP-', '-PP ', 'POLYPROPYLENE', 'POLYETHYLENE', 'ΠΟΛΥΠΡΟΠΥΛΕΝΙ', 'ΠΟΛΥΑΙΘΥΛ'],
+            'Κεραμικό'          => ['CERAMIC', 'ΚΕΡΑΜΙΚ', 'TERRACOTTA', 'STONEWARE', 'DOLOMITE', 'BONE CHINA', 'PORCELAIN', 'SINTERED', 'EARTHENWARE', 'FIBER CLAY', 'FIBERCLAY'],
+            'Πολυπροπυλένιο'    => ['HDPE', ' PP ', ' PP-', '-PP ', ' PE ', ' PE-', '-PE ', 'POLYPROPYLENE', 'POLYETHYLENE', 'ΠΟΛΥΠΡΟΠΥΛΕΝΙ', 'ΠΟΛΥΑΙΘΥΛ'],
             'PVC'               => ['PVC'],
-            'Πολυεστέρας'       => ['POLYESTER', '420D', '600D', '100D', 'SILICON COATED FIBER', 'MICROFIBER', 'MICRO FIBER'],
+            'Πολυεστέρας'       => ['POLYESTER', 'ΠΟΛΥΕΣΤΕΡ', '420D', '600D', '100D', 'SILICON COATED FIBER', 'MICROFIBER', 'MICRO FIBER'],
             'Πλαστικό'          => [' ABS ', 'PLASTIC', ' PC ', ' PS ', 'ACRYLIC', 'POLYCARBONATE', 'ΠΛΑΣΤΙΚ', 'ΑΚΡΥΛΙΚ', 'PEVA', 'ΠΟΛΥΚΑΡΒΟΝΙΚ', 'ΠΟΛΥΣΤΥΡΕΝ'],
             'Ρητίνη'            => ['RESIN', 'ΡΗΤΙΝ', 'POLYURETHAN', 'ΠΟΛΥΟΥΡΕΘΑΝ', 'ΡΕΖΙΝ'],
             'Σιλικόνη'          => ['ΣΙΛΙΚΟΝ', 'SILICONE'],
-            'Σφουγγάρι'         => ['FOAM', 'EPS BEADS', ' EPS ', 'SPRING MATTRESS', 'POCKET SPRING', 'MEMORY FOAM', 'LATEX'],
+            'Σφουγγάρι'         => ['FOAM', 'EPS BEADS', ' EPS ', 'SPRING MATTRESS', 'POCKET SPRING', 'MEMORY FOAM', 'LATEX', 'ΣΦΟΥΓΓΑΡ'],
             'Κερί'              => ['ΚΕΡΙ', ' WAX', 'CANDLE'],
         ];
 
-        $upper = mb_strtoupper(' ' . $text . ' ', 'UTF-8');
+        static $accent_map = [
+            'Ά' => 'Α', 'Έ' => 'Ε', 'Ή' => 'Η', 'Ί' => 'Ι', 'Ό' => 'Ο', 'Ύ' => 'Υ', 'Ώ' => 'Ω',
+            'Ϊ' => 'Ι', 'Ϋ' => 'Υ',
+        ];
+
+        $upper = strtr(mb_strtoupper(' ' . $text . ' ', 'UTF-8'), $accent_map);
         $found = [];
 
         foreach ($map as $canonical => $keywords) {
