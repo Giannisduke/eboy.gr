@@ -176,8 +176,9 @@
       </div>
 
     </div>
-    
+
     <div class="views">
+  
 			<div class="row justify-content-between">
 			<div class="left">
 				<button id="grid_2" data-value="view_small"> </button>
@@ -484,6 +485,22 @@ const categoryBtnStyle = (slug) => {
   return icon ? { '--category-bg-image': `url(${icon})` } : {};
 };
 
+// Scroll the page so the filter-bar reaches its sticky (stuck) position.
+// No-op when the bar is already stuck.
+const scrollToStuck = () => {
+  if (!filterBarEl.value) return;
+  const headerHeight = parseFloat(
+    getComputedStyle(document.documentElement).getPropertyValue('--header-height')
+  ) || 80;
+  const rect = filterBarEl.value.getBoundingClientRect();
+  if (rect.top > headerHeight) {
+    window.scrollTo({
+      top: window.scrollY + rect.top - headerHeight + 1,
+      behavior: 'smooth',
+    });
+  }
+};
+
 const selectCategory = (categoryId) => {
   // Toggle category: if already selected, deselect it
   if (selectedCategory.value === categoryId) {
@@ -493,11 +510,13 @@ const selectCategory = (categoryId) => {
     selectedCategory.value = categoryId;
     shopStore.setCategory(categoryId);
   }
+  scrollToStuck();
 };
 
 const toggleOnSale = () => {
   showOnSale.value = !showOnSale.value;
   shopStore.setOnSale(showOnSale.value);
+  scrollToStuck();
 };
 
 const toggleTag = (tagId) => {
@@ -687,13 +706,17 @@ const getMaterialSize = (count) => {
   top: var(--header-height, 80px);
   z-index: 200;
   background: white;
+
+  &.is-stuck {
+    padding: 2rem 0 0 0;
+  }
 }
 
 /* Category Menu */
 .category-menu {
       @include make-container();
       max-width: 1440px;
-    padding-top: 3rem;
+    padding-top: 1rem;
     padding-bottom: 3rem;
     transition: padding 0.12s cubic-bezier(0.2, 0, 0.2, 1);
   @extend .d-flex;
@@ -853,6 +876,29 @@ const getMaterialSize = (count) => {
   width: 60%;
   height: 3px;
   background: $secondary;
+}
+
+/* Stuck (sticky) state: shrink category buttons vertically */
+.filter-bar.is-stuck .category-btn {
+  padding: calc(32px + 0.5rem) 0.75rem 0.5rem;
+  background-size: 32px 32px;
+  background-position: center 0.4rem;
+}
+
+.filter-bar.is-stuck .category-btn.no-icon {
+  padding: 0.5rem 0.75rem;
+}
+
+.filter-bar.is-stuck .category-name {
+  font-size: 0.8rem;
+}
+
+.filter-bar.is-stuck .category-count-badge {
+  min-width: 1.1rem;
+  height: 1.1rem;
+  font-size: 0.65rem;
+  top: 0.15rem;
+  right: 0.15rem;
 }
 
 .category-name {
