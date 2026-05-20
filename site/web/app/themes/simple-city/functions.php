@@ -951,9 +951,10 @@ function get_shop_filter_state($request) {
     };
 
     // Returns per-term product counts within the current filter context.
-    // Skipped when no filters are active — WP's native tt.count is used instead.
-    $get_term_counts = function ($taxonomy) use ($wpdb, $active_subquery, $has_filters) {
-        if (!$has_filters || $active_subquery === null) {
+    // Skipped only when no category and no filters are active — then WP's
+    // native tt.count (global) is the correct value.
+    $get_term_counts = function ($taxonomy) use ($wpdb, $active_subquery) {
+        if ($active_subquery === null) {
             return null;
         }
         $rows = $wpdb->get_results($wpdb->prepare(
