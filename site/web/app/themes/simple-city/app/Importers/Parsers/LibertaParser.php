@@ -16,10 +16,20 @@ class LibertaParser extends AbstractParser {
 
     public function parseProducts() {
         $this->loadXML();
-        $products   = [];
-        $seen_skus  = [];
+        $products        = [];
+        $seen_skus       = [];
+        $skipped_nostock = 0;
 
         foreach ($this->getProductNodes() as $productNode) {
+            // Strict skip: any product whose raw <quantity> is < 1 is not imported.
+            // Reading the tag directly (mirrors the B2BMarkt pattern) so existing
+            // out-of-stock products get trashed by trashMissingProducts().
+            $raw_stock = (float) str_replace(',', '.', (string) $productNode->quantity);
+            if ($raw_stock < 1) {
+                $skipped_nostock++;
+                continue;
+            }
+
             try {
                 $product = $this->parseProduct($productNode);
                 if ($product->validate() !== true) {
@@ -34,6 +44,10 @@ class LibertaParser extends AbstractParser {
             } catch (\Exception $e) {
                 error_log("Liberta Parser Error: " . $e->getMessage());
             }
+        }
+
+        if ($skipped_nostock > 0) {
+            error_log("LibertaParser: Skipped {$skipped_nostock} products with quantity < 1.");
         }
 
         return $products;

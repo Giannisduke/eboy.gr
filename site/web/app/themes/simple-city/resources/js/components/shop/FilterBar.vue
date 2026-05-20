@@ -20,11 +20,18 @@
         @click="selectCategory(category.id)"
       >
         <span class="category-name">{{ category.name }}</span>
+        <span v-if="category.count !== undefined" class="category-count-badge">{{ category.count }}</span>
       </button>
     </div>
 
     <!-- Filters Container (Two Columns) -->
-    <div class="filters-container" :class="{ 'filters-open': filtersOpen }">
+    <div
+      class="filters-container"
+      :class="{
+        'filters-open': filtersOpen,
+        'has-category': selectedCategory !== null,
+      }"
+    >
       <!-- Tag Cloud (Left Column) -->
       <div v-if="shopStore.tags.length > 0" class="tag-cloud">
         <div
@@ -275,15 +282,24 @@ const setupStickyObserver = () => {
   const headerHeight = parseFloat(
     getComputedStyle(document.documentElement).getPropertyValue('--header-height')
   ) || 80;
+  // Hysteresis: sentinel has measurable height (see .filter-bar-sentinel CSS) so
+  // intersectionRatio yields true partial values. We only toggle at the extremes,
+  // giving a stable dead-zone around the boundary that absorbs wheel-momentum
+  // oscillations.
   stickyObserver = new IntersectionObserver(
     ([entry]) => {
-      const stuck = !entry.isIntersecting;
-      isStuck.value = stuck;
-      if (!stuck) filtersOpen.value = false;
+      if (entry.intersectionRatio <= 0) {
+        if (!isStuck.value) isStuck.value = true;
+      } else if (entry.intersectionRatio >= 1) {
+        if (isStuck.value) {
+          isStuck.value = false;
+          filtersOpen.value = false;
+        }
+      }
     },
     {
       rootMargin: `-${Math.ceil(headerHeight)}px 0px 0px 0px`,
-      threshold: 0,
+      threshold: [0, 1],
     }
   );
   if (sentinelEl.value) stickyObserver.observe(sentinelEl.value);
@@ -656,7 +672,10 @@ const getMaterialSize = (count) => {
 @import "bootstrap/scss/utilities/api";
 
 .filter-bar-sentinel {
-  height: 0;
+  /* Tall sentinel provides hysteresis dead-zone for the IntersectionObserver
+     (ratio 0 ↔ 1), preventing flicker around the stuck boundary. */
+  height: 40px;
+  margin-bottom: -40px;
   visibility: hidden;
   pointer-events: none;
 }
@@ -753,39 +772,37 @@ const getMaterialSize = (count) => {
   }
 }
 
-/* Filters container collapse — fast transform/opacity + delayed max-height snap (no layout thrashing during animation) */
+/* Filters container collapse — single max-height + opacity transition.
+   Avoid transform: scaleY on a child of a sticky parent (causes paint glitches
+   on desktop Chrome/Safari) and avoid the instant max-height snap which jumped
+   layout below the bar. Both states share the same transition so closing and
+   opening animate symmetrically. */
 .filters-container {
-  max-height: 2000px;
+  max-height: 0;
   overflow: hidden;
-  opacity: 1;
-  transform: scaleY(1);
-  transform-origin: top;
-  transform-box: border-box;
-  /* Un-stick: max-height snaps back instantly (0s), then transform/opacity animate in */
+  opacity: 0;
+  pointer-events: none;
   transition:
-    opacity 0.12s cubic-bezier(0.2, 0, 0.2, 1),
-    transform 0.12s cubic-bezier(0.2, 0, 0.2, 1),
-    max-height 0s linear;
-  will-change: opacity, transform;
-  contain: layout style;
+    max-height 0.22s cubic-bezier(0.2, 0, 0.2, 1),
+    opacity 0.15s cubic-bezier(0.2, 0, 0.2, 1);
+  will-change: max-height, opacity;
+}
+
+.filters-container.has-category {
+  max-height: 2000px;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .filter-bar.is-stuck .filters-container {
-  opacity: 0;
-  transform: scaleY(0);
   max-height: 0;
+  opacity: 0;
   pointer-events: none;
-  /* Stick: transform/opacity animate, then max-height snaps at the end (after 0.12s) */
-  transition:
-    opacity 0.12s cubic-bezier(0.2, 0, 0.2, 1),
-    transform 0.12s cubic-bezier(0.2, 0, 0.2, 1),
-    max-height 0s linear 0.12s;
 }
 
 .filter-bar.is-stuck .filters-container.filters-open {
-  opacity: 1;
-  transform: scaleY(1);
   max-height: 2000px;
+  opacity: 1;
   pointer-events: auto;
 }
 
@@ -811,6 +828,7 @@ const getMaterialSize = (count) => {
   width: 150px;
   flex: 0 0 150px;
   position: relative;
+  border: 1px $fourth solid;
 }
 
 .category-btn.no-icon {
@@ -844,6 +862,25 @@ const getMaterialSize = (count) => {
   white-space: normal;
   word-wrap: break-word;
   overflow-wrap: break-word;
+}
+
+.category-count-badge {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.35rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1;
+  color: $primary;
+  background-color: $secondary;
+  border-radius: 999px;
+  pointer-events: none;
 }
 
 /* Filters Container (Two Columns) */
