@@ -807,10 +807,9 @@ const getMaterialSize = (count) => {
   text-align: center;
 
   & .cloud-inner {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: flex-start;
+    @extend .d-flex;
+    flex-wrap: wrap;
+    @extend .justify-content-center;
     overflow-x: auto;
     overflow-y: hidden;
   }
@@ -1305,13 +1304,6 @@ const getMaterialSize = (count) => {
 
     & .color-swatch:hover .color-name {
       opacity: 1;
-    }
-
-    & .cloud-inner {
-      overflow: hidden;
-      transition: max-height 0.35s ease;
-      display: flex;
-      flex-wrap: wrap;
     }
 
     & .cloud-toggle-btn {
