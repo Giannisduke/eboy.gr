@@ -2,6 +2,12 @@
     border: 1px solid red;
 }
 
+// Button variant: same anatomy as .btn-primary, background = $fourth.
+// Hover/active/disabled states are derived by Bootstrap's button-variant mixin.
+.btn-tags {
+    @include button-variant($third, $third);
+}
+
 body {
     background-color: #fff;
    // @extend .bg-light;

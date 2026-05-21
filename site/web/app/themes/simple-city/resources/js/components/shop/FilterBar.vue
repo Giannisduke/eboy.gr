@@ -7,25 +7,42 @@
   >
     <!-- Category Menu with Icons -->
     <div class="category-menu">
-      <button
-        class="category-btn test"
-        :class="{ active: showOnSale }"
-        :style="{ '--category-bg-image': `url(${salesIcon})` }"
-        @click="toggleOnSale"
-      >
-        <span class="category-name">Προσφορές</span>
-      </button>
-      <button
-        v-for="category in shopStore.categories"
-        :key="category.id"
-        class="category-btn"
-        :class="{ active: selectedCategory === category.id, 'no-icon': !getCategoryIcon(category.slug) }"
-        :style="categoryBtnStyle(category.slug)"
-        @click="selectCategory(category.id)"
-      >
-        <span class="category-name">{{ category.name }}</span>
-        <span v-if="category.count !== undefined" class="category-count-badge">{{ category.count }}</span>
-      </button>
+      <div class="categories-wrapper">
+        <button
+          class="category-btn"
+          :class="{ active: showOnSale }"
+          :style="{ '--category-bg-image': `url(${salesIcon})` }"
+          @click="toggleOnSale"
+        >
+          <span class="category-name">Προσφορές</span>
+        </button>
+        <button
+          v-for="category in shopStore.categories"
+          :key="category.id"
+          class="category-btn"
+          :class="{ active: selectedCategory === category.id, 'no-icon': !getCategoryIcon(category.slug) }"
+          :style="categoryBtnStyle(category.slug)"
+          @click="selectCategory(category.id)">
+          <span class="category-name">{{ category.name }}</span>
+          <span v-if="category.count !== undefined" class="category-count-badge">{{ category.count }}</span>
+        </button>
+      </div>
+
+        				<!-- Hide-filters template: tags appear here when a category is selected -->
+				<div v-if="props.hideFilters && selectedCategory !== null && shopStore.tags.length > 0" class="tag-cloud-inline">
+					<div class="cloud-inner">
+						<button
+							v-for="tag in stableSortedTags"
+							:key="tag.id"
+							class="tag-btn"
+							:class="{ active: shopStore.filters.tags.includes(tag.id) }"
+							@click="shopStore.setSingleTag(tag.id)"
+						>
+							{{ tag.name }} <span class="tag-count">({{ tag.count }})</span>
+						</button>
+					</div>
+				</div>
+      
     </div>
 
     <!-- Filters Container (Two Columns) -->
@@ -193,23 +210,6 @@
 
 			<!-- Results Count / Tags (hide-filters template) -->
 			<div class="results-count col-auto">
-				<!-- Hide-filters template: tags appear here when a category is selected -->
-				<div
-					v-if="props.hideFilters && selectedCategory !== null && shopStore.tags.length > 0"
-					class="tag-cloud-inline"
-				>
-					<div class="cloud-inner">
-						<button
-							v-for="tag in stableSortedTags"
-							:key="tag.id"
-							class="tag-btn"
-							:class="{ active: shopStore.filters.tags.includes(tag.id) }"
-							@click="shopStore.setSingleTag(tag.id)"
-						>
-							{{ tag.name }} <span class="tag-count">({{ tag.count }})</span>
-						</button>
-					</div>
-				</div>
 			</div>
 
 			<div class="right col-auto">
@@ -755,11 +755,20 @@ const getMaterialSize = (count) => {
 .category-menu {
       @include make-container();
       max-width: 1440px;
-    padding-top: 1rem;
-    padding-bottom: 3rem;
-    transition: padding 0.12s cubic-bezier(0.2, 0, 0.2, 1);
-  @extend .d-flex;
-  @extend .justify-content-between;
+      padding-top: 1rem;
+      padding-bottom: 3rem;
+      transition: padding 0.12s cubic-bezier(0.2, 0, 0.2, 1);
+
+    & .categories-wrapper {
+      @include make-row();
+      @extend .justify-content-between;
+    }
+
+    & .tag-cloud-inline {
+      @include make-row();
+      @extend .justify-content-center;
+      @extend .mt-4;
+    }
 }
 
 .filter-bar.is-stuck .category-menu {
@@ -808,28 +817,38 @@ const getMaterialSize = (count) => {
 
   & .tag-btn {
     @extend .btn;
-    @extend .btn-primary;
+    @include button-variant($third, $third);
+    background-color: transparent;
+    border: 1px solid $fourth;
     margin: 0.05rem;
     flex: 0 0 auto;
     white-space: nowrap;
+    position: relative;
   }
 
   & .tag-btn:hover {
-    background: $secondary;
+    background: #f5f5f5;
     transform: translateY(-2px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
   & .tag-btn.active {
-    background: #ffd700;
-    border-color: #ffd700;
-    color: #000;
-    font-weight: 600;
+    background: #f0f0f0;
+    border-color: $primary;
+  }
+
+  & .tag-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 3px;
+    background: $secondary;
   }
 
   & .tag-btn.active:hover {
-    background: #ffed4e;
-    border-color: #ffed4e;
+    background: #f0f0f0;
   }
 
   & .tag-btn.disabled {
@@ -1314,27 +1333,35 @@ const getMaterialSize = (count) => {
     & .tag-btn {
       @extend .btn;
       @extend .btn-primary;
+      background-color: transparent;
+      border: 1px solid $fourth;
      // @extend .m-1;
      margin: 0.05rem;
+     position: relative;
     }
 
     & .tag-btn:hover {
-    // border-color: #999;
-      background: $secondary;
+      background: #f5f5f5;
       transform: translateY(-2px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     & .tag-btn.active {
-      background: #ffd700;
-      border-color: #ffd700;
-      color: #000;
-      font-weight: 600;
+      background: #f0f0f0;
+    }
+
+    & .tag-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 3px;
+      background: $secondary;
     }
 
     & .tag-btn.active:hover {
-      background: #ffed4e;
-      border-color: #ffed4e;
+      background: #f0f0f0;
     }
 
     & .tag-btn.disabled {
