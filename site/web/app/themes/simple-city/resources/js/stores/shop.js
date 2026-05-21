@@ -379,6 +379,17 @@ export const useShopStore = defineStore('shop', {
             this._applyFilters();
         },
 
+        // Single-select tag: replaces any previous tag selection.
+        // Clicking the already-selected tag clears the selection.
+        setSingleTag(tagId) {
+            const isAlreadySelected =
+                this.filters.tags.length === 1 && this.filters.tags[0] === tagId;
+            this.filters.tags = isAlreadySelected ? [] : [tagId];
+            this.filters.page = 1;
+            this.updateURL();
+            this._applyFilters();
+        },
+
         toggleColor(colorId) {
             const index = this.filters.colors.indexOf(colorId);
             if (index === -1) {

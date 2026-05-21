@@ -69,7 +69,7 @@ body {
 
                 & .top_wrapper {
                     @include make-container();
-                    max-width: 1400px;
+                    max-width: 1440px;
                    & nav {
                         @include make-col-ready();
 
@@ -110,6 +110,7 @@ body {
                     & .searchrow {
                         @include make-container();
                         max-width: 1440px;
+                        @extend .p-0;
 
                      & .searchwrap {
                         @include make-row();

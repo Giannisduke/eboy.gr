@@ -3,7 +3,7 @@
     <v-main>
       <div class="shop-page">
         <!-- Filters -->
-        <FilterBar />
+        <FilterBar :hide-filters="hideFilters" />
 
     <!-- Error State -->
     <div v-if="shopStore.error" class="error">
@@ -60,6 +60,10 @@ import { useShopStore } from '../../stores/shop';
 import FilterBar from './FilterBar.vue';
 import ProductCard from './ProductCard.vue';
 import ProductCardSkeleton from './ProductCardSkeleton.vue';
+
+defineProps({
+  hideFilters: { type: Boolean, default: false },
+});
 
 const shopStore = useShopStore();
 

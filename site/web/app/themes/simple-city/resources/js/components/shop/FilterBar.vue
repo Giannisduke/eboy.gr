@@ -1,6 +1,10 @@
 <template>
   <div ref="sentinelEl" class="filter-bar-sentinel" aria-hidden="true"></div>
-  <div class="filter-bar" :class="{ 'is-stuck': isStuck }" ref="filterBarEl">
+  <div
+    class="filter-bar"
+    :class="{ 'is-stuck': isStuck, 'hide-filters-mode': props.hideFilters }"
+    ref="filterBarEl"
+  >
     <!-- Category Menu with Icons -->
     <div class="category-menu">
       <button
@@ -26,6 +30,7 @@
 
     <!-- Filters Container (Two Columns) -->
     <div
+      v-if="!props.hideFilters"
       class="filters-container"
       :class="{
         'filters-open': filtersOpen,
@@ -180,32 +185,34 @@
     <div class="views">
   
 			<div class="row justify-content-between">
-			<div class="left">
+			<div class="left col-auto">
 				<button id="grid_2" data-value="view_small"> </button>
 				<button id="grid_4" class="selected" data-value="view_normal"></button>
 				<button id="grid_6" data-value="view_large"></button>
 			</div>
 
-			<!-- Results Count -->
-			<div class="results-count">
-				<div class="results-text">
-					<span
-						v-for="chip in activeFilters"
-						:key="chip.key"
-						class="filter-chip"
-					>
-						{{ chip.label }}
-						<button class="filter-chip-remove" @click="chip.action" aria-label="Αφαίρεση φίλτρου">×</button>
-					</span>
-					<button
-						v-if="activeFilters.length > 0"
-						class="filter-clear-all"
-						@click="shopStore.clearFilters()"
-					>Ακύρωση Όλων</button>
+			<!-- Results Count / Tags (hide-filters template) -->
+			<div class="results-count col-auto">
+				<!-- Hide-filters template: tags appear here when a category is selected -->
+				<div
+					v-if="props.hideFilters && selectedCategory !== null && shopStore.tags.length > 0"
+					class="tag-cloud-inline"
+				>
+					<div class="cloud-inner">
+						<button
+							v-for="tag in stableSortedTags"
+							:key="tag.id"
+							class="tag-btn"
+							:class="{ active: shopStore.filters.tags.includes(tag.id) }"
+							@click="shopStore.setSingleTag(tag.id)"
+						>
+							{{ tag.name }} <span class="tag-count">({{ tag.count }})</span>
+						</button>
+					</div>
 				</div>
 			</div>
 
-			<div class="right">
+			<div class="right col-auto">
 				<v-select
 					id="sort-select"
 					v-model="sortValue"
@@ -250,6 +257,10 @@ import iconExoterikos from '../../../images/exoterikos-choros.svg';
 import iconMpanio from '../../../images/mpanio.svg';
 import iconKouzina from '../../../images/kitchen.svg';
 import salesIcon from '../../../images/sales.svg';
+
+const props = defineProps({
+  hideFilters: { type: Boolean, default: false },
+});
 
 const shopStore = useShopStore();
 
@@ -637,6 +648,38 @@ const sortedTags = computed(() =>
   [...shopStore.tags].sort((a, b) => b.count - a.count)
 );
 
+// Hide-filters mode: stable tag order captured on first load after a category
+// change. Stops the cloud from re-shuffling each time a tag is clicked (counts
+// change → default sortedTags would re-sort).
+const stableTagOrder = ref([]);
+
+watch(() => shopStore.filters.category, () => {
+  stableTagOrder.value = [];
+});
+
+watch(
+  () => shopStore.tags,
+  (newTags) => {
+    if (!props.hideFilters) return;
+    if (stableTagOrder.value.length === 0 && newTags.length > 0) {
+      stableTagOrder.value = [...newTags]
+        .sort((a, b) => b.count - a.count)
+        .map(t => t.id);
+    }
+  },
+  { immediate: true }
+);
+
+const stableSortedTags = computed(() => {
+  if (!props.hideFilters || stableTagOrder.value.length === 0) {
+    return sortedTags.value;
+  }
+  const tagsById = new Map(shopStore.tags.map(t => [t.id, t]));
+  return stableTagOrder.value
+    .map(id => tagsById.get(id))
+    .filter(Boolean);
+});
+
 const sortedMaterials = computed(() => {
   return [...shopStore.materials].sort((a, b) => {
     const aAvail = a.available === false ? 1 : 0;
@@ -706,10 +749,6 @@ const getMaterialSize = (count) => {
   top: var(--header-height, 80px);
   z-index: 200;
   background: white;
-
-  &.is-stuck {
-    padding: 2rem 0 0 0;
-  }
 }
 
 /* Category Menu */
@@ -724,7 +763,7 @@ const getMaterialSize = (count) => {
 }
 
 .filter-bar.is-stuck .category-menu {
-  padding-top: 2.5rem;
+  padding-top: 4.5rem;
   padding-bottom: 0.5rem;
 }
 
@@ -733,6 +772,102 @@ const getMaterialSize = (count) => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Hide-filters template: override the make-col(4) widths defined in
+   sections.scss for .shop .views .{left,results-count,right} so the
+   three cols size to their content instead of a fixed 33% column. */
+.filter-bar.hide-filters-mode .views {
+  & .row {
+    flex-wrap: inherit;
+  }
+
+  & .left,
+  & .results-count,
+  & .right {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: none;
+  }
+}
+
+/* Inline tag cloud — used on the hide-filters template,
+   rendered inside .results-count when a category is selected */
+.tag-cloud-inline {
+  width: 100%;
+  text-align: center;
+
+  & .cloud-inner {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  & .tag-btn {
+    @extend .btn;
+    @extend .btn-primary;
+    margin: 0.05rem;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  & .tag-btn:hover {
+    background: $secondary;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  & .tag-btn.active {
+    background: #ffd700;
+    border-color: #ffd700;
+    color: #000;
+    font-weight: 600;
+  }
+
+  & .tag-btn.active:hover {
+    background: #ffed4e;
+    border-color: #ffed4e;
+  }
+
+  & .tag-btn.disabled {
+    background: #f5f5f5;
+    color: #ccc;
+    border-color: #e5e5e5;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  & .tag-btn.disabled:hover {
+    background: #f5f5f5;
+    border-color: #e5e5e5;
+    transform: none;
+    box-shadow: none;
+  }
+
+  & .tag-count {
+    font-size: 0.85em;
+    opacity: 0.7;
+    margin-left: 0.25rem;
+  }
+
+  & .cloud-toggle-btn {
+    margin-top: 0.5rem;
+    padding: 0.2rem 0.75rem;
+    font-size: 0.78rem;
+    background: transparent;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+
+    &:hover {
+      border-color: #000;
+      color: #000;
+    }
+  }
 }
 
 .results-text {
@@ -827,10 +962,6 @@ const getMaterialSize = (count) => {
   max-height: 2000px;
   opacity: 1;
   pointer-events: auto;
-}
-
-.filter-bar.is-stuck .views {
-  margin-top: 0 !important;
 }
 
 .category-btn {

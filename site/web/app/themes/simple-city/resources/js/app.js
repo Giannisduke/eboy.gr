@@ -252,8 +252,9 @@ if (priceEl && qtyInput) {
 // Mount Vue Shop App
 const shopAppElement = document.getElementById('vue-shop-app');
 if (shopAppElement) {
+    const hideFilters = shopAppElement.hasAttribute('data-hide-filters');
     const pinia = createPinia();
-    const shopApp = createApp(ShopPage);
+    const shopApp = createApp(ShopPage, { hideFilters });
     shopApp.use(pinia);
     shopApp.use(vuetify);
     shopApp.mount('#vue-shop-app');
