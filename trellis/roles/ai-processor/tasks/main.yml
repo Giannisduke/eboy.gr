@@ -37,19 +37,19 @@
     group: "{{ web_group }}"
     mode: '0755'
   loop:
-    - "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor"
-    - "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/logs"
-    - "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/xml_files"
-    - "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/xml_files/en"
-    - "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/xml_files/gr"
-    - "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/xml_files/enhanced"
+    - "{{ ai_site_root }}/shared/web/app/plugins/eboy-product-importer/product-ai-processor"
+    - "{{ ai_site_root }}/shared/web/app/plugins/eboy-product-importer/product-ai-processor/logs"
+    - "{{ ai_site_root }}/shared/web/app/plugins/eboy-product-importer/data/xml_files"
+    - "{{ ai_site_root }}/shared/web/app/plugins/eboy-product-importer/data/xml_files/en"
+    - "{{ ai_site_root }}/shared/web/app/plugins/eboy-product-importer/data/xml_files/gr"
+    - "{{ ai_site_root }}/shared/web/app/plugins/eboy-product-importer/data/xml_files/enhanced"
     - "{{ ai_site_root }}/shared/web/app/uploads/ai-processed-images"
   tags: [ai-processor]
 
 - name: Deploy .env file for AI processor (shared — survives deploys)
   template:
     src: env.j2
-    dest: "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/.env"
+    dest: "{{ ai_site_root }}/shared/web/app/plugins/eboy-product-importer/product-ai-processor/.env"
     owner: "{{ web_user }}"
     group: "{{ web_group }}"
     mode: '0640'
@@ -57,8 +57,8 @@
 
 - name: Symlink .env into current release
   file:
-    src: "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/.env"
-    dest: "{{ ai_site_root }}/current/web/app/themes/simple-city/scripts/product-ai-processor/.env"
+    src: "{{ ai_site_root }}/shared/web/app/plugins/eboy-product-importer/product-ai-processor/.env"
+    dest: "{{ ai_site_root }}/current/web/app/plugins/eboy-product-importer/product-ai-processor/.env"
     state: link
     owner: "{{ web_user }}"
     group: "{{ web_group }}"
@@ -67,29 +67,29 @@
 
 - name: Check if AI processor code is deployed
   stat:
-    path: "{{ ai_site_root }}/current/web/app/themes/simple-city/scripts/product-ai-processor/requirements.txt"
+    path: "{{ ai_site_root }}/current/web/app/plugins/eboy-product-importer/product-ai-processor/requirements.txt"
   register: ai_processor_code
   tags: [ai-processor, venv, dependencies]
 
 - name: Ensure Python venv exists (in shared — persists across deploys)
-  command: python3 -m venv "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/venv"
+  command: python3 -m venv "{{ ai_site_root }}/shared/web/app/plugins/eboy-product-importer/product-ai-processor/venv"
   args:
-    creates: "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/venv/bin/python3"
+    creates: "{{ ai_site_root }}/shared/web/app/plugins/eboy-product-importer/product-ai-processor/venv/bin/python3"
   become_user: "{{ web_user }}"
   when: ai_processor_code.stat.exists
   tags: [ai-processor, venv]
 
 - name: Remove existing venv directory from current release (if not already a symlink)
   file:
-    path: "{{ ai_site_root }}/current/web/app/themes/simple-city/scripts/product-ai-processor/venv"
+    path: "{{ ai_site_root }}/current/web/app/plugins/eboy-product-importer/product-ai-processor/venv"
     state: absent
   when: ai_processor_code.stat.exists
   tags: [ai-processor, venv]
 
 - name: Symlink venv into current release
   file:
-    src: "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/venv"
-    dest: "{{ ai_site_root }}/current/web/app/themes/simple-city/scripts/product-ai-processor/venv"
+    src: "{{ ai_site_root }}/shared/web/app/plugins/eboy-product-importer/product-ai-processor/venv"
+    dest: "{{ ai_site_root }}/current/web/app/plugins/eboy-product-importer/product-ai-processor/venv"
     state: link
     owner: "{{ web_user }}"
     group: "{{ web_group }}"
@@ -99,8 +99,8 @@
 
 - name: Install Python dependencies
   pip:
-    requirements: "{{ ai_site_root }}/current/web/app/themes/simple-city/scripts/product-ai-processor/requirements.txt"
-    virtualenv: "{{ ai_site_root }}/shared/web/app/themes/simple-city/scripts/product-ai-processor/venv"
+    requirements: "{{ ai_site_root }}/current/web/app/plugins/eboy-product-importer/product-ai-processor/requirements.txt"
+    virtualenv: "{{ ai_site_root }}/shared/web/app/plugins/eboy-product-importer/product-ai-processor/venv"
     virtualenv_command: python3 -m venv
   become_user: "{{ web_user }}"
   when: ai_processor_code.stat.exists

@@ -314,8 +314,8 @@ class B2BMarktParser extends AbstractParser {
 
     /**
      * Map an enhanced-XML path to its original counterpart:
-     *   …/scripts/xml_files/enhanced/b2bmarkt-enhanced.xml
-     * → …/scripts/xml_files/gr/b2bmarkt.xml
+     *   …/data/xml_files/enhanced/b2bmarkt-enhanced.xml
+     * → …/data/xml_files/gr/b2bmarkt.xml
      */
     private function resolveOriginalXMLPath(): ?string {
         $path = $this->file_path;

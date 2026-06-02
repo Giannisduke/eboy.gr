@@ -31,8 +31,8 @@ wordpress_sites:
       skip_cache_cookie: comment_author|wordpress_[a-f0-9]+|wp-postpass|wordpress_no_cache|wordpress_logged_in|woocommerce_cart_hash|woocommerce_items_in_cart|wp_woocommerce_session_
     shared_paths:
       - web/app/uploads
-      - web/app/themes/simple-city/scripts/xml_files
-      - web/app/themes/simple-city/scripts/product-ai-processor/logs
+      - web/app/plugins/eboy-product-importer/data/xml_files
+      - web/app/plugins/eboy-product-importer/product-ai-processor/logs
     env:
       WP_ENV: staging
       MULTISITE: true

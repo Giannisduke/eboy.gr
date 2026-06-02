@@ -505,7 +505,7 @@ class ProductSync {
             return [];
         }
 
-        $script_dir = dirname(dirname(dirname(__FILE__))) . '/scripts/product-ai-processor';
+        $script_dir = dirname(__DIR__) . '/product-ai-processor';
         $wrapper    = $script_dir . '/rembg_run.sh';
 
         // rembg_run.sh is inside the virtiofs mount so file_exists() works even

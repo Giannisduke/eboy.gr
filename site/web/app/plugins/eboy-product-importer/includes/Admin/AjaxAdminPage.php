@@ -55,10 +55,10 @@ class AjaxAdminPage {
             return;
         }
 
-        $js_path = get_template_directory() . '/app/Importers/Admin/assets/admin.js';
+        $js_path = __DIR__ . '/assets/admin.js';
         wp_enqueue_script(
             'xml-importer-admin',
-            get_template_directory_uri() . '/app/Importers/Admin/assets/admin.js',
+            plugins_url('assets/admin.js', __FILE__),
             ['jquery'],
             file_exists($js_path) ? filemtime($js_path) : '1.0.0',
             true
@@ -72,7 +72,7 @@ class AjaxAdminPage {
 
         wp_enqueue_style(
             'xml-importer-admin',
-            get_template_directory_uri() . '/app/Importers/Admin/assets/admin.css',
+            plugins_url('assets/admin.css', __FILE__),
             [],
             '1.0.0'
         );
@@ -440,15 +440,12 @@ class AjaxAdminPage {
         }
 
         try {
-            // Use __DIR__ to get actual filesystem path
-            // __DIR__ = /path/to/theme/app/Importers/Admin
-            // Theme root = __DIR__ . '/../../..'
-            $theme_root = dirname(dirname(dirname(__DIR__)));
-            $script_dir = $theme_root . '/scripts/product-ai-processor';
-            $xml_dir = $theme_root . '/scripts/xml_files/';
+            $plugin_root = dirname(__DIR__, 2);
+            $script_dir  = $plugin_root . '/product-ai-processor';
+            $xml_dir     = $plugin_root . '/data/xml_files/';
 
             if (!file_exists($script_dir)) {
-                wp_send_json_error(['message' => "AI Enhancement script directory not found at: {$script_dir}. Theme root: {$theme_root}"]);
+                wp_send_json_error(['message' => "AI Enhancement script directory not found at: {$script_dir}. Plugin root: {$plugin_root}"]);
             }
 
             $python_script = $script_dir . '/main.py';
@@ -530,7 +527,7 @@ class AjaxAdminPage {
             wp_send_json_error(['message' => 'Invalid or missing supplier']);
         }
 
-        $xml_dir = get_template_directory() . '/scripts/xml_files/';
+        $xml_dir = dirname(__DIR__, 2) . '/data/xml_files/';
         $progress_file = $xml_dir . $supplier . '-progress.json';
         $enhanced_xml = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml';
 
@@ -703,11 +700,11 @@ class AjaxAdminPage {
 
             // Step 3: AI Enhancement for new products (if any)
             if (!empty($diff['new'])) {
-                // Python AI processor script (in project root /scripts/)
-            $script_dir = get_template_directory() . '/../../../../../scripts/product-ai-processor';
+                $plugin_root   = dirname(__DIR__, 2);
+                $script_dir    = $plugin_root . '/product-ai-processor';
                 $python_script = $script_dir . '/main.py';
-                $venv_python = $script_dir . '/venv/bin/python3';
-                $xml_dir = get_template_directory() . '/scripts/xml_files/';
+                $venv_python   = $script_dir . '/venv/bin/python3';
+                $xml_dir       = $plugin_root . '/data/xml_files/';
 
                 $input_xml = $xml_dir . 'gr/' . $supplier . '.xml';
                 $output_xml = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml';
@@ -777,7 +774,7 @@ class AjaxAdminPage {
      * Get supplier URL from xml_urls.txt
      */
     private function getSupplierURL($supplier) {
-        $xml_dir = get_template_directory() . '/scripts/xml_files/';
+        $xml_dir = dirname(__DIR__, 2) . '/data/xml_files/';
         $urls_file = $xml_dir . 'xml_urls.txt';
 
         if (!file_exists($urls_file)) {
@@ -960,9 +957,7 @@ class AjaxAdminPage {
 
         error_log("AjaxAdminPage: Stopping AI processing (user closed page)");
 
-        // Use __FILE__ for reliable path resolution
-        $theme_root = dirname(dirname(dirname(dirname(__FILE__))));
-        $xml_dir = $theme_root . '/scripts/xml_files/';
+        $xml_dir = dirname(__DIR__, 2) . '/data/xml_files/';
 
         // Kill Python AI processes
         $kill_command = "pkill -9 -f 'product-ai-processor'";

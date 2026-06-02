@@ -29,6 +29,8 @@ web/app/plugins/*
 !web/app/plugins/webexpert-timologio-for-woocommerce
 !web/app/plugins/webexpert-google-merchant-product-data-feed
 !web/app/plugins/recaptcha-woo
+!web/app/plugins/eboy-product-importer
+web/app/plugins/eboy-product-importer/data/xml_files/**
 web/app/mu-plugins/*/
 !web/app/themes/twentytwentyfive/
 !web/app/themes/woodmart
@@ -37,11 +39,14 @@ web/app/upgrade
 web/app/uploads/*
 !web/app/uploads/.gitkeep
 web/app/cache/*
-web/app/themes/simple-city/scripts/xml_files/**
 
 # WordPress
 web/wp
 web/.htaccess
+
+# Python bytecode (product-ai-processor)
+__pycache__/
+*.pyc
 
 # Logs
 *.log

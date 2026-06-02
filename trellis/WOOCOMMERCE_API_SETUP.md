@@ -72,10 +72,10 @@ AI_MODEL_EN={{ ai_processor.ai_model_english }}
 TRANSLATION_MODEL={{ ai_processor.translation_model }}
 
 # File Paths
-XML_INPUT_DIR={{ www_root }}/web/app/themes/simple-city/xml_files
-XML_OUTPUT_DIR={{ www_root }}/web/app/themes/simple-city/xml_files/enhanced
+XML_INPUT_DIR={{ www_root }}/web/app/plugins/eboy-product-importer/data/xml_files
+XML_OUTPUT_DIR={{ www_root }}/web/app/plugins/eboy-product-importer/data/xml_files/enhanced
 IMAGE_OUTPUT_DIR={{ www_root }}/web/app/uploads/ai-processed-images
-LOG_DIR={{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor/logs
+LOG_DIR={{ www_root }}/web/app/plugins/eboy-product-importer/product-ai-processor/logs
 
 # Processing Configuration
 BATCH_SIZE={{ ai_processor.batch_size }}
@@ -100,7 +100,7 @@ DEBUG={{ 'true' if ai_processor.debug | default(false) else 'false' }}
 - name: Deploy .env file for AI processor
   template:
     src: env.j2
-    dest: "{{ www_root }}/web/app/themes/simple-city/scripts/product-ai-processor/.env"
+    dest: "{{ www_root }}/web/app/plugins/eboy-product-importer/product-ai-processor/.env"
     owner: "{{ web_user }}"
     group: "{{ web_group }}"
     mode: '0640'
@@ -133,7 +133,7 @@ ansible-playbook server.yml -e env=production --tags ai-processor
 ## Testing WooCommerce Connection
 
 ```bash
-cd /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/product-ai-processor
+cd /srv/www/eboy.gr/current/web/app/plugins/eboy-product-importer/product-ai-processor
 source venv/bin/activate
 
 python3 <<EOF

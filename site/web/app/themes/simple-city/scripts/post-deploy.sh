@@ -1,39 +1,40 @@
 #!/bin/bash
-# Post-deploy fix-ups for the simple-city theme.
+# Post-deploy fix-ups.
 #
 # After a Capistrano-style deploy, the new release directory needs:
-#   1. symlink for `scripts/xml_files` → /shared (so XML feeds and progress
-#      files persist between releases).
-#   2. symlink for `scripts/product-ai-processor/logs` → /shared (so Python
-#      logs persist between releases).
-#   3. symlink for `scripts/product-ai-processor/venv` → /shared (Capistrano
-#      ships an empty venv shell; the real virtualenv lives in /shared).
+#   1. symlink for `eboy-product-importer/data/xml_files` → /shared (so XML
+#      feeds and progress files persist between releases).
+#   2. symlink for `eboy-product-importer/product-ai-processor/logs` → /shared
+#      (so Python logs persist between releases).
+#   3. symlink for `eboy-product-importer/product-ai-processor/venv` → /shared
+#      (Capistrano ships an empty venv shell; the real virtualenv lives in
+#      /shared).
 #   4. exec bit on every *.sh under product-ai-processor (some deploys lose it).
+#   5. clear stale Acorn cache from previous release.
 #
 # Run after every deploy:
 #   bash /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/post-deploy.sh
-#
-# Or set up an alias:
-#   alias post-deploy='bash /srv/www/eboy.gr/current/web/app/themes/simple-city/scripts/post-deploy.sh'
 
 set -e
 
 RELEASE=$(readlink /srv/www/eboy.gr/current)
-SHARED=/srv/www/eboy.gr/shared/web/app/themes/simple-city/scripts
-DEST=$RELEASE/web/app/themes/simple-city/scripts
+SHARED_PLUGIN=/srv/www/eboy.gr/shared/web/app/plugins/eboy-product-importer
+DEST_PLUGIN=$RELEASE/web/app/plugins/eboy-product-importer
 
 echo "Post-deploy for: $RELEASE"
 
-rm -rf "$DEST/xml_files"
-ln -sfn "$SHARED/xml_files" "$DEST/xml_files"
+mkdir -p "$DEST_PLUGIN/data"
 
-rm -rf "$DEST/product-ai-processor/logs"
-ln -sfn "$SHARED/product-ai-processor/logs" "$DEST/product-ai-processor/logs"
+rm -rf "$DEST_PLUGIN/data/xml_files"
+ln -sfn "$SHARED_PLUGIN/data/xml_files" "$DEST_PLUGIN/data/xml_files"
 
-rm -rf "$DEST/product-ai-processor/venv"
-ln -sfn "$SHARED/product-ai-processor/venv" "$DEST/product-ai-processor/venv"
+rm -rf "$DEST_PLUGIN/product-ai-processor/logs"
+ln -sfn "$SHARED_PLUGIN/product-ai-processor/logs" "$DEST_PLUGIN/product-ai-processor/logs"
 
-chmod +x "$DEST/product-ai-processor/"*.sh
+rm -rf "$DEST_PLUGIN/product-ai-processor/venv"
+ln -sfn "$SHARED_PLUGIN/product-ai-processor/venv" "$DEST_PLUGIN/product-ai-processor/venv"
+
+chmod +x "$DEST_PLUGIN/product-ai-processor/"*.sh
 
 # Clear stale Acorn cache from previous release. Compiled service paths in
 # /web/app/cache/acorn point at the OLD release directory and produce a fatal
@@ -46,4 +47,4 @@ if [ -d "$ACORN_CACHE" ]; then
     echo "Cleared Acorn cache: $ACORN_CACHE"
 fi
 
-ls -la "$DEST/"
+ls -la "$DEST_PLUGIN/"

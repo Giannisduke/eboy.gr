@@ -87,9 +87,8 @@ class BatchImporter {
         set_time_limit($offset === 0 ? 600 : 120);
         ini_set('memory_limit', wp_get_environment_type() === 'development' ? '1024M' : '512M');
 
-        // Use __FILE__ for reliable path resolution
-        $theme_root = dirname(dirname(dirname(__FILE__)));
-        $xml_dir = $theme_root . '/scripts/xml_files/';
+        $plugin_root = dirname(__DIR__);
+        $xml_dir = $plugin_root . '/data/xml_files/';
         $progress_file = $xml_dir . $supplier . '-progress.json';
         $enhanced_xml_path = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml';
         $realtime_flag_file = $xml_dir . $supplier . '-realtime.flag';
@@ -457,25 +456,16 @@ class BatchImporter {
      * Run AI enhancement on XML file (asynchronously in background)
      */
     private function runAIEnhancement($supplier, $input_xml, $limit = 0) {
-        // Use __FILE__ to get the actual filesystem path, immune to WordPress context switching
-        // __FILE__ = /path/to/theme/app/Importers/BatchImporter.php
-        // Theme root = dirname(dirname(dirname(__FILE__)))
-        $theme_root = dirname(dirname(dirname(__FILE__)));
-        $script_dir = $theme_root . '/scripts/product-ai-processor';
-        $xml_dir = $theme_root . '/scripts/xml_files/';
+        $plugin_root = dirname(__DIR__);
+        $script_dir  = $plugin_root . '/product-ai-processor';
+        $xml_dir     = $plugin_root . '/data/xml_files/';
 
-        // Write debug info directly to log file BEFORE running command
         $debug_log = $xml_dir . 'debug-paths.log';
         $debug_info = "=== PATH DEBUG [" . date('Y-m-d H:i:s') . "] ===\n";
         $debug_info .= "__FILE__ = " . __FILE__ . "\n";
-        $debug_info .= "dirname(__FILE__) = " . dirname(__FILE__) . "\n";
-        $debug_info .= "dirname(dirname(__FILE__)) = " . dirname(dirname(__FILE__)) . "\n";
-        $debug_info .= "dirname(dirname(dirname(__FILE__))) = " . dirname(dirname(dirname(__FILE__))) . "\n";
+        $debug_info .= "\$plugin_root = " . $plugin_root . "\n";
+        $debug_info .= "\$script_dir = " . $script_dir . "\n";
         $debug_info .= "ABSPATH = " . ABSPATH . "\n";
-        $debug_info .= "\$_SERVER['DOCUMENT_ROOT'] = " . $_SERVER['DOCUMENT_ROOT'] . "\n";
-        $debug_info .= "get_template_directory() = " . get_template_directory() . "\n";
-        $debug_info .= "\$theme_root (calculated) = " . $theme_root . "\n";
-        $debug_info .= "\$script_dir (calculated) = " . $script_dir . "\n";
         $debug_info .= "=== END DEBUG ===\n\n";
         file_put_contents($debug_log, $debug_info, FILE_APPEND);
 
@@ -494,10 +484,8 @@ class BatchImporter {
         $limit_arg = $limit > 0 ? '--limit ' . intval($limit) : '';
         $main_script = $script_dir . '/main.py';
 
-        // Calculate uploads directory (theme_root -> themes -> app -> uploads)
-        // $theme_root = /path/to/web/app/themes/simple-city
-        // We need: /path/to/web/app/uploads
-        $app_dir = dirname(dirname($theme_root)); // simple-city → themes → app
+        // Resolve uploads dir: plugin_root → plugins → app, then /uploads/ai-processed-images
+        $app_dir = dirname(dirname($plugin_root));
         $uploads_dir = $app_dir . '/uploads/ai-processed-images';
 
         // Build command parts with proper escaping
@@ -551,9 +539,7 @@ class BatchImporter {
      * Get supplier URL from xml_urls.txt
      */
     private function getSupplierURL($supplier) {
-        // Use __FILE__ for reliable path resolution
-        $theme_root = dirname(dirname(dirname(__FILE__)));
-        $xml_dir = $theme_root . '/scripts/xml_files/';
+        $xml_dir = dirname(__DIR__) . '/data/xml_files/';
         $urls_file = $xml_dir . 'xml_urls.txt';
 
         if (!file_exists($urls_file)) {
@@ -585,14 +571,14 @@ class BatchImporter {
      * Start realtime import in background (monitors AI progress and imports products as they're ready)
      */
     private function startRealtimeImport($supplier) {
-        $theme_root = dirname(dirname(dirname(__FILE__)));
-        $script_path = $theme_root . '/scripts/realtime-import-cli.php';
-        $log_file = $theme_root . '/scripts/xml_files/realtime-import.log';
+        $plugin_root = dirname(__DIR__);
+        $script_path = $plugin_root . '/cli/realtime-import-cli.php';
+        $log_file    = $plugin_root . '/data/xml_files/realtime-import.log';
 
-        // Build command to run realtime import in background via WP-CLI
-        // WP-CLI properly bootstraps WordPress in CLI context (Bedrock/Acorn compatible)
-        // $theme_root = …/web/app/themes/simple-city
-        $web_root     = dirname(dirname(dirname($theme_root))); // simple-city → themes → app → web
+        // Build command to run realtime import in background via WP-CLI.
+        // plugin_root = .../web/app/plugins/eboy-product-importer
+        // → plugins → app → web
+        $web_root     = dirname(dirname(dirname($plugin_root)));
         $project_root = dirname($web_root); // web → release dir (where .env lives)
         $wp_cli_bin = trim(shell_exec('which wp') ?: '') ?: '/usr/local/bin/wp';
         // --url targets the correct Multisite blog (e.g. sc-staging.eboy.gr = blog_id=2)

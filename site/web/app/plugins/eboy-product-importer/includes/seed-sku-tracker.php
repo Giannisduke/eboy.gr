@@ -5,7 +5,7 @@
  */
 
 // Load WordPress
-require_once(__DIR__ . '/../../../../../wp/wp-load.php');
+require_once(__DIR__ . '/../../../../wp/wp-load.php');
 require_once(__DIR__ . '/SKUTracker.php');
 
 use App\Importers\SKUTracker;

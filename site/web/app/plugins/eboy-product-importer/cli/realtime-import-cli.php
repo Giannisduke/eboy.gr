@@ -37,22 +37,22 @@ foreach (array_slice($cli_args, 1) as $arg) {
     }
 }
 
-// Resolve theme root from this file's location:
-// realtime-import-cli.php lives in scripts/ → parent is theme root
-$theme_root = dirname(dirname(__FILE__));
+// Plugin root from this file's location: cli/ → eboy-product-importer/
+$plugin_root = dirname(__DIR__);
 
-// WordPress is bootstrapped by WP-CLI (eval-file context)
-// Load importer classes
-require_once $theme_root . '/app/Importers/Models/NormalizedProduct.php';
-require_once $theme_root . '/app/Importers/XMLDownloader.php';
-require_once $theme_root . '/app/Importers/ProductSync.php';
-require_once $theme_root . '/app/Importers/SKUTracker.php';
-require_once $theme_root . '/app/Importers/RealtimeImporter.php';
-require_once $theme_root . '/app/Importers/Parsers/AbstractParser.php';
-require_once $theme_root . '/app/Importers/Parsers/PakoworldParser.php';
-require_once $theme_root . '/app/Importers/Parsers/B2BMarktParser.php';
-require_once $theme_root . '/app/Importers/Parsers/LibertaParser.php';
-require_once $theme_root . '/app/Importers/Parsers/EstiahParser.php';
+// WordPress is bootstrapped by WP-CLI (eval-file context).
+// The plugin's autoloader handles App\Importers\* — these requires are
+// defensive (in case the plugin isn't active or autoloader isn't reached).
+require_once $plugin_root . '/includes/Models/NormalizedProduct.php';
+require_once $plugin_root . '/includes/XMLDownloader.php';
+require_once $plugin_root . '/includes/ProductSync.php';
+require_once $plugin_root . '/includes/SKUTracker.php';
+require_once $plugin_root . '/includes/RealtimeImporter.php';
+require_once $plugin_root . '/includes/Parsers/AbstractParser.php';
+require_once $plugin_root . '/includes/Parsers/PakoworldParser.php';
+require_once $plugin_root . '/includes/Parsers/B2BMarktParser.php';
+require_once $plugin_root . '/includes/Parsers/LibertaParser.php';
+require_once $plugin_root . '/includes/Parsers/EstiahParser.php';
 
 // No PHP time limit or memory cap — parsing large XMLs (50MB+) needs headroom
 set_time_limit(0);
@@ -60,7 +60,7 @@ ini_set('memory_limit', '1024M');
 
 error_log("=== Realtime Import CLI Started ===");
 error_log("Supplier: {$supplier}");
-error_log("Theme root: {$theme_root}");
+error_log("Plugin root: {$plugin_root}");
 
 // Wait for Python AI processor to start a fresh run before we read anything.
 // Python writes progress.json with status='processing' AFTER it has reset ready.json
@@ -69,7 +69,7 @@ error_log("Theme root: {$theme_root}");
 //
 // In `resume` mode the AI run already finished (status='complete') and we want to
 // re-process the existing enhanced.xml — the wait would time out, so skip it.
-$progress_file = $theme_root . '/scripts/xml_files/' . $supplier . '-progress.json';
+$progress_file = $plugin_root . '/data/xml_files/' . $supplier . '-progress.json';
 if ($resume) {
     error_log("RealtimeImporter CLI: Resume mode — skipping Python wait, using existing enhanced.xml.");
 } else {

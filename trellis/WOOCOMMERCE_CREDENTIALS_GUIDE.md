@@ -91,7 +91,7 @@ ssh web@staging.simple-city.gr
 curl -u "ck_xxx:cs_xxx" https://staging.simple-city.gr/wp-json/wc/v3/products
 
 # Or use the Python script
-cd /srv/www/simple-city.gr/current/web/app/themes/simple-city/scripts/product-ai-processor
+cd /srv/www/simple-city.gr/current/web/app/plugins/eboy-product-importer/product-ai-processor
 source venv/bin/activate
 python3 -c "from src.woocommerce_api import WooCommerceAPI; api = WooCommerceAPI(); print(api.test_connection())"
 ```

@@ -73,8 +73,7 @@ class RealtimeImporter {
      * @return array Processing statistics
      */
     public function watchAndImport($supplier, $poll_interval = 5, $max_wait = 86400) {
-        $theme_root = dirname(dirname(dirname(__FILE__)));
-        $xml_dir = $theme_root . '/scripts/xml_files/';
+        $xml_dir = dirname(__DIR__) . '/data/xml_files/';
         $ready_file = $xml_dir . $supplier . '-ready.json';
         $progress_file = $xml_dir . $supplier . '-progress.json';
         $enhanced_xml = $xml_dir . 'enhanced/' . $supplier . '-enhanced.xml';

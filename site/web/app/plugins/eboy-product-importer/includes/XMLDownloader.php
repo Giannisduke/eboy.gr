@@ -11,8 +11,7 @@ class XMLDownloader {
     private $cache_dir;
 
     public function __construct() {
-        // Use scripts/xml_files directory inside theme
-        $xml_dir = get_template_directory() . '/scripts/xml_files/';
+        $xml_dir = dirname(__DIR__) . '/data/xml_files/';
 
         $this->urls_file = $xml_dir . 'xml_urls.txt';
         $this->cache_dir = $xml_dir;  // Base directory, will use subdirectories for en/gr/enhanced

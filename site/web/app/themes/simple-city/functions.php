@@ -59,18 +59,6 @@ collect(['setup', 'filters', 'wc-template-hooks'])
         }
     });
 
-/*
-|--------------------------------------------------------------------------
-| XML Product Importer
-|--------------------------------------------------------------------------
-|
-| Initialize the XML Product Importer for syncing products from suppliers
-|
-*/
-
-if (file_exists(__DIR__ . '/app/Importers/init.php')) {
-    require_once __DIR__ . '/app/Importers/init.php';
-}
 
    function my_own_mime_types( $mimes ) {
         $mimes['svg'] = 'image/svg+xml';

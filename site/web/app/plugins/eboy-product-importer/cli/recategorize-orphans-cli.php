@@ -44,7 +44,7 @@ if (empty($term_ids)) {
     exit(1);
 }
 
-$wrapper = dirname(__FILE__) . '/product-ai-processor/categorize_one.sh';
+$wrapper = dirname(__DIR__) . '/product-ai-processor/categorize_one.sh';
 if (!file_exists($wrapper)) {
     echo "ERROR: AI wrapper not found at {$wrapper}\n";
     exit(1);
