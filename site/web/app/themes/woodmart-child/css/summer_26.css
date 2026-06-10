@@ -108,7 +108,7 @@ body {
   height: auto;
   display: block;
   position: relative;
-  bottom: 176px;
+  bottom: 238px;
   z-index: 9999;
   left: 206px;
   transform: rotate(-6deg);
@@ -126,7 +126,7 @@ body {
   height: auto;
   display: block;
   position: relative;
-  bottom: 53px;
+  bottom: 104px;
   z-index: 9999;
   left: 42px;
   transform: rotate(-6deg);
