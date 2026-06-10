@@ -50,6 +50,11 @@ body {
       height: calc(100dvh - var(--monk-header-h-mobile));
     }
   }
+
+.summer-morph__text {
+  bottom: -30px;
+  }
+  
 }
 
 #monk_slider {
@@ -85,9 +90,12 @@ body {
 
 /* Κείμενο πάνω από τη λέξη (αλλάζει πλάτος εδώ αν θες πιο μικρό/μεγάλο) */
 .summer-morph__text {
-  width: 100%;
+  width: 258px;
   height: auto;
   display: block;
+  position: relative;
+  bottom: -88px;
+  z-index: 9999;
 }
 
 /* Box: κρατά το φυσικό aspect ratio του artwork, responsive (πλάτος από το stack) */
