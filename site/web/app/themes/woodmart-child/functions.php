@@ -98,9 +98,10 @@ function eboy_gsap_home() {
     $css_ver
   );
 
-  // Vendor scripts
-  wp_enqueue_script('gsap_js', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js', array(), '3.6.1', true);
-  wp_enqueue_script('gsap_draggables', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/Draggable.min.js', array('gsap_js'), '3.2.6', true);
+  // Vendor scripts (gsap 3.13: απαιτείται για το MorphSVGPlugin, που πλέον είναι δωρεάν)
+  wp_enqueue_script('gsap_js', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js', array(), '3.13.0', true);
+  wp_enqueue_script('gsap_draggables', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Draggable.min.js', array('gsap_js'), '3.13.0', true);
+  wp_enqueue_script('gsap_morphsvg', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/MorphSVGPlugin.min.js', array('gsap_js'), '3.13.0', true);
 
   wp_enqueue_script('embla-carousel', 'https://unpkg.com/embla-carousel/embla-carousel.umd.js', array(), null, true);
   wp_enqueue_script('embla-carousel-autoplay', 'https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js', array('embla-carousel'), null, true);
@@ -117,6 +118,19 @@ function eboy_gsap_home() {
     get_stylesheet_directory_uri() . $js_rel,
     array('embla-carousel', 'embla-carousel-class-names', 'gsap_js'),
     $js_ver,
+    true
+  );
+
+  // Summer 26 hero — GSAP MorphSVG morph (summer→sommer→verano→estate)
+  $morph_rel = '/js/summer_morph.js';
+  $morph_abs = get_stylesheet_directory() . $morph_rel;
+  $morph_ver = file_exists($morph_abs) ? filemtime($morph_abs) : time();
+
+  wp_enqueue_script(
+    'summer_morph_js',
+    get_stylesheet_directory_uri() . $morph_rel,
+    array('gsap_js', 'gsap_morphsvg'),
+    $morph_ver,
     true
   );
 }
