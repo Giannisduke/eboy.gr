@@ -100,26 +100,7 @@ function eboy_gsap_home() {
 
   // Vendor scripts (gsap 3.13: απαιτείται για το MorphSVGPlugin, που πλέον είναι δωρεάν)
   wp_enqueue_script('gsap_js', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js', array(), '3.13.0', true);
-  wp_enqueue_script('gsap_draggables', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Draggable.min.js', array('gsap_js'), '3.13.0', true);
   wp_enqueue_script('gsap_morphsvg', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/MorphSVGPlugin.min.js', array('gsap_js'), '3.13.0', true);
-
-  wp_enqueue_script('embla-carousel', 'https://unpkg.com/embla-carousel/embla-carousel.umd.js', array(), null, true);
-  wp_enqueue_script('embla-carousel-autoplay', 'https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js', array('embla-carousel'), null, true);
-  wp_enqueue_script('embla-carousel-class-names', 'https://unpkg.com/embla-carousel-class-names/embla-carousel-class-names.umd.js', array('embla-carousel'), null, true);
-  //wp_enqueue_script('embla-carousel-fade', 'https://cdn.jsdelivr.net/npm/embla-carousel-fade/embla-carousel-fade.umd.js', array('embla-carousel'), null, true);
-
-  // JS (με deps ώστε να φορτώσει αφού υπάρχουν τα embla/gsap)
-  $js_rel = '/js/easter_26_03.js';
-  $js_abs = get_stylesheet_directory() . $js_rel;
-  $js_ver = file_exists($js_abs) ? filemtime($js_abs) : time(); // fallback
-
-  wp_enqueue_script(
-    'easter_26_03_js',
-    get_stylesheet_directory_uri() . $js_rel,
-    array('embla-carousel', 'embla-carousel-class-names', 'gsap_js'),
-    $js_ver,
-    true
-  );
 
   // Summer 26 hero — GSAP MorphSVG morph (summer→sommer→verano→estate)
   $morph_rel = '/js/summer_morph.js';

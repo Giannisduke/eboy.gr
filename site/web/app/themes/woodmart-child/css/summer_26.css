@@ -74,10 +74,29 @@ body {
   justify-content: center;
 }
 
-/* Box: κρατά το φυσικό aspect ratio του artwork, κεντραρισμένο & responsive */
+/* Κάθετο stack: κείμενο πάνω, μορφούμενη λέξη κάτω — κεντραρισμένα μαζί */
+.summer-morph__stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(12px, 2.5vw, 32px);
+  width: min(1318px, 92vw);
+}
+
+/* Κείμενο πάνω από τη λέξη (αλλάζει πλάτος εδώ αν θες πιο μικρό/μεγάλο) */
+.summer-morph__text {
+  width: 258px;
+  height: auto;
+  display: block;
+  position: relative;
+  bottom: -88px;
+  z-index: 9999;
+}
+
+/* Box: κρατά το φυσικό aspect ratio του artwork, responsive (πλάτος από το stack) */
 .summer-morph__box {
   position: relative;
-  width: min(1318px, 92vw);
+  width: 100%;
   aspect-ratio: 1318 / 369;
 }
 
