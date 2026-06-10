@@ -12,13 +12,20 @@
 
 html,
 body {
-  height: 100%;
   margin: 0;
 }
 
+/* Ύψος του header (whb-header) που αφαιρείται ώστε το hero να πιάνει
+   ΑΚΡΙΒΩΣ το υπόλοιπο της οθόνης. Αν αλλάξει ο header, ρύθμισε εδώ
+   (ή δες το JS snippet που μετράει αυτόματα το .whb-header). */
+:root {
+  --monk-header-h: 155px;
+  --monk-header-h-mobile: 136px;
+}
+
 .featured_wrapper {
-  min-height: 100vh;
-  height: 100vh;
+  min-height: calc(100vh - var(--monk-header-h));
+  height: calc(100vh - var(--monk-header-h));
   display: flex;
   flex-direction: column;
   background: #02979c;
@@ -26,8 +33,22 @@ body {
 
 @supports (height: 100dvh) {
   .featured_wrapper {
-    min-height: 100dvh;
-    height: 100dvh;
+    min-height: calc(100dvh - var(--monk-header-h));
+    height: calc(100dvh - var(--monk-header-h));
+  }
+}
+
+@media (max-width: 768px) {
+  .featured_wrapper {
+    min-height: calc(100vh - var(--monk-header-h-mobile));
+    height: calc(100vh - var(--monk-header-h-mobile));
+  }
+
+  @supports (height: 100dvh) {
+    .featured_wrapper {
+      min-height: calc(100dvh - var(--monk-header-h-mobile));
+      height: calc(100dvh - var(--monk-header-h-mobile));
+    }
   }
 }
 
