@@ -16,3 +16,39 @@ site/web/app/themes/simple-city/xml_files/.DS_Store
 site/*.csv
 *.csv
 .*
+=======
+# macOS
+.DS_Store
+._*
+
+# Environment / secrets
+.env
+site/.env
+trellis/.vault_pass
+trellis/group_vars/*/vault.yml
+
+# Dependencies
+node_modules/
+vendor/
+site/vendor/
+site/web/app/themes/*/node_modules/
+
+# WordPress generated files
+site/web/app/uploads/
+site/web/app/cache/
+site/web/app/upgrade/
+site/web/app/advanced-cache.php
+site/web/app/object-cache.php
+
+# Logs / backups / exports / large feeds
+*.log
+*.sql
+*.sql.gz
+*.zip
+*.tar.gz
+*.xml
+
+# Local/editor
+.idea/
+.vscode/
+commands.txt
