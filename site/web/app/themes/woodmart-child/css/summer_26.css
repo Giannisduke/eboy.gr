@@ -103,13 +103,35 @@ body {
 
 }
 
+.summer-morph__2026 {
+  width: 330px;
+  height: auto;
+  display: block;
+  position: relative;
+  bottom: 176px;
+  z-index: 9999;
+  left: 206px;
+  transform: rotate(-6deg);
+  transform-origin: center center;
+}
+
 @media (max-width: 768px) {
 
   .summer-morph__text {
-
     bottom: -30px;
-
   }
+
+  .summer-morph__2026 {
+  width: 130px;
+  height: auto;
+  display: block;
+  position: relative;
+  bottom: 53px;
+  z-index: 9999;
+  left: 42px;
+  transform: rotate(-6deg);
+  transform-origin: center center;
+}
 
 }
 
