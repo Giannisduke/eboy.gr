@@ -1,9 +1,17 @@
 ---
-- name: Create Acorn cache directory writable by www-data
+# Acorn (Sage 10) requires a present + writable cache tree, created fresh per release.
+- name: Ensure Acorn cache directories exist and are writable by the web user
   file:
-    path: "{{ deploy_helper.new_release_path }}/web/app/cache"
+    path: "{{ deploy_helper.new_release_path }}/web/app/cache/{{ item }}"
     state: directory
     owner: "{{ web_user }}"
     group: "{{ web_group }}"
     mode: "0775"
   become: true
+  loop:
+    - ""
+    - acorn
+    - acorn/framework
+    - acorn/framework/cache
+    - acorn/framework/sessions
+    - acorn/framework/views

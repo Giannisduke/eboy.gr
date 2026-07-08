@@ -1,0 +1,38 @@
+{
+  "editor.deps.json": {
+    "file": "assets/editor.deps-DxpY22xl.json",
+    "src": "editor.deps.json"
+  },
+  "resources/css/app.scss": {
+    "file": "assets/app-0BmDVrxS.css",
+    "name": "editor",
+    "names": [
+      "app.css",
+      "editor.css"
+    ],
+    "src": "resources/css/app.scss",
+    "isEntry": true
+  },
+  "resources/css/editor.scss": {
+    "file": "assets/app-0BmDVrxS.css",
+    "name": "editor",
+    "names": [
+      "app.css",
+      "editor.css"
+    ],
+    "src": "resources/css/app.scss",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-cfCUeujM.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/editor.js": {
+    "file": "assets/editor-Dqo-zVGR.js",
+    "name": "editor",
+    "src": "resources/js/editor.js",
+    "isEntry": true
+  }
+}

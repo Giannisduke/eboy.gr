@@ -1,14 +1,23 @@
 ---
-# Build before deploy - Install Composer dependencies
+# Build before deploy - Install Composer dependencies for the Sage theme(s).
+# Node/npm is not installed on the servers, so theme JS/CSS assets (public/build)
+# are built locally and committed to git; only composer runs here.
 
-- name: Install Composer dependencies in theme
+- name: Check which Sage themes ship a composer.json
+  stat:
+    path: "{{ deploy_helper.new_release_path }}/web/app/themes/{{ item }}/composer.json"
+  register: theme_composer
+  loop:
+    - eboy
+    - simple-city
+
+- name: Install Composer dependencies in theme(s)
   command: composer install --no-ansi --no-dev --no-interaction --no-progress --optimize-autoloader --classmap-authoritative
   args:
-    chdir: "{{ deploy_helper.new_release_path }}/web/app/themes/simple-city"
+    chdir: "{{ deploy_helper.new_release_path }}/web/app/themes/{{ item.item }}"
+  loop: "{{ theme_composer.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+  when: item.stat.exists
   register: composer_result
   changed_when: "'Nothing to install' not in composer_result.stdout"
-
-- name: Display Composer install result
-  debug:
-    msg: "Composer dependencies installed successfully"
-  when: composer_result.changed
